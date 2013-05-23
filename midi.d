@@ -1,0 +1,11 @@
+midi.o: Main\midi.c
+midi.o: Main\midi.h
+midi.o: .\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
+midi.o: C:\Keil\ARM\CMSIS\Include\core_cm4.h
+midi.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+midi.o: C:\Keil\ARM\CMSIS\Include\core_cmInstr.h
+midi.o: C:\Keil\ARM\CMSIS\Include\core_cmFunc.h
+midi.o: C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h
+midi.o: .\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h
+midi.o: .\CMSIS\stm32f4xx_conf.h
+midi.o: Main\fifo.h

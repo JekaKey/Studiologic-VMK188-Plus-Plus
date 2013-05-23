@@ -1,0 +1,10 @@
+misc.o: STM32F4xx_SPL\src\misc.c
+misc.o: .\STM32F4xx_SPL\inc\misc.h
+misc.o: .\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
+misc.o: C:\Keil\ARM\CMSIS\Include\core_cm4.h
+misc.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+misc.o: C:\Keil\ARM\CMSIS\Include\core_cmInstr.h
+misc.o: C:\Keil\ARM\CMSIS\Include\core_cmFunc.h
+misc.o: C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h
+misc.o: .\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h
+misc.o: .\CMSIS\stm32f4xx_conf.h

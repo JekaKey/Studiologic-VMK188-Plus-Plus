@@ -1,0 +1,108 @@
+Dependencies for Project 'Fatarminator', Target 'Fatarminator': (DO NOT MODIFY !)
+F (.\startup_stm32f4xx.s)(0x508791EC)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx --list "startup_stm32f4xx.lst" --xref -o "startup_stm32f4xx.o" --depend "startup_stm32f4xx.d")
+F (.\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c)(0x50EE9DF5)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\CMSIS -I.\CMSIS\Device\ST\STM32F4xx\Include -I.\Main -I.\STM32F4xx_SPL\inc -I.\STM32F4xx_SPL\src -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -o "system_stm32f4xx.o" --omf_browse "system_stm32f4xx.crf" --depend "system_stm32f4xx.d")
+I (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x508793BE)
+I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F99990)
+I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x508793BE)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)
+I (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)
+F (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)()
+F (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)()
+F (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)()
+F (.\STM32F4xx_SPL\src\stm32f4xx_usart.c)(0x50EEC1B1)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\CMSIS -I.\CMSIS\Device\ST\STM32F4xx\Include -I.\Main -I.\STM32F4xx_SPL\inc -I.\STM32F4xx_SPL\src -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -o "stm32f4xx_usart.o" --omf_browse "stm32f4xx_usart.crf" --depend "stm32f4xx_usart.d")
+I (.\STM32F4xx_SPL\inc\stm32f4xx_usart.h)(0x50EEC1B3)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x508793BE)
+I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F99990)
+I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x508793BE)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)
+I (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)
+I (.\STM32F4xx_SPL\inc\stm32f4xx_rcc.h)(0x50EEC1B3)
+F (.\STM32F4xx_SPL\src\stm32f4xx_tim.c)(0x50EEC1B2)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\CMSIS -I.\CMSIS\Device\ST\STM32F4xx\Include -I.\Main -I.\STM32F4xx_SPL\inc -I.\STM32F4xx_SPL\src -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -o "stm32f4xx_tim.o" --omf_browse "stm32f4xx_tim.crf" --depend "stm32f4xx_tim.d")
+I (.\STM32F4xx_SPL\inc\stm32f4xx_tim.h)(0x50EEC1B3)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x508793BE)
+I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F99990)
+I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x508793BE)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)
+I (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)
+I (.\STM32F4xx_SPL\inc\stm32f4xx_rcc.h)(0x50EEC1B3)
+F (.\STM32F4xx_SPL\src\stm32f4xx_sdio.c)(0x50EEC1B1)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\CMSIS -I.\CMSIS\Device\ST\STM32F4xx\Include -I.\Main -I.\STM32F4xx_SPL\inc -I.\STM32F4xx_SPL\src -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -o "stm32f4xx_sdio.o" --omf_browse "stm32f4xx_sdio.crf" --depend "stm32f4xx_sdio.d")
+I (.\STM32F4xx_SPL\inc\stm32f4xx_sdio.h)(0x50EEC1B3)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x508793BE)
+I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F99990)
+I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x508793BE)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)
+I (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)
+I (.\STM32F4xx_SPL\inc\stm32f4xx_rcc.h)(0x50EEC1B3)
+F (.\STM32F4xx_SPL\src\stm32f4xx_rcc.c)(0x50EEC1B1)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\CMSIS -I.\CMSIS\Device\ST\STM32F4xx\Include -I.\Main -I.\STM32F4xx_SPL\inc -I.\STM32F4xx_SPL\src -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -o "stm32f4xx_rcc.o" --omf_browse "stm32f4xx_rcc.crf" --depend "stm32f4xx_rcc.d")
+I (.\STM32F4xx_SPL\inc\stm32f4xx_rcc.h)(0x50EEC1B3)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x508793BE)
+I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F99990)
+I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x508793BE)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)
+I (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)
+F (.\STM32F4xx_SPL\src\stm32f4xx_gpio.c)(0x50EEC1B1)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\CMSIS -I.\CMSIS\Device\ST\STM32F4xx\Include -I.\Main -I.\STM32F4xx_SPL\inc -I.\STM32F4xx_SPL\src -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -o "stm32f4xx_gpio.o" --omf_browse "stm32f4xx_gpio.crf" --depend "stm32f4xx_gpio.d")
+I (.\STM32F4xx_SPL\inc\stm32f4xx_gpio.h)(0x50EEC1B3)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x508793BE)
+I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F99990)
+I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x508793BE)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)
+I (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)
+I (.\STM32F4xx_SPL\inc\stm32f4xx_rcc.h)(0x50EEC1B3)
+F (.\STM32F4xx_SPL\src\misc.c)(0x50EEC1B2)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\CMSIS -I.\CMSIS\Device\ST\STM32F4xx\Include -I.\Main -I.\STM32F4xx_SPL\inc -I.\STM32F4xx_SPL\src -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -o "misc.o" --omf_browse "misc.crf" --depend "misc.d")
+I (.\STM32F4xx_SPL\inc\misc.h)(0x50EEC1B3)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x508793BE)
+I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F99990)
+I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x508793BE)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)
+I (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)
+F (.\Main\main.c)(0x519E166E)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\CMSIS -I.\CMSIS\Device\ST\STM32F4xx\Include -I.\Main -I.\STM32F4xx_SPL\inc -I.\STM32F4xx_SPL\src -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -o "main.o" --omf_browse "main.crf" --depend "main.d")
+I (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x508793BE)
+I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F99990)
+I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x508793BE)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)
+I (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)
+I (.\STM32F4xx_SPL\inc\stm32f4xx_rcc.h)(0x50EEC1B3)
+I (.\STM32F4xx_SPL\inc\stm32f4xx_gpio.h)(0x50EEC1B3)
+I (.\STM32F4xx_SPL\inc\stm32f4xx_tim.h)(0x50EEC1B3)
+I (.\STM32F4xx_SPL\inc\stm32f4xx_usart.h)(0x50EEC1B3)
+I (.\STM32F4xx_SPL\inc\misc.h)(0x50EEC1B3)
+I (C:\Keil\ARM\ARMCC\bin\..\include\math.h)(0x50F99990)
+I (Main\main.h)(0x519CC221)
+I (Main\fifo.h)(0x518A2CC2)
+I (Main\midi.h)(0x519C9BB5)
+F (.\Main\fifo.h)(0x518A2CC2)()
+F (.\Main\midi.c)(0x519DF7FC)(-c --cpu Cortex-M4.fp -D__EVAL -g -O0 --apcs=interwork -I.\CMSIS -I.\CMSIS\Device\ST\STM32F4xx\Include -I.\Main -I.\STM32F4xx_SPL\inc -I.\STM32F4xx_SPL\src -I C:\Keil\ARM\RV31\INC -I C:\Keil\ARM\CMSIS\Include -I C:\Keil\ARM\Inc\ST\STM32F4xx -DUSE_STDPERIPH_DRIVER -DSTM32F4XX -o "midi.o" --omf_browse "midi.crf" --depend "midi.d")
+I (Main\midi.h)(0x519C9BB5)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h)(0x50EFED24)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4.h)(0x508793BE)
+I (C:\Keil\ARM\ARMCC\bin\..\include\stdint.h)(0x50F99990)
+I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x508793BE)
+I (C:\Keil\ARM\CMSIS\Include\core_cm4_simd.h)(0x508793BE)
+I (.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h)(0x50EE9DF5)
+I (.\CMSIS\stm32f4xx_conf.h)(0x5137A005)
+I (Main\fifo.h)(0x518A2CC2)

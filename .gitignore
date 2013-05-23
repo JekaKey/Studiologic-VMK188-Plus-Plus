@@ -19,3 +19,5 @@
 #Others
 *.sublime-project
 *.sublime-workspace
+*.d
+*.crf

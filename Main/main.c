@@ -19,11 +19,11 @@
 #include "fifo.h"
 #include "midi.h"
 
-#define MIDI_BAUDRATE 31250                         //Скорость работы midi
-#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))     //Проверка битов в переменной
+#define MIDI_BAUDRATE 31250                         //Midi speed baudrate
+#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))     //Check bit in position
 
-FIFO8(8) notes;
-FIFO16(8) durations;
+FIFO8(8) notes;         //Array for current note
+FIFO16(8) durations;    //Array for duration for current note
 
 TIM_TimeBaseInitTypeDef timer;
 
@@ -40,9 +40,8 @@ void Delay(__IO uint32_t nCount) {
     }
 }
 
-/* This funcion shows how to initialize
-* the GPIO pins on GPIOD and how to configure
-* them as inputs and outputs
+/*
+* GPIO init
 */
 
 void init_GPIO(void) {
@@ -200,14 +199,28 @@ void USART_puts(USART_TypeDef *USARTx, volatile char *s) {
 }
 
 /**
-*Выходы клавиатуры на высокий уровень
+* First init
 */
-void firstPinState() {
+void firstInit() {
+
+    init_GPIO();                //GPIO init
+    init_USART1(9600);          //Midi init
+
+    //First port init, all for high
 
     GPIOB->BSRRL = 0xFC07;  // B0-B2, B10-B15
     GPIOC->BSRRL = 0x30;    // C4-C5
     GPIOD->BSRRL = 0x300;   // D8-D9
     GPIOE->BSRRL = 0xFF80;  // E7-E15
+
+    //Настраиваем таймер для генерации прерывания по обновлению (переполнению)
+    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+
+    //Запускаем таймер
+    TIM_Cmd(TIM4, ENABLE);
+
+    //Разрешаем соответствующее прерывание
+    NVIC_EnableIRQ(TIM4_IRQn);
 
 }
 /**
@@ -329,7 +342,7 @@ void readKeyState() {
     // d26 = ~GPIOA->IDR; //Read port state second contact
     // GPIOB->BSRRL = GPIO_Pin_14;
 
-    //  7 chunk 
+    //  7 chunk
 
     // GPIOC->BSRRH = GPIO_Pin_4;
     // d17 = ~GPIOA->IDR; //Read port state first contact
@@ -414,55 +427,31 @@ void readKeyState() {
 
 int main(void) {
 
-    init_GPIO();                //Инициализируем порты
-    init_USART1(9600);          //Инициализируем USART1 @ 31250 baud
-    firstPinState();
-
-    //Настраиваем таймер для генерации прерывания по обновлению (переполнению)
-    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
-
-    //Запускаем таймер
-    TIM_Cmd(TIM4, ENABLE);
-
-    //Разрешаем соответствующее прерывание
-    NVIC_EnableIRQ(TIM4_IRQn);
-
-    //  GPIOD->BSRRL = 0x1000; // this sets LED1 (green)
-    //  GPIOD->BSRRL = 0x2000; // this resets LED4 (blue)
-    //  GPIOD->BSRRL = 0x4000; // this resets LED4 (blue)
-    //  GPIOD->BSRRL = 0x8000; // this resets LED4 (blue)
+    firstInit();
 
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
-
-
-    // sendNoteOn(0xAA, 0xAA, 0);
-    // sendNoteOn(0xBB, 0xBB, 0);
-    // sendNoteOn(0xCC, 0xCC, 0);
 
     /* Основной цикл программы */
     while (1) {
 
         __NOP();
-        // readKeyState();
 
-        
-            
         //Проверяем буффер считанных клавиш с длительностями
-        // if (FIFO_COUNT(notes) > 0) {
+        if (FIFO_COUNT(notes) > 0) {
 
-        //     curNote = FIFO_FRONT(notes);
-        //     duration = FIFO_FRONT(durations);
+            curNote = FIFO_FRONT(notes);
+            duration = FIFO_FRONT(durations);
 
-        //     if ((curNote & 0x80) == 0) {
-        //         sendNoteOn(curNote, getVelocity(duration), 0);
-        //     } else {
-        //         sendNoteOff(curNote & 0x7F, getVelocity(duration), 0);
-        //     }
+            if ((curNote & 0x80) == 0) {
+                sendNoteOn(curNote, getVelocity(duration), 0);
+            } else {
+                sendNoteOff(curNote & 0x7F, getVelocity(duration), 0);
+            }
 
-        //     FIFO_POP(notes);
-        //     FIFO_POP(durations);
+            FIFO_POP(notes);
+            FIFO_POP(durations);
 
-        // }
+        }
 
         //Проверка и отправка буффера midi сообщений
         sendMidiData();

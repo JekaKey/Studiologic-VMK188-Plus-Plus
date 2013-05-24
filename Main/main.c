@@ -64,7 +64,7 @@ void init_GPIO(void) {
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOC, &GPIO_InitStruct);
 
     /*Configure GPIO pin */
@@ -72,7 +72,7 @@ void init_GPIO(void) {
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /*Configure GPIO pin */
@@ -80,7 +80,7 @@ void init_GPIO(void) {
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOE, &GPIO_InitStruct);
 
     /*Configure GPIO pin */
@@ -88,7 +88,7 @@ void init_GPIO(void) {
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* Настройка таймера 4 */
@@ -270,112 +270,114 @@ void readKeyState() {
     /* 1 chunk */
 
     GPIOE->BSRRH = GPIO_Pin_11;
-    d11 = 0x0001;
+    d11 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_11;
 
+    Delay(10); //Test delay
+
     GPIOE->BSRRH = GPIO_Pin_12;
-    d21 = 0x0001;
+    d21 = ~GPIOA->IDR; //Read port state second contact
     GPIOE->BSRRL = GPIO_Pin_12;
 
     /* 2 chunk */
 
-    GPIOD->BSRRH = GPIO_Pin_9;
-    d12 = ~GPIOA->IDR; //Read port state first contact
-    GPIOD->BSRRL = GPIO_Pin_9;
+    // GPIOD->BSRRH = GPIO_Pin_9;
+    // d12 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOD->BSRRL = GPIO_Pin_9;
 
-    GPIOE->BSRRH = GPIO_Pin_13;
-    d22 = ~GPIOA->IDR; //Read port state second contact
-    GPIOE->BSRRL = GPIO_Pin_13;
+    // GPIOE->BSRRH = GPIO_Pin_13;
+    // d22 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOE->BSRRL = GPIO_Pin_13;
 
-    /* 3 chunk */
+    // /* 3 chunk */
 
-    GPIOE->BSRRH = GPIO_Pin_15;
-    d13 = ~GPIOA->IDR; //Read port state first contact
-    GPIOE->BSRRL = GPIO_Pin_15;
+    // GPIOE->BSRRH = GPIO_Pin_15;
+    // d13 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOE->BSRRL = GPIO_Pin_15;
 
-    GPIOD->BSRRH = GPIO_Pin_8;
-    d23 = ~GPIOA->IDR; //Read port state second contact
-    GPIOD->BSRRL = GPIO_Pin_8;
+    // GPIOD->BSRRH = GPIO_Pin_8;
+    // d23 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOD->BSRRL = GPIO_Pin_8;
 
-    /* 4 chunk */
+    // /* 4 chunk */
 
-    GPIOB->BSRRH = GPIO_Pin_11;
-    d14 = ~GPIOA->IDR; //Read port state first contact
-    GPIOB->BSRRL = GPIO_Pin_11;
+    // GPIOB->BSRRH = GPIO_Pin_11;
+    // d14 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOB->BSRRL = GPIO_Pin_11;
 
-    GPIOB->BSRRH = GPIO_Pin_10;
-    d24 = ~GPIOA->IDR; //Read port state second contact
-    GPIOB->BSRRL = GPIO_Pin_10;
+    // GPIOB->BSRRH = GPIO_Pin_10;
+    // d24 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOB->BSRRL = GPIO_Pin_10;
 
-    /* 5 chunk */
+    // /* 5 chunk */
 
-    GPIOB->BSRRH = GPIO_Pin_15;
-    d15 = ~GPIOA->IDR; //Read port state first contact
-    GPIOB->BSRRL = GPIO_Pin_15;
+    // GPIOB->BSRRH = GPIO_Pin_15;
+    // d15 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOB->BSRRL = GPIO_Pin_15;
 
-    GPIOE->BSRRH = GPIO_Pin_14;
-    d25 = ~GPIOA->IDR; //Read port state second contact
-    GPIOE->BSRRL = GPIO_Pin_14;
+    // GPIOE->BSRRH = GPIO_Pin_14;
+    // d25 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOE->BSRRL = GPIO_Pin_14;
 
-    /* 6 chunk */
+    // /* 6 chunk */
 
-    GPIOB->BSRRH = GPIO_Pin_13;
-    d16 = ~GPIOA->IDR; //Read port state first contact
-    GPIOB->BSRRL = GPIO_Pin_13;
+    // GPIOB->BSRRH = GPIO_Pin_13;
+    // d16 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOB->BSRRL = GPIO_Pin_13;
 
-    GPIOB->BSRRH = GPIO_Pin_14;
-    d26 = ~GPIOA->IDR; //Read port state second contact
-    GPIOB->BSRRL = GPIO_Pin_14;
+    // GPIOB->BSRRH = GPIO_Pin_14;
+    // d26 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOB->BSRRL = GPIO_Pin_14;
 
-    /* 7 chunk */
+    //  7 chunk 
 
-    GPIOC->BSRRH = GPIO_Pin_4;
-    d17 = ~GPIOA->IDR; //Read port state first contact
-    GPIOC->BSRRL = GPIO_Pin_4;
+    // GPIOC->BSRRH = GPIO_Pin_4;
+    // d17 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOC->BSRRL = GPIO_Pin_4;
 
-    GPIOB->BSRRH = GPIO_Pin_12;
-    d27 = ~GPIOA->IDR; //Read port state second contact
-    GPIOB->BSRRL = GPIO_Pin_12;
+    // GPIOB->BSRRH = GPIO_Pin_12;
+    // d27 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOB->BSRRL = GPIO_Pin_12;
 
-    /* 8 chunk */
+    // /* 8 chunk */
 
-    GPIOB->BSRRH = GPIO_Pin_0;
-    d18 = ~GPIOA->IDR; //Read port state first contact
-    GPIOB->BSRRL = GPIO_Pin_0;
+    // GPIOB->BSRRH = GPIO_Pin_0;
+    // d18 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOB->BSRRL = GPIO_Pin_0;
 
-    GPIOC->BSRRH = GPIO_Pin_5;
-    d28 = ~GPIOA->IDR; //Read port state second contact
-    GPIOC->BSRRL = GPIO_Pin_5;
+    // GPIOC->BSRRH = GPIO_Pin_5;
+    // d28 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOC->BSRRL = GPIO_Pin_5;
 
-    /* 9 chunk */
+    // /* 9 chunk */
 
-    GPIOB->BSRRH = GPIO_Pin_2;
-    d19 = ~GPIOA->IDR; //Read port state first contact
-    GPIOB->BSRRL = GPIO_Pin_2;
+    // GPIOB->BSRRH = GPIO_Pin_2;
+    // d19 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOB->BSRRL = GPIO_Pin_2;
 
-    GPIOB->BSRRH = GPIO_Pin_1;
-    d29 = ~GPIOA->IDR; //Read port state second contact
-    GPIOB->BSRRL = GPIO_Pin_1;
+    // GPIOB->BSRRH = GPIO_Pin_1;
+    // d29 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOB->BSRRL = GPIO_Pin_1;
 
-    /* 10 chunk */
+    // /* 10 chunk */
 
-    GPIOE->BSRRH = GPIO_Pin_8;
-    d110 = ~GPIOA->IDR; //Read port state first contact
-    GPIOE->BSRRL = GPIO_Pin_8;
+    // GPIOE->BSRRH = GPIO_Pin_8;
+    // d110 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOE->BSRRL = GPIO_Pin_8;
 
-    GPIOE->BSRRH = GPIO_Pin_7;
-    d210 = ~GPIOA->IDR; //Read port state second contact
-    GPIOE->BSRRL = GPIO_Pin_7;
+    // GPIOE->BSRRH = GPIO_Pin_7;
+    // d210 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOE->BSRRL = GPIO_Pin_7;
 
-    /* 11 chunk */
+    // /* 11 chunk */
 
-    GPIOE->BSRRH = GPIO_Pin_9;
-    d111 = ~GPIOA->IDR; //Read port state first contact
-    GPIOE->BSRRL = GPIO_Pin_9;
+    // GPIOE->BSRRH = GPIO_Pin_9;
+    // d111 = ~GPIOA->IDR; //Read port state first contact
+    // GPIOE->BSRRL = GPIO_Pin_9;
 
-    GPIOE->BSRRH = GPIO_Pin_10;
-    d211 = ~GPIOA->IDR; //Read port state second contact
-    GPIOE->BSRRL = GPIO_Pin_10;
+    // GPIOE->BSRRH = GPIO_Pin_10;
+    // d211 = ~GPIOA->IDR; //Read port state second contact
+    // GPIOE->BSRRL = GPIO_Pin_10;
 
     /*************************************************************************/
 
@@ -414,7 +416,7 @@ int main(void) {
 
     init_GPIO();                //Инициализируем порты
     init_USART1(9600);          //Инициализируем USART1 @ 31250 baud
-    firstPinState();            //Начальное состояние портов
+    firstPinState();
 
     //Настраиваем таймер для генерации прерывания по обновлению (переполнению)
     TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
@@ -502,6 +504,5 @@ void TIM4_IRQHandler() {
 
         //Считываем состояние клавиш
         readKeyState();
-        // GPIOD->ODR ^= (GPIO_Pin_14 | GPIO_Pin_15); //Инвертируем состояние светодиодов
     }
 }

@@ -223,17 +223,6 @@ void firstInit() {
     NVIC_EnableIRQ(TIM4_IRQn);
 
 }
-/**
-* Отправка миди данных из буффера
-*/
-void sendMidiData(void) {
-    if (FIFO_COUNT(midiMessagesArray) > 0) {
-        if ((USART1->SR & 0x00000040)) {
-            USART_SendData(USART1, FIFO_FRONT(midiMessagesArray));
-            FIFO_POP(midiMessagesArray);
-        }
-    }
-}
 
 //Пересчет тиков в велосити
 //velocity=round(a/(x1+b)+c)
@@ -255,11 +244,23 @@ uint8_t getVelocity(uint16_t tickNum) {
 }
 
 /**
+* Отправка миди данных из буффера
+*/
+void sendMidiData(void) {
+    if (FIFO_COUNT(midiMessagesArray) > 0) {
+        if ((USART1->SR & 0x00000040)) {
+            USART_SendData(USART1, FIFO_FRONT(midiMessagesArray));
+            FIFO_POP(midiMessagesArray);
+        }
+    }
+}
+
+
+/**
 * Расчет velocity и запись в midi буффер
 */
-
-void getNoteToVelocity(void) {
-
+void checkNoteArray(void) {
+    //Проверяем буффер считанных клавиш с длительностями
     if (FIFO_COUNT(notes) > 0) {
 
         curNote = FIFO_FRONT(notes);
@@ -436,22 +437,8 @@ int main(void) {
 
         __NOP();
 
-        //Проверяем буффер считанных клавиш с длительностями
-        if (FIFO_COUNT(notes) > 0) {
-
-            curNote = FIFO_FRONT(notes);
-            duration = FIFO_FRONT(durations);
-
-            if ((curNote & 0x80) == 0) {
-                sendNoteOn(curNote, getVelocity(duration), 0);
-            } else {
-                sendNoteOff(curNote & 0x7F, getVelocity(duration), 0);
-            }
-
-            FIFO_POP(notes);
-            FIFO_POP(durations);
-
-        }
+        //Проверяем, если ли считанные ноты
+        checkNoteArray();
 
         //Проверка и отправка буффера midi сообщений
         sendMidiData();

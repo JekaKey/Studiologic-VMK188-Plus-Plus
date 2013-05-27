@@ -42,7 +42,7 @@
     }
 
 //взять первый элемент из fifo
-#define FIFO_FRONT(fifo) (fifo.buf[(fifo).tail & ((sizeof(fifo.buf) / sizeof(fifo.buf[0]) - 1)])
+#define FIFO_FRONT(fifo) (fifo.buf[(fifo).tail & ((sizeof(fifo.buf) / sizeof(fifo.buf[0])) - 1)])
 
 //уменьшить количество элементов в очереди
 #define FIFO_POP(fifo)   \

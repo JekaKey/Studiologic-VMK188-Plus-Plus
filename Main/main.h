@@ -41,7 +41,7 @@ uint16_t lastState11 = 0x00;
 
 
 /* Variables */
-uint16_t duration_note1 = 670;
+uint16_t duration_note1 = 0;
 uint16_t duration_note2 = 0;
 uint16_t duration_note3 = 0;
 uint16_t duration_note4 = 0;

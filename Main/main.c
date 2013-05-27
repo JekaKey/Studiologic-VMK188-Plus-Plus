@@ -21,6 +21,7 @@
 
 #define MIDI_BAUDRATE 31250                         //Midi speed baudrate
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))     //Check bit in position
+#define KEY_SWITCH_DELAY 10
 
 FIFO8(8) notes;         //Array for current note
 FIFO16(8) durations;    //Array for duration for current note
@@ -30,6 +31,7 @@ TIM_TimeBaseInitTypeDef timer;
 uint16_t previousState;
 uint8_t curNote;
 uint16_t duration;
+uint8_t count;
 
 #define MAX_STRLEN 12 // this is the maximum string length of our string in characters
 
@@ -204,7 +206,7 @@ void USART_puts(USART_TypeDef *USARTx, volatile char *s) {
 void firstInit() {
 
     init_GPIO();                //GPIO init
-    init_USART1(9600);          //Midi init
+    init_USART1(31250);          //Midi init
 
     //First port init, all for high
 
@@ -228,14 +230,12 @@ void firstInit() {
 //velocity=round(a/(x1+b)+c)
 uint8_t getVelocity(uint16_t tickNum) {
 
-    uint16_t minTickVelocity = 36;
-    uint16_t maxTickVelocity = 990;
     uint8_t velocity;
 
-    if (tickNum >= maxTickVelocity)
+    if (tickNum >= 990)
         return 0;
 
-    if (tickNum <= minTickVelocity)
+    if (tickNum <= 36)
         return 127;
 
     velocity = ((10500 / (tickNum + 41)) - 9);
@@ -247,10 +247,14 @@ uint8_t getVelocity(uint16_t tickNum) {
 * Отправка миди данных из буффера
 */
 void sendMidiData(void) {
-    if (FIFO_COUNT(midiMessagesArray) > 0) {
+		
+		count = FIFO_COUNT(midiMessagesArray);
+	
+    if (count > 0) {
         if ((USART1->SR & 0x00000040)) {
             USART_SendData(USART1, FIFO_FRONT(midiMessagesArray));
             FIFO_POP(midiMessagesArray);
+				
         }
     }
 }
@@ -261,19 +265,22 @@ void sendMidiData(void) {
 */
 void checkNoteArray(void) {
     //Проверяем буффер считанных клавиш с длительностями
-    if (FIFO_COUNT(notes) > 0) {
+	
+		count = FIFO_COUNT(notes);
+	
+    if (count > 0) {
 
         curNote = FIFO_FRONT(notes);
         duration = FIFO_FRONT(durations);
-
+				
+        FIFO_POP(durations);
+				FIFO_POP(notes);
+								
         if ((curNote & 0x80) == 0) {
             sendNoteOn(curNote, getVelocity(duration), 0);
         } else {
-            sendNoteOff(curNote & 0x7F, getVelocity(duration), 0);
+            sendNoteOff(curNote & 0x7F, 70, 0);
         }
-
-        FIFO_POP(notes);
-        FIFO_POP(durations);
 
     }
 }
@@ -284,128 +291,151 @@ void readKeyState() {
     /* 1 chunk */
 
     GPIOE->BSRRH = GPIO_Pin_11;
+		Delay(KEY_SWITCH_DELAY);
     d11 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_11;
 
-    Delay(10); //Test delay
-
     GPIOE->BSRRH = GPIO_Pin_12;
+		Delay(KEY_SWITCH_DELAY);
     d21 = ~GPIOA->IDR; //Read port state second contact
     GPIOE->BSRRL = GPIO_Pin_12;
 
     /* 2 chunk */
 
-    // GPIOD->BSRRH = GPIO_Pin_9;
-    // d12 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOD->BSRRL = GPIO_Pin_9;
+    GPIOD->BSRRH = GPIO_Pin_9;
+		Delay(KEY_SWITCH_DELAY);
+    d12 = ~GPIOA->IDR; //Read port state first contact
+    GPIOD->BSRRL = GPIO_Pin_9;
 
-    // GPIOE->BSRRH = GPIO_Pin_13;
-    // d22 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOE->BSRRL = GPIO_Pin_13;
+    GPIOE->BSRRH = GPIO_Pin_13;
+		Delay(KEY_SWITCH_DELAY);
+    d22 = ~GPIOA->IDR; //Read port state second contact
+    GPIOE->BSRRL = GPIO_Pin_13;
 
-    // /* 3 chunk */
+    /* 3 chunk */
 
-    // GPIOE->BSRRH = GPIO_Pin_15;
-    // d13 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOE->BSRRL = GPIO_Pin_15;
+    GPIOE->BSRRH = GPIO_Pin_15;
+		Delay(KEY_SWITCH_DELAY);
+    d13 = ~GPIOA->IDR; //Read port state first contact
+    GPIOE->BSRRL = GPIO_Pin_15;
 
-    // GPIOD->BSRRH = GPIO_Pin_8;
-    // d23 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOD->BSRRL = GPIO_Pin_8;
+    GPIOD->BSRRH = GPIO_Pin_8;
+		Delay(KEY_SWITCH_DELAY);
+    d23 = ~GPIOA->IDR; //Read port state second contact
+    GPIOD->BSRRL = GPIO_Pin_8;
 
-    // /* 4 chunk */
+    /* 4 chunk */
 
-    // GPIOB->BSRRH = GPIO_Pin_11;
-    // d14 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOB->BSRRL = GPIO_Pin_11;
+    GPIOB->BSRRH = GPIO_Pin_11;
+		Delay(KEY_SWITCH_DELAY);
+    d14 = ~GPIOA->IDR; //Read port state first contact
+    GPIOB->BSRRL = GPIO_Pin_11;
 
-    // GPIOB->BSRRH = GPIO_Pin_10;
-    // d24 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOB->BSRRL = GPIO_Pin_10;
+    GPIOB->BSRRH = GPIO_Pin_10;
+		Delay(KEY_SWITCH_DELAY);
+    d24 = ~GPIOA->IDR; //Read port state second contact
+    GPIOB->BSRRL = GPIO_Pin_10;
 
-    // /* 5 chunk */
+    /* 5 chunk */
 
-    // GPIOB->BSRRH = GPIO_Pin_15;
-    // d15 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOB->BSRRL = GPIO_Pin_15;
+    GPIOB->BSRRH = GPIO_Pin_15;
+		Delay(KEY_SWITCH_DELAY);
+    d15 = ~GPIOA->IDR; //Read port state first contact
+    GPIOB->BSRRL = GPIO_Pin_15;
 
-    // GPIOE->BSRRH = GPIO_Pin_14;
-    // d25 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOE->BSRRL = GPIO_Pin_14;
+    GPIOE->BSRRH = GPIO_Pin_14;
+		Delay(KEY_SWITCH_DELAY);
+    d25 = ~GPIOA->IDR; //Read port state second contact
+    GPIOE->BSRRL = GPIO_Pin_14;
 
-    // /* 6 chunk */
+    /* 6 chunk */
 
-    // GPIOB->BSRRH = GPIO_Pin_13;
-    // d16 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOB->BSRRL = GPIO_Pin_13;
+    GPIOB->BSRRH = GPIO_Pin_13;
+		Delay(KEY_SWITCH_DELAY);
+    d16 = ~GPIOA->IDR; //Read port state first contact
+    GPIOB->BSRRL = GPIO_Pin_13;
 
-    // GPIOB->BSRRH = GPIO_Pin_14;
-    // d26 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOB->BSRRL = GPIO_Pin_14;
+    GPIOB->BSRRH = GPIO_Pin_14;
+		Delay(KEY_SWITCH_DELAY);
+    d26 = ~GPIOA->IDR; //Read port state second contact
+    GPIOB->BSRRL = GPIO_Pin_14;
 
-    //  7 chunk
+    /* 7 chunk */
 
-    // GPIOC->BSRRH = GPIO_Pin_4;
-    // d17 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOC->BSRRL = GPIO_Pin_4;
+    GPIOC->BSRRH = GPIO_Pin_4;
+		Delay(KEY_SWITCH_DELAY);
+    d17 = ~GPIOA->IDR; //Read port state first contact
+    GPIOC->BSRRL = GPIO_Pin_4;
 
-    // GPIOB->BSRRH = GPIO_Pin_12;
-    // d27 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOB->BSRRL = GPIO_Pin_12;
+    GPIOB->BSRRH = GPIO_Pin_12;
+		Delay(KEY_SWITCH_DELAY);
+    d27 = ~GPIOA->IDR; //Read port state second contact
+    GPIOB->BSRRL = GPIO_Pin_12;
 
-    // /* 8 chunk */
+    /* 8 chunk */
 
-    // GPIOB->BSRRH = GPIO_Pin_0;
-    // d18 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOB->BSRRL = GPIO_Pin_0;
+    GPIOB->BSRRH = GPIO_Pin_0;
+		Delay(KEY_SWITCH_DELAY);
+    d18 = ~GPIOA->IDR; //Read port state first contact
+    GPIOB->BSRRL = GPIO_Pin_0;
 
-    // GPIOC->BSRRH = GPIO_Pin_5;
-    // d28 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOC->BSRRL = GPIO_Pin_5;
+    GPIOC->BSRRH = GPIO_Pin_5;
+		Delay(KEY_SWITCH_DELAY);
+    d28 = ~GPIOA->IDR; //Read port state second contact
+    GPIOC->BSRRL = GPIO_Pin_5;
 
-    // /* 9 chunk */
+    /* 9 chunk */
 
-    // GPIOB->BSRRH = GPIO_Pin_2;
-    // d19 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOB->BSRRL = GPIO_Pin_2;
+    GPIOB->BSRRH = GPIO_Pin_2;
+		Delay(KEY_SWITCH_DELAY);
+    d19 = ~GPIOA->IDR; //Read port state first contact
+    GPIOB->BSRRL = GPIO_Pin_2;
 
-    // GPIOB->BSRRH = GPIO_Pin_1;
-    // d29 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOB->BSRRL = GPIO_Pin_1;
+    GPIOB->BSRRH = GPIO_Pin_1;
+		Delay(KEY_SWITCH_DELAY);
+    d29 = ~GPIOA->IDR; //Read port state second contact
+    GPIOB->BSRRL = GPIO_Pin_1;
 
-    // /* 10 chunk */
+    /* 10 chunk */
 
-    // GPIOE->BSRRH = GPIO_Pin_8;
-    // d110 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOE->BSRRL = GPIO_Pin_8;
+    GPIOE->BSRRH = GPIO_Pin_8;
+		Delay(KEY_SWITCH_DELAY);
+    d110 = ~GPIOA->IDR; //Read port state first contact
+    GPIOE->BSRRL = GPIO_Pin_8;
 
-    // GPIOE->BSRRH = GPIO_Pin_7;
-    // d210 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOE->BSRRL = GPIO_Pin_7;
+    GPIOE->BSRRH = GPIO_Pin_7;
+		Delay(KEY_SWITCH_DELAY);
+    d210 = ~GPIOA->IDR; //Read port state second contact
+    GPIOE->BSRRL = GPIO_Pin_7;
 
-    // /* 11 chunk */
+    /* 11 chunk */
 
-    // GPIOE->BSRRH = GPIO_Pin_9;
-    // d111 = ~GPIOA->IDR; //Read port state first contact
-    // GPIOE->BSRRL = GPIO_Pin_9;
+    GPIOE->BSRRH = GPIO_Pin_9;
+		Delay(KEY_SWITCH_DELAY);
+    d111 = ~GPIOA->IDR; //Read port state first contact
+    GPIOE->BSRRL = GPIO_Pin_9;
 
-    // GPIOE->BSRRH = GPIO_Pin_10;
-    // d211 = ~GPIOA->IDR; //Read port state second contact
-    // GPIOE->BSRRL = GPIO_Pin_10;
+    GPIOE->BSRRH = GPIO_Pin_10;
+		Delay(KEY_SWITCH_DELAY);
+    d211 = ~GPIOA->IDR; //Read port state second contact
+    GPIOE->BSRRL = GPIO_Pin_10;
 
     /*************************************************************************/
 
     /* 1 key */
 
     if (d11 & 0x0001) { //Первый контакт
-        duration_note1++; //Увеличиваем длительность
+			
+			if (duration_note1<0xFFFF)  {
+					duration_note1++; //Увеличиваем длительность
+			}
 
         if (d21 & 0x0001) { //Второй контакт
 
             if (lastState1 & 0x0001) {
                 duration_note1 = 0; //Пока нажат второй контакт, сбрасываем длительность
             } else {
-                FIFO_PUSH(notes, 1); //Добавляем в ФИФО текущую ноту
+                FIFO_PUSH(notes, 21); //Добавляем в ФИФО текущую ноту
                 FIFO_PUSH(durations, duration_note1); //Добавляем в ФИФО текущую длительность
 
                 lastState1 ^= 0x1; //Устанавливаем прошлый статус как отправлен
@@ -415,7 +445,7 @@ void readKeyState() {
         }
 
     } else if (lastState1 & 0x0001) {
-        FIFO_PUSH(notes, 1); //Добавляем в ФИФО текущую ноту
+        FIFO_PUSH(notes, 149); //Добавляем в ФИФО текущую ноту
         FIFO_PUSH(durations, duration_note1); //Добавляем в ФИФО текущую длительность
         lastState1 &= 0xFFFE; //Убираем статус отправки с бита
         duration_note1 = 0; //Сброс длительности
@@ -427,16 +457,24 @@ void readKeyState() {
 }
 
 int main(void) {
-
+		
+		uint8_t i;
     firstInit();
-
+		
+		for(i=1; i<=9; i++) {
+			FIFO_PUSH(notes,i);
+			FIFO_PUSH(durations,i);
+		}
+				
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
 
     /* Основной цикл программы */
     while (1) {
 
         __NOP();
+				
 
+			
         //Проверяем, если ли считанные ноты
         checkNoteArray();
 

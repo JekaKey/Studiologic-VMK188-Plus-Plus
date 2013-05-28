@@ -8,14 +8,16 @@
 #endif
 
 #include "stm32f4xx.h"
+#include "stm32f4xx_usart.h"
 #include "fifo.h"
 
 EXTERN FIFO8(128) midiMessagesArray; //Массив с миди данными для отправки
+EXTERN FIFO8(8) notes;         //Array for current note
+EXTERN FIFO16(8) durations;    //Array for duration for current note
 
 /*! Type definition for practical use (because "unsigned char" is a bit long to write.. )*/
 typedef uint8_t byte;
 typedef uint16_t word;
-
 
 /*! Enumeration of MIDI types */
 enum kMIDIType {
@@ -50,6 +52,6 @@ void sendPitchBend(word PitchValue,byte Channel);
 void sendPolyPressure(byte NoteNumber,byte Pressure,byte Channel);
 void sendAfterTouch(byte Pressure,byte Channel);
 
-// void sendMidiData(void); //Отправка Миди данных из буффера
+void sendMidiData(void); //Отправка Миди данных из буффера
 
 #endif //MIDI_H

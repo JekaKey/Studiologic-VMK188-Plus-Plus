@@ -23,7 +23,10 @@ void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel) {
 */
 void sendMidiData(void) {
 
-    if (FIFO_COUNT(midiMessagesArray) > 0) {
+		uint8_t test;
+	
+	  test = FIFO_COUNT(midiMessagesArray);
+    if (test != 0) {
         if ((USART1->SR & 0x00000040)) {
             USART_SendData(USART1, FIFO_FRONT(midiMessagesArray));
             FIFO_POP(midiMessagesArray);

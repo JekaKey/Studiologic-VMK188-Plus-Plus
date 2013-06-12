@@ -298,12 +298,7 @@ int main(void) {
     init_ADC();                                 //ADC init
 
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
-
-		sendControlChange(64,100,0);
-		sendControlChange(64,110,0);
-		sendControlChange(64,120,0);
-		sendControlChange(64,90,0);
-	
+		
     /* Основной цикл программы */
     while (1) {
 
@@ -312,15 +307,16 @@ int main(void) {
 
         //Проверка и отправка буффера midi сообщений
         sendMidiData();
-				
-				sendControlChange(64,90,0);
+									
+				count = FIFO_COUNT(midiMessagesArray);
 			
-        i = readADC1(ADC_Channel_11) >> 5; //Сдвигаем на 5, потому что максимальное значением CC 127
-
-        if (i != sliders.value) {
-            //sliders.value = i;
-            //sendControlChange(64,i,0);
-        }
+        i = readADC1(ADC_Channel_11); //Сдвигаем на 5, потому что максимальное значением CC 127
+				
+//        if (i != sliders.value) {
+//					__NOP();
+//            sliders.value = i;
+//            sendControlChange(64,i,0);
+//        }
 
 
     }

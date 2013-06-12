@@ -29,7 +29,7 @@
 #define FIFO_COUNT(fifo)     (fifo.head-fifo.tail)
 
 //размер fifo
-#define FIFO_SIZE(fifo)      ( (sizeof(fifo.buf) / sizeof(fifo.buf[0]))
+#define FIFO_SIZE(fifo)      (sizeof(fifo.buf) / sizeof(fifo.buf[0]))
 
 //количество свободного места в fifo
 #define FIFO_SPACE(fifo)     (FIFO_SIZE(fifo)-FIFO_COUNT(fifo))
@@ -37,7 +37,7 @@
 //поместить элемент в fifo
 #define FIFO_PUSH(fifo, byte) \
     {\
-        fifo.buf[fifo.head & (sizeof(fifo.buf) / sizeof(fifo.buf[0]) - 1)] = byte; \
+        fifo.buf[fifo.head & (FIFO_SIZE(fifo) - 1)] = byte; \
         fifo.head++; \
     }
 

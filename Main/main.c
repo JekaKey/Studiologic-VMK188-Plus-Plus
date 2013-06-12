@@ -36,7 +36,7 @@ typedef struct {
     uint8_t channel;
     uint8_t event;
     uint8_t value;
-    uint8_t 
+    uint8_t reverse;
 } Slider;
 
 #define MAX_STRLEN 12 // this is the maximum string length of our string in characters
@@ -299,6 +299,11 @@ int main(void) {
 
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
 
+		sendControlChange(64,100,0);
+		sendControlChange(64,110,0);
+		sendControlChange(64,120,0);
+		sendControlChange(64,90,0);
+	
     /* Основной цикл программы */
     while (1) {
 
@@ -307,12 +312,14 @@ int main(void) {
 
         //Проверка и отправка буффера midi сообщений
         sendMidiData();
-
-        i = readADC1(ADC_Channel_10) >> 5; //Сдвигаем на 5, потому что максимальное значением CC 127
+				
+				sendControlChange(64,90,0);
+			
+        i = readADC1(ADC_Channel_11) >> 5; //Сдвигаем на 5, потому что максимальное значением CC 127
 
         if (i != sliders.value) {
-            sliders.value = i;
-            sendControlChange(sliders.event, sliders.value, sliders.channel);
+            //sliders.value = i;
+            //sendControlChange(64,i,0);
         }
 
 

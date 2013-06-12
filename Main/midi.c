@@ -12,6 +12,12 @@ void sendNoteOff(byte NoteNumber, byte Velocity, byte Channel) {
     FIFO_PUSH(midiMessagesArray, Velocity);            //Скорость
 }
 
+void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel) {
+    FIFO_PUSH(midiMessagesArray, ControlChange ^ Channel);      //Событие и канал
+    FIFO_PUSH(midiMessagesArray, ControlNumber);                //Тип события
+    FIFO_PUSH(midiMessagesArray, ControlValue);                 //Значение
+}
+
 /**
 * Отправка миди данных из буффера
 */

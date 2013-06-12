@@ -2,10 +2,12 @@
 #define STM32F40XX
 
 #include "stm32f4xx.h"
+#include "stm32f4xx_syscfg.h"
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_tim.h"
 #include "stm32f4xx_usart.h"
+#include "stm32f4xx_adc.h"
 #include "misc.h"
 #include "math.h"
 
@@ -28,6 +30,14 @@ TIM_TimeBaseInitTypeDef timer;
 
 uint16_t previousState;
 uint8_t count;
+uint16_t i;
+
+typedef struct {
+    uint8_t channel;
+    uint8_t event;
+    uint8_t value;
+    uint8_t 
+} Slider;
 
 #define MAX_STRLEN 12 // this is the maximum string length of our string in characters
 
@@ -62,6 +72,13 @@ void init_GPIO(void) {
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+
+    /*Configure GPIO pin */
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2;
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AN;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(GPIOC, &GPIO_InitStruct);
 
     /*Configure GPIO pin */
@@ -107,6 +124,39 @@ void init_GPIO(void) {
 
 }
 
+
+void init_ADC() {
+    ADC_InitTypeDef ADC_InitStructure;
+    ADC_CommonInitTypeDef adc_init;
+    /* разрешаем тактирование AЦП1 */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+
+    /* сбрасываем настройки АЦП */
+    ADC_DeInit();
+
+    /* АЦП работают независимо */
+    adc_init.ADC_Mode = ADC_Mode_Independent;
+    adc_init.ADC_Prescaler = ADC_Prescaler_Div2;
+
+    /* выключаем scan conversion */
+    ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+    /* Не делать длительные преобразования */
+    ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+
+    /* Начинать преобразование программно, а не по срабатыванию тригера */
+    ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConvEdge_None;
+    ADC_InitStructure.ADC_ExternalTrigConvEdge = 0;
+    /* 12 битное преобразование. результат в 12 младших разрядах результата */
+    ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+
+    /* инициализация */
+    ADC_CommonInit(&adc_init);
+
+    ADC_Init(ADC1, &ADC_InitStructure);
+    /* Включаем АЦП1 */
+    ADC_Cmd(ADC1, ENABLE);
+
+}
 
 /*******************************************************************/
 
@@ -202,7 +252,8 @@ void USART_puts(USART_TypeDef *USARTx, volatile char *s) {
 void firstInit() {
 
     init_GPIO();                //GPIO init
-    init_USART1(31250);          //Midi init
+    init_USART1(31250);         //Midi init
+
 
     //First port init, all for high
 
@@ -222,28 +273,48 @@ void firstInit() {
 
 }
 
+uint16_t readADC1(uint8_t channel) {
+    ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_28Cycles);
+    // начинаем работу
+    ADC_SoftwareStartConv(ADC1);
+    // ждём пока преобразуется напряжение в код
+    while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) {}
+    // очищаем статус
+    // ADC_ClearFlag(ADC1, ADC_FLAG_EOC);
+    // возвращаем результат
+    return ADC_GetConversionValue(ADC1);
+}
+
 int main(void) {
 
-    // uint8_t i;
+    Slider sliders;
+
+    sliders.channel = 0;
+    sliders.event = 64;
+    sliders.value = 0;
+
     firstInit();
 
-    // for(i=1; i<=9; i++) {
-    //  FIFO_PUSH(notes,i);
-    //  FIFO_PUSH(durations,i);
-    // }
+    init_ADC();                                 //ADC init
 
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
 
     /* Основной цикл программы */
     while (1) {
 
-        __NOP();
-
         //Проверяем, если ли считанные ноты
         checkNoteArray();
 
         //Проверка и отправка буффера midi сообщений
         sendMidiData();
+
+        i = readADC1(ADC_Channel_10) >> 5; //Сдвигаем на 5, потому что максимальное значением CC 127
+
+        if (i != sliders.value) {
+            sliders.value = i;
+            sendControlChange(sliders.event, sliders.value, sliders.channel);
+        }
+
 
     }
 }
@@ -281,6 +352,6 @@ void TIM4_IRQHandler() {
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
         //Считываем состояние клавиш
-        readKeyState();
+        //readKeyState();
     }
 }

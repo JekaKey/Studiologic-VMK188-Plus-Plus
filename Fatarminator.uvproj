@@ -456,6 +456,16 @@
               <FileType>1</FileType>
               <FilePath>.\STM32F4xx_SPL\src\misc.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f4xx_syscfg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\STM32F4xx_SPL\src\stm32f4xx_syscfg.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\STM32F4xx_SPL\src\stm32f4xx_adc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -475,6 +485,16 @@
               <FileName>midi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Main\midi.c</FilePath>
+            </File>
+            <File>
+              <FileName>keyboardscan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Main\keyboardscan.c</FilePath>
+            </File>
+            <File>
+              <FileName>keyboardscan.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Main\keyboardscan.h</FilePath>
             </File>
           </Files>
         </Group>

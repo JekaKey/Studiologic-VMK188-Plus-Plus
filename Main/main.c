@@ -427,6 +427,6 @@ void TIM4_IRQHandler() {
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
         //Считываем состояние клавиш
-        readKeyState();
+        //readKeyState();
     }
 }

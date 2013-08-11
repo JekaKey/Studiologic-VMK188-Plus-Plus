@@ -8,6 +8,7 @@
 #include "stm32f4xx_tim.h"
 #include "stm32f4xx_usart.h"
 #include "stm32f4xx_adc.h"
+#include "stm32f4xx_spi.h"
 #include "misc.h"
 #include "math.h"
 
@@ -31,11 +32,18 @@ TIM_TimeBaseInitTypeDef timer;
 uint16_t previousState;
 uint8_t count;
 uint16_t i;
+uint16_t min = 0xFFFF;
+uint16_t max = 0;
+uint8_t mid = 0;
 
 typedef struct {
     uint8_t channel;
     uint8_t event;
     uint8_t value;
+    uint8_t min_in_value;
+    uint8_t max_in_value;
+    uint8_t min_out_value;
+    uint8_t max_out_value;
     uint8_t reverse;
 } Slider;
 
@@ -141,12 +149,13 @@ void init_ADC() {
     /* выключаем scan conversion */
     ADC_InitStructure.ADC_ScanConvMode = DISABLE;
     /* Не делать длительные преобразования */
-    ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+    ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
 
     /* Начинать преобразование программно, а не по срабатыванию тригера */
     ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConvEdge_None;
     ADC_InitStructure.ADC_ExternalTrigConvEdge = 0;
     /* 12 битное преобразование. результат в 12 младших разрядах результата */
+    ADC_InitStructure.ADC_Resolution = ADC_Resolution_8b;
     ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
 
     /* инициализация */
@@ -252,11 +261,9 @@ void USART_puts(USART_TypeDef *USARTx, volatile char *s) {
 void firstInit() {
 
     init_GPIO();                //GPIO init
-    init_USART1(31250);         //Midi init
-
+    init_USART1(MIDI_BAUDRATE); //Midi init
 
     //First port init, all for high
-
     GPIOB->BSRRL = 0xFC07;  // B0-B2, B10-B15
     GPIOC->BSRRL = 0x30;    // C4-C5
     GPIOD->BSRRL = 0x300;   // D8-D9
@@ -274,16 +281,84 @@ void firstInit() {
 }
 
 uint16_t readADC1(uint8_t channel) {
-    ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_28Cycles);
+    Delay(1000);
+    ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_56Cycles);
     // начинаем работу
+    Delay(1000);
     ADC_SoftwareStartConv(ADC1);
+    Delay(1000);
+    ADC_SoftwareStartInjectedConv(ADC1);
+    Delay(1000);
     // ждём пока преобразуется напряжение в код
     while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) {}
+    Delay(1000);
     // очищаем статус
     // ADC_ClearFlag(ADC1, ADC_FLAG_EOC);
     // возвращаем результат
     return ADC_GetConversionValue(ADC1);
 }
+
+/**DocID022945 Rev 4 29/33
+AN4073 Averaging of N-X ADC samples: source code
+ * @brief Sort the N ADC samples
+ * @param ADC samples to be sorted
+ * @param Numbre of ADC samples to be sorted
+ * @retval None
+ */
+void Sort_tab(uint16_t tab[], uint8_t lenght) {
+    uint8_t l = 0x00, exchange = 0x01;
+    uint16_t tmp = 0x00;
+    /* Sort tab */
+    while (exchange == 1) {
+        exchange = 0;
+        for (l = 0; l < lenght - 1; l++) {
+            if ( tab[l] > tab[l + 1] ) {
+                tmp = tab[l];
+                tab[l] = tab[l + 1];
+                tab[l + 1] = tmp;
+                exchange = 1;
+            }
+        }
+    }
+}
+
+/**
+ * @brief Get the average of N-X ADC samples
+ * @param Numbre of ADC samples to be averaged
+ * @param Numbre of ADC samples to be averaged
+ * @retval The average value
+ */
+uint16_t ADC_GetSampleAvgNDeleteX(uint8_t N , uint8_t X) {
+    uint32_t avg_sample = 0x00;
+    uint16_t adc_sample[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+    uint8_t index = 0x00;
+    for (index = 0x00; index < N; index++) {
+        /* ADC start conv */
+        ADC_SoftwareStartConv(ADC1);
+        /* Wait end of conversion */
+        while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
+        /* Store ADC samples */
+        // adc_sample[index] = ADC_GetConversionValue(ADC1);
+        adc_sample[index] = readADC1(ADC_Channel_10);
+    }
+    /* Sort the N-X ADC samples */
+    Sort_tab(adc_sample, N);
+    /* Add the N ADC samples */
+    for (index = X / 2; index < N - X / 2; index++) {
+        avg_sample += adc_sample[index];
+    }
+    /* Compute the average of N-X ADC sample */
+    avg_sample /= N - X;
+    /* Return average value */
+    return avg_sample;
+}
+
+
+uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 
 int main(void) {
 
@@ -298,7 +373,7 @@ int main(void) {
     init_ADC();                                 //ADC init
 
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
-		
+
     /* Основной цикл программы */
     while (1) {
 
@@ -307,17 +382,16 @@ int main(void) {
 
         //Проверка и отправка буффера midi сообщений
         sendMidiData();
-									
-				count = FIFO_COUNT(midiMessagesArray);
-			
-        i = readADC1(ADC_Channel_11); //Сдвигаем на 5, потому что максимальное значением CC 127
-				
-//        if (i != sliders.value) {
-//					__NOP();
-//            sliders.value = i;
-//            sendControlChange(64,i,0);
-//        }
 
+        count = FIFO_COUNT(midiMessagesArray);
+
+        i = ADC_GetSampleAvgNDeleteX(8, 6) >> 1;
+
+        //        if (i != sliders.value) {
+        //                  __NOP();
+        //            sliders.value = i;
+        //            sendControlChange(64,i,0);
+        //        }
 
     }
 }

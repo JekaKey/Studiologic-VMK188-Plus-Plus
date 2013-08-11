@@ -31,3 +31,7 @@
 *.bak
 *.map
 *.dep
+*.uvopt
+*.__i
+
+*.uvopt

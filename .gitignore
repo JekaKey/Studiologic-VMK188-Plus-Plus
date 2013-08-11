@@ -33,6 +33,9 @@
 *.dep
 *.uvopt
 *.__i
+*.plg
+*.lst
+*.Uxus2
 
 *.uvopt
 

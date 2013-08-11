@@ -362,12 +362,6 @@ uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t 
 
 int main(void) {
 
-    Slider sliders;
-
-    sliders.channel = 0;
-    sliders.event = 64;
-    sliders.value = 0;
-
     firstInit();
 
     init_ADC();                                 //ADC init
@@ -383,9 +377,9 @@ int main(void) {
         //Проверка и отправка буффера midi сообщений
         sendMidiData();
 
-        count = FIFO_COUNT(midiMessagesArray);
+        // count = FIFO_COUNT(midiMessagesArray);
 
-        i = ADC_GetSampleAvgNDeleteX(8, 6) >> 1;
+        // i = ADC_GetSampleAvgNDeleteX(8, 6) >> 1;
 
         //        if (i != sliders.value) {
         //                  __NOP();
@@ -429,6 +423,6 @@ void TIM4_IRQHandler() {
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
         //Считываем состояние клавиш
-        //readKeyState();
+        readKeyState();
     }
 }

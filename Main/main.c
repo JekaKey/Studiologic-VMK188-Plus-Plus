@@ -368,6 +368,10 @@ int main(void) {
 
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
 
+    //Тестовый кусок для Константина, отправляем  noteOn при включении
+    sendNoteOn(60, 90, 0);
+
+
     /* Основной цикл программы */
     while (1) {
 

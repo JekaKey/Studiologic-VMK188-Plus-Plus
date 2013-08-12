@@ -36,7 +36,7 @@
 *.plg
 *.lst
 *.Uxus2
-
+*.lst
 *.uvopt
 
 Fatarminator.uvopt

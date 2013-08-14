@@ -183,13 +183,15 @@ void readKeyState(void) {
 
     GPIOE->BSRRH = GPIO_Pin_15;
     Delay(KEY_SWITCH_DELAY);
-    d11 = ~GPIOA->IDR; //Read port state first contact
+	  d11 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_15;
+
 
     GPIOE->BSRRH = GPIO_Pin_14;
     Delay(KEY_SWITCH_DELAY);
     d21 = ~GPIOA->IDR; //Read port state second contact
     GPIOE->BSRRL = GPIO_Pin_14;
+
 
     /* 2 chunk */
 
@@ -198,12 +200,13 @@ void readKeyState(void) {
     d12 = ~GPIOA->IDR; //Read port state first contact
     GPIOB->BSRRL = GPIO_Pin_11;
 
+
     GPIOB->BSRRH = GPIO_Pin_10;
     Delay(KEY_SWITCH_DELAY);
     d22 = ~GPIOA->IDR; //Read port state second contact
     GPIOB->BSRRL = GPIO_Pin_10;
-
-    /* 3 chunk */
+ 
+ /* 3 chunk */
 
     GPIOB->BSRRH = GPIO_Pin_13;
     Delay(KEY_SWITCH_DELAY);
@@ -310,10 +313,10 @@ void readKeyState(void) {
     Delay(KEY_SWITCH_DELAY);
     d211 = ~GPIOA->IDR; //Read port state second contact
     GPIOE->BSRRL = GPIO_Pin_10;
-
+		
     /*************************************************************************/
 
-	/*1 key */
+		/*1 key */
 
       if (d11&0x0001) {
       duration_note1++;
@@ -2601,6 +2604,7 @@ lastState11 &=0xFF7F;
 	} else {
 		duration_note88 = 0;
  }
+
     /*************************************************************************/
 }
 

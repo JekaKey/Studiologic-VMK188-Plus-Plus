@@ -123,7 +123,7 @@ void init_GPIO(void) {
     timer.TIM_Prescaler = 1;
 
     //Тут значение, досчитав до которого таймер сгенерирует прерывание
-    timer.TIM_Period = 1343;
+    timer.TIM_Period = 4343; // Было число 1343. 
 
     //Предделитель таймера
     timer.TIM_ClockDivision = 0;

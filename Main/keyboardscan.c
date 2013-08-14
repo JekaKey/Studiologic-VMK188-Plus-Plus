@@ -181,130 +181,130 @@ void readKeyState(void) {
 
     /* 1 chunk */
 
-    GPIOE->BSRRH = GPIO_Pin_11;
+    GPIOE->BSRRH = GPIO_Pin_15;
     Delay(KEY_SWITCH_DELAY);
     d11 = ~GPIOA->IDR; //Read port state first contact
-    GPIOE->BSRRL = GPIO_Pin_11;
+    GPIOE->BSRRL = GPIO_Pin_15;
 
-    GPIOE->BSRRH = GPIO_Pin_12;
+    GPIOE->BSRRH = GPIO_Pin_14;
     Delay(KEY_SWITCH_DELAY);
     d21 = ~GPIOA->IDR; //Read port state second contact
-    GPIOE->BSRRL = GPIO_Pin_12;
+    GPIOE->BSRRL = GPIO_Pin_14;
 
     /* 2 chunk */
 
-    GPIOD->BSRRH = GPIO_Pin_9;
-    Delay(KEY_SWITCH_DELAY);
-    d12 = ~GPIOA->IDR; //Read port state first contact
-    GPIOD->BSRRL = GPIO_Pin_9;
-
-    GPIOE->BSRRH = GPIO_Pin_13;
-    Delay(KEY_SWITCH_DELAY);
-    d22 = ~GPIOA->IDR; //Read port state second contact
-    GPIOE->BSRRL = GPIO_Pin_13;
-
-    /* 3 chunk */
-
-    GPIOE->BSRRH = GPIO_Pin_15;
-    Delay(KEY_SWITCH_DELAY);
-    d13 = ~GPIOA->IDR; //Read port state first contact
-    GPIOE->BSRRL = GPIO_Pin_15;
-
-    GPIOD->BSRRH = GPIO_Pin_8;
-    Delay(KEY_SWITCH_DELAY);
-    d23 = ~GPIOA->IDR; //Read port state second contact
-    GPIOD->BSRRL = GPIO_Pin_8;
-
-    /* 4 chunk */
-
     GPIOB->BSRRH = GPIO_Pin_11;
     Delay(KEY_SWITCH_DELAY);
-    d14 = ~GPIOA->IDR; //Read port state first contact
+    d12 = ~GPIOA->IDR; //Read port state first contact
     GPIOB->BSRRL = GPIO_Pin_11;
 
     GPIOB->BSRRH = GPIO_Pin_10;
     Delay(KEY_SWITCH_DELAY);
-    d24 = ~GPIOA->IDR; //Read port state second contact
+    d22 = ~GPIOA->IDR; //Read port state second contact
     GPIOB->BSRRL = GPIO_Pin_10;
 
-    /* 5 chunk */
-
-    GPIOB->BSRRH = GPIO_Pin_15;
-    Delay(KEY_SWITCH_DELAY);
-    d15 = ~GPIOA->IDR; //Read port state first contact
-    GPIOB->BSRRL = GPIO_Pin_15;
-
-    GPIOE->BSRRH = GPIO_Pin_14;
-    Delay(KEY_SWITCH_DELAY);
-    d25 = ~GPIOA->IDR; //Read port state second contact
-    GPIOE->BSRRL = GPIO_Pin_14;
-
-    /* 6 chunk */
+    /* 3 chunk */
 
     GPIOB->BSRRH = GPIO_Pin_13;
     Delay(KEY_SWITCH_DELAY);
-    d16 = ~GPIOA->IDR; //Read port state first contact
+    d13 = ~GPIOA->IDR; //Read port state first contact
     GPIOB->BSRRL = GPIO_Pin_13;
-
-    GPIOB->BSRRH = GPIO_Pin_14;
-    Delay(KEY_SWITCH_DELAY);
-    d26 = ~GPIOA->IDR; //Read port state second contact
-    GPIOB->BSRRL = GPIO_Pin_14;
-
-    /* 7 chunk */
-
-    GPIOC->BSRRH = GPIO_Pin_4;
-    Delay(KEY_SWITCH_DELAY);
-    d17 = ~GPIOA->IDR; //Read port state first contact
-    GPIOC->BSRRL = GPIO_Pin_4;
 
     GPIOB->BSRRH = GPIO_Pin_12;
     Delay(KEY_SWITCH_DELAY);
-    d27 = ~GPIOA->IDR; //Read port state second contact
+    d23 = ~GPIOA->IDR; //Read port state second contact
     GPIOB->BSRRL = GPIO_Pin_12;
 
-    /* 8 chunk */
+    /* 4 chunk */
 
-    GPIOB->BSRRH = GPIO_Pin_0;
+    GPIOB->BSRRH = GPIO_Pin_15;
     Delay(KEY_SWITCH_DELAY);
-    d18 = ~GPIOA->IDR; //Read port state first contact
-    GPIOB->BSRRL = GPIO_Pin_0;
+    d14 = ~GPIOA->IDR; //Read port state first contact
+    GPIOB->BSRRL = GPIO_Pin_15;
+
+    GPIOB->BSRRH = GPIO_Pin_14;
+    Delay(KEY_SWITCH_DELAY);
+    d24 = ~GPIOA->IDR; //Read port state second contact
+    GPIOB->BSRRL = GPIO_Pin_14;
+
+    /* 5 chunk */
+
+    GPIOD->BSRRH = GPIO_Pin_9;
+    Delay(KEY_SWITCH_DELAY);
+    d15 = ~GPIOA->IDR; //Read port state first contact
+    GPIOD->BSRRL = GPIO_Pin_9;
+
+    GPIOD->BSRRH = GPIO_Pin_8;
+    Delay(KEY_SWITCH_DELAY);
+    d25 = ~GPIOA->IDR; //Read port state second contact
+    GPIOD->BSRRL = GPIO_Pin_8;
+
+    /* 6 chunk */
+
+    GPIOC->BSRRH = GPIO_Pin_4;
+    Delay(KEY_SWITCH_DELAY);
+    d16 = ~GPIOA->IDR; //Read port state first contact
+    GPIOC->BSRRL = GPIO_Pin_4;
 
     GPIOC->BSRRH = GPIO_Pin_5;
     Delay(KEY_SWITCH_DELAY);
-    d28 = ~GPIOA->IDR; //Read port state second contact
+    d26 = ~GPIOA->IDR; //Read port state second contact
     GPIOC->BSRRL = GPIO_Pin_5;
 
-    /* 9 chunk */
+    /* 7 chunk */
 
-    GPIOB->BSRRH = GPIO_Pin_2;
+    GPIOB->BSRRH = GPIO_Pin_0;
     Delay(KEY_SWITCH_DELAY);
-    d19 = ~GPIOA->IDR; //Read port state first contact
-    GPIOB->BSRRL = GPIO_Pin_2;
+    d17 = ~GPIOA->IDR; //Read port state first contact
+    GPIOB->BSRRL = GPIO_Pin_0;
 
     GPIOB->BSRRH = GPIO_Pin_1;
     Delay(KEY_SWITCH_DELAY);
-    d29 = ~GPIOA->IDR; //Read port state second contact
+    d27 = ~GPIOA->IDR; //Read port state second contact
     GPIOB->BSRRL = GPIO_Pin_1;
 
-    /* 10 chunk */
-
-    GPIOE->BSRRH = GPIO_Pin_8;
-    Delay(KEY_SWITCH_DELAY);
-    d110 = ~GPIOA->IDR; //Read port state first contact
-    GPIOE->BSRRL = GPIO_Pin_8;
+    /* 8 chunk */
 
     GPIOE->BSRRH = GPIO_Pin_7;
     Delay(KEY_SWITCH_DELAY);
-    d210 = ~GPIOA->IDR; //Read port state second contact
+    d18 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_7;
 
-    /* 11 chunk */
+    GPIOB->BSRRH = GPIO_Pin_2;
+    Delay(KEY_SWITCH_DELAY);
+    d28 = ~GPIOA->IDR; //Read port state second contact
+    GPIOB->BSRRL = GPIO_Pin_2;
+
+    /* 9 chunk */
 
     GPIOE->BSRRH = GPIO_Pin_9;
     Delay(KEY_SWITCH_DELAY);
-    d111 = ~GPIOA->IDR; //Read port state first contact
+    d19 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_9;
+
+    GPIOE->BSRRH = GPIO_Pin_8;
+    Delay(KEY_SWITCH_DELAY);
+    d29 = ~GPIOA->IDR; //Read port state second contact
+    GPIOE->BSRRL = GPIO_Pin_8;
+
+    /* 10 chunk */
+
+    GPIOE->BSRRH = GPIO_Pin_13;
+    Delay(KEY_SWITCH_DELAY);
+    d110 = ~GPIOA->IDR; //Read port state first contact
+    GPIOE->BSRRL = GPIO_Pin_13;
+
+    GPIOE->BSRRH = GPIO_Pin_11;
+    Delay(KEY_SWITCH_DELAY);
+    d210 = ~GPIOA->IDR; //Read port state second contact
+    GPIOE->BSRRL = GPIO_Pin_11;
+
+    /* 11 chunk */
+
+    GPIOE->BSRRH = GPIO_Pin_12;
+    Delay(KEY_SWITCH_DELAY);
+    d111 = ~GPIOA->IDR; //Read port state first contact
+    GPIOE->BSRRL = GPIO_Pin_12;
 
     GPIOE->BSRRH = GPIO_Pin_10;
     Delay(KEY_SWITCH_DELAY);
@@ -313,7 +313,7 @@ void readKeyState(void) {
 
     /*************************************************************************/
 
-    	/*1 key */
+	/*1 key */
 
       if (d11&0x0001) {
       duration_note1++;
@@ -323,18 +323,18 @@ void readKeyState(void) {
 		         if (lastState1&0x0001) {
 		          	duration_note1 = 0;
 	      	} else {
-			FIFO_PUSH(notes,1);
+			FIFO_PUSH(notes,1+20);
 			FIFO_PUSH(durations, duration_note1);
 
-			lastState1 ^= 0x1;   
+			lastState1 ^= 0x0001;   
 			duration_note1 = 0;  
 		}
 
 	}	 
 } else if (lastState1&0x0001) {	
-FIFO_PUSH(notes,1); 
+FIFO_PUSH(notes,129+20); 
 FIFO_PUSH(durations, duration_note1); 
-lastState1 &= 0xFFFE; 
+lastState1 &=0xFFFE; 
 	duration_note1 = 0;
 	} else {
 		duration_note1 = 0;
@@ -349,18 +349,18 @@ lastState1 &= 0xFFFE;
 		         if (lastState1&0x0002) {
 		          	duration_note2 = 0;
 	      	} else {
-			FIFO_PUSH(notes,2);
+			FIFO_PUSH(notes,2+20);
 			FIFO_PUSH(durations, duration_note2);
 
-			lastState1 ^= 0x1;   
+			lastState1 ^= 0x0002;   
 			duration_note2 = 0;  
 		}
 
 	}	 
 } else if (lastState1&0x0002) {	
-FIFO_PUSH(notes,2); 
+FIFO_PUSH(notes,130+20); 
 FIFO_PUSH(durations, duration_note2); 
-lastState1 &= 0xFFFE; 
+lastState1 &=0xFFFD; 
 	duration_note2 = 0;
 	} else {
 		duration_note2 = 0;
@@ -375,18 +375,18 @@ lastState1 &= 0xFFFE;
 		         if (lastState1&0x0004) {
 		          	duration_note3 = 0;
 	      	} else {
-			FIFO_PUSH(notes,3);
+			FIFO_PUSH(notes,3+20);
 			FIFO_PUSH(durations, duration_note3);
 
-			lastState1 ^= 0x1;   
+			lastState1 ^= 0x0004;   
 			duration_note3 = 0;  
 		}
 
 	}	 
 } else if (lastState1&0x0004) {	
-FIFO_PUSH(notes,3); 
+FIFO_PUSH(notes,131+20); 
 FIFO_PUSH(durations, duration_note3); 
-lastState1 &= 0xFFFE; 
+lastState1 &=0xFFFB; 
 	duration_note3 = 0;
 	} else {
 		duration_note3 = 0;
@@ -401,18 +401,18 @@ lastState1 &= 0xFFFE;
 		         if (lastState1&0x0008) {
 		          	duration_note4 = 0;
 	      	} else {
-			FIFO_PUSH(notes,4);
+			FIFO_PUSH(notes,4+20);
 			FIFO_PUSH(durations, duration_note4);
 
-			lastState1 ^= 0x1;   
+			lastState1 ^= 0x0008;   
 			duration_note4 = 0;  
 		}
 
 	}	 
 } else if (lastState1&0x0008) {	
-FIFO_PUSH(notes,4); 
+FIFO_PUSH(notes,132+20); 
 FIFO_PUSH(durations, duration_note4); 
-lastState1 &= 0xFFFE; 
+lastState1 &=0xFFF7; 
 	duration_note4 = 0;
 	} else {
 		duration_note4 = 0;
@@ -427,18 +427,18 @@ lastState1 &= 0xFFFE;
 		         if (lastState1&0x0010) {
 		          	duration_note5 = 0;
 	      	} else {
-			FIFO_PUSH(notes,5);
+			FIFO_PUSH(notes,5+20);
 			FIFO_PUSH(durations, duration_note5);
 
-			lastState1 ^= 0x1;   
+			lastState1 ^= 0x0010;   
 			duration_note5 = 0;  
 		}
 
 	}	 
 } else if (lastState1&0x0010) {	
-FIFO_PUSH(notes,5); 
+FIFO_PUSH(notes,133+20); 
 FIFO_PUSH(durations, duration_note5); 
-lastState1 &= 0xFFFE; 
+lastState1 &=0xFFEF; 
 	duration_note5 = 0;
 	} else {
 		duration_note5 = 0;
@@ -453,18 +453,18 @@ lastState1 &= 0xFFFE;
 		         if (lastState1&0x0020) {
 		          	duration_note6 = 0;
 	      	} else {
-			FIFO_PUSH(notes,6);
+			FIFO_PUSH(notes,6+20);
 			FIFO_PUSH(durations, duration_note6);
 
-			lastState1 ^= 0x1;   
+			lastState1 ^= 0x0020;   
 			duration_note6 = 0;  
 		}
 
 	}	 
 } else if (lastState1&0x0020) {	
-FIFO_PUSH(notes,6); 
+FIFO_PUSH(notes,134+20); 
 FIFO_PUSH(durations, duration_note6); 
-lastState1 &= 0xFFFE; 
+lastState1 &=0xFFDF; 
 	duration_note6 = 0;
 	} else {
 		duration_note6 = 0;
@@ -479,18 +479,18 @@ lastState1 &= 0xFFFE;
 		         if (lastState1&0x0040) {
 		          	duration_note7 = 0;
 	      	} else {
-			FIFO_PUSH(notes,7);
+			FIFO_PUSH(notes,7+20);
 			FIFO_PUSH(durations, duration_note7);
 
-			lastState1 ^= 0x1;   
+			lastState1 ^= 0x0040;   
 			duration_note7 = 0;  
 		}
 
 	}	 
 } else if (lastState1&0x0040) {	
-FIFO_PUSH(notes,7); 
+FIFO_PUSH(notes,135+20); 
 FIFO_PUSH(durations, duration_note7); 
-lastState1 &= 0xFFFE; 
+lastState1 &=0xFFBF; 
 	duration_note7 = 0;
 	} else {
 		duration_note7 = 0;
@@ -505,18 +505,18 @@ lastState1 &= 0xFFFE;
 		         if (lastState1&0x0080) {
 		          	duration_note8 = 0;
 	      	} else {
-			FIFO_PUSH(notes,8);
+			FIFO_PUSH(notes,8+20);
 			FIFO_PUSH(durations, duration_note8);
 
-			lastState1 ^= 0x1;   
+			lastState1 ^= 0x0080;   
 			duration_note8 = 0;  
 		}
 
 	}	 
 } else if (lastState1&0x0080) {	
-FIFO_PUSH(notes,8); 
+FIFO_PUSH(notes,136+20); 
 FIFO_PUSH(durations, duration_note8); 
-lastState1 &= 0xFFFE; 
+lastState1 &=0xFF7F; 
 	duration_note8 = 0;
 	} else {
 		duration_note8 = 0;
@@ -531,18 +531,18 @@ lastState1 &= 0xFFFE;
 		         if (lastState2&0x0001) {
 		          	duration_note9 = 0;
 	      	} else {
-			FIFO_PUSH(notes,9);
+			FIFO_PUSH(notes,9+20);
 			FIFO_PUSH(durations, duration_note9);
 
-			lastState2 ^= 0x1;   
+			lastState2 ^= 0x0001;   
 			duration_note9 = 0;  
 		}
 
 	}	 
 } else if (lastState2&0x0001) {	
-FIFO_PUSH(notes,9); 
+FIFO_PUSH(notes,137+20); 
 FIFO_PUSH(durations, duration_note9); 
-lastState2 &= 0xFFFE; 
+lastState2 &=0xFFFE; 
 	duration_note9 = 0;
 	} else {
 		duration_note9 = 0;
@@ -557,18 +557,18 @@ lastState2 &= 0xFFFE;
 		         if (lastState2&0x0002) {
 		          	duration_note10 = 0;
 	      	} else {
-			FIFO_PUSH(notes,10);
+			FIFO_PUSH(notes,10+20);
 			FIFO_PUSH(durations, duration_note10);
 
-			lastState2 ^= 0x1;   
+			lastState2 ^= 0x0002;   
 			duration_note10 = 0;  
 		}
 
 	}	 
 } else if (lastState2&0x0002) {	
-FIFO_PUSH(notes,10); 
+FIFO_PUSH(notes,138+20); 
 FIFO_PUSH(durations, duration_note10); 
-lastState2 &= 0xFFFE; 
+lastState2 &=0xFFFD; 
 	duration_note10 = 0;
 	} else {
 		duration_note10 = 0;
@@ -583,18 +583,18 @@ lastState2 &= 0xFFFE;
 		         if (lastState2&0x0004) {
 		          	duration_note11 = 0;
 	      	} else {
-			FIFO_PUSH(notes,11);
+			FIFO_PUSH(notes,11+20);
 			FIFO_PUSH(durations, duration_note11);
 
-			lastState2 ^= 0x1;   
+			lastState2 ^= 0x0004;   
 			duration_note11 = 0;  
 		}
 
 	}	 
 } else if (lastState2&0x0004) {	
-FIFO_PUSH(notes,11); 
+FIFO_PUSH(notes,139+20); 
 FIFO_PUSH(durations, duration_note11); 
-lastState2 &= 0xFFFE; 
+lastState2 &=0xFFFB; 
 	duration_note11 = 0;
 	} else {
 		duration_note11 = 0;
@@ -609,18 +609,18 @@ lastState2 &= 0xFFFE;
 		         if (lastState2&0x0008) {
 		          	duration_note12 = 0;
 	      	} else {
-			FIFO_PUSH(notes,12);
+			FIFO_PUSH(notes,12+20);
 			FIFO_PUSH(durations, duration_note12);
 
-			lastState2 ^= 0x1;   
+			lastState2 ^= 0x0008;   
 			duration_note12 = 0;  
 		}
 
 	}	 
 } else if (lastState2&0x0008) {	
-FIFO_PUSH(notes,12); 
+FIFO_PUSH(notes,140+20); 
 FIFO_PUSH(durations, duration_note12); 
-lastState2 &= 0xFFFE; 
+lastState2 &=0xFFF7; 
 	duration_note12 = 0;
 	} else {
 		duration_note12 = 0;
@@ -635,18 +635,18 @@ lastState2 &= 0xFFFE;
 		         if (lastState2&0x0010) {
 		          	duration_note13 = 0;
 	      	} else {
-			FIFO_PUSH(notes,13);
+			FIFO_PUSH(notes,13+20);
 			FIFO_PUSH(durations, duration_note13);
 
-			lastState2 ^= 0x1;   
+			lastState2 ^= 0x0010;   
 			duration_note13 = 0;  
 		}
 
 	}	 
 } else if (lastState2&0x0010) {	
-FIFO_PUSH(notes,13); 
+FIFO_PUSH(notes,141+20); 
 FIFO_PUSH(durations, duration_note13); 
-lastState2 &= 0xFFFE; 
+lastState2 &=0xFFEF; 
 	duration_note13 = 0;
 	} else {
 		duration_note13 = 0;
@@ -661,18 +661,18 @@ lastState2 &= 0xFFFE;
 		         if (lastState2&0x0020) {
 		          	duration_note14 = 0;
 	      	} else {
-			FIFO_PUSH(notes,14);
+			FIFO_PUSH(notes,14+20);
 			FIFO_PUSH(durations, duration_note14);
 
-			lastState2 ^= 0x1;   
+			lastState2 ^= 0x0020;   
 			duration_note14 = 0;  
 		}
 
 	}	 
 } else if (lastState2&0x0020) {	
-FIFO_PUSH(notes,14); 
+FIFO_PUSH(notes,142+20); 
 FIFO_PUSH(durations, duration_note14); 
-lastState2 &= 0xFFFE; 
+lastState2 &=0xFFDF; 
 	duration_note14 = 0;
 	} else {
 		duration_note14 = 0;
@@ -687,18 +687,18 @@ lastState2 &= 0xFFFE;
 		         if (lastState2&0x0040) {
 		          	duration_note15 = 0;
 	      	} else {
-			FIFO_PUSH(notes,15);
+			FIFO_PUSH(notes,15+20);
 			FIFO_PUSH(durations, duration_note15);
 
-			lastState2 ^= 0x1;   
+			lastState2 ^= 0x0040;   
 			duration_note15 = 0;  
 		}
 
 	}	 
 } else if (lastState2&0x0040) {	
-FIFO_PUSH(notes,15); 
+FIFO_PUSH(notes,143+20); 
 FIFO_PUSH(durations, duration_note15); 
-lastState2 &= 0xFFFE; 
+lastState2 &=0xFFBF; 
 	duration_note15 = 0;
 	} else {
 		duration_note15 = 0;
@@ -713,18 +713,18 @@ lastState2 &= 0xFFFE;
 		         if (lastState2&0x0080) {
 		          	duration_note16 = 0;
 	      	} else {
-			FIFO_PUSH(notes,16);
+			FIFO_PUSH(notes,16+20);
 			FIFO_PUSH(durations, duration_note16);
 
-			lastState2 ^= 0x1;   
+			lastState2 ^= 0x0080;   
 			duration_note16 = 0;  
 		}
 
 	}	 
 } else if (lastState2&0x0080) {	
-FIFO_PUSH(notes,16); 
+FIFO_PUSH(notes,144+20); 
 FIFO_PUSH(durations, duration_note16); 
-lastState2 &= 0xFFFE; 
+lastState2 &=0xFF7F; 
 	duration_note16 = 0;
 	} else {
 		duration_note16 = 0;
@@ -739,18 +739,18 @@ lastState2 &= 0xFFFE;
 		         if (lastState3&0x0001) {
 		          	duration_note17 = 0;
 	      	} else {
-			FIFO_PUSH(notes,17);
+			FIFO_PUSH(notes,17+20);
 			FIFO_PUSH(durations, duration_note17);
 
-			lastState3 ^= 0x1;   
+			lastState3 ^= 0x0001;   
 			duration_note17 = 0;  
 		}
 
 	}	 
 } else if (lastState3&0x0001) {	
-FIFO_PUSH(notes,17); 
+FIFO_PUSH(notes,145+20); 
 FIFO_PUSH(durations, duration_note17); 
-lastState3 &= 0xFFFE; 
+lastState3 &=0xFFFE; 
 	duration_note17 = 0;
 	} else {
 		duration_note17 = 0;
@@ -765,18 +765,18 @@ lastState3 &= 0xFFFE;
 		         if (lastState3&0x0002) {
 		          	duration_note18 = 0;
 	      	} else {
-			FIFO_PUSH(notes,18);
+			FIFO_PUSH(notes,18+20);
 			FIFO_PUSH(durations, duration_note18);
 
-			lastState3 ^= 0x1;   
+			lastState3 ^= 0x0002;   
 			duration_note18 = 0;  
 		}
 
 	}	 
 } else if (lastState3&0x0002) {	
-FIFO_PUSH(notes,18); 
+FIFO_PUSH(notes,146+20); 
 FIFO_PUSH(durations, duration_note18); 
-lastState3 &= 0xFFFE; 
+lastState3 &=0xFFFD; 
 	duration_note18 = 0;
 	} else {
 		duration_note18 = 0;
@@ -791,18 +791,18 @@ lastState3 &= 0xFFFE;
 		         if (lastState3&0x0004) {
 		          	duration_note19 = 0;
 	      	} else {
-			FIFO_PUSH(notes,19);
+			FIFO_PUSH(notes,19+20);
 			FIFO_PUSH(durations, duration_note19);
 
-			lastState3 ^= 0x1;   
+			lastState3 ^= 0x0004;   
 			duration_note19 = 0;  
 		}
 
 	}	 
 } else if (lastState3&0x0004) {	
-FIFO_PUSH(notes,19); 
+FIFO_PUSH(notes,147+20); 
 FIFO_PUSH(durations, duration_note19); 
-lastState3 &= 0xFFFE; 
+lastState3 &=0xFFFB; 
 	duration_note19 = 0;
 	} else {
 		duration_note19 = 0;
@@ -817,18 +817,18 @@ lastState3 &= 0xFFFE;
 		         if (lastState3&0x0008) {
 		          	duration_note20 = 0;
 	      	} else {
-			FIFO_PUSH(notes,20);
+			FIFO_PUSH(notes,20+20);
 			FIFO_PUSH(durations, duration_note20);
 
-			lastState3 ^= 0x1;   
+			lastState3 ^= 0x0008;   
 			duration_note20 = 0;  
 		}
 
 	}	 
 } else if (lastState3&0x0008) {	
-FIFO_PUSH(notes,20); 
+FIFO_PUSH(notes,148+20); 
 FIFO_PUSH(durations, duration_note20); 
-lastState3 &= 0xFFFE; 
+lastState3 &=0xFFF7; 
 	duration_note20 = 0;
 	} else {
 		duration_note20 = 0;
@@ -843,18 +843,18 @@ lastState3 &= 0xFFFE;
 		         if (lastState3&0x0010) {
 		          	duration_note21 = 0;
 	      	} else {
-			FIFO_PUSH(notes,21);
+			FIFO_PUSH(notes,21+20);
 			FIFO_PUSH(durations, duration_note21);
 
-			lastState3 ^= 0x1;   
+			lastState3 ^= 0x0010;   
 			duration_note21 = 0;  
 		}
 
 	}	 
 } else if (lastState3&0x0010) {	
-FIFO_PUSH(notes,21); 
+FIFO_PUSH(notes,149+20); 
 FIFO_PUSH(durations, duration_note21); 
-lastState3 &= 0xFFFE; 
+lastState3 &=0xFFEF; 
 	duration_note21 = 0;
 	} else {
 		duration_note21 = 0;
@@ -869,18 +869,18 @@ lastState3 &= 0xFFFE;
 		         if (lastState3&0x0020) {
 		          	duration_note22 = 0;
 	      	} else {
-			FIFO_PUSH(notes,22);
+			FIFO_PUSH(notes,22+20);
 			FIFO_PUSH(durations, duration_note22);
 
-			lastState3 ^= 0x1;   
+			lastState3 ^= 0x0020;   
 			duration_note22 = 0;  
 		}
 
 	}	 
 } else if (lastState3&0x0020) {	
-FIFO_PUSH(notes,22); 
+FIFO_PUSH(notes,150+20); 
 FIFO_PUSH(durations, duration_note22); 
-lastState3 &= 0xFFFE; 
+lastState3 &=0xFFDF; 
 	duration_note22 = 0;
 	} else {
 		duration_note22 = 0;
@@ -895,18 +895,18 @@ lastState3 &= 0xFFFE;
 		         if (lastState3&0x0040) {
 		          	duration_note23 = 0;
 	      	} else {
-			FIFO_PUSH(notes,23);
+			FIFO_PUSH(notes,23+20);
 			FIFO_PUSH(durations, duration_note23);
 
-			lastState3 ^= 0x1;   
+			lastState3 ^= 0x0040;   
 			duration_note23 = 0;  
 		}
 
 	}	 
 } else if (lastState3&0x0040) {	
-FIFO_PUSH(notes,23); 
+FIFO_PUSH(notes,151+20); 
 FIFO_PUSH(durations, duration_note23); 
-lastState3 &= 0xFFFE; 
+lastState3 &=0xFFBF; 
 	duration_note23 = 0;
 	} else {
 		duration_note23 = 0;
@@ -921,18 +921,18 @@ lastState3 &= 0xFFFE;
 		         if (lastState3&0x0080) {
 		          	duration_note24 = 0;
 	      	} else {
-			FIFO_PUSH(notes,24);
+			FIFO_PUSH(notes,24+20);
 			FIFO_PUSH(durations, duration_note24);
 
-			lastState3 ^= 0x1;   
+			lastState3 ^= 0x0080;   
 			duration_note24 = 0;  
 		}
 
 	}	 
 } else if (lastState3&0x0080) {	
-FIFO_PUSH(notes,24); 
+FIFO_PUSH(notes,152+20); 
 FIFO_PUSH(durations, duration_note24); 
-lastState3 &= 0xFFFE; 
+lastState3 &=0xFF7F; 
 	duration_note24 = 0;
 	} else {
 		duration_note24 = 0;
@@ -947,18 +947,18 @@ lastState3 &= 0xFFFE;
 		         if (lastState4&0x0001) {
 		          	duration_note25 = 0;
 	      	} else {
-			FIFO_PUSH(notes,25);
+			FIFO_PUSH(notes,25+20);
 			FIFO_PUSH(durations, duration_note25);
 
-			lastState4 ^= 0x1;   
+			lastState4 ^= 0x0001;   
 			duration_note25 = 0;  
 		}
 
 	}	 
 } else if (lastState4&0x0001) {	
-FIFO_PUSH(notes,25); 
+FIFO_PUSH(notes,153+20); 
 FIFO_PUSH(durations, duration_note25); 
-lastState4 &= 0xFFFE; 
+lastState4 &=0xFFFE; 
 	duration_note25 = 0;
 	} else {
 		duration_note25 = 0;
@@ -973,18 +973,18 @@ lastState4 &= 0xFFFE;
 		         if (lastState4&0x0002) {
 		          	duration_note26 = 0;
 	      	} else {
-			FIFO_PUSH(notes,26);
+			FIFO_PUSH(notes,26+20);
 			FIFO_PUSH(durations, duration_note26);
 
-			lastState4 ^= 0x1;   
+			lastState4 ^= 0x0002;   
 			duration_note26 = 0;  
 		}
 
 	}	 
 } else if (lastState4&0x0002) {	
-FIFO_PUSH(notes,26); 
+FIFO_PUSH(notes,154+20); 
 FIFO_PUSH(durations, duration_note26); 
-lastState4 &= 0xFFFE; 
+lastState4 &=0xFFFD; 
 	duration_note26 = 0;
 	} else {
 		duration_note26 = 0;
@@ -999,18 +999,18 @@ lastState4 &= 0xFFFE;
 		         if (lastState4&0x0004) {
 		          	duration_note27 = 0;
 	      	} else {
-			FIFO_PUSH(notes,27);
+			FIFO_PUSH(notes,27+20);
 			FIFO_PUSH(durations, duration_note27);
 
-			lastState4 ^= 0x1;   
+			lastState4 ^= 0x0004;   
 			duration_note27 = 0;  
 		}
 
 	}	 
 } else if (lastState4&0x0004) {	
-FIFO_PUSH(notes,27); 
+FIFO_PUSH(notes,155+20); 
 FIFO_PUSH(durations, duration_note27); 
-lastState4 &= 0xFFFE; 
+lastState4 &=0xFFFB; 
 	duration_note27 = 0;
 	} else {
 		duration_note27 = 0;
@@ -1025,18 +1025,18 @@ lastState4 &= 0xFFFE;
 		         if (lastState4&0x0008) {
 		          	duration_note28 = 0;
 	      	} else {
-			FIFO_PUSH(notes,28);
+			FIFO_PUSH(notes,28+20);
 			FIFO_PUSH(durations, duration_note28);
 
-			lastState4 ^= 0x1;   
+			lastState4 ^= 0x0008;   
 			duration_note28 = 0;  
 		}
 
 	}	 
 } else if (lastState4&0x0008) {	
-FIFO_PUSH(notes,28); 
+FIFO_PUSH(notes,156+20); 
 FIFO_PUSH(durations, duration_note28); 
-lastState4 &= 0xFFFE; 
+lastState4 &=0xFFF7; 
 	duration_note28 = 0;
 	} else {
 		duration_note28 = 0;
@@ -1051,18 +1051,18 @@ lastState4 &= 0xFFFE;
 		         if (lastState4&0x0010) {
 		          	duration_note29 = 0;
 	      	} else {
-			FIFO_PUSH(notes,29);
+			FIFO_PUSH(notes,29+20);
 			FIFO_PUSH(durations, duration_note29);
 
-			lastState4 ^= 0x1;   
+			lastState4 ^= 0x0010;   
 			duration_note29 = 0;  
 		}
 
 	}	 
 } else if (lastState4&0x0010) {	
-FIFO_PUSH(notes,29); 
+FIFO_PUSH(notes,157+20); 
 FIFO_PUSH(durations, duration_note29); 
-lastState4 &= 0xFFFE; 
+lastState4 &=0xFFEF; 
 	duration_note29 = 0;
 	} else {
 		duration_note29 = 0;
@@ -1077,18 +1077,18 @@ lastState4 &= 0xFFFE;
 		         if (lastState4&0x0020) {
 		          	duration_note30 = 0;
 	      	} else {
-			FIFO_PUSH(notes,30);
+			FIFO_PUSH(notes,30+20);
 			FIFO_PUSH(durations, duration_note30);
 
-			lastState4 ^= 0x1;   
+			lastState4 ^= 0x0020;   
 			duration_note30 = 0;  
 		}
 
 	}	 
 } else if (lastState4&0x0020) {	
-FIFO_PUSH(notes,30); 
+FIFO_PUSH(notes,158+20); 
 FIFO_PUSH(durations, duration_note30); 
-lastState4 &= 0xFFFE; 
+lastState4 &=0xFFDF; 
 	duration_note30 = 0;
 	} else {
 		duration_note30 = 0;
@@ -1103,18 +1103,18 @@ lastState4 &= 0xFFFE;
 		         if (lastState4&0x0040) {
 		          	duration_note31 = 0;
 	      	} else {
-			FIFO_PUSH(notes,31);
+			FIFO_PUSH(notes,31+20);
 			FIFO_PUSH(durations, duration_note31);
 
-			lastState4 ^= 0x1;   
+			lastState4 ^= 0x0040;   
 			duration_note31 = 0;  
 		}
 
 	}	 
 } else if (lastState4&0x0040) {	
-FIFO_PUSH(notes,31); 
+FIFO_PUSH(notes,159+20); 
 FIFO_PUSH(durations, duration_note31); 
-lastState4 &= 0xFFFE; 
+lastState4 &=0xFFBF; 
 	duration_note31 = 0;
 	} else {
 		duration_note31 = 0;
@@ -1129,18 +1129,18 @@ lastState4 &= 0xFFFE;
 		         if (lastState4&0x0080) {
 		          	duration_note32 = 0;
 	      	} else {
-			FIFO_PUSH(notes,32);
+			FIFO_PUSH(notes,32+20);
 			FIFO_PUSH(durations, duration_note32);
 
-			lastState4 ^= 0x1;   
+			lastState4 ^= 0x0080;   
 			duration_note32 = 0;  
 		}
 
 	}	 
 } else if (lastState4&0x0080) {	
-FIFO_PUSH(notes,32); 
+FIFO_PUSH(notes,160+20); 
 FIFO_PUSH(durations, duration_note32); 
-lastState4 &= 0xFFFE; 
+lastState4 &=0xFF7F; 
 	duration_note32 = 0;
 	} else {
 		duration_note32 = 0;
@@ -1155,18 +1155,18 @@ lastState4 &= 0xFFFE;
 		         if (lastState5&0x0001) {
 		          	duration_note33 = 0;
 	      	} else {
-			FIFO_PUSH(notes,33);
+			FIFO_PUSH(notes,33+20);
 			FIFO_PUSH(durations, duration_note33);
 
-			lastState5 ^= 0x1;   
+			lastState5 ^= 0x0001;   
 			duration_note33 = 0;  
 		}
 
 	}	 
 } else if (lastState5&0x0001) {	
-FIFO_PUSH(notes,33); 
+FIFO_PUSH(notes,161+20); 
 FIFO_PUSH(durations, duration_note33); 
-lastState5 &= 0xFFFE; 
+lastState5 &=0xFFFE; 
 	duration_note33 = 0;
 	} else {
 		duration_note33 = 0;
@@ -1181,18 +1181,18 @@ lastState5 &= 0xFFFE;
 		         if (lastState5&0x0002) {
 		          	duration_note34 = 0;
 	      	} else {
-			FIFO_PUSH(notes,34);
+			FIFO_PUSH(notes,34+20);
 			FIFO_PUSH(durations, duration_note34);
 
-			lastState5 ^= 0x1;   
+			lastState5 ^= 0x0002;   
 			duration_note34 = 0;  
 		}
 
 	}	 
 } else if (lastState5&0x0002) {	
-FIFO_PUSH(notes,34); 
+FIFO_PUSH(notes,162+20); 
 FIFO_PUSH(durations, duration_note34); 
-lastState5 &= 0xFFFE; 
+lastState5 &=0xFFFD; 
 	duration_note34 = 0;
 	} else {
 		duration_note34 = 0;
@@ -1207,18 +1207,18 @@ lastState5 &= 0xFFFE;
 		         if (lastState5&0x0004) {
 		          	duration_note35 = 0;
 	      	} else {
-			FIFO_PUSH(notes,35);
+			FIFO_PUSH(notes,35+20);
 			FIFO_PUSH(durations, duration_note35);
 
-			lastState5 ^= 0x1;   
+			lastState5 ^= 0x0004;   
 			duration_note35 = 0;  
 		}
 
 	}	 
 } else if (lastState5&0x0004) {	
-FIFO_PUSH(notes,35); 
+FIFO_PUSH(notes,163+20); 
 FIFO_PUSH(durations, duration_note35); 
-lastState5 &= 0xFFFE; 
+lastState5 &=0xFFFB; 
 	duration_note35 = 0;
 	} else {
 		duration_note35 = 0;
@@ -1233,18 +1233,18 @@ lastState5 &= 0xFFFE;
 		         if (lastState5&0x0008) {
 		          	duration_note36 = 0;
 	      	} else {
-			FIFO_PUSH(notes,36);
+			FIFO_PUSH(notes,36+20);
 			FIFO_PUSH(durations, duration_note36);
 
-			lastState5 ^= 0x1;   
+			lastState5 ^= 0x0008;   
 			duration_note36 = 0;  
 		}
 
 	}	 
 } else if (lastState5&0x0008) {	
-FIFO_PUSH(notes,36); 
+FIFO_PUSH(notes,164+20); 
 FIFO_PUSH(durations, duration_note36); 
-lastState5 &= 0xFFFE; 
+lastState5 &=0xFFF7; 
 	duration_note36 = 0;
 	} else {
 		duration_note36 = 0;
@@ -1259,18 +1259,18 @@ lastState5 &= 0xFFFE;
 		         if (lastState5&0x0010) {
 		          	duration_note37 = 0;
 	      	} else {
-			FIFO_PUSH(notes,37);
+			FIFO_PUSH(notes,37+20);
 			FIFO_PUSH(durations, duration_note37);
 
-			lastState5 ^= 0x1;   
+			lastState5 ^= 0x0010;   
 			duration_note37 = 0;  
 		}
 
 	}	 
 } else if (lastState5&0x0010) {	
-FIFO_PUSH(notes,37); 
+FIFO_PUSH(notes,165+20); 
 FIFO_PUSH(durations, duration_note37); 
-lastState5 &= 0xFFFE; 
+lastState5 &=0xFFEF; 
 	duration_note37 = 0;
 	} else {
 		duration_note37 = 0;
@@ -1285,18 +1285,18 @@ lastState5 &= 0xFFFE;
 		         if (lastState5&0x0020) {
 		          	duration_note38 = 0;
 	      	} else {
-			FIFO_PUSH(notes,38);
+			FIFO_PUSH(notes,38+20);
 			FIFO_PUSH(durations, duration_note38);
 
-			lastState5 ^= 0x1;   
+			lastState5 ^= 0x0020;   
 			duration_note38 = 0;  
 		}
 
 	}	 
 } else if (lastState5&0x0020) {	
-FIFO_PUSH(notes,38); 
+FIFO_PUSH(notes,166+20); 
 FIFO_PUSH(durations, duration_note38); 
-lastState5 &= 0xFFFE; 
+lastState5 &=0xFFDF; 
 	duration_note38 = 0;
 	} else {
 		duration_note38 = 0;
@@ -1311,18 +1311,18 @@ lastState5 &= 0xFFFE;
 		         if (lastState5&0x0040) {
 		          	duration_note39 = 0;
 	      	} else {
-			FIFO_PUSH(notes,39);
+			FIFO_PUSH(notes,39+20);
 			FIFO_PUSH(durations, duration_note39);
 
-			lastState5 ^= 0x1;   
+			lastState5 ^= 0x0040;   
 			duration_note39 = 0;  
 		}
 
 	}	 
 } else if (lastState5&0x0040) {	
-FIFO_PUSH(notes,39); 
+FIFO_PUSH(notes,167+20); 
 FIFO_PUSH(durations, duration_note39); 
-lastState5 &= 0xFFFE; 
+lastState5 &=0xFFBF; 
 	duration_note39 = 0;
 	} else {
 		duration_note39 = 0;
@@ -1337,18 +1337,18 @@ lastState5 &= 0xFFFE;
 		         if (lastState5&0x0080) {
 		          	duration_note40 = 0;
 	      	} else {
-			FIFO_PUSH(notes,40);
+			FIFO_PUSH(notes,40+20);
 			FIFO_PUSH(durations, duration_note40);
 
-			lastState5 ^= 0x1;   
+			lastState5 ^= 0x0080;   
 			duration_note40 = 0;  
 		}
 
 	}	 
 } else if (lastState5&0x0080) {	
-FIFO_PUSH(notes,40); 
+FIFO_PUSH(notes,168+20); 
 FIFO_PUSH(durations, duration_note40); 
-lastState5 &= 0xFFFE; 
+lastState5 &=0xFF7F; 
 	duration_note40 = 0;
 	} else {
 		duration_note40 = 0;
@@ -1363,18 +1363,18 @@ lastState5 &= 0xFFFE;
 		         if (lastState6&0x0001) {
 		          	duration_note41 = 0;
 	      	} else {
-			FIFO_PUSH(notes,41);
+			FIFO_PUSH(notes,41+20);
 			FIFO_PUSH(durations, duration_note41);
 
-			lastState6 ^= 0x1;   
+			lastState6 ^= 0x0001;   
 			duration_note41 = 0;  
 		}
 
 	}	 
 } else if (lastState6&0x0001) {	
-FIFO_PUSH(notes,41); 
+FIFO_PUSH(notes,169+20); 
 FIFO_PUSH(durations, duration_note41); 
-lastState6 &= 0xFFFE; 
+lastState6 &=0xFFFE; 
 	duration_note41 = 0;
 	} else {
 		duration_note41 = 0;
@@ -1389,18 +1389,18 @@ lastState6 &= 0xFFFE;
 		         if (lastState6&0x0002) {
 		          	duration_note42 = 0;
 	      	} else {
-			FIFO_PUSH(notes,42);
+			FIFO_PUSH(notes,42+20);
 			FIFO_PUSH(durations, duration_note42);
 
-			lastState6 ^= 0x1;   
+			lastState6 ^= 0x0002;   
 			duration_note42 = 0;  
 		}
 
 	}	 
 } else if (lastState6&0x0002) {	
-FIFO_PUSH(notes,42); 
+FIFO_PUSH(notes,170+20); 
 FIFO_PUSH(durations, duration_note42); 
-lastState6 &= 0xFFFE; 
+lastState6 &=0xFFFD; 
 	duration_note42 = 0;
 	} else {
 		duration_note42 = 0;
@@ -1415,18 +1415,18 @@ lastState6 &= 0xFFFE;
 		         if (lastState6&0x0004) {
 		          	duration_note43 = 0;
 	      	} else {
-			FIFO_PUSH(notes,43);
+			FIFO_PUSH(notes,43+20);
 			FIFO_PUSH(durations, duration_note43);
 
-			lastState6 ^= 0x1;   
+			lastState6 ^= 0x0004;   
 			duration_note43 = 0;  
 		}
 
 	}	 
 } else if (lastState6&0x0004) {	
-FIFO_PUSH(notes,43); 
+FIFO_PUSH(notes,171+20); 
 FIFO_PUSH(durations, duration_note43); 
-lastState6 &= 0xFFFE; 
+lastState6 &=0xFFFB; 
 	duration_note43 = 0;
 	} else {
 		duration_note43 = 0;
@@ -1441,18 +1441,18 @@ lastState6 &= 0xFFFE;
 		         if (lastState6&0x0008) {
 		          	duration_note44 = 0;
 	      	} else {
-			FIFO_PUSH(notes,44);
+			FIFO_PUSH(notes,44+20);
 			FIFO_PUSH(durations, duration_note44);
 
-			lastState6 ^= 0x1;   
+			lastState6 ^= 0x0008;   
 			duration_note44 = 0;  
 		}
 
 	}	 
 } else if (lastState6&0x0008) {	
-FIFO_PUSH(notes,44); 
+FIFO_PUSH(notes,172+20); 
 FIFO_PUSH(durations, duration_note44); 
-lastState6 &= 0xFFFE; 
+lastState6 &=0xFFF7; 
 	duration_note44 = 0;
 	} else {
 		duration_note44 = 0;
@@ -1467,18 +1467,18 @@ lastState6 &= 0xFFFE;
 		         if (lastState6&0x0010) {
 		          	duration_note45 = 0;
 	      	} else {
-			FIFO_PUSH(notes,45);
+			FIFO_PUSH(notes,45+20);
 			FIFO_PUSH(durations, duration_note45);
 
-			lastState6 ^= 0x1;   
+			lastState6 ^= 0x0010;   
 			duration_note45 = 0;  
 		}
 
 	}	 
 } else if (lastState6&0x0010) {	
-FIFO_PUSH(notes,45); 
+FIFO_PUSH(notes,173+20); 
 FIFO_PUSH(durations, duration_note45); 
-lastState6 &= 0xFFFE; 
+lastState6 &=0xFFEF; 
 	duration_note45 = 0;
 	} else {
 		duration_note45 = 0;
@@ -1493,18 +1493,18 @@ lastState6 &= 0xFFFE;
 		         if (lastState6&0x0020) {
 		          	duration_note46 = 0;
 	      	} else {
-			FIFO_PUSH(notes,46);
+			FIFO_PUSH(notes,46+20);
 			FIFO_PUSH(durations, duration_note46);
 
-			lastState6 ^= 0x1;   
+			lastState6 ^= 0x0020;   
 			duration_note46 = 0;  
 		}
 
 	}	 
 } else if (lastState6&0x0020) {	
-FIFO_PUSH(notes,46); 
+FIFO_PUSH(notes,174+20); 
 FIFO_PUSH(durations, duration_note46); 
-lastState6 &= 0xFFFE; 
+lastState6 &=0xFFDF; 
 	duration_note46 = 0;
 	} else {
 		duration_note46 = 0;
@@ -1519,18 +1519,18 @@ lastState6 &= 0xFFFE;
 		         if (lastState6&0x0040) {
 		          	duration_note47 = 0;
 	      	} else {
-			FIFO_PUSH(notes,47);
+			FIFO_PUSH(notes,47+20);
 			FIFO_PUSH(durations, duration_note47);
 
-			lastState6 ^= 0x1;   
+			lastState6 ^= 0x0040;   
 			duration_note47 = 0;  
 		}
 
 	}	 
 } else if (lastState6&0x0040) {	
-FIFO_PUSH(notes,47); 
+FIFO_PUSH(notes,175+20); 
 FIFO_PUSH(durations, duration_note47); 
-lastState6 &= 0xFFFE; 
+lastState6 &=0xFFBF; 
 	duration_note47 = 0;
 	} else {
 		duration_note47 = 0;
@@ -1545,18 +1545,18 @@ lastState6 &= 0xFFFE;
 		         if (lastState6&0x0080) {
 		          	duration_note48 = 0;
 	      	} else {
-			FIFO_PUSH(notes,48);
+			FIFO_PUSH(notes,48+20);
 			FIFO_PUSH(durations, duration_note48);
 
-			lastState6 ^= 0x1;   
+			lastState6 ^= 0x0080;   
 			duration_note48 = 0;  
 		}
 
 	}	 
 } else if (lastState6&0x0080) {	
-FIFO_PUSH(notes,48); 
+FIFO_PUSH(notes,176+20); 
 FIFO_PUSH(durations, duration_note48); 
-lastState6 &= 0xFFFE; 
+lastState6 &=0xFF7F; 
 	duration_note48 = 0;
 	} else {
 		duration_note48 = 0;
@@ -1571,18 +1571,18 @@ lastState6 &= 0xFFFE;
 		         if (lastState7&0x0001) {
 		          	duration_note49 = 0;
 	      	} else {
-			FIFO_PUSH(notes,49);
+			FIFO_PUSH(notes,49+20);
 			FIFO_PUSH(durations, duration_note49);
 
-			lastState7 ^= 0x1;   
+			lastState7 ^= 0x0001;   
 			duration_note49 = 0;  
 		}
 
 	}	 
 } else if (lastState7&0x0001) {	
-FIFO_PUSH(notes,49); 
+FIFO_PUSH(notes,177+20); 
 FIFO_PUSH(durations, duration_note49); 
-lastState7 &= 0xFFFE; 
+lastState7 &=0xFFFE; 
 	duration_note49 = 0;
 	} else {
 		duration_note49 = 0;
@@ -1597,18 +1597,18 @@ lastState7 &= 0xFFFE;
 		         if (lastState7&0x0002) {
 		          	duration_note50 = 0;
 	      	} else {
-			FIFO_PUSH(notes,50);
+			FIFO_PUSH(notes,50+20);
 			FIFO_PUSH(durations, duration_note50);
 
-			lastState7 ^= 0x1;   
+			lastState7 ^= 0x0002;   
 			duration_note50 = 0;  
 		}
 
 	}	 
 } else if (lastState7&0x0002) {	
-FIFO_PUSH(notes,50); 
+FIFO_PUSH(notes,178+20); 
 FIFO_PUSH(durations, duration_note50); 
-lastState7 &= 0xFFFE; 
+lastState7 &=0xFFFD; 
 	duration_note50 = 0;
 	} else {
 		duration_note50 = 0;
@@ -1623,18 +1623,18 @@ lastState7 &= 0xFFFE;
 		         if (lastState7&0x0004) {
 		          	duration_note51 = 0;
 	      	} else {
-			FIFO_PUSH(notes,51);
+			FIFO_PUSH(notes,51+20);
 			FIFO_PUSH(durations, duration_note51);
 
-			lastState7 ^= 0x1;   
+			lastState7 ^= 0x0004;   
 			duration_note51 = 0;  
 		}
 
 	}	 
 } else if (lastState7&0x0004) {	
-FIFO_PUSH(notes,51); 
+FIFO_PUSH(notes,179+20); 
 FIFO_PUSH(durations, duration_note51); 
-lastState7 &= 0xFFFE; 
+lastState7 &=0xFFFB; 
 	duration_note51 = 0;
 	} else {
 		duration_note51 = 0;
@@ -1649,18 +1649,18 @@ lastState7 &= 0xFFFE;
 		         if (lastState7&0x0008) {
 		          	duration_note52 = 0;
 	      	} else {
-			FIFO_PUSH(notes,52);
+			FIFO_PUSH(notes,52+20);
 			FIFO_PUSH(durations, duration_note52);
 
-			lastState7 ^= 0x1;   
+			lastState7 ^= 0x0008;   
 			duration_note52 = 0;  
 		}
 
 	}	 
 } else if (lastState7&0x0008) {	
-FIFO_PUSH(notes,52); 
+FIFO_PUSH(notes,180+20); 
 FIFO_PUSH(durations, duration_note52); 
-lastState7 &= 0xFFFE; 
+lastState7 &=0xFFF7; 
 	duration_note52 = 0;
 	} else {
 		duration_note52 = 0;
@@ -1675,18 +1675,18 @@ lastState7 &= 0xFFFE;
 		         if (lastState7&0x0010) {
 		          	duration_note53 = 0;
 	      	} else {
-			FIFO_PUSH(notes,53);
+			FIFO_PUSH(notes,53+20);
 			FIFO_PUSH(durations, duration_note53);
 
-			lastState7 ^= 0x1;   
+			lastState7 ^= 0x0010;   
 			duration_note53 = 0;  
 		}
 
 	}	 
 } else if (lastState7&0x0010) {	
-FIFO_PUSH(notes,53); 
+FIFO_PUSH(notes,181+20); 
 FIFO_PUSH(durations, duration_note53); 
-lastState7 &= 0xFFFE; 
+lastState7 &=0xFFEF; 
 	duration_note53 = 0;
 	} else {
 		duration_note53 = 0;
@@ -1701,18 +1701,18 @@ lastState7 &= 0xFFFE;
 		         if (lastState7&0x0020) {
 		          	duration_note54 = 0;
 	      	} else {
-			FIFO_PUSH(notes,54);
+			FIFO_PUSH(notes,54+20);
 			FIFO_PUSH(durations, duration_note54);
 
-			lastState7 ^= 0x1;   
+			lastState7 ^= 0x0020;   
 			duration_note54 = 0;  
 		}
 
 	}	 
 } else if (lastState7&0x0020) {	
-FIFO_PUSH(notes,54); 
+FIFO_PUSH(notes,182+20); 
 FIFO_PUSH(durations, duration_note54); 
-lastState7 &= 0xFFFE; 
+lastState7 &=0xFFDF; 
 	duration_note54 = 0;
 	} else {
 		duration_note54 = 0;
@@ -1727,18 +1727,18 @@ lastState7 &= 0xFFFE;
 		         if (lastState7&0x0040) {
 		          	duration_note55 = 0;
 	      	} else {
-			FIFO_PUSH(notes,55);
+			FIFO_PUSH(notes,55+20);
 			FIFO_PUSH(durations, duration_note55);
 
-			lastState7 ^= 0x1;   
+			lastState7 ^= 0x0040;   
 			duration_note55 = 0;  
 		}
 
 	}	 
 } else if (lastState7&0x0040) {	
-FIFO_PUSH(notes,55); 
+FIFO_PUSH(notes,183+20); 
 FIFO_PUSH(durations, duration_note55); 
-lastState7 &= 0xFFFE; 
+lastState7 &=0xFFBF; 
 	duration_note55 = 0;
 	} else {
 		duration_note55 = 0;
@@ -1753,18 +1753,18 @@ lastState7 &= 0xFFFE;
 		         if (lastState7&0x0080) {
 		          	duration_note56 = 0;
 	      	} else {
-			FIFO_PUSH(notes,56);
+			FIFO_PUSH(notes,56+20);
 			FIFO_PUSH(durations, duration_note56);
 
-			lastState7 ^= 0x1;   
+			lastState7 ^= 0x0080;   
 			duration_note56 = 0;  
 		}
 
 	}	 
 } else if (lastState7&0x0080) {	
-FIFO_PUSH(notes,56); 
+FIFO_PUSH(notes,184+20); 
 FIFO_PUSH(durations, duration_note56); 
-lastState7 &= 0xFFFE; 
+lastState7 &=0xFF7F; 
 	duration_note56 = 0;
 	} else {
 		duration_note56 = 0;
@@ -1779,18 +1779,18 @@ lastState7 &= 0xFFFE;
 		         if (lastState8&0x0001) {
 		          	duration_note57 = 0;
 	      	} else {
-			FIFO_PUSH(notes,57);
+			FIFO_PUSH(notes,57+20);
 			FIFO_PUSH(durations, duration_note57);
 
-			lastState8 ^= 0x1;   
+			lastState8 ^= 0x0001;   
 			duration_note57 = 0;  
 		}
 
 	}	 
 } else if (lastState8&0x0001) {	
-FIFO_PUSH(notes,57); 
+FIFO_PUSH(notes,185+20); 
 FIFO_PUSH(durations, duration_note57); 
-lastState8 &= 0xFFFE; 
+lastState8 &=0xFFFE; 
 	duration_note57 = 0;
 	} else {
 		duration_note57 = 0;
@@ -1805,18 +1805,18 @@ lastState8 &= 0xFFFE;
 		         if (lastState8&0x0002) {
 		          	duration_note58 = 0;
 	      	} else {
-			FIFO_PUSH(notes,58);
+			FIFO_PUSH(notes,58+20);
 			FIFO_PUSH(durations, duration_note58);
 
-			lastState8 ^= 0x1;   
+			lastState8 ^= 0x0002;   
 			duration_note58 = 0;  
 		}
 
 	}	 
 } else if (lastState8&0x0002) {	
-FIFO_PUSH(notes,58); 
+FIFO_PUSH(notes,186+20); 
 FIFO_PUSH(durations, duration_note58); 
-lastState8 &= 0xFFFE; 
+lastState8 &=0xFFFD; 
 	duration_note58 = 0;
 	} else {
 		duration_note58 = 0;
@@ -1831,18 +1831,18 @@ lastState8 &= 0xFFFE;
 		         if (lastState8&0x0004) {
 		          	duration_note59 = 0;
 	      	} else {
-			FIFO_PUSH(notes,59);
+			FIFO_PUSH(notes,59+20);
 			FIFO_PUSH(durations, duration_note59);
 
-			lastState8 ^= 0x1;   
+			lastState8 ^= 0x0004;   
 			duration_note59 = 0;  
 		}
 
 	}	 
 } else if (lastState8&0x0004) {	
-FIFO_PUSH(notes,59); 
+FIFO_PUSH(notes,187+20); 
 FIFO_PUSH(durations, duration_note59); 
-lastState8 &= 0xFFFE; 
+lastState8 &=0xFFFB; 
 	duration_note59 = 0;
 	} else {
 		duration_note59 = 0;
@@ -1857,18 +1857,18 @@ lastState8 &= 0xFFFE;
 		         if (lastState8&0x0008) {
 		          	duration_note60 = 0;
 	      	} else {
-			FIFO_PUSH(notes,60);
+			FIFO_PUSH(notes,60+20);
 			FIFO_PUSH(durations, duration_note60);
 
-			lastState8 ^= 0x1;   
+			lastState8 ^= 0x0008;   
 			duration_note60 = 0;  
 		}
 
 	}	 
 } else if (lastState8&0x0008) {	
-FIFO_PUSH(notes,60); 
+FIFO_PUSH(notes,188+20); 
 FIFO_PUSH(durations, duration_note60); 
-lastState8 &= 0xFFFE; 
+lastState8 &=0xFFF7; 
 	duration_note60 = 0;
 	} else {
 		duration_note60 = 0;
@@ -1883,18 +1883,18 @@ lastState8 &= 0xFFFE;
 		         if (lastState8&0x0010) {
 		          	duration_note61 = 0;
 	      	} else {
-			FIFO_PUSH(notes,61);
+			FIFO_PUSH(notes,61+20);
 			FIFO_PUSH(durations, duration_note61);
 
-			lastState8 ^= 0x1;   
+			lastState8 ^= 0x0010;   
 			duration_note61 = 0;  
 		}
 
 	}	 
 } else if (lastState8&0x0010) {	
-FIFO_PUSH(notes,61); 
+FIFO_PUSH(notes,189+20); 
 FIFO_PUSH(durations, duration_note61); 
-lastState8 &= 0xFFFE; 
+lastState8 &=0xFFEF; 
 	duration_note61 = 0;
 	} else {
 		duration_note61 = 0;
@@ -1909,18 +1909,18 @@ lastState8 &= 0xFFFE;
 		         if (lastState8&0x0020) {
 		          	duration_note62 = 0;
 	      	} else {
-			FIFO_PUSH(notes,62);
+			FIFO_PUSH(notes,62+20);
 			FIFO_PUSH(durations, duration_note62);
 
-			lastState8 ^= 0x1;   
+			lastState8 ^= 0x0020;   
 			duration_note62 = 0;  
 		}
 
 	}	 
 } else if (lastState8&0x0020) {	
-FIFO_PUSH(notes,62); 
+FIFO_PUSH(notes,190+20); 
 FIFO_PUSH(durations, duration_note62); 
-lastState8 &= 0xFFFE; 
+lastState8 &=0xFFDF; 
 	duration_note62 = 0;
 	} else {
 		duration_note62 = 0;
@@ -1935,18 +1935,18 @@ lastState8 &= 0xFFFE;
 		         if (lastState8&0x0040) {
 		          	duration_note63 = 0;
 	      	} else {
-			FIFO_PUSH(notes,63);
+			FIFO_PUSH(notes,63+20);
 			FIFO_PUSH(durations, duration_note63);
 
-			lastState8 ^= 0x1;   
+			lastState8 ^= 0x0040;   
 			duration_note63 = 0;  
 		}
 
 	}	 
 } else if (lastState8&0x0040) {	
-FIFO_PUSH(notes,63); 
+FIFO_PUSH(notes,191+20); 
 FIFO_PUSH(durations, duration_note63); 
-lastState8 &= 0xFFFE; 
+lastState8 &=0xFFBF; 
 	duration_note63 = 0;
 	} else {
 		duration_note63 = 0;
@@ -1961,18 +1961,18 @@ lastState8 &= 0xFFFE;
 		         if (lastState8&0x0080) {
 		          	duration_note64 = 0;
 	      	} else {
-			FIFO_PUSH(notes,64);
+			FIFO_PUSH(notes,64+20);
 			FIFO_PUSH(durations, duration_note64);
 
-			lastState8 ^= 0x1;   
+			lastState8 ^= 0x0080;   
 			duration_note64 = 0;  
 		}
 
 	}	 
 } else if (lastState8&0x0080) {	
-FIFO_PUSH(notes,64); 
+FIFO_PUSH(notes,192+20); 
 FIFO_PUSH(durations, duration_note64); 
-lastState8 &= 0xFFFE; 
+lastState8 &=0xFF7F; 
 	duration_note64 = 0;
 	} else {
 		duration_note64 = 0;
@@ -1987,18 +1987,18 @@ lastState8 &= 0xFFFE;
 		         if (lastState9&0x0001) {
 		          	duration_note65 = 0;
 	      	} else {
-			FIFO_PUSH(notes,65);
+			FIFO_PUSH(notes,65+20);
 			FIFO_PUSH(durations, duration_note65);
 
-			lastState9 ^= 0x1;   
+			lastState9 ^= 0x0001;   
 			duration_note65 = 0;  
 		}
 
 	}	 
 } else if (lastState9&0x0001) {	
-FIFO_PUSH(notes,65); 
+FIFO_PUSH(notes,193+20); 
 FIFO_PUSH(durations, duration_note65); 
-lastState9 &= 0xFFFE; 
+lastState9 &=0xFFFE; 
 	duration_note65 = 0;
 	} else {
 		duration_note65 = 0;
@@ -2013,18 +2013,18 @@ lastState9 &= 0xFFFE;
 		         if (lastState9&0x0002) {
 		          	duration_note66 = 0;
 	      	} else {
-			FIFO_PUSH(notes,66);
+			FIFO_PUSH(notes,66+20);
 			FIFO_PUSH(durations, duration_note66);
 
-			lastState9 ^= 0x1;   
+			lastState9 ^= 0x0002;   
 			duration_note66 = 0;  
 		}
 
 	}	 
 } else if (lastState9&0x0002) {	
-FIFO_PUSH(notes,66); 
+FIFO_PUSH(notes,194+20); 
 FIFO_PUSH(durations, duration_note66); 
-lastState9 &= 0xFFFE; 
+lastState9 &=0xFFFD; 
 	duration_note66 = 0;
 	} else {
 		duration_note66 = 0;
@@ -2039,18 +2039,18 @@ lastState9 &= 0xFFFE;
 		         if (lastState9&0x0004) {
 		          	duration_note67 = 0;
 	      	} else {
-			FIFO_PUSH(notes,67);
+			FIFO_PUSH(notes,67+20);
 			FIFO_PUSH(durations, duration_note67);
 
-			lastState9 ^= 0x1;   
+			lastState9 ^= 0x0004;   
 			duration_note67 = 0;  
 		}
 
 	}	 
 } else if (lastState9&0x0004) {	
-FIFO_PUSH(notes,67); 
+FIFO_PUSH(notes,195+20); 
 FIFO_PUSH(durations, duration_note67); 
-lastState9 &= 0xFFFE; 
+lastState9 &=0xFFFB; 
 	duration_note67 = 0;
 	} else {
 		duration_note67 = 0;
@@ -2065,18 +2065,18 @@ lastState9 &= 0xFFFE;
 		         if (lastState9&0x0008) {
 		          	duration_note68 = 0;
 	      	} else {
-			FIFO_PUSH(notes,68);
+			FIFO_PUSH(notes,68+20);
 			FIFO_PUSH(durations, duration_note68);
 
-			lastState9 ^= 0x1;   
+			lastState9 ^= 0x0008;   
 			duration_note68 = 0;  
 		}
 
 	}	 
 } else if (lastState9&0x0008) {	
-FIFO_PUSH(notes,68); 
+FIFO_PUSH(notes,196+20); 
 FIFO_PUSH(durations, duration_note68); 
-lastState9 &= 0xFFFE; 
+lastState9 &=0xFFF7; 
 	duration_note68 = 0;
 	} else {
 		duration_note68 = 0;
@@ -2091,18 +2091,18 @@ lastState9 &= 0xFFFE;
 		         if (lastState9&0x0010) {
 		          	duration_note69 = 0;
 	      	} else {
-			FIFO_PUSH(notes,69);
+			FIFO_PUSH(notes,69+20);
 			FIFO_PUSH(durations, duration_note69);
 
-			lastState9 ^= 0x1;   
+			lastState9 ^= 0x0010;   
 			duration_note69 = 0;  
 		}
 
 	}	 
 } else if (lastState9&0x0010) {	
-FIFO_PUSH(notes,69); 
+FIFO_PUSH(notes,197+20); 
 FIFO_PUSH(durations, duration_note69); 
-lastState9 &= 0xFFFE; 
+lastState9 &=0xFFEF; 
 	duration_note69 = 0;
 	} else {
 		duration_note69 = 0;
@@ -2117,18 +2117,18 @@ lastState9 &= 0xFFFE;
 		         if (lastState9&0x0020) {
 		          	duration_note70 = 0;
 	      	} else {
-			FIFO_PUSH(notes,70);
+			FIFO_PUSH(notes,70+20);
 			FIFO_PUSH(durations, duration_note70);
 
-			lastState9 ^= 0x1;   
+			lastState9 ^= 0x0020;   
 			duration_note70 = 0;  
 		}
 
 	}	 
 } else if (lastState9&0x0020) {	
-FIFO_PUSH(notes,70); 
+FIFO_PUSH(notes,198+20); 
 FIFO_PUSH(durations, duration_note70); 
-lastState9 &= 0xFFFE; 
+lastState9 &=0xFFDF; 
 	duration_note70 = 0;
 	} else {
 		duration_note70 = 0;
@@ -2143,18 +2143,18 @@ lastState9 &= 0xFFFE;
 		         if (lastState9&0x0040) {
 		          	duration_note71 = 0;
 	      	} else {
-			FIFO_PUSH(notes,71);
+			FIFO_PUSH(notes,71+20);
 			FIFO_PUSH(durations, duration_note71);
 
-			lastState9 ^= 0x1;   
+			lastState9 ^= 0x0040;   
 			duration_note71 = 0;  
 		}
 
 	}	 
 } else if (lastState9&0x0040) {	
-FIFO_PUSH(notes,71); 
+FIFO_PUSH(notes,199+20); 
 FIFO_PUSH(durations, duration_note71); 
-lastState9 &= 0xFFFE; 
+lastState9 &=0xFFBF; 
 	duration_note71 = 0;
 	} else {
 		duration_note71 = 0;
@@ -2169,18 +2169,18 @@ lastState9 &= 0xFFFE;
 		         if (lastState9&0x0080) {
 		          	duration_note72 = 0;
 	      	} else {
-			FIFO_PUSH(notes,72);
+			FIFO_PUSH(notes,72+20);
 			FIFO_PUSH(durations, duration_note72);
 
-			lastState9 ^= 0x1;   
+			lastState9 ^= 0x0080;   
 			duration_note72 = 0;  
 		}
 
 	}	 
 } else if (lastState9&0x0080) {	
-FIFO_PUSH(notes,72); 
+FIFO_PUSH(notes,200+20); 
 FIFO_PUSH(durations, duration_note72); 
-lastState9 &= 0xFFFE; 
+lastState9 &=0xFF7F; 
 	duration_note72 = 0;
 	} else {
 		duration_note72 = 0;
@@ -2195,18 +2195,18 @@ lastState9 &= 0xFFFE;
 		         if (lastState10&0x0001) {
 		          	duration_note73 = 0;
 	      	} else {
-			FIFO_PUSH(notes,73);
+			FIFO_PUSH(notes,73+20);
 			FIFO_PUSH(durations, duration_note73);
 
-			lastState10 ^= 0x1;   
+			lastState10 ^= 0x0001;   
 			duration_note73 = 0;  
 		}
 
 	}	 
 } else if (lastState10&0x0001) {	
-FIFO_PUSH(notes,73); 
+FIFO_PUSH(notes,201+20); 
 FIFO_PUSH(durations, duration_note73); 
-lastState10 &= 0xFFFE; 
+lastState10 &=0xFFFE; 
 	duration_note73 = 0;
 	} else {
 		duration_note73 = 0;
@@ -2221,18 +2221,18 @@ lastState10 &= 0xFFFE;
 		         if (lastState10&0x0002) {
 		          	duration_note74 = 0;
 	      	} else {
-			FIFO_PUSH(notes,74);
+			FIFO_PUSH(notes,74+20);
 			FIFO_PUSH(durations, duration_note74);
 
-			lastState10 ^= 0x1;   
+			lastState10 ^= 0x0002;   
 			duration_note74 = 0;  
 		}
 
 	}	 
 } else if (lastState10&0x0002) {	
-FIFO_PUSH(notes,74); 
+FIFO_PUSH(notes,202+20); 
 FIFO_PUSH(durations, duration_note74); 
-lastState10 &= 0xFFFE; 
+lastState10 &=0xFFFD; 
 	duration_note74 = 0;
 	} else {
 		duration_note74 = 0;
@@ -2247,18 +2247,18 @@ lastState10 &= 0xFFFE;
 		         if (lastState10&0x0004) {
 		          	duration_note75 = 0;
 	      	} else {
-			FIFO_PUSH(notes,75);
+			FIFO_PUSH(notes,75+20);
 			FIFO_PUSH(durations, duration_note75);
 
-			lastState10 ^= 0x1;   
+			lastState10 ^= 0x0004;   
 			duration_note75 = 0;  
 		}
 
 	}	 
 } else if (lastState10&0x0004) {	
-FIFO_PUSH(notes,75); 
+FIFO_PUSH(notes,203+20); 
 FIFO_PUSH(durations, duration_note75); 
-lastState10 &= 0xFFFE; 
+lastState10 &=0xFFFB; 
 	duration_note75 = 0;
 	} else {
 		duration_note75 = 0;
@@ -2273,18 +2273,18 @@ lastState10 &= 0xFFFE;
 		         if (lastState10&0x0008) {
 		          	duration_note76 = 0;
 	      	} else {
-			FIFO_PUSH(notes,76);
+			FIFO_PUSH(notes,76+20);
 			FIFO_PUSH(durations, duration_note76);
 
-			lastState10 ^= 0x1;   
+			lastState10 ^= 0x0008;   
 			duration_note76 = 0;  
 		}
 
 	}	 
 } else if (lastState10&0x0008) {	
-FIFO_PUSH(notes,76); 
+FIFO_PUSH(notes,204+20); 
 FIFO_PUSH(durations, duration_note76); 
-lastState10 &= 0xFFFE; 
+lastState10 &=0xFFF7; 
 	duration_note76 = 0;
 	} else {
 		duration_note76 = 0;
@@ -2299,18 +2299,18 @@ lastState10 &= 0xFFFE;
 		         if (lastState10&0x0010) {
 		          	duration_note77 = 0;
 	      	} else {
-			FIFO_PUSH(notes,77);
+			FIFO_PUSH(notes,77+20);
 			FIFO_PUSH(durations, duration_note77);
 
-			lastState10 ^= 0x1;   
+			lastState10 ^= 0x0010;   
 			duration_note77 = 0;  
 		}
 
 	}	 
 } else if (lastState10&0x0010) {	
-FIFO_PUSH(notes,77); 
+FIFO_PUSH(notes,205+20); 
 FIFO_PUSH(durations, duration_note77); 
-lastState10 &= 0xFFFE; 
+lastState10 &=0xFFEF; 
 	duration_note77 = 0;
 	} else {
 		duration_note77 = 0;
@@ -2325,18 +2325,18 @@ lastState10 &= 0xFFFE;
 		         if (lastState10&0x0020) {
 		          	duration_note78 = 0;
 	      	} else {
-			FIFO_PUSH(notes,78);
+			FIFO_PUSH(notes,78+20);
 			FIFO_PUSH(durations, duration_note78);
 
-			lastState10 ^= 0x1;   
+			lastState10 ^= 0x0020;   
 			duration_note78 = 0;  
 		}
 
 	}	 
 } else if (lastState10&0x0020) {	
-FIFO_PUSH(notes,78); 
+FIFO_PUSH(notes,206+20); 
 FIFO_PUSH(durations, duration_note78); 
-lastState10 &= 0xFFFE; 
+lastState10 &=0xFFDF; 
 	duration_note78 = 0;
 	} else {
 		duration_note78 = 0;
@@ -2351,18 +2351,18 @@ lastState10 &= 0xFFFE;
 		         if (lastState10&0x0040) {
 		          	duration_note79 = 0;
 	      	} else {
-			FIFO_PUSH(notes,79);
+			FIFO_PUSH(notes,79+20);
 			FIFO_PUSH(durations, duration_note79);
 
-			lastState10 ^= 0x1;   
+			lastState10 ^= 0x0040;   
 			duration_note79 = 0;  
 		}
 
 	}	 
 } else if (lastState10&0x0040) {	
-FIFO_PUSH(notes,79); 
+FIFO_PUSH(notes,207+20); 
 FIFO_PUSH(durations, duration_note79); 
-lastState10 &= 0xFFFE; 
+lastState10 &=0xFFBF; 
 	duration_note79 = 0;
 	} else {
 		duration_note79 = 0;
@@ -2377,18 +2377,18 @@ lastState10 &= 0xFFFE;
 		         if (lastState10&0x0080) {
 		          	duration_note80 = 0;
 	      	} else {
-			FIFO_PUSH(notes,80);
+			FIFO_PUSH(notes,80+20);
 			FIFO_PUSH(durations, duration_note80);
 
-			lastState10 ^= 0x1;   
+			lastState10 ^= 0x0080;   
 			duration_note80 = 0;  
 		}
 
 	}	 
 } else if (lastState10&0x0080) {	
-FIFO_PUSH(notes,80); 
+FIFO_PUSH(notes,208+20); 
 FIFO_PUSH(durations, duration_note80); 
-lastState10 &= 0xFFFE; 
+lastState10 &=0xFF7F; 
 	duration_note80 = 0;
 	} else {
 		duration_note80 = 0;
@@ -2403,18 +2403,18 @@ lastState10 &= 0xFFFE;
 		         if (lastState11&0x0001) {
 		          	duration_note81 = 0;
 	      	} else {
-			FIFO_PUSH(notes,81);
+			FIFO_PUSH(notes,81+20);
 			FIFO_PUSH(durations, duration_note81);
 
-			lastState11 ^= 0x1;   
+			lastState11 ^= 0x0001;   
 			duration_note81 = 0;  
 		}
 
 	}	 
 } else if (lastState11&0x0001) {	
-FIFO_PUSH(notes,81); 
+FIFO_PUSH(notes,209+20); 
 FIFO_PUSH(durations, duration_note81); 
-lastState11 &= 0xFFFE; 
+lastState11 &=0xFFFE; 
 	duration_note81 = 0;
 	} else {
 		duration_note81 = 0;
@@ -2429,18 +2429,18 @@ lastState11 &= 0xFFFE;
 		         if (lastState11&0x0002) {
 		          	duration_note82 = 0;
 	      	} else {
-			FIFO_PUSH(notes,82);
+			FIFO_PUSH(notes,82+20);
 			FIFO_PUSH(durations, duration_note82);
 
-			lastState11 ^= 0x1;   
+			lastState11 ^= 0x0002;   
 			duration_note82 = 0;  
 		}
 
 	}	 
 } else if (lastState11&0x0002) {	
-FIFO_PUSH(notes,82); 
+FIFO_PUSH(notes,210+20); 
 FIFO_PUSH(durations, duration_note82); 
-lastState11 &= 0xFFFE; 
+lastState11 &=0xFFFD; 
 	duration_note82 = 0;
 	} else {
 		duration_note82 = 0;
@@ -2455,18 +2455,18 @@ lastState11 &= 0xFFFE;
 		         if (lastState11&0x0004) {
 		          	duration_note83 = 0;
 	      	} else {
-			FIFO_PUSH(notes,83);
+			FIFO_PUSH(notes,83+20);
 			FIFO_PUSH(durations, duration_note83);
 
-			lastState11 ^= 0x1;   
+			lastState11 ^= 0x0004;   
 			duration_note83 = 0;  
 		}
 
 	}	 
 } else if (lastState11&0x0004) {	
-FIFO_PUSH(notes,83); 
+FIFO_PUSH(notes,211+20); 
 FIFO_PUSH(durations, duration_note83); 
-lastState11 &= 0xFFFE; 
+lastState11 &=0xFFFB; 
 	duration_note83 = 0;
 	} else {
 		duration_note83 = 0;
@@ -2481,18 +2481,18 @@ lastState11 &= 0xFFFE;
 		         if (lastState11&0x0008) {
 		          	duration_note84 = 0;
 	      	} else {
-			FIFO_PUSH(notes,84);
+			FIFO_PUSH(notes,84+20);
 			FIFO_PUSH(durations, duration_note84);
 
-			lastState11 ^= 0x1;   
+			lastState11 ^= 0x0008;   
 			duration_note84 = 0;  
 		}
 
 	}	 
 } else if (lastState11&0x0008) {	
-FIFO_PUSH(notes,84); 
+FIFO_PUSH(notes,212+20); 
 FIFO_PUSH(durations, duration_note84); 
-lastState11 &= 0xFFFE; 
+lastState11 &=0xFFF7; 
 	duration_note84 = 0;
 	} else {
 		duration_note84 = 0;
@@ -2507,18 +2507,18 @@ lastState11 &= 0xFFFE;
 		         if (lastState11&0x0010) {
 		          	duration_note85 = 0;
 	      	} else {
-			FIFO_PUSH(notes,85);
+			FIFO_PUSH(notes,85+20);
 			FIFO_PUSH(durations, duration_note85);
 
-			lastState11 ^= 0x1;   
+			lastState11 ^= 0x0010;   
 			duration_note85 = 0;  
 		}
 
 	}	 
 } else if (lastState11&0x0010) {	
-FIFO_PUSH(notes,85); 
+FIFO_PUSH(notes,213+20); 
 FIFO_PUSH(durations, duration_note85); 
-lastState11 &= 0xFFFE; 
+lastState11 &=0xFFEF; 
 	duration_note85 = 0;
 	} else {
 		duration_note85 = 0;
@@ -2533,18 +2533,18 @@ lastState11 &= 0xFFFE;
 		         if (lastState11&0x0020) {
 		          	duration_note86 = 0;
 	      	} else {
-			FIFO_PUSH(notes,86);
+			FIFO_PUSH(notes,86+20);
 			FIFO_PUSH(durations, duration_note86);
 
-			lastState11 ^= 0x1;   
+			lastState11 ^= 0x0020;   
 			duration_note86 = 0;  
 		}
 
 	}	 
 } else if (lastState11&0x0020) {	
-FIFO_PUSH(notes,86); 
+FIFO_PUSH(notes,214+20); 
 FIFO_PUSH(durations, duration_note86); 
-lastState11 &= 0xFFFE; 
+lastState11 &=0xFFDF; 
 	duration_note86 = 0;
 	} else {
 		duration_note86 = 0;
@@ -2559,18 +2559,18 @@ lastState11 &= 0xFFFE;
 		         if (lastState11&0x0040) {
 		          	duration_note87 = 0;
 	      	} else {
-			FIFO_PUSH(notes,87);
+			FIFO_PUSH(notes,87+20);
 			FIFO_PUSH(durations, duration_note87);
 
-			lastState11 ^= 0x1;   
+			lastState11 ^= 0x0040;   
 			duration_note87 = 0;  
 		}
 
 	}	 
 } else if (lastState11&0x0040) {	
-FIFO_PUSH(notes,87); 
+FIFO_PUSH(notes,215+20); 
 FIFO_PUSH(durations, duration_note87); 
-lastState11 &= 0xFFFE; 
+lastState11 &=0xFFBF; 
 	duration_note87 = 0;
 	} else {
 		duration_note87 = 0;
@@ -2585,24 +2585,22 @@ lastState11 &= 0xFFFE;
 		         if (lastState11&0x0080) {
 		          	duration_note88 = 0;
 	      	} else {
-			FIFO_PUSH(notes,88);
+			FIFO_PUSH(notes,88+20);
 			FIFO_PUSH(durations, duration_note88);
 
-			lastState11 ^= 0x1;   
+			lastState11 ^= 0x0080;   
 			duration_note88 = 0;  
 		}
 
 	}	 
 } else if (lastState11&0x0080) {	
-FIFO_PUSH(notes,88); 
+FIFO_PUSH(notes,216+20); 
 FIFO_PUSH(durations, duration_note88); 
-lastState11 &= 0xFFFE; 
+lastState11 &=0xFF7F; 
 	duration_note88 = 0;
 	} else {
 		duration_note88 = 0;
  }
-
-
     /*************************************************************************/
 }
 

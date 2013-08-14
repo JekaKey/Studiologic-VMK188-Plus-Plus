@@ -370,8 +370,7 @@ int main(void) {
 
     //Тестовый кусок для Константина, отправляем  noteOn при включении
     sendNoteOn(60, 90, 0);
-	  sendNoteOn(20, 90, 0);
-	  sendNoteOn(88, 90, 0);
+
 
 
     /* Основной цикл программы */
@@ -429,6 +428,6 @@ void TIM4_IRQHandler() {
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
         //Считываем состояние клавиш
-        //readKeyState();
+        readKeyState();
     }
 }

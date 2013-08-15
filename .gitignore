@@ -40,3 +40,5 @@
 *.uvopt
 
 Fatarminator.uvopt
+
+.DS_Store

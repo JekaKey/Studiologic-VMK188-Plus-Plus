@@ -119,11 +119,10 @@ void init_GPIO(void) {
     TIM_TimeBaseStructInit(&timer);
 
     //Выставляем предделитель, 100uS
-    //timer.TIM_Prescaler = (uint16_t) ((SystemCoreClock / 7) / 2624) - 1;
-    timer.TIM_Prescaler = 1;
+    timer.TIM_Prescaler = 84-1;
 
     //Тут значение, досчитав до которого таймер сгенерирует прерывание
-    timer.TIM_Period = 4343; // Было число 1343. 
+    timer.TIM_Period = 100 - 1; 
 
     //Предделитель таймера
     timer.TIM_ClockDivision = 0;
@@ -371,7 +370,7 @@ int main(void) {
     //Тестовый кусок для Константина, отправляем  noteOn при включении
     sendNoteOn(60, 90, 0);
 
-
+    GPIOD->BSRRL = GPIO_Pin_15;
 
     /* Основной цикл программы */
     while (1) {
@@ -427,6 +426,7 @@ void TIM4_IRQHandler() {
         //Очищаем бит
         TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
+        // GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
         //Считываем состояние клавиш
         readKeyState();
     }

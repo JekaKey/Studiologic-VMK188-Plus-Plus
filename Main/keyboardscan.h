@@ -6,7 +6,7 @@
 #include "fifo.h"
 #include "midi.h"
 
-#define KEY_SWITCH_DELAY 67 //это тот самый delay при этом значении и более медленном таймере играет, но иногда виснет
+#define KEY_SWITCH_DELAY 10
 
 void readKeyState(void); 				//Считывание состояние клавиш
 uint8_t getVelocity(uint16_t tickNum); 	//Расчет velocity исходя из количества тиков

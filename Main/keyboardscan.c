@@ -135,6 +135,8 @@ uint16_t duration_note88 = 0;
 uint8_t curNote;
 uint16_t duration;
 
+GPIO_InitTypeDef GPIO_Struct = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
+
 //Пересчет тиков в велосити
 //velocity=round(a/(x1+b)+c)
 uint8_t getVelocity(uint16_t tickNum) {
@@ -176,21 +178,28 @@ void checkNoteArray(void) {
 }
 
 void readKeyState(void) {
-
       /* 1 chunk */ 
 
-    GPIOE->BSRRH = GPIO_Pin_15; 
+    GPIOE->BSRRH = GPIO_Pin_15; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d11 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOE->BSRRL = GPIO_Pin_15; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOE->BSRRL = GPIO_Pin_15; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d11&0x00FF){  
 
     GPIOE->BSRRH = GPIO_Pin_14; 
     Delay(KEY_SWITCH_DELAY);  
     d21 = ~GPIOA->IDR; //Read port state second contact 
     GPIOE->BSRRL = GPIO_Pin_14;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d21=0;
      }
@@ -420,18 +429,26 @@ void readKeyState(void) {
 
       /* 2 chunk */ 
 
-    GPIOB->BSRRH = GPIO_Pin_11; 
+    GPIOB->BSRRH = GPIO_Pin_11; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d12 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOB->BSRRL = GPIO_Pin_11; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOB->BSRRL = GPIO_Pin_11; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d12&0x00FF){  
 
     GPIOB->BSRRH = GPIO_Pin_10; 
     Delay(KEY_SWITCH_DELAY);  
     d22 = ~GPIOA->IDR; //Read port state second contact 
     GPIOB->BSRRL = GPIO_Pin_10;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d22=0;
      }
@@ -661,18 +678,26 @@ void readKeyState(void) {
 
       /* 3 chunk */ 
 
-    GPIOB->BSRRH = GPIO_Pin_13; 
+    GPIOB->BSRRH = GPIO_Pin_13; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d13 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOB->BSRRL = GPIO_Pin_13; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOB->BSRRL = GPIO_Pin_13; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d13&0x00FF){  
 
     GPIOB->BSRRH = GPIO_Pin_12; 
     Delay(KEY_SWITCH_DELAY);  
     d23 = ~GPIOA->IDR; //Read port state second contact 
     GPIOB->BSRRL = GPIO_Pin_12;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d23=0;
      }
@@ -902,18 +927,26 @@ void readKeyState(void) {
 
       /* 4 chunk */ 
 
-    GPIOB->BSRRH = GPIO_Pin_15; 
+    GPIOB->BSRRH = GPIO_Pin_15; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d14 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOB->BSRRL = GPIO_Pin_15; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOB->BSRRL = GPIO_Pin_15; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d14&0x00FF){  
 
     GPIOB->BSRRH = GPIO_Pin_14; 
     Delay(KEY_SWITCH_DELAY);  
     d24 = ~GPIOA->IDR; //Read port state second contact 
     GPIOB->BSRRL = GPIO_Pin_14;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d24=0;
      }
@@ -1143,18 +1176,26 @@ void readKeyState(void) {
 
       /* 5 chunk */ 
 
-    GPIOD->BSRRH = GPIO_Pin_9; 
+    GPIOD->BSRRH = GPIO_Pin_9; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d15 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOD->BSRRL = GPIO_Pin_9; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOD->BSRRL = GPIO_Pin_9; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d15&0x00FF){  
 
     GPIOD->BSRRH = GPIO_Pin_8; 
     Delay(KEY_SWITCH_DELAY);  
     d25 = ~GPIOA->IDR; //Read port state second contact 
     GPIOD->BSRRL = GPIO_Pin_8;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d25=0;
      }
@@ -1384,18 +1425,26 @@ void readKeyState(void) {
 
       /* 6 chunk */ 
 
-    GPIOC->BSRRH = GPIO_Pin_4; 
+    GPIOC->BSRRH = GPIO_Pin_4; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d16 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOC->BSRRL = GPIO_Pin_4; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOC->BSRRL = GPIO_Pin_4; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d16&0x00FF){  
 
     GPIOC->BSRRH = GPIO_Pin_5; 
     Delay(KEY_SWITCH_DELAY);  
     d26 = ~GPIOA->IDR; //Read port state second contact 
     GPIOC->BSRRL = GPIO_Pin_5;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d26=0;
      }
@@ -1625,18 +1674,26 @@ void readKeyState(void) {
 
       /* 7 chunk */ 
 
-    GPIOB->BSRRH = GPIO_Pin_0; 
+    GPIOB->BSRRH = GPIO_Pin_0; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d17 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOB->BSRRL = GPIO_Pin_0; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOB->BSRRL = GPIO_Pin_0; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d17&0x00FF){  
 
     GPIOB->BSRRH = GPIO_Pin_1; 
     Delay(KEY_SWITCH_DELAY);  
     d27 = ~GPIOA->IDR; //Read port state second contact 
     GPIOB->BSRRL = GPIO_Pin_1;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d27=0;
      }
@@ -1866,18 +1923,26 @@ void readKeyState(void) {
 
       /* 8 chunk */ 
 
-    GPIOE->BSRRH = GPIO_Pin_7; 
+    GPIOE->BSRRH = GPIO_Pin_7; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d18 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOE->BSRRL = GPIO_Pin_7; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOE->BSRRL = GPIO_Pin_7; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d18&0x00FF){  
 
     GPIOB->BSRRH = GPIO_Pin_2; 
     Delay(KEY_SWITCH_DELAY);  
     d28 = ~GPIOA->IDR; //Read port state second contact 
     GPIOB->BSRRL = GPIO_Pin_2;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d28=0;
      }
@@ -2107,18 +2172,26 @@ void readKeyState(void) {
 
       /* 9 chunk */ 
 
-    GPIOE->BSRRH = GPIO_Pin_9; 
+    GPIOE->BSRRH = GPIO_Pin_9; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d19 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOE->BSRRL = GPIO_Pin_9; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOE->BSRRL = GPIO_Pin_9; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d19&0x00FF){  
 
     GPIOE->BSRRH = GPIO_Pin_8; 
     Delay(KEY_SWITCH_DELAY);  
     d29 = ~GPIOA->IDR; //Read port state second contact 
     GPIOE->BSRRL = GPIO_Pin_8;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d29=0;
      }
@@ -2348,18 +2421,26 @@ void readKeyState(void) {
 
       /* 10 chunk */ 
 
-    GPIOE->BSRRH = GPIO_Pin_12; 
+    GPIOE->BSRRH = GPIO_Pin_12; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d110 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOE->BSRRL = GPIO_Pin_12; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOE->BSRRL = GPIO_Pin_12; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d110&0x00FF){  
 
     GPIOE->BSRRH = GPIO_Pin_10; 
     Delay(KEY_SWITCH_DELAY);  
     d210 = ~GPIOA->IDR; //Read port state second contact 
     GPIOE->BSRRL = GPIO_Pin_10;  
-    Delay(KEY_SWITCH_DELAY);  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d210=0;
      }
@@ -2589,18 +2670,26 @@ void readKeyState(void) {
 
       /* 11 chunk */ 
 
-    GPIOE->BSRRH = GPIO_Pin_13; 
+    GPIOE->BSRRH = GPIO_Pin_11; //Pin to zero
     Delay(KEY_SWITCH_DELAY); 
     d111 = ~GPIOA->IDR; //Read port state first contact 
-    GPIOE->BSRRL = GPIO_Pin_13; 
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOE->BSRRL = GPIO_Pin_11; //Pin to 1
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     if (d111&0x00FF){  
 
-    GPIOE->BSRRH = GPIO_Pin_11; 
+    GPIOE->BSRRH = GPIO_Pin_13; 
     Delay(KEY_SWITCH_DELAY);  
     d211 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOE->BSRRL = GPIO_Pin_11;  
-    Delay(KEY_SWITCH_DELAY);  
+    GPIOE->BSRRL = GPIO_Pin_13;  
+
+     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
+     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
+     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+
     }else{ 
          d211=0;
      }
@@ -2827,8 +2916,6 @@ void readKeyState(void) {
 	         }else {
 		          duration_note88 = 0;
           }
-
-    /*************************************************************************/
-}
-
-
+					
+				}	
+	

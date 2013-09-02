@@ -71,7 +71,7 @@ void init_GPIO(void) {
     /*Configure GPIO pin */
     GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
-    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init(GPIOA, &GPIO_InitStruct);
 
     /*Configure GPIO pin */

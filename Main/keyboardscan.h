@@ -6,7 +6,7 @@
 #include "fifo.h"
 #include "midi.h"
 
-#define KEY_SWITCH_DELAY 10
+#define KEY_SWITCH_DELAY 5
 
 void readKeyState(void); 				//Считывание состояние клавиш
 uint8_t getVelocity(uint16_t tickNum); 	//Расчет velocity исходя из количества тиков

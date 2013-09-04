@@ -135,7 +135,7 @@ uint16_t duration_note88 = 0;
 uint8_t curNote;
 uint16_t duration;
 
-GPIO_InitTypeDef GPIO_Struct = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
+
 
 //Пересчет тиков в велосити
 //velocity=round(a/(x1+b)+c)
@@ -177,7 +177,11 @@ void checkNoteArray(void) {
     }
 }
 
+
+
 void readKeyState(void) {
+	
+	  GPIOA->PUPDR |= 0x0000555;
       /* 1 chunk */ 
 
     GPIOE->BSRRH = GPIO_Pin_15; //Pin to zero
@@ -188,6 +192,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d11&0x00FF){  
 
@@ -203,6 +208,7 @@ void readKeyState(void) {
     }else{ 
          d21=0;
      }
+if ((d11&0x00FF)|(lastState1&0x00FF)){
 	/*1 key */
 
       if (d11 & 0x0001) {
@@ -427,6 +433,7 @@ void readKeyState(void) {
 		          duration_note8 = 0;
           }
 
+         	}
       /* 2 chunk */ 
 
     GPIOB->BSRRH = GPIO_Pin_11; //Pin to zero
@@ -437,6 +444,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d12&0x00FF){  
 
@@ -452,6 +460,7 @@ void readKeyState(void) {
     }else{ 
          d22=0;
      }
+if ((d12&0x00FF)|(lastState2&0x00FF)){
 	/*9 key */
 
       if (d12 & 0x0001) {
@@ -676,6 +685,7 @@ void readKeyState(void) {
 		          duration_note16 = 0;
           }
 
+         	}
       /* 3 chunk */ 
 
     GPIOB->BSRRH = GPIO_Pin_13; //Pin to zero
@@ -686,6 +696,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d13&0x00FF){  
 
@@ -701,6 +712,7 @@ void readKeyState(void) {
     }else{ 
          d23=0;
      }
+if ((d13&0x00FF)|(lastState3&0x00FF)){
 	/*17 key */
 
       if (d13 & 0x0001) {
@@ -925,6 +937,7 @@ void readKeyState(void) {
 		          duration_note24 = 0;
           }
 
+         	}
       /* 4 chunk */ 
 
     GPIOB->BSRRH = GPIO_Pin_15; //Pin to zero
@@ -935,6 +948,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d14&0x00FF){  
 
@@ -950,6 +964,7 @@ void readKeyState(void) {
     }else{ 
          d24=0;
      }
+if ((d14&0x00FF)|(lastState4&0x00FF)){
 	/*25 key */
 
       if (d14 & 0x0001) {
@@ -1174,6 +1189,7 @@ void readKeyState(void) {
 		          duration_note32 = 0;
           }
 
+         	}
       /* 5 chunk */ 
 
     GPIOD->BSRRH = GPIO_Pin_9; //Pin to zero
@@ -1184,6 +1200,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d15&0x00FF){  
 
@@ -1199,6 +1216,7 @@ void readKeyState(void) {
     }else{ 
          d25=0;
      }
+if ((d15&0x00FF)|(lastState5&0x00FF)){
 	/*33 key */
 
       if (d15 & 0x0001) {
@@ -1423,6 +1441,7 @@ void readKeyState(void) {
 		          duration_note40 = 0;
           }
 
+         	}
       /* 6 chunk */ 
 
     GPIOC->BSRRH = GPIO_Pin_4; //Pin to zero
@@ -1433,6 +1452,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d16&0x00FF){  
 
@@ -1448,6 +1468,7 @@ void readKeyState(void) {
     }else{ 
          d26=0;
      }
+if ((d16&0x00FF)|(lastState6&0x00FF)){
 	/*41 key */
 
       if (d16 & 0x0001) {
@@ -1672,6 +1693,7 @@ void readKeyState(void) {
 		          duration_note48 = 0;
           }
 
+         	}
       /* 7 chunk */ 
 
     GPIOB->BSRRH = GPIO_Pin_0; //Pin to zero
@@ -1682,6 +1704,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d17&0x00FF){  
 
@@ -1697,6 +1720,7 @@ void readKeyState(void) {
     }else{ 
          d27=0;
      }
+if ((d17&0x00FF)|(lastState7&0x00FF)){
 	/*49 key */
 
       if (d17 & 0x0001) {
@@ -1921,6 +1945,7 @@ void readKeyState(void) {
 		          duration_note56 = 0;
           }
 
+         	}
       /* 8 chunk */ 
 
     GPIOE->BSRRH = GPIO_Pin_7; //Pin to zero
@@ -1931,6 +1956,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d18&0x00FF){  
 
@@ -1946,6 +1972,7 @@ void readKeyState(void) {
     }else{ 
          d28=0;
      }
+if ((d18&0x00FF)|(lastState8&0x00FF)){
 	/*57 key */
 
       if (d18 & 0x0001) {
@@ -2170,6 +2197,7 @@ void readKeyState(void) {
 		          duration_note64 = 0;
           }
 
+         	}
       /* 9 chunk */ 
 
     GPIOE->BSRRH = GPIO_Pin_9; //Pin to zero
@@ -2180,6 +2208,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d19&0x00FF){  
 
@@ -2195,6 +2224,7 @@ void readKeyState(void) {
     }else{ 
          d29=0;
      }
+if ((d19&0x00FF)|(lastState9&0x00FF)){
 	/*65 key */
 
       if (d19 & 0x0001) {
@@ -2419,6 +2449,7 @@ void readKeyState(void) {
 		          duration_note72 = 0;
           }
 
+         	}
       /* 10 chunk */ 
 
     GPIOE->BSRRH = GPIO_Pin_12; //Pin to zero
@@ -2429,6 +2460,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d110&0x00FF){  
 
@@ -2444,6 +2476,7 @@ void readKeyState(void) {
     }else{ 
          d210=0;
      }
+if ((d110&0x00FF)|(lastState10&0x00FF)){
 	/*73 key */
 
       if (d110 & 0x0001) {
@@ -2668,6 +2701,7 @@ void readKeyState(void) {
 		          duration_note80 = 0;
           }
 
+         	}
       /* 11 chunk */ 
 
     GPIOE->BSRRH = GPIO_Pin_11; //Pin to zero
@@ -2678,6 +2712,7 @@ void readKeyState(void) {
      GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
      GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
      GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY); 
 
     if (d111&0x00FF){  
 
@@ -2693,6 +2728,7 @@ void readKeyState(void) {
     }else{ 
          d211=0;
      }
+if ((d111&0x00FF)|(lastState11&0x00FF)){
 	/*81 key */
 
       if (d111 & 0x0001) {
@@ -2916,6 +2952,8 @@ void readKeyState(void) {
 	         }else {
 		          duration_note88 = 0;
           }
-					
+
+         	}
+		 
 				}	
 	

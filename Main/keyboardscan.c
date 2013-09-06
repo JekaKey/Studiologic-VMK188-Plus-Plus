@@ -180,2780 +180,2779 @@ void checkNoteArray(void) {
 
 
 void readKeyState(void) {
-	
-	  GPIOA->PUPDR |= 0x0000555;
-      /* 1 chunk */ 
+
+    GPIOA->PUPDR |= 0x0000555;
+    /* 1 chunk */
 
     GPIOE->BSRRH = GPIO_Pin_15; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d11 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d11 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_15; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d11&0x00FF){  
+    if (d11 & 0x00FF) {
 
-    GPIOE->BSRRH = GPIO_Pin_14; 
-    Delay(KEY_SWITCH_DELAY);  
-    d21 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOE->BSRRL = GPIO_Pin_14;  
+        GPIOE->BSRRH = GPIO_Pin_14;
+        Delay(KEY_SWITCH_DELAY);
+        d21 = ~GPIOA->IDR; //Read port state second contact
+        GPIOE->BSRRL = GPIO_Pin_14;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d21=0;
-     }
-if ((d11&0x00FF)|(lastState1&0x00FF)){
-	/*1 key */
+    } else {
+        d21 = 0;
+    }
+    if ((d11 & 0x00FF) | (lastState1 & 0x00FF)) {
+        /*1 key */
 
-      if (d11 & 0x0001) {
-       duration_note1++;
+        if (d11 & 0x0001) {
+            duration_note1++;
 
-     	   if (d21&0x0001) { 
+            if (d21 & 0x0001) {
 
-		         if (lastState1&0x0001) {
-		          	duration_note1 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,21);      
-			          FIFO_PUSH(durations, duration_note1);
+                if (lastState1 & 0x0001) {
+                    duration_note1 = 0;
+                } else {
+                    FIFO_PUSH(notes, 21);
+                    FIFO_PUSH(durations, duration_note1);
 
-		        	  lastState1 ^=0x0001;   
-		           	duration_note1 = 0;  
-	          	}
+                    lastState1 ^= 0x0001;
+                    duration_note1 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState1&0x0001) {	
-             FIFO_PUSH(notes,149); 
-		          FIFO_PUSH(durations, duration_note1); 
-	          	lastState1 &= 0xFFFE; 
-	            duration_note1 = 0;
-	         }else {
-		          duration_note1 = 0;
-          }
+        } else if (lastState1 & 0x0001) {
+            FIFO_PUSH(notes, 149);
+            FIFO_PUSH(durations, duration_note1);
+            lastState1 &= 0xFFFE;
+            duration_note1 = 0;
+        } else {
+            duration_note1 = 0;
+        }
 
-	/*2 key */
+        /*2 key */
 
-      if (d11 & 0x0002) {
-       duration_note2++;
+        if (d11 & 0x0002) {
+            duration_note2++;
 
-     	   if (d21&0x0002) { 
+            if (d21 & 0x0002) {
 
-		         if (lastState1&0x0002) {
-		          	duration_note2 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,22);      
-			          FIFO_PUSH(durations, duration_note2);
+                if (lastState1 & 0x0002) {
+                    duration_note2 = 0;
+                } else {
+                    FIFO_PUSH(notes, 22);
+                    FIFO_PUSH(durations, duration_note2);
 
-		        	  lastState1 ^=0x0002;   
-		           	duration_note2 = 0;  
-	          	}
+                    lastState1 ^= 0x0002;
+                    duration_note2 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState1&0x0002) {	
-             FIFO_PUSH(notes,150); 
-		          FIFO_PUSH(durations, duration_note2); 
-	          	lastState1 &= 0xFFFD; 
-	            duration_note2 = 0;
-	         }else {
-		          duration_note2 = 0;
-          }
+        } else if (lastState1 & 0x0002) {
+            FIFO_PUSH(notes, 150);
+            FIFO_PUSH(durations, duration_note2);
+            lastState1 &= 0xFFFD;
+            duration_note2 = 0;
+        } else {
+            duration_note2 = 0;
+        }
 
-	/*3 key */
+        /*3 key */
 
-      if (d11 & 0x0004) {
-       duration_note3++;
+        if (d11 & 0x0004) {
+            duration_note3++;
 
-     	   if (d21&0x0004) { 
+            if (d21 & 0x0004) {
 
-		         if (lastState1&0x0004) {
-		          	duration_note3 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,23);      
-			          FIFO_PUSH(durations, duration_note3);
+                if (lastState1 & 0x0004) {
+                    duration_note3 = 0;
+                } else {
+                    FIFO_PUSH(notes, 23);
+                    FIFO_PUSH(durations, duration_note3);
 
-		        	  lastState1 ^=0x0004;   
-		           	duration_note3 = 0;  
-	          	}
+                    lastState1 ^= 0x0004;
+                    duration_note3 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState1&0x0004) {	
-             FIFO_PUSH(notes,151); 
-		          FIFO_PUSH(durations, duration_note3); 
-	          	lastState1 &= 0xFFFB; 
-	            duration_note3 = 0;
-	         }else {
-		          duration_note3 = 0;
-          }
+        } else if (lastState1 & 0x0004) {
+            FIFO_PUSH(notes, 151);
+            FIFO_PUSH(durations, duration_note3);
+            lastState1 &= 0xFFFB;
+            duration_note3 = 0;
+        } else {
+            duration_note3 = 0;
+        }
 
-	/*4 key */
+        /*4 key */
 
-      if (d11 & 0x0008) {
-       duration_note4++;
+        if (d11 & 0x0008) {
+            duration_note4++;
 
-     	   if (d21&0x0008) { 
+            if (d21 & 0x0008) {
 
-		         if (lastState1&0x0008) {
-		          	duration_note4 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,24);      
-			          FIFO_PUSH(durations, duration_note4);
+                if (lastState1 & 0x0008) {
+                    duration_note4 = 0;
+                } else {
+                    FIFO_PUSH(notes, 24);
+                    FIFO_PUSH(durations, duration_note4);
 
-		        	  lastState1 ^=0x0008;   
-		           	duration_note4 = 0;  
-	          	}
+                    lastState1 ^= 0x0008;
+                    duration_note4 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState1&0x0008) {	
-             FIFO_PUSH(notes,152); 
-		          FIFO_PUSH(durations, duration_note4); 
-	          	lastState1 &= 0xFFF7; 
-	            duration_note4 = 0;
-	         }else {
-		          duration_note4 = 0;
-          }
+        } else if (lastState1 & 0x0008) {
+            FIFO_PUSH(notes, 152);
+            FIFO_PUSH(durations, duration_note4);
+            lastState1 &= 0xFFF7;
+            duration_note4 = 0;
+        } else {
+            duration_note4 = 0;
+        }
 
-	/*5 key */
+        /*5 key */
 
-      if (d11 & 0x0010) {
-       duration_note5++;
+        if (d11 & 0x0010) {
+            duration_note5++;
 
-     	   if (d21&0x0010) { 
+            if (d21 & 0x0010) {
 
-		         if (lastState1&0x0010) {
-		          	duration_note5 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,25);      
-			          FIFO_PUSH(durations, duration_note5);
+                if (lastState1 & 0x0010) {
+                    duration_note5 = 0;
+                } else {
+                    FIFO_PUSH(notes, 25);
+                    FIFO_PUSH(durations, duration_note5);
 
-		        	  lastState1 ^=0x0010;   
-		           	duration_note5 = 0;  
-	          	}
+                    lastState1 ^= 0x0010;
+                    duration_note5 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState1&0x0010) {	
-             FIFO_PUSH(notes,153); 
-		          FIFO_PUSH(durations, duration_note5); 
-	          	lastState1 &= 0xFFEF; 
-	            duration_note5 = 0;
-	         }else {
-		          duration_note5 = 0;
-          }
+        } else if (lastState1 & 0x0010) {
+            FIFO_PUSH(notes, 153);
+            FIFO_PUSH(durations, duration_note5);
+            lastState1 &= 0xFFEF;
+            duration_note5 = 0;
+        } else {
+            duration_note5 = 0;
+        }
 
-	/*6 key */
+        /*6 key */
 
-      if (d11 & 0x0020) {
-       duration_note6++;
+        if (d11 & 0x0020) {
+            duration_note6++;
 
-     	   if (d21&0x0020) { 
+            if (d21 & 0x0020) {
 
-		         if (lastState1&0x0020) {
-		          	duration_note6 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,26);      
-			          FIFO_PUSH(durations, duration_note6);
+                if (lastState1 & 0x0020) {
+                    duration_note6 = 0;
+                } else {
+                    FIFO_PUSH(notes, 26);
+                    FIFO_PUSH(durations, duration_note6);
 
-		        	  lastState1 ^=0x0020;   
-		           	duration_note6 = 0;  
-	          	}
+                    lastState1 ^= 0x0020;
+                    duration_note6 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState1&0x0020) {	
-             FIFO_PUSH(notes,154); 
-		          FIFO_PUSH(durations, duration_note6); 
-	          	lastState1 &= 0xFFDF; 
-	            duration_note6 = 0;
-	         }else {
-		          duration_note6 = 0;
-          }
+        } else if (lastState1 & 0x0020) {
+            FIFO_PUSH(notes, 154);
+            FIFO_PUSH(durations, duration_note6);
+            lastState1 &= 0xFFDF;
+            duration_note6 = 0;
+        } else {
+            duration_note6 = 0;
+        }
 
-	/*7 key */
+        /*7 key */
 
-      if (d11 & 0x0040) {
-       duration_note7++;
+        if (d11 & 0x0040) {
+            duration_note7++;
 
-     	   if (d21&0x0040) { 
+            if (d21 & 0x0040) {
 
-		         if (lastState1&0x0040) {
-		          	duration_note7 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,27);      
-			          FIFO_PUSH(durations, duration_note7);
+                if (lastState1 & 0x0040) {
+                    duration_note7 = 0;
+                } else {
+                    FIFO_PUSH(notes, 27);
+                    FIFO_PUSH(durations, duration_note7);
 
-		        	  lastState1 ^=0x0040;   
-		           	duration_note7 = 0;  
-	          	}
+                    lastState1 ^= 0x0040;
+                    duration_note7 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState1&0x0040) {	
-             FIFO_PUSH(notes,155); 
-		          FIFO_PUSH(durations, duration_note7); 
-	          	lastState1 &= 0xFFBF; 
-	            duration_note7 = 0;
-	         }else {
-		          duration_note7 = 0;
-          }
+        } else if (lastState1 & 0x0040) {
+            FIFO_PUSH(notes, 155);
+            FIFO_PUSH(durations, duration_note7);
+            lastState1 &= 0xFFBF;
+            duration_note7 = 0;
+        } else {
+            duration_note7 = 0;
+        }
 
-	/*8 key */
+        /*8 key */
 
-      if (d11 & 0x0080) {
-       duration_note8++;
+        if (d11 & 0x0080) {
+            duration_note8++;
 
-     	   if (d21&0x0080) { 
+            if (d21 & 0x0080) {
 
-		         if (lastState1&0x0080) {
-		          	duration_note8 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,28);      
-			          FIFO_PUSH(durations, duration_note8);
+                if (lastState1 & 0x0080) {
+                    duration_note8 = 0;
+                } else {
+                    FIFO_PUSH(notes, 28);
+                    FIFO_PUSH(durations, duration_note8);
 
-		        	  lastState1 ^=0x0080;   
-		           	duration_note8 = 0;  
-	          	}
+                    lastState1 ^= 0x0080;
+                    duration_note8 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState1&0x0080) {	
-             FIFO_PUSH(notes,156); 
-		          FIFO_PUSH(durations, duration_note8); 
-	          	lastState1 &= 0xFF7F; 
-	            duration_note8 = 0;
-	         }else {
-		          duration_note8 = 0;
-          }
+        } else if (lastState1 & 0x0080) {
+            FIFO_PUSH(notes, 156);
+            FIFO_PUSH(durations, duration_note8);
+            lastState1 &= 0xFF7F;
+            duration_note8 = 0;
+        } else {
+            duration_note8 = 0;
+        }
 
-         	}
-      /* 2 chunk */ 
+    }
+    /* 2 chunk */
 
     GPIOB->BSRRH = GPIO_Pin_11; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d12 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d12 = ~GPIOA->IDR; //Read port state first contact
     GPIOB->BSRRL = GPIO_Pin_11; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d12&0x00FF){  
+    if (d12 & 0x00FF) {
 
-    GPIOB->BSRRH = GPIO_Pin_10; 
-    Delay(KEY_SWITCH_DELAY);  
-    d22 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOB->BSRRL = GPIO_Pin_10;  
+        GPIOB->BSRRH = GPIO_Pin_10;
+        Delay(KEY_SWITCH_DELAY);
+        d22 = ~GPIOA->IDR; //Read port state second contact
+        GPIOB->BSRRL = GPIO_Pin_10;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d22=0;
-     }
-if ((d12&0x00FF)|(lastState2&0x00FF)){
-	/*9 key */
+    } else {
+        d22 = 0;
+    }
+    if ((d12 & 0x00FF) | (lastState2 & 0x00FF)) {
+        /*9 key */
 
-      if (d12 & 0x0001) {
-       duration_note9++;
+        if (d12 & 0x0001) {
+            duration_note9++;
 
-     	   if (d22&0x0001) { 
+            if (d22 & 0x0001) {
 
-		         if (lastState2&0x0001) {
-		          	duration_note9 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,29);      
-			          FIFO_PUSH(durations, duration_note9);
+                if (lastState2 & 0x0001) {
+                    duration_note9 = 0;
+                } else {
+                    FIFO_PUSH(notes, 29);
+                    FIFO_PUSH(durations, duration_note9);
 
-		        	  lastState2 ^=0x0001;   
-		           	duration_note9 = 0;  
-	          	}
+                    lastState2 ^= 0x0001;
+                    duration_note9 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState2&0x0001) {	
-             FIFO_PUSH(notes,157); 
-		          FIFO_PUSH(durations, duration_note9); 
-	          	lastState2 &= 0xFFFE; 
-	            duration_note9 = 0;
-	         }else {
-		          duration_note9 = 0;
-          }
+        } else if (lastState2 & 0x0001) {
+            FIFO_PUSH(notes, 157);
+            FIFO_PUSH(durations, duration_note9);
+            lastState2 &= 0xFFFE;
+            duration_note9 = 0;
+        } else {
+            duration_note9 = 0;
+        }
 
-	/*10 key */
+        /*10 key */
 
-      if (d12 & 0x0002) {
-       duration_note10++;
+        if (d12 & 0x0002) {
+            duration_note10++;
 
-     	   if (d22&0x0002) { 
+            if (d22 & 0x0002) {
 
-		         if (lastState2&0x0002) {
-		          	duration_note10 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,30);      
-			          FIFO_PUSH(durations, duration_note10);
+                if (lastState2 & 0x0002) {
+                    duration_note10 = 0;
+                } else {
+                    FIFO_PUSH(notes, 30);
+                    FIFO_PUSH(durations, duration_note10);
 
-		        	  lastState2 ^=0x0002;   
-		           	duration_note10 = 0;  
-	          	}
+                    lastState2 ^= 0x0002;
+                    duration_note10 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState2&0x0002) {	
-             FIFO_PUSH(notes,158); 
-		          FIFO_PUSH(durations, duration_note10); 
-	          	lastState2 &= 0xFFFD; 
-	            duration_note10 = 0;
-	         }else {
-		          duration_note10 = 0;
-          }
+        } else if (lastState2 & 0x0002) {
+            FIFO_PUSH(notes, 158);
+            FIFO_PUSH(durations, duration_note10);
+            lastState2 &= 0xFFFD;
+            duration_note10 = 0;
+        } else {
+            duration_note10 = 0;
+        }
 
-	/*11 key */
+        /*11 key */
 
-      if (d12 & 0x0004) {
-       duration_note11++;
+        if (d12 & 0x0004) {
+            duration_note11++;
 
-     	   if (d22&0x0004) { 
+            if (d22 & 0x0004) {
 
-		         if (lastState2&0x0004) {
-		          	duration_note11 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,31);      
-			          FIFO_PUSH(durations, duration_note11);
+                if (lastState2 & 0x0004) {
+                    duration_note11 = 0;
+                } else {
+                    FIFO_PUSH(notes, 31);
+                    FIFO_PUSH(durations, duration_note11);
 
-		        	  lastState2 ^=0x0004;   
-		           	duration_note11 = 0;  
-	          	}
+                    lastState2 ^= 0x0004;
+                    duration_note11 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState2&0x0004) {	
-             FIFO_PUSH(notes,159); 
-		          FIFO_PUSH(durations, duration_note11); 
-	          	lastState2 &= 0xFFFB; 
-	            duration_note11 = 0;
-	         }else {
-		          duration_note11 = 0;
-          }
+        } else if (lastState2 & 0x0004) {
+            FIFO_PUSH(notes, 159);
+            FIFO_PUSH(durations, duration_note11);
+            lastState2 &= 0xFFFB;
+            duration_note11 = 0;
+        } else {
+            duration_note11 = 0;
+        }
 
-	/*12 key */
+        /*12 key */
 
-      if (d12 & 0x0008) {
-       duration_note12++;
+        if (d12 & 0x0008) {
+            duration_note12++;
 
-     	   if (d22&0x0008) { 
+            if (d22 & 0x0008) {
 
-		         if (lastState2&0x0008) {
-		          	duration_note12 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,32);      
-			          FIFO_PUSH(durations, duration_note12);
+                if (lastState2 & 0x0008) {
+                    duration_note12 = 0;
+                } else {
+                    FIFO_PUSH(notes, 32);
+                    FIFO_PUSH(durations, duration_note12);
 
-		        	  lastState2 ^=0x0008;   
-		           	duration_note12 = 0;  
-	          	}
+                    lastState2 ^= 0x0008;
+                    duration_note12 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState2&0x0008) {	
-             FIFO_PUSH(notes,160); 
-		          FIFO_PUSH(durations, duration_note12); 
-	          	lastState2 &= 0xFFF7; 
-	            duration_note12 = 0;
-	         }else {
-		          duration_note12 = 0;
-          }
+        } else if (lastState2 & 0x0008) {
+            FIFO_PUSH(notes, 160);
+            FIFO_PUSH(durations, duration_note12);
+            lastState2 &= 0xFFF7;
+            duration_note12 = 0;
+        } else {
+            duration_note12 = 0;
+        }
 
-	/*13 key */
+        /*13 key */
 
-      if (d12 & 0x0010) {
-       duration_note13++;
+        if (d12 & 0x0010) {
+            duration_note13++;
 
-     	   if (d22&0x0010) { 
+            if (d22 & 0x0010) {
 
-		         if (lastState2&0x0010) {
-		          	duration_note13 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,33);      
-			          FIFO_PUSH(durations, duration_note13);
+                if (lastState2 & 0x0010) {
+                    duration_note13 = 0;
+                } else {
+                    FIFO_PUSH(notes, 33);
+                    FIFO_PUSH(durations, duration_note13);
 
-		        	  lastState2 ^=0x0010;   
-		           	duration_note13 = 0;  
-	          	}
+                    lastState2 ^= 0x0010;
+                    duration_note13 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState2&0x0010) {	
-             FIFO_PUSH(notes,161); 
-		          FIFO_PUSH(durations, duration_note13); 
-	          	lastState2 &= 0xFFEF; 
-	            duration_note13 = 0;
-	         }else {
-		          duration_note13 = 0;
-          }
+        } else if (lastState2 & 0x0010) {
+            FIFO_PUSH(notes, 161);
+            FIFO_PUSH(durations, duration_note13);
+            lastState2 &= 0xFFEF;
+            duration_note13 = 0;
+        } else {
+            duration_note13 = 0;
+        }
 
-	/*14 key */
+        /*14 key */
 
-      if (d12 & 0x0020) {
-       duration_note14++;
+        if (d12 & 0x0020) {
+            duration_note14++;
 
-     	   if (d22&0x0020) { 
+            if (d22 & 0x0020) {
 
-		         if (lastState2&0x0020) {
-		          	duration_note14 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,34);      
-			          FIFO_PUSH(durations, duration_note14);
+                if (lastState2 & 0x0020) {
+                    duration_note14 = 0;
+                } else {
+                    FIFO_PUSH(notes, 34);
+                    FIFO_PUSH(durations, duration_note14);
 
-		        	  lastState2 ^=0x0020;   
-		           	duration_note14 = 0;  
-	          	}
+                    lastState2 ^= 0x0020;
+                    duration_note14 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState2&0x0020) {	
-             FIFO_PUSH(notes,162); 
-		          FIFO_PUSH(durations, duration_note14); 
-	          	lastState2 &= 0xFFDF; 
-	            duration_note14 = 0;
-	         }else {
-		          duration_note14 = 0;
-          }
+        } else if (lastState2 & 0x0020) {
+            FIFO_PUSH(notes, 162);
+            FIFO_PUSH(durations, duration_note14);
+            lastState2 &= 0xFFDF;
+            duration_note14 = 0;
+        } else {
+            duration_note14 = 0;
+        }
 
-	/*15 key */
+        /*15 key */
 
-      if (d12 & 0x0040) {
-       duration_note15++;
+        if (d12 & 0x0040) {
+            duration_note15++;
 
-     	   if (d22&0x0040) { 
+            if (d22 & 0x0040) {
 
-		         if (lastState2&0x0040) {
-		          	duration_note15 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,35);      
-			          FIFO_PUSH(durations, duration_note15);
+                if (lastState2 & 0x0040) {
+                    duration_note15 = 0;
+                } else {
+                    FIFO_PUSH(notes, 35);
+                    FIFO_PUSH(durations, duration_note15);
 
-		        	  lastState2 ^=0x0040;   
-		           	duration_note15 = 0;  
-	          	}
+                    lastState2 ^= 0x0040;
+                    duration_note15 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState2&0x0040) {	
-             FIFO_PUSH(notes,163); 
-		          FIFO_PUSH(durations, duration_note15); 
-	          	lastState2 &= 0xFFBF; 
-	            duration_note15 = 0;
-	         }else {
-		          duration_note15 = 0;
-          }
+        } else if (lastState2 & 0x0040) {
+            FIFO_PUSH(notes, 163);
+            FIFO_PUSH(durations, duration_note15);
+            lastState2 &= 0xFFBF;
+            duration_note15 = 0;
+        } else {
+            duration_note15 = 0;
+        }
 
-	/*16 key */
+        /*16 key */
 
-      if (d12 & 0x0080) {
-       duration_note16++;
+        if (d12 & 0x0080) {
+            duration_note16++;
 
-     	   if (d22&0x0080) { 
+            if (d22 & 0x0080) {
 
-		         if (lastState2&0x0080) {
-		          	duration_note16 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,36);      
-			          FIFO_PUSH(durations, duration_note16);
+                if (lastState2 & 0x0080) {
+                    duration_note16 = 0;
+                } else {
+                    FIFO_PUSH(notes, 36);
+                    FIFO_PUSH(durations, duration_note16);
 
-		        	  lastState2 ^=0x0080;   
-		           	duration_note16 = 0;  
-	          	}
+                    lastState2 ^= 0x0080;
+                    duration_note16 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState2&0x0080) {	
-             FIFO_PUSH(notes,164); 
-		          FIFO_PUSH(durations, duration_note16); 
-	          	lastState2 &= 0xFF7F; 
-	            duration_note16 = 0;
-	         }else {
-		          duration_note16 = 0;
-          }
+        } else if (lastState2 & 0x0080) {
+            FIFO_PUSH(notes, 164);
+            FIFO_PUSH(durations, duration_note16);
+            lastState2 &= 0xFF7F;
+            duration_note16 = 0;
+        } else {
+            duration_note16 = 0;
+        }
 
-         	}
-      /* 3 chunk */ 
+    }
+    /* 3 chunk */
 
     GPIOB->BSRRH = GPIO_Pin_13; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d13 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d13 = ~GPIOA->IDR; //Read port state first contact
     GPIOB->BSRRL = GPIO_Pin_13; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d13&0x00FF){  
+    if (d13 & 0x00FF) {
 
-    GPIOB->BSRRH = GPIO_Pin_12; 
-    Delay(KEY_SWITCH_DELAY);  
-    d23 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOB->BSRRL = GPIO_Pin_12;  
+        GPIOB->BSRRH = GPIO_Pin_12;
+        Delay(KEY_SWITCH_DELAY);
+        d23 = ~GPIOA->IDR; //Read port state second contact
+        GPIOB->BSRRL = GPIO_Pin_12;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d23=0;
-     }
-if ((d13&0x00FF)|(lastState3&0x00FF)){
-	/*17 key */
+    } else {
+        d23 = 0;
+    }
+    if ((d13 & 0x00FF) | (lastState3 & 0x00FF)) {
+        /*17 key */
 
-      if (d13 & 0x0001) {
-       duration_note17++;
+        if (d13 & 0x0001) {
+            duration_note17++;
 
-     	   if (d23&0x0001) { 
+            if (d23 & 0x0001) {
 
-		         if (lastState3&0x0001) {
-		          	duration_note17 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,37);      
-			          FIFO_PUSH(durations, duration_note17);
+                if (lastState3 & 0x0001) {
+                    duration_note17 = 0;
+                } else {
+                    FIFO_PUSH(notes, 37);
+                    FIFO_PUSH(durations, duration_note17);
 
-		        	  lastState3 ^=0x0001;   
-		           	duration_note17 = 0;  
-	          	}
+                    lastState3 ^= 0x0001;
+                    duration_note17 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState3&0x0001) {	
-             FIFO_PUSH(notes,165); 
-		          FIFO_PUSH(durations, duration_note17); 
-	          	lastState3 &= 0xFFFE; 
-	            duration_note17 = 0;
-	         }else {
-		          duration_note17 = 0;
-          }
+        } else if (lastState3 & 0x0001) {
+            FIFO_PUSH(notes, 165);
+            FIFO_PUSH(durations, duration_note17);
+            lastState3 &= 0xFFFE;
+            duration_note17 = 0;
+        } else {
+            duration_note17 = 0;
+        }
 
-	/*18 key */
+        /*18 key */
 
-      if (d13 & 0x0002) {
-       duration_note18++;
+        if (d13 & 0x0002) {
+            duration_note18++;
 
-     	   if (d23&0x0002) { 
+            if (d23 & 0x0002) {
 
-		         if (lastState3&0x0002) {
-		          	duration_note18 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,38);      
-			          FIFO_PUSH(durations, duration_note18);
+                if (lastState3 & 0x0002) {
+                    duration_note18 = 0;
+                } else {
+                    FIFO_PUSH(notes, 38);
+                    FIFO_PUSH(durations, duration_note18);
 
-		        	  lastState3 ^=0x0002;   
-		           	duration_note18 = 0;  
-	          	}
+                    lastState3 ^= 0x0002;
+                    duration_note18 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState3&0x0002) {	
-             FIFO_PUSH(notes,166); 
-		          FIFO_PUSH(durations, duration_note18); 
-	          	lastState3 &= 0xFFFD; 
-	            duration_note18 = 0;
-	         }else {
-		          duration_note18 = 0;
-          }
+        } else if (lastState3 & 0x0002) {
+            FIFO_PUSH(notes, 166);
+            FIFO_PUSH(durations, duration_note18);
+            lastState3 &= 0xFFFD;
+            duration_note18 = 0;
+        } else {
+            duration_note18 = 0;
+        }
 
-	/*19 key */
+        /*19 key */
 
-      if (d13 & 0x0004) {
-       duration_note19++;
+        if (d13 & 0x0004) {
+            duration_note19++;
 
-     	   if (d23&0x0004) { 
+            if (d23 & 0x0004) {
 
-		         if (lastState3&0x0004) {
-		          	duration_note19 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,39);      
-			          FIFO_PUSH(durations, duration_note19);
+                if (lastState3 & 0x0004) {
+                    duration_note19 = 0;
+                } else {
+                    FIFO_PUSH(notes, 39);
+                    FIFO_PUSH(durations, duration_note19);
 
-		        	  lastState3 ^=0x0004;   
-		           	duration_note19 = 0;  
-	          	}
+                    lastState3 ^= 0x0004;
+                    duration_note19 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState3&0x0004) {	
-             FIFO_PUSH(notes,167); 
-		          FIFO_PUSH(durations, duration_note19); 
-	          	lastState3 &= 0xFFFB; 
-	            duration_note19 = 0;
-	         }else {
-		          duration_note19 = 0;
-          }
+        } else if (lastState3 & 0x0004) {
+            FIFO_PUSH(notes, 167);
+            FIFO_PUSH(durations, duration_note19);
+            lastState3 &= 0xFFFB;
+            duration_note19 = 0;
+        } else {
+            duration_note19 = 0;
+        }
 
-	/*20 key */
+        /*20 key */
 
-      if (d13 & 0x0008) {
-       duration_note20++;
+        if (d13 & 0x0008) {
+            duration_note20++;
 
-     	   if (d23&0x0008) { 
+            if (d23 & 0x0008) {
 
-		         if (lastState3&0x0008) {
-		          	duration_note20 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,40);      
-			          FIFO_PUSH(durations, duration_note20);
+                if (lastState3 & 0x0008) {
+                    duration_note20 = 0;
+                } else {
+                    FIFO_PUSH(notes, 40);
+                    FIFO_PUSH(durations, duration_note20);
 
-		        	  lastState3 ^=0x0008;   
-		           	duration_note20 = 0;  
-	          	}
+                    lastState3 ^= 0x0008;
+                    duration_note20 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState3&0x0008) {	
-             FIFO_PUSH(notes,168); 
-		          FIFO_PUSH(durations, duration_note20); 
-	          	lastState3 &= 0xFFF7; 
-	            duration_note20 = 0;
-	         }else {
-		          duration_note20 = 0;
-          }
+        } else if (lastState3 & 0x0008) {
+            FIFO_PUSH(notes, 168);
+            FIFO_PUSH(durations, duration_note20);
+            lastState3 &= 0xFFF7;
+            duration_note20 = 0;
+        } else {
+            duration_note20 = 0;
+        }
 
-	/*21 key */
+        /*21 key */
 
-      if (d13 & 0x0010) {
-       duration_note21++;
+        if (d13 & 0x0010) {
+            duration_note21++;
 
-     	   if (d23&0x0010) { 
+            if (d23 & 0x0010) {
 
-		         if (lastState3&0x0010) {
-		          	duration_note21 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,41);      
-			          FIFO_PUSH(durations, duration_note21);
+                if (lastState3 & 0x0010) {
+                    duration_note21 = 0;
+                } else {
+                    FIFO_PUSH(notes, 41);
+                    FIFO_PUSH(durations, duration_note21);
 
-		        	  lastState3 ^=0x0010;   
-		           	duration_note21 = 0;  
-	          	}
+                    lastState3 ^= 0x0010;
+                    duration_note21 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState3&0x0010) {	
-             FIFO_PUSH(notes,169); 
-		          FIFO_PUSH(durations, duration_note21); 
-	          	lastState3 &= 0xFFEF; 
-	            duration_note21 = 0;
-	         }else {
-		          duration_note21 = 0;
-          }
+        } else if (lastState3 & 0x0010) {
+            FIFO_PUSH(notes, 169);
+            FIFO_PUSH(durations, duration_note21);
+            lastState3 &= 0xFFEF;
+            duration_note21 = 0;
+        } else {
+            duration_note21 = 0;
+        }
 
-	/*22 key */
+        /*22 key */
 
-      if (d13 & 0x0020) {
-       duration_note22++;
+        if (d13 & 0x0020) {
+            duration_note22++;
 
-     	   if (d23&0x0020) { 
+            if (d23 & 0x0020) {
 
-		         if (lastState3&0x0020) {
-		          	duration_note22 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,42);      
-			          FIFO_PUSH(durations, duration_note22);
+                if (lastState3 & 0x0020) {
+                    duration_note22 = 0;
+                } else {
+                    FIFO_PUSH(notes, 42);
+                    FIFO_PUSH(durations, duration_note22);
 
-		        	  lastState3 ^=0x0020;   
-		           	duration_note22 = 0;  
-	          	}
+                    lastState3 ^= 0x0020;
+                    duration_note22 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState3&0x0020) {	
-             FIFO_PUSH(notes,170); 
-		          FIFO_PUSH(durations, duration_note22); 
-	          	lastState3 &= 0xFFDF; 
-	            duration_note22 = 0;
-	         }else {
-		          duration_note22 = 0;
-          }
+        } else if (lastState3 & 0x0020) {
+            FIFO_PUSH(notes, 170);
+            FIFO_PUSH(durations, duration_note22);
+            lastState3 &= 0xFFDF;
+            duration_note22 = 0;
+        } else {
+            duration_note22 = 0;
+        }
 
-	/*23 key */
+        /*23 key */
 
-      if (d13 & 0x0040) {
-       duration_note23++;
+        if (d13 & 0x0040) {
+            duration_note23++;
 
-     	   if (d23&0x0040) { 
+            if (d23 & 0x0040) {
 
-		         if (lastState3&0x0040) {
-		          	duration_note23 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,43);      
-			          FIFO_PUSH(durations, duration_note23);
+                if (lastState3 & 0x0040) {
+                    duration_note23 = 0;
+                } else {
+                    FIFO_PUSH(notes, 43);
+                    FIFO_PUSH(durations, duration_note23);
 
-		        	  lastState3 ^=0x0040;   
-		           	duration_note23 = 0;  
-	          	}
+                    lastState3 ^= 0x0040;
+                    duration_note23 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState3&0x0040) {	
-             FIFO_PUSH(notes,171); 
-		          FIFO_PUSH(durations, duration_note23); 
-	          	lastState3 &= 0xFFBF; 
-	            duration_note23 = 0;
-	         }else {
-		          duration_note23 = 0;
-          }
+        } else if (lastState3 & 0x0040) {
+            FIFO_PUSH(notes, 171);
+            FIFO_PUSH(durations, duration_note23);
+            lastState3 &= 0xFFBF;
+            duration_note23 = 0;
+        } else {
+            duration_note23 = 0;
+        }
 
-	/*24 key */
+        /*24 key */
 
-      if (d13 & 0x0080) {
-       duration_note24++;
+        if (d13 & 0x0080) {
+            duration_note24++;
 
-     	   if (d23&0x0080) { 
+            if (d23 & 0x0080) {
 
-		         if (lastState3&0x0080) {
-		          	duration_note24 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,44);      
-			          FIFO_PUSH(durations, duration_note24);
+                if (lastState3 & 0x0080) {
+                    duration_note24 = 0;
+                } else {
+                    FIFO_PUSH(notes, 44);
+                    FIFO_PUSH(durations, duration_note24);
 
-		        	  lastState3 ^=0x0080;   
-		           	duration_note24 = 0;  
-	          	}
+                    lastState3 ^= 0x0080;
+                    duration_note24 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState3&0x0080) {	
-             FIFO_PUSH(notes,172); 
-		          FIFO_PUSH(durations, duration_note24); 
-	          	lastState3 &= 0xFF7F; 
-	            duration_note24 = 0;
-	         }else {
-		          duration_note24 = 0;
-          }
+        } else if (lastState3 & 0x0080) {
+            FIFO_PUSH(notes, 172);
+            FIFO_PUSH(durations, duration_note24);
+            lastState3 &= 0xFF7F;
+            duration_note24 = 0;
+        } else {
+            duration_note24 = 0;
+        }
 
-         	}
-      /* 4 chunk */ 
+    }
+    /* 4 chunk */
 
     GPIOB->BSRRH = GPIO_Pin_15; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d14 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d14 = ~GPIOA->IDR; //Read port state first contact
     GPIOB->BSRRL = GPIO_Pin_15; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d14&0x00FF){  
+    if (d14 & 0x00FF) {
 
-    GPIOB->BSRRH = GPIO_Pin_14; 
-    Delay(KEY_SWITCH_DELAY);  
-    d24 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOB->BSRRL = GPIO_Pin_14;  
+        GPIOB->BSRRH = GPIO_Pin_14;
+        Delay(KEY_SWITCH_DELAY);
+        d24 = ~GPIOA->IDR; //Read port state second contact
+        GPIOB->BSRRL = GPIO_Pin_14;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d24=0;
-     }
-if ((d14&0x00FF)|(lastState4&0x00FF)){
-	/*25 key */
+    } else {
+        d24 = 0;
+    }
+    if ((d14 & 0x00FF) | (lastState4 & 0x00FF)) {
+        /*25 key */
 
-      if (d14 & 0x0001) {
-       duration_note25++;
+        if (d14 & 0x0001) {
+            duration_note25++;
 
-     	   if (d24&0x0001) { 
+            if (d24 & 0x0001) {
 
-		         if (lastState4&0x0001) {
-		          	duration_note25 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,45);      
-			          FIFO_PUSH(durations, duration_note25);
+                if (lastState4 & 0x0001) {
+                    duration_note25 = 0;
+                } else {
+                    FIFO_PUSH(notes, 45);
+                    FIFO_PUSH(durations, duration_note25);
 
-		        	  lastState4 ^=0x0001;   
-		           	duration_note25 = 0;  
-	          	}
+                    lastState4 ^= 0x0001;
+                    duration_note25 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState4&0x0001) {	
-             FIFO_PUSH(notes,173); 
-		          FIFO_PUSH(durations, duration_note25); 
-	          	lastState4 &= 0xFFFE; 
-	            duration_note25 = 0;
-	         }else {
-		          duration_note25 = 0;
-          }
+        } else if (lastState4 & 0x0001) {
+            FIFO_PUSH(notes, 173);
+            FIFO_PUSH(durations, duration_note25);
+            lastState4 &= 0xFFFE;
+            duration_note25 = 0;
+        } else {
+            duration_note25 = 0;
+        }
 
-	/*26 key */
+        /*26 key */
 
-      if (d14 & 0x0002) {
-       duration_note26++;
+        if (d14 & 0x0002) {
+            duration_note26++;
 
-     	   if (d24&0x0002) { 
+            if (d24 & 0x0002) {
 
-		         if (lastState4&0x0002) {
-		          	duration_note26 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,46);      
-			          FIFO_PUSH(durations, duration_note26);
+                if (lastState4 & 0x0002) {
+                    duration_note26 = 0;
+                } else {
+                    FIFO_PUSH(notes, 46);
+                    FIFO_PUSH(durations, duration_note26);
 
-		        	  lastState4 ^=0x0002;   
-		           	duration_note26 = 0;  
-	          	}
+                    lastState4 ^= 0x0002;
+                    duration_note26 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState4&0x0002) {	
-             FIFO_PUSH(notes,174); 
-		          FIFO_PUSH(durations, duration_note26); 
-	          	lastState4 &= 0xFFFD; 
-	            duration_note26 = 0;
-	         }else {
-		          duration_note26 = 0;
-          }
+        } else if (lastState4 & 0x0002) {
+            FIFO_PUSH(notes, 174);
+            FIFO_PUSH(durations, duration_note26);
+            lastState4 &= 0xFFFD;
+            duration_note26 = 0;
+        } else {
+            duration_note26 = 0;
+        }
 
-	/*27 key */
+        /*27 key */
 
-      if (d14 & 0x0004) {
-       duration_note27++;
+        if (d14 & 0x0004) {
+            duration_note27++;
 
-     	   if (d24&0x0004) { 
+            if (d24 & 0x0004) {
 
-		         if (lastState4&0x0004) {
-		          	duration_note27 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,47);      
-			          FIFO_PUSH(durations, duration_note27);
+                if (lastState4 & 0x0004) {
+                    duration_note27 = 0;
+                } else {
+                    FIFO_PUSH(notes, 47);
+                    FIFO_PUSH(durations, duration_note27);
 
-		        	  lastState4 ^=0x0004;   
-		           	duration_note27 = 0;  
-	          	}
+                    lastState4 ^= 0x0004;
+                    duration_note27 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState4&0x0004) {	
-             FIFO_PUSH(notes,175); 
-		          FIFO_PUSH(durations, duration_note27); 
-	          	lastState4 &= 0xFFFB; 
-	            duration_note27 = 0;
-	         }else {
-		          duration_note27 = 0;
-          }
+        } else if (lastState4 & 0x0004) {
+            FIFO_PUSH(notes, 175);
+            FIFO_PUSH(durations, duration_note27);
+            lastState4 &= 0xFFFB;
+            duration_note27 = 0;
+        } else {
+            duration_note27 = 0;
+        }
 
-	/*28 key */
+        /*28 key */
 
-      if (d14 & 0x0008) {
-       duration_note28++;
+        if (d14 & 0x0008) {
+            duration_note28++;
 
-     	   if (d24&0x0008) { 
+            if (d24 & 0x0008) {
 
-		         if (lastState4&0x0008) {
-		          	duration_note28 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,48);      
-			          FIFO_PUSH(durations, duration_note28);
+                if (lastState4 & 0x0008) {
+                    duration_note28 = 0;
+                } else {
+                    FIFO_PUSH(notes, 48);
+                    FIFO_PUSH(durations, duration_note28);
 
-		        	  lastState4 ^=0x0008;   
-		           	duration_note28 = 0;  
-	          	}
+                    lastState4 ^= 0x0008;
+                    duration_note28 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState4&0x0008) {	
-             FIFO_PUSH(notes,176); 
-		          FIFO_PUSH(durations, duration_note28); 
-	          	lastState4 &= 0xFFF7; 
-	            duration_note28 = 0;
-	         }else {
-		          duration_note28 = 0;
-          }
+        } else if (lastState4 & 0x0008) {
+            FIFO_PUSH(notes, 176);
+            FIFO_PUSH(durations, duration_note28);
+            lastState4 &= 0xFFF7;
+            duration_note28 = 0;
+        } else {
+            duration_note28 = 0;
+        }
 
-	/*29 key */
+        /*29 key */
 
-      if (d14 & 0x0010) {
-       duration_note29++;
+        if (d14 & 0x0010) {
+            duration_note29++;
 
-     	   if (d24&0x0010) { 
+            if (d24 & 0x0010) {
 
-		         if (lastState4&0x0010) {
-		          	duration_note29 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,49);      
-			          FIFO_PUSH(durations, duration_note29);
+                if (lastState4 & 0x0010) {
+                    duration_note29 = 0;
+                } else {
+                    FIFO_PUSH(notes, 49);
+                    FIFO_PUSH(durations, duration_note29);
 
-		        	  lastState4 ^=0x0010;   
-		           	duration_note29 = 0;  
-	          	}
+                    lastState4 ^= 0x0010;
+                    duration_note29 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState4&0x0010) {	
-             FIFO_PUSH(notes,177); 
-		          FIFO_PUSH(durations, duration_note29); 
-	          	lastState4 &= 0xFFEF; 
-	            duration_note29 = 0;
-	         }else {
-		          duration_note29 = 0;
-          }
+        } else if (lastState4 & 0x0010) {
+            FIFO_PUSH(notes, 177);
+            FIFO_PUSH(durations, duration_note29);
+            lastState4 &= 0xFFEF;
+            duration_note29 = 0;
+        } else {
+            duration_note29 = 0;
+        }
 
-	/*30 key */
+        /*30 key */
 
-      if (d14 & 0x0020) {
-       duration_note30++;
+        if (d14 & 0x0020) {
+            duration_note30++;
 
-     	   if (d24&0x0020) { 
+            if (d24 & 0x0020) {
 
-		         if (lastState4&0x0020) {
-		          	duration_note30 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,50);      
-			          FIFO_PUSH(durations, duration_note30);
+                if (lastState4 & 0x0020) {
+                    duration_note30 = 0;
+                } else {
+                    FIFO_PUSH(notes, 50);
+                    FIFO_PUSH(durations, duration_note30);
 
-		        	  lastState4 ^=0x0020;   
-		           	duration_note30 = 0;  
-	          	}
+                    lastState4 ^= 0x0020;
+                    duration_note30 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState4&0x0020) {	
-             FIFO_PUSH(notes,178); 
-		          FIFO_PUSH(durations, duration_note30); 
-	          	lastState4 &= 0xFFDF; 
-	            duration_note30 = 0;
-	         }else {
-		          duration_note30 = 0;
-          }
+        } else if (lastState4 & 0x0020) {
+            FIFO_PUSH(notes, 178);
+            FIFO_PUSH(durations, duration_note30);
+            lastState4 &= 0xFFDF;
+            duration_note30 = 0;
+        } else {
+            duration_note30 = 0;
+        }
 
-	/*31 key */
+        /*31 key */
 
-      if (d14 & 0x0040) {
-       duration_note31++;
+        if (d14 & 0x0040) {
+            duration_note31++;
 
-     	   if (d24&0x0040) { 
+            if (d24 & 0x0040) {
 
-		         if (lastState4&0x0040) {
-		          	duration_note31 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,51);      
-			          FIFO_PUSH(durations, duration_note31);
+                if (lastState4 & 0x0040) {
+                    duration_note31 = 0;
+                } else {
+                    FIFO_PUSH(notes, 51);
+                    FIFO_PUSH(durations, duration_note31);
 
-		        	  lastState4 ^=0x0040;   
-		           	duration_note31 = 0;  
-	          	}
+                    lastState4 ^= 0x0040;
+                    duration_note31 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState4&0x0040) {	
-             FIFO_PUSH(notes,179); 
-		          FIFO_PUSH(durations, duration_note31); 
-	          	lastState4 &= 0xFFBF; 
-	            duration_note31 = 0;
-	         }else {
-		          duration_note31 = 0;
-          }
+        } else if (lastState4 & 0x0040) {
+            FIFO_PUSH(notes, 179);
+            FIFO_PUSH(durations, duration_note31);
+            lastState4 &= 0xFFBF;
+            duration_note31 = 0;
+        } else {
+            duration_note31 = 0;
+        }
 
-	/*32 key */
+        /*32 key */
 
-      if (d14 & 0x0080) {
-       duration_note32++;
+        if (d14 & 0x0080) {
+            duration_note32++;
 
-     	   if (d24&0x0080) { 
+            if (d24 & 0x0080) {
 
-		         if (lastState4&0x0080) {
-		          	duration_note32 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,52);      
-			          FIFO_PUSH(durations, duration_note32);
+                if (lastState4 & 0x0080) {
+                    duration_note32 = 0;
+                } else {
+                    FIFO_PUSH(notes, 52);
+                    FIFO_PUSH(durations, duration_note32);
 
-		        	  lastState4 ^=0x0080;   
-		           	duration_note32 = 0;  
-	          	}
+                    lastState4 ^= 0x0080;
+                    duration_note32 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState4&0x0080) {	
-             FIFO_PUSH(notes,180); 
-		          FIFO_PUSH(durations, duration_note32); 
-	          	lastState4 &= 0xFF7F; 
-	            duration_note32 = 0;
-	         }else {
-		          duration_note32 = 0;
-          }
+        } else if (lastState4 & 0x0080) {
+            FIFO_PUSH(notes, 180);
+            FIFO_PUSH(durations, duration_note32);
+            lastState4 &= 0xFF7F;
+            duration_note32 = 0;
+        } else {
+            duration_note32 = 0;
+        }
 
-         	}
-      /* 5 chunk */ 
+    }
+    /* 5 chunk */
 
     GPIOD->BSRRH = GPIO_Pin_9; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d15 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d15 = ~GPIOA->IDR; //Read port state first contact
     GPIOD->BSRRL = GPIO_Pin_9; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d15&0x00FF){  
+    if (d15 & 0x00FF) {
 
-    GPIOD->BSRRH = GPIO_Pin_8; 
-    Delay(KEY_SWITCH_DELAY);  
-    d25 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOD->BSRRL = GPIO_Pin_8;  
+        GPIOD->BSRRH = GPIO_Pin_8;
+        Delay(KEY_SWITCH_DELAY);
+        d25 = ~GPIOA->IDR; //Read port state second contact
+        GPIOD->BSRRL = GPIO_Pin_8;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d25=0;
-     }
-if ((d15&0x00FF)|(lastState5&0x00FF)){
-	/*33 key */
+    } else {
+        d25 = 0;
+    }
+    if ((d15 & 0x00FF) | (lastState5 & 0x00FF)) {
+        /*33 key */
 
-      if (d15 & 0x0001) {
-       duration_note33++;
+        if (d15 & 0x0001) {
+            duration_note33++;
 
-     	   if (d25&0x0001) { 
+            if (d25 & 0x0001) {
 
-		         if (lastState5&0x0001) {
-		          	duration_note33 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,53);      
-			          FIFO_PUSH(durations, duration_note33);
+                if (lastState5 & 0x0001) {
+                    duration_note33 = 0;
+                } else {
+                    FIFO_PUSH(notes, 53);
+                    FIFO_PUSH(durations, duration_note33);
 
-		        	  lastState5 ^=0x0001;   
-		           	duration_note33 = 0;  
-	          	}
+                    lastState5 ^= 0x0001;
+                    duration_note33 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState5&0x0001) {	
-             FIFO_PUSH(notes,181); 
-		          FIFO_PUSH(durations, duration_note33); 
-	          	lastState5 &= 0xFFFE; 
-	            duration_note33 = 0;
-	         }else {
-		          duration_note33 = 0;
-          }
+        } else if (lastState5 & 0x0001) {
+            FIFO_PUSH(notes, 181);
+            FIFO_PUSH(durations, duration_note33);
+            lastState5 &= 0xFFFE;
+            duration_note33 = 0;
+        } else {
+            duration_note33 = 0;
+        }
 
-	/*34 key */
+        /*34 key */
 
-      if (d15 & 0x0002) {
-       duration_note34++;
+        if (d15 & 0x0002) {
+            duration_note34++;
 
-     	   if (d25&0x0002) { 
+            if (d25 & 0x0002) {
 
-		         if (lastState5&0x0002) {
-		          	duration_note34 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,54);      
-			          FIFO_PUSH(durations, duration_note34);
+                if (lastState5 & 0x0002) {
+                    duration_note34 = 0;
+                } else {
+                    FIFO_PUSH(notes, 54);
+                    FIFO_PUSH(durations, duration_note34);
 
-		        	  lastState5 ^=0x0002;   
-		           	duration_note34 = 0;  
-	          	}
+                    lastState5 ^= 0x0002;
+                    duration_note34 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState5&0x0002) {	
-             FIFO_PUSH(notes,182); 
-		          FIFO_PUSH(durations, duration_note34); 
-	          	lastState5 &= 0xFFFD; 
-	            duration_note34 = 0;
-	         }else {
-		          duration_note34 = 0;
-          }
+        } else if (lastState5 & 0x0002) {
+            FIFO_PUSH(notes, 182);
+            FIFO_PUSH(durations, duration_note34);
+            lastState5 &= 0xFFFD;
+            duration_note34 = 0;
+        } else {
+            duration_note34 = 0;
+        }
 
-	/*35 key */
+        /*35 key */
 
-      if (d15 & 0x0004) {
-       duration_note35++;
+        if (d15 & 0x0004) {
+            duration_note35++;
 
-     	   if (d25&0x0004) { 
+            if (d25 & 0x0004) {
 
-		         if (lastState5&0x0004) {
-		          	duration_note35 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,55);      
-			          FIFO_PUSH(durations, duration_note35);
+                if (lastState5 & 0x0004) {
+                    duration_note35 = 0;
+                } else {
+                    FIFO_PUSH(notes, 55);
+                    FIFO_PUSH(durations, duration_note35);
 
-		        	  lastState5 ^=0x0004;   
-		           	duration_note35 = 0;  
-	          	}
+                    lastState5 ^= 0x0004;
+                    duration_note35 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState5&0x0004) {	
-             FIFO_PUSH(notes,183); 
-		          FIFO_PUSH(durations, duration_note35); 
-	          	lastState5 &= 0xFFFB; 
-	            duration_note35 = 0;
-	         }else {
-		          duration_note35 = 0;
-          }
+        } else if (lastState5 & 0x0004) {
+            FIFO_PUSH(notes, 183);
+            FIFO_PUSH(durations, duration_note35);
+            lastState5 &= 0xFFFB;
+            duration_note35 = 0;
+        } else {
+            duration_note35 = 0;
+        }
 
-	/*36 key */
+        /*36 key */
 
-      if (d15 & 0x0008) {
-       duration_note36++;
+        if (d15 & 0x0008) {
+            duration_note36++;
 
-     	   if (d25&0x0008) { 
+            if (d25 & 0x0008) {
 
-		         if (lastState5&0x0008) {
-		          	duration_note36 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,56);      
-			          FIFO_PUSH(durations, duration_note36);
+                if (lastState5 & 0x0008) {
+                    duration_note36 = 0;
+                } else {
+                    FIFO_PUSH(notes, 56);
+                    FIFO_PUSH(durations, duration_note36);
 
-		        	  lastState5 ^=0x0008;   
-		           	duration_note36 = 0;  
-	          	}
+                    lastState5 ^= 0x0008;
+                    duration_note36 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState5&0x0008) {	
-             FIFO_PUSH(notes,184); 
-		          FIFO_PUSH(durations, duration_note36); 
-	          	lastState5 &= 0xFFF7; 
-	            duration_note36 = 0;
-	         }else {
-		          duration_note36 = 0;
-          }
+        } else if (lastState5 & 0x0008) {
+            FIFO_PUSH(notes, 184);
+            FIFO_PUSH(durations, duration_note36);
+            lastState5 &= 0xFFF7;
+            duration_note36 = 0;
+        } else {
+            duration_note36 = 0;
+        }
 
-	/*37 key */
+        /*37 key */
 
-      if (d15 & 0x0010) {
-       duration_note37++;
+        if (d15 & 0x0010) {
+            duration_note37++;
 
-     	   if (d25&0x0010) { 
+            if (d25 & 0x0010) {
 
-		         if (lastState5&0x0010) {
-		          	duration_note37 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,57);      
-			          FIFO_PUSH(durations, duration_note37);
+                if (lastState5 & 0x0010) {
+                    duration_note37 = 0;
+                } else {
+                    FIFO_PUSH(notes, 57);
+                    FIFO_PUSH(durations, duration_note37);
 
-		        	  lastState5 ^=0x0010;   
-		           	duration_note37 = 0;  
-	          	}
+                    lastState5 ^= 0x0010;
+                    duration_note37 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState5&0x0010) {	
-             FIFO_PUSH(notes,185); 
-		          FIFO_PUSH(durations, duration_note37); 
-	          	lastState5 &= 0xFFEF; 
-	            duration_note37 = 0;
-	         }else {
-		          duration_note37 = 0;
-          }
+        } else if (lastState5 & 0x0010) {
+            FIFO_PUSH(notes, 185);
+            FIFO_PUSH(durations, duration_note37);
+            lastState5 &= 0xFFEF;
+            duration_note37 = 0;
+        } else {
+            duration_note37 = 0;
+        }
 
-	/*38 key */
+        /*38 key */
 
-      if (d15 & 0x0020) {
-       duration_note38++;
+        if (d15 & 0x0020) {
+            duration_note38++;
 
-     	   if (d25&0x0020) { 
+            if (d25 & 0x0020) {
 
-		         if (lastState5&0x0020) {
-		          	duration_note38 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,58);      
-			          FIFO_PUSH(durations, duration_note38);
+                if (lastState5 & 0x0020) {
+                    duration_note38 = 0;
+                } else {
+                    FIFO_PUSH(notes, 58);
+                    FIFO_PUSH(durations, duration_note38);
 
-		        	  lastState5 ^=0x0020;   
-		           	duration_note38 = 0;  
-	          	}
+                    lastState5 ^= 0x0020;
+                    duration_note38 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState5&0x0020) {	
-             FIFO_PUSH(notes,186); 
-		          FIFO_PUSH(durations, duration_note38); 
-	          	lastState5 &= 0xFFDF; 
-	            duration_note38 = 0;
-	         }else {
-		          duration_note38 = 0;
-          }
+        } else if (lastState5 & 0x0020) {
+            FIFO_PUSH(notes, 186);
+            FIFO_PUSH(durations, duration_note38);
+            lastState5 &= 0xFFDF;
+            duration_note38 = 0;
+        } else {
+            duration_note38 = 0;
+        }
 
-	/*39 key */
+        /*39 key */
 
-      if (d15 & 0x0040) {
-       duration_note39++;
+        if (d15 & 0x0040) {
+            duration_note39++;
 
-     	   if (d25&0x0040) { 
+            if (d25 & 0x0040) {
 
-		         if (lastState5&0x0040) {
-		          	duration_note39 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,59);      
-			          FIFO_PUSH(durations, duration_note39);
+                if (lastState5 & 0x0040) {
+                    duration_note39 = 0;
+                } else {
+                    FIFO_PUSH(notes, 59);
+                    FIFO_PUSH(durations, duration_note39);
 
-		        	  lastState5 ^=0x0040;   
-		           	duration_note39 = 0;  
-	          	}
+                    lastState5 ^= 0x0040;
+                    duration_note39 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState5&0x0040) {	
-             FIFO_PUSH(notes,187); 
-		          FIFO_PUSH(durations, duration_note39); 
-	          	lastState5 &= 0xFFBF; 
-	            duration_note39 = 0;
-	         }else {
-		          duration_note39 = 0;
-          }
+        } else if (lastState5 & 0x0040) {
+            FIFO_PUSH(notes, 187);
+            FIFO_PUSH(durations, duration_note39);
+            lastState5 &= 0xFFBF;
+            duration_note39 = 0;
+        } else {
+            duration_note39 = 0;
+        }
 
-	/*40 key */
+        /*40 key */
 
-      if (d15 & 0x0080) {
-       duration_note40++;
+        if (d15 & 0x0080) {
+            duration_note40++;
 
-     	   if (d25&0x0080) { 
+            if (d25 & 0x0080) {
 
-		         if (lastState5&0x0080) {
-		          	duration_note40 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,60);      
-			          FIFO_PUSH(durations, duration_note40);
+                if (lastState5 & 0x0080) {
+                    duration_note40 = 0;
+                } else {
+                    FIFO_PUSH(notes, 60);
+                    FIFO_PUSH(durations, duration_note40);
 
-		        	  lastState5 ^=0x0080;   
-		           	duration_note40 = 0;  
-	          	}
+                    lastState5 ^= 0x0080;
+                    duration_note40 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState5&0x0080) {	
-             FIFO_PUSH(notes,188); 
-		          FIFO_PUSH(durations, duration_note40); 
-	          	lastState5 &= 0xFF7F; 
-	            duration_note40 = 0;
-	         }else {
-		          duration_note40 = 0;
-          }
+        } else if (lastState5 & 0x0080) {
+            FIFO_PUSH(notes, 188);
+            FIFO_PUSH(durations, duration_note40);
+            lastState5 &= 0xFF7F;
+            duration_note40 = 0;
+        } else {
+            duration_note40 = 0;
+        }
 
-         	}
-      /* 6 chunk */ 
+    }
+    /* 6 chunk */
 
     GPIOC->BSRRH = GPIO_Pin_4; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d16 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d16 = ~GPIOA->IDR; //Read port state first contact
     GPIOC->BSRRL = GPIO_Pin_4; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d16&0x00FF){  
+    if (d16 & 0x00FF) {
 
-    GPIOC->BSRRH = GPIO_Pin_5; 
-    Delay(KEY_SWITCH_DELAY);  
-    d26 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOC->BSRRL = GPIO_Pin_5;  
+        GPIOC->BSRRH = GPIO_Pin_5;
+        Delay(KEY_SWITCH_DELAY);
+        d26 = ~GPIOA->IDR; //Read port state second contact
+        GPIOC->BSRRL = GPIO_Pin_5;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d26=0;
-     }
-if ((d16&0x00FF)|(lastState6&0x00FF)){
-	/*41 key */
+    } else {
+        d26 = 0;
+    }
+    if ((d16 & 0x00FF) | (lastState6 & 0x00FF)) {
+        /*41 key */
 
-      if (d16 & 0x0001) {
-       duration_note41++;
+        if (d16 & 0x0001) {
+            duration_note41++;
 
-     	   if (d26&0x0001) { 
+            if (d26 & 0x0001) {
 
-		         if (lastState6&0x0001) {
-		          	duration_note41 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,61);      
-			          FIFO_PUSH(durations, duration_note41);
+                if (lastState6 & 0x0001) {
+                    duration_note41 = 0;
+                } else {
+                    FIFO_PUSH(notes, 61);
+                    FIFO_PUSH(durations, duration_note41);
 
-		        	  lastState6 ^=0x0001;   
-		           	duration_note41 = 0;  
-	          	}
+                    lastState6 ^= 0x0001;
+                    duration_note41 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState6&0x0001) {	
-             FIFO_PUSH(notes,189); 
-		          FIFO_PUSH(durations, duration_note41); 
-	          	lastState6 &= 0xFFFE; 
-	            duration_note41 = 0;
-	         }else {
-		          duration_note41 = 0;
-          }
+        } else if (lastState6 & 0x0001) {
+            FIFO_PUSH(notes, 189);
+            FIFO_PUSH(durations, duration_note41);
+            lastState6 &= 0xFFFE;
+            duration_note41 = 0;
+        } else {
+            duration_note41 = 0;
+        }
 
-	/*42 key */
+        /*42 key */
 
-      if (d16 & 0x0002) {
-       duration_note42++;
+        if (d16 & 0x0002) {
+            duration_note42++;
 
-     	   if (d26&0x0002) { 
+            if (d26 & 0x0002) {
 
-		         if (lastState6&0x0002) {
-		          	duration_note42 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,62);      
-			          FIFO_PUSH(durations, duration_note42);
+                if (lastState6 & 0x0002) {
+                    duration_note42 = 0;
+                } else {
+                    FIFO_PUSH(notes, 62);
+                    FIFO_PUSH(durations, duration_note42);
 
-		        	  lastState6 ^=0x0002;   
-		           	duration_note42 = 0;  
-	          	}
+                    lastState6 ^= 0x0002;
+                    duration_note42 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState6&0x0002) {	
-             FIFO_PUSH(notes,190); 
-		          FIFO_PUSH(durations, duration_note42); 
-	          	lastState6 &= 0xFFFD; 
-	            duration_note42 = 0;
-	         }else {
-		          duration_note42 = 0;
-          }
+        } else if (lastState6 & 0x0002) {
+            FIFO_PUSH(notes, 190);
+            FIFO_PUSH(durations, duration_note42);
+            lastState6 &= 0xFFFD;
+            duration_note42 = 0;
+        } else {
+            duration_note42 = 0;
+        }
 
-	/*43 key */
+        /*43 key */
 
-      if (d16 & 0x0004) {
-       duration_note43++;
+        if (d16 & 0x0004) {
+            duration_note43++;
 
-     	   if (d26&0x0004) { 
+            if (d26 & 0x0004) {
 
-		         if (lastState6&0x0004) {
-		          	duration_note43 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,63);      
-			          FIFO_PUSH(durations, duration_note43);
+                if (lastState6 & 0x0004) {
+                    duration_note43 = 0;
+                } else {
+                    FIFO_PUSH(notes, 63);
+                    FIFO_PUSH(durations, duration_note43);
 
-		        	  lastState6 ^=0x0004;   
-		           	duration_note43 = 0;  
-	          	}
+                    lastState6 ^= 0x0004;
+                    duration_note43 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState6&0x0004) {	
-             FIFO_PUSH(notes,191); 
-		          FIFO_PUSH(durations, duration_note43); 
-	          	lastState6 &= 0xFFFB; 
-	            duration_note43 = 0;
-	         }else {
-		          duration_note43 = 0;
-          }
+        } else if (lastState6 & 0x0004) {
+            FIFO_PUSH(notes, 191);
+            FIFO_PUSH(durations, duration_note43);
+            lastState6 &= 0xFFFB;
+            duration_note43 = 0;
+        } else {
+            duration_note43 = 0;
+        }
 
-	/*44 key */
+        /*44 key */
 
-      if (d16 & 0x0008) {
-       duration_note44++;
+        if (d16 & 0x0008) {
+            duration_note44++;
 
-     	   if (d26&0x0008) { 
+            if (d26 & 0x0008) {
 
-		         if (lastState6&0x0008) {
-		          	duration_note44 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,64);      
-			          FIFO_PUSH(durations, duration_note44);
+                if (lastState6 & 0x0008) {
+                    duration_note44 = 0;
+                } else {
+                    FIFO_PUSH(notes, 64);
+                    FIFO_PUSH(durations, duration_note44);
 
-		        	  lastState6 ^=0x0008;   
-		           	duration_note44 = 0;  
-	          	}
+                    lastState6 ^= 0x0008;
+                    duration_note44 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState6&0x0008) {	
-             FIFO_PUSH(notes,192); 
-		          FIFO_PUSH(durations, duration_note44); 
-	          	lastState6 &= 0xFFF7; 
-	            duration_note44 = 0;
-	         }else {
-		          duration_note44 = 0;
-          }
+        } else if (lastState6 & 0x0008) {
+            FIFO_PUSH(notes, 192);
+            FIFO_PUSH(durations, duration_note44);
+            lastState6 &= 0xFFF7;
+            duration_note44 = 0;
+        } else {
+            duration_note44 = 0;
+        }
 
-	/*45 key */
+        /*45 key */
 
-      if (d16 & 0x0010) {
-       duration_note45++;
+        if (d16 & 0x0010) {
+            duration_note45++;
 
-     	   if (d26&0x0010) { 
+            if (d26 & 0x0010) {
 
-		         if (lastState6&0x0010) {
-		          	duration_note45 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,65);      
-			          FIFO_PUSH(durations, duration_note45);
+                if (lastState6 & 0x0010) {
+                    duration_note45 = 0;
+                } else {
+                    FIFO_PUSH(notes, 65);
+                    FIFO_PUSH(durations, duration_note45);
 
-		        	  lastState6 ^=0x0010;   
-		           	duration_note45 = 0;  
-	          	}
+                    lastState6 ^= 0x0010;
+                    duration_note45 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState6&0x0010) {	
-             FIFO_PUSH(notes,193); 
-		          FIFO_PUSH(durations, duration_note45); 
-	          	lastState6 &= 0xFFEF; 
-	            duration_note45 = 0;
-	         }else {
-		          duration_note45 = 0;
-          }
+        } else if (lastState6 & 0x0010) {
+            FIFO_PUSH(notes, 193);
+            FIFO_PUSH(durations, duration_note45);
+            lastState6 &= 0xFFEF;
+            duration_note45 = 0;
+        } else {
+            duration_note45 = 0;
+        }
 
-	/*46 key */
+        /*46 key */
 
-      if (d16 & 0x0020) {
-       duration_note46++;
+        if (d16 & 0x0020) {
+            duration_note46++;
 
-     	   if (d26&0x0020) { 
+            if (d26 & 0x0020) {
 
-		         if (lastState6&0x0020) {
-		          	duration_note46 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,66);      
-			          FIFO_PUSH(durations, duration_note46);
+                if (lastState6 & 0x0020) {
+                    duration_note46 = 0;
+                } else {
+                    FIFO_PUSH(notes, 66);
+                    FIFO_PUSH(durations, duration_note46);
 
-		        	  lastState6 ^=0x0020;   
-		           	duration_note46 = 0;  
-	          	}
+                    lastState6 ^= 0x0020;
+                    duration_note46 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState6&0x0020) {	
-             FIFO_PUSH(notes,194); 
-		          FIFO_PUSH(durations, duration_note46); 
-	          	lastState6 &= 0xFFDF; 
-	            duration_note46 = 0;
-	         }else {
-		          duration_note46 = 0;
-          }
+        } else if (lastState6 & 0x0020) {
+            FIFO_PUSH(notes, 194);
+            FIFO_PUSH(durations, duration_note46);
+            lastState6 &= 0xFFDF;
+            duration_note46 = 0;
+        } else {
+            duration_note46 = 0;
+        }
 
-	/*47 key */
+        /*47 key */
 
-      if (d16 & 0x0040) {
-       duration_note47++;
+        if (d16 & 0x0040) {
+            duration_note47++;
 
-     	   if (d26&0x0040) { 
+            if (d26 & 0x0040) {
 
-		         if (lastState6&0x0040) {
-		          	duration_note47 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,67);      
-			          FIFO_PUSH(durations, duration_note47);
+                if (lastState6 & 0x0040) {
+                    duration_note47 = 0;
+                } else {
+                    FIFO_PUSH(notes, 67);
+                    FIFO_PUSH(durations, duration_note47);
 
-		        	  lastState6 ^=0x0040;   
-		           	duration_note47 = 0;  
-	          	}
+                    lastState6 ^= 0x0040;
+                    duration_note47 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState6&0x0040) {	
-             FIFO_PUSH(notes,195); 
-		          FIFO_PUSH(durations, duration_note47); 
-	          	lastState6 &= 0xFFBF; 
-	            duration_note47 = 0;
-	         }else {
-		          duration_note47 = 0;
-          }
+        } else if (lastState6 & 0x0040) {
+            FIFO_PUSH(notes, 195);
+            FIFO_PUSH(durations, duration_note47);
+            lastState6 &= 0xFFBF;
+            duration_note47 = 0;
+        } else {
+            duration_note47 = 0;
+        }
 
-	/*48 key */
+        /*48 key */
 
-      if (d16 & 0x0080) {
-       duration_note48++;
+        if (d16 & 0x0080) {
+            duration_note48++;
 
-     	   if (d26&0x0080) { 
+            if (d26 & 0x0080) {
 
-		         if (lastState6&0x0080) {
-		          	duration_note48 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,68);      
-			          FIFO_PUSH(durations, duration_note48);
+                if (lastState6 & 0x0080) {
+                    duration_note48 = 0;
+                } else {
+                    FIFO_PUSH(notes, 68);
+                    FIFO_PUSH(durations, duration_note48);
 
-		        	  lastState6 ^=0x0080;   
-		           	duration_note48 = 0;  
-	          	}
+                    lastState6 ^= 0x0080;
+                    duration_note48 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState6&0x0080) {	
-             FIFO_PUSH(notes,196); 
-		          FIFO_PUSH(durations, duration_note48); 
-	          	lastState6 &= 0xFF7F; 
-	            duration_note48 = 0;
-	         }else {
-		          duration_note48 = 0;
-          }
+        } else if (lastState6 & 0x0080) {
+            FIFO_PUSH(notes, 196);
+            FIFO_PUSH(durations, duration_note48);
+            lastState6 &= 0xFF7F;
+            duration_note48 = 0;
+        } else {
+            duration_note48 = 0;
+        }
 
-         	}
-      /* 7 chunk */ 
+    }
+    /* 7 chunk */
 
     GPIOB->BSRRH = GPIO_Pin_0; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d17 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d17 = ~GPIOA->IDR; //Read port state first contact
     GPIOB->BSRRL = GPIO_Pin_0; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d17&0x00FF){  
+    if (d17 & 0x00FF) {
 
-    GPIOB->BSRRH = GPIO_Pin_1; 
-    Delay(KEY_SWITCH_DELAY);  
-    d27 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOB->BSRRL = GPIO_Pin_1;  
+        GPIOB->BSRRH = GPIO_Pin_1;
+        Delay(KEY_SWITCH_DELAY);
+        d27 = ~GPIOA->IDR; //Read port state second contact
+        GPIOB->BSRRL = GPIO_Pin_1;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d27=0;
-     }
-if ((d17&0x00FF)|(lastState7&0x00FF)){
-	/*49 key */
+    } else {
+        d27 = 0;
+    }
+    if ((d17 & 0x00FF) | (lastState7 & 0x00FF)) {
+        /*49 key */
 
-      if (d17 & 0x0001) {
-       duration_note49++;
+        if (d17 & 0x0001) {
+            duration_note49++;
 
-     	   if (d27&0x0001) { 
+            if (d27 & 0x0001) {
 
-		         if (lastState7&0x0001) {
-		          	duration_note49 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,69);      
-			          FIFO_PUSH(durations, duration_note49);
+                if (lastState7 & 0x0001) {
+                    duration_note49 = 0;
+                } else {
+                    FIFO_PUSH(notes, 69);
+                    FIFO_PUSH(durations, duration_note49);
 
-		        	  lastState7 ^=0x0001;   
-		           	duration_note49 = 0;  
-	          	}
+                    lastState7 ^= 0x0001;
+                    duration_note49 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState7&0x0001) {	
-             FIFO_PUSH(notes,197); 
-		          FIFO_PUSH(durations, duration_note49); 
-	          	lastState7 &= 0xFFFE; 
-	            duration_note49 = 0;
-	         }else {
-		          duration_note49 = 0;
-          }
+        } else if (lastState7 & 0x0001) {
+            FIFO_PUSH(notes, 197);
+            FIFO_PUSH(durations, duration_note49);
+            lastState7 &= 0xFFFE;
+            duration_note49 = 0;
+        } else {
+            duration_note49 = 0;
+        }
 
-	/*50 key */
+        /*50 key */
 
-      if (d17 & 0x0002) {
-       duration_note50++;
+        if (d17 & 0x0002) {
+            duration_note50++;
 
-     	   if (d27&0x0002) { 
+            if (d27 & 0x0002) {
 
-		         if (lastState7&0x0002) {
-		          	duration_note50 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,70);      
-			          FIFO_PUSH(durations, duration_note50);
+                if (lastState7 & 0x0002) {
+                    duration_note50 = 0;
+                } else {
+                    FIFO_PUSH(notes, 70);
+                    FIFO_PUSH(durations, duration_note50);
 
-		        	  lastState7 ^=0x0002;   
-		           	duration_note50 = 0;  
-	          	}
+                    lastState7 ^= 0x0002;
+                    duration_note50 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState7&0x0002) {	
-             FIFO_PUSH(notes,198); 
-		          FIFO_PUSH(durations, duration_note50); 
-	          	lastState7 &= 0xFFFD; 
-	            duration_note50 = 0;
-	         }else {
-		          duration_note50 = 0;
-          }
+        } else if (lastState7 & 0x0002) {
+            FIFO_PUSH(notes, 198);
+            FIFO_PUSH(durations, duration_note50);
+            lastState7 &= 0xFFFD;
+            duration_note50 = 0;
+        } else {
+            duration_note50 = 0;
+        }
 
-	/*51 key */
+        /*51 key */
 
-      if (d17 & 0x0004) {
-       duration_note51++;
+        if (d17 & 0x0004) {
+            duration_note51++;
 
-     	   if (d27&0x0004) { 
+            if (d27 & 0x0004) {
 
-		         if (lastState7&0x0004) {
-		          	duration_note51 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,71);      
-			          FIFO_PUSH(durations, duration_note51);
+                if (lastState7 & 0x0004) {
+                    duration_note51 = 0;
+                } else {
+                    FIFO_PUSH(notes, 71);
+                    FIFO_PUSH(durations, duration_note51);
 
-		        	  lastState7 ^=0x0004;   
-		           	duration_note51 = 0;  
-	          	}
+                    lastState7 ^= 0x0004;
+                    duration_note51 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState7&0x0004) {	
-             FIFO_PUSH(notes,199); 
-		          FIFO_PUSH(durations, duration_note51); 
-	          	lastState7 &= 0xFFFB; 
-	            duration_note51 = 0;
-	         }else {
-		          duration_note51 = 0;
-          }
+        } else if (lastState7 & 0x0004) {
+            FIFO_PUSH(notes, 199);
+            FIFO_PUSH(durations, duration_note51);
+            lastState7 &= 0xFFFB;
+            duration_note51 = 0;
+        } else {
+            duration_note51 = 0;
+        }
 
-	/*52 key */
+        /*52 key */
 
-      if (d17 & 0x0008) {
-       duration_note52++;
+        if (d17 & 0x0008) {
+            duration_note52++;
 
-     	   if (d27&0x0008) { 
+            if (d27 & 0x0008) {
 
-		         if (lastState7&0x0008) {
-		          	duration_note52 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,72);      
-			          FIFO_PUSH(durations, duration_note52);
+                if (lastState7 & 0x0008) {
+                    duration_note52 = 0;
+                } else {
+                    FIFO_PUSH(notes, 72);
+                    FIFO_PUSH(durations, duration_note52);
 
-		        	  lastState7 ^=0x0008;   
-		           	duration_note52 = 0;  
-	          	}
+                    lastState7 ^= 0x0008;
+                    duration_note52 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState7&0x0008) {	
-             FIFO_PUSH(notes,200); 
-		          FIFO_PUSH(durations, duration_note52); 
-	          	lastState7 &= 0xFFF7; 
-	            duration_note52 = 0;
-	         }else {
-		          duration_note52 = 0;
-          }
+        } else if (lastState7 & 0x0008) {
+            FIFO_PUSH(notes, 200);
+            FIFO_PUSH(durations, duration_note52);
+            lastState7 &= 0xFFF7;
+            duration_note52 = 0;
+        } else {
+            duration_note52 = 0;
+        }
 
-	/*53 key */
+        /*53 key */
 
-      if (d17 & 0x0010) {
-       duration_note53++;
+        if (d17 & 0x0010) {
+            duration_note53++;
 
-     	   if (d27&0x0010) { 
+            if (d27 & 0x0010) {
 
-		         if (lastState7&0x0010) {
-		          	duration_note53 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,73);      
-			          FIFO_PUSH(durations, duration_note53);
+                if (lastState7 & 0x0010) {
+                    duration_note53 = 0;
+                } else {
+                    FIFO_PUSH(notes, 73);
+                    FIFO_PUSH(durations, duration_note53);
 
-		        	  lastState7 ^=0x0010;   
-		           	duration_note53 = 0;  
-	          	}
+                    lastState7 ^= 0x0010;
+                    duration_note53 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState7&0x0010) {	
-             FIFO_PUSH(notes,201); 
-		          FIFO_PUSH(durations, duration_note53); 
-	          	lastState7 &= 0xFFEF; 
-	            duration_note53 = 0;
-	         }else {
-		          duration_note53 = 0;
-          }
+        } else if (lastState7 & 0x0010) {
+            FIFO_PUSH(notes, 201);
+            FIFO_PUSH(durations, duration_note53);
+            lastState7 &= 0xFFEF;
+            duration_note53 = 0;
+        } else {
+            duration_note53 = 0;
+        }
 
-	/*54 key */
+        /*54 key */
 
-      if (d17 & 0x0020) {
-       duration_note54++;
+        if (d17 & 0x0020) {
+            duration_note54++;
 
-     	   if (d27&0x0020) { 
+            if (d27 & 0x0020) {
 
-		         if (lastState7&0x0020) {
-		          	duration_note54 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,74);      
-			          FIFO_PUSH(durations, duration_note54);
+                if (lastState7 & 0x0020) {
+                    duration_note54 = 0;
+                } else {
+                    FIFO_PUSH(notes, 74);
+                    FIFO_PUSH(durations, duration_note54);
 
-		        	  lastState7 ^=0x0020;   
-		           	duration_note54 = 0;  
-	          	}
+                    lastState7 ^= 0x0020;
+                    duration_note54 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState7&0x0020) {	
-             FIFO_PUSH(notes,202); 
-		          FIFO_PUSH(durations, duration_note54); 
-	          	lastState7 &= 0xFFDF; 
-	            duration_note54 = 0;
-	         }else {
-		          duration_note54 = 0;
-          }
+        } else if (lastState7 & 0x0020) {
+            FIFO_PUSH(notes, 202);
+            FIFO_PUSH(durations, duration_note54);
+            lastState7 &= 0xFFDF;
+            duration_note54 = 0;
+        } else {
+            duration_note54 = 0;
+        }
 
-	/*55 key */
+        /*55 key */
 
-      if (d17 & 0x0040) {
-       duration_note55++;
+        if (d17 & 0x0040) {
+            duration_note55++;
 
-     	   if (d27&0x0040) { 
+            if (d27 & 0x0040) {
 
-		         if (lastState7&0x0040) {
-		          	duration_note55 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,75);      
-			          FIFO_PUSH(durations, duration_note55);
+                if (lastState7 & 0x0040) {
+                    duration_note55 = 0;
+                } else {
+                    FIFO_PUSH(notes, 75);
+                    FIFO_PUSH(durations, duration_note55);
 
-		        	  lastState7 ^=0x0040;   
-		           	duration_note55 = 0;  
-	          	}
+                    lastState7 ^= 0x0040;
+                    duration_note55 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState7&0x0040) {	
-             FIFO_PUSH(notes,203); 
-		          FIFO_PUSH(durations, duration_note55); 
-	          	lastState7 &= 0xFFBF; 
-	            duration_note55 = 0;
-	         }else {
-		          duration_note55 = 0;
-          }
+        } else if (lastState7 & 0x0040) {
+            FIFO_PUSH(notes, 203);
+            FIFO_PUSH(durations, duration_note55);
+            lastState7 &= 0xFFBF;
+            duration_note55 = 0;
+        } else {
+            duration_note55 = 0;
+        }
 
-	/*56 key */
+        /*56 key */
 
-      if (d17 & 0x0080) {
-       duration_note56++;
+        if (d17 & 0x0080) {
+            duration_note56++;
 
-     	   if (d27&0x0080) { 
+            if (d27 & 0x0080) {
 
-		         if (lastState7&0x0080) {
-		          	duration_note56 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,76);      
-			          FIFO_PUSH(durations, duration_note56);
+                if (lastState7 & 0x0080) {
+                    duration_note56 = 0;
+                } else {
+                    FIFO_PUSH(notes, 76);
+                    FIFO_PUSH(durations, duration_note56);
 
-		        	  lastState7 ^=0x0080;   
-		           	duration_note56 = 0;  
-	          	}
+                    lastState7 ^= 0x0080;
+                    duration_note56 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState7&0x0080) {	
-             FIFO_PUSH(notes,204); 
-		          FIFO_PUSH(durations, duration_note56); 
-	          	lastState7 &= 0xFF7F; 
-	            duration_note56 = 0;
-	         }else {
-		          duration_note56 = 0;
-          }
+        } else if (lastState7 & 0x0080) {
+            FIFO_PUSH(notes, 204);
+            FIFO_PUSH(durations, duration_note56);
+            lastState7 &= 0xFF7F;
+            duration_note56 = 0;
+        } else {
+            duration_note56 = 0;
+        }
 
-         	}
-      /* 8 chunk */ 
+    }
+    /* 8 chunk */
 
     GPIOE->BSRRH = GPIO_Pin_7; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d18 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d18 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_7; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d18&0x00FF){  
+    if (d18 & 0x00FF) {
 
-    GPIOB->BSRRH = GPIO_Pin_2; 
-    Delay(KEY_SWITCH_DELAY);  
-    d28 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOB->BSRRL = GPIO_Pin_2;  
+        GPIOB->BSRRH = GPIO_Pin_2;
+        Delay(KEY_SWITCH_DELAY);
+        d28 = ~GPIOA->IDR; //Read port state second contact
+        GPIOB->BSRRL = GPIO_Pin_2;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d28=0;
-     }
-if ((d18&0x00FF)|(lastState8&0x00FF)){
-	/*57 key */
+    } else {
+        d28 = 0;
+    }
+    if ((d18 & 0x00FF) | (lastState8 & 0x00FF)) {
+        /*57 key */
 
-      if (d18 & 0x0001) {
-       duration_note57++;
+        if (d18 & 0x0001) {
+            duration_note57++;
 
-     	   if (d28&0x0001) { 
+            if (d28 & 0x0001) {
 
-		         if (lastState8&0x0001) {
-		          	duration_note57 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,77);      
-			          FIFO_PUSH(durations, duration_note57);
+                if (lastState8 & 0x0001) {
+                    duration_note57 = 0;
+                } else {
+                    FIFO_PUSH(notes, 77);
+                    FIFO_PUSH(durations, duration_note57);
 
-		        	  lastState8 ^=0x0001;   
-		           	duration_note57 = 0;  
-	          	}
+                    lastState8 ^= 0x0001;
+                    duration_note57 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState8&0x0001) {	
-             FIFO_PUSH(notes,205); 
-		          FIFO_PUSH(durations, duration_note57); 
-	          	lastState8 &= 0xFFFE; 
-	            duration_note57 = 0;
-	         }else {
-		          duration_note57 = 0;
-          }
+        } else if (lastState8 & 0x0001) {
+            FIFO_PUSH(notes, 205);
+            FIFO_PUSH(durations, duration_note57);
+            lastState8 &= 0xFFFE;
+            duration_note57 = 0;
+        } else {
+            duration_note57 = 0;
+        }
 
-	/*58 key */
+        /*58 key */
 
-      if (d18 & 0x0002) {
-       duration_note58++;
+        if (d18 & 0x0002) {
+            duration_note58++;
 
-     	   if (d28&0x0002) { 
+            if (d28 & 0x0002) {
 
-		         if (lastState8&0x0002) {
-		          	duration_note58 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,78);      
-			          FIFO_PUSH(durations, duration_note58);
+                if (lastState8 & 0x0002) {
+                    duration_note58 = 0;
+                } else {
+                    FIFO_PUSH(notes, 78);
+                    FIFO_PUSH(durations, duration_note58);
 
-		        	  lastState8 ^=0x0002;   
-		           	duration_note58 = 0;  
-	          	}
+                    lastState8 ^= 0x0002;
+                    duration_note58 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState8&0x0002) {	
-             FIFO_PUSH(notes,206); 
-		          FIFO_PUSH(durations, duration_note58); 
-	          	lastState8 &= 0xFFFD; 
-	            duration_note58 = 0;
-	         }else {
-		          duration_note58 = 0;
-          }
+        } else if (lastState8 & 0x0002) {
+            FIFO_PUSH(notes, 206);
+            FIFO_PUSH(durations, duration_note58);
+            lastState8 &= 0xFFFD;
+            duration_note58 = 0;
+        } else {
+            duration_note58 = 0;
+        }
 
-	/*59 key */
+        /*59 key */
 
-      if (d18 & 0x0004) {
-       duration_note59++;
+        if (d18 & 0x0004) {
+            duration_note59++;
 
-     	   if (d28&0x0004) { 
+            if (d28 & 0x0004) {
 
-		         if (lastState8&0x0004) {
-		          	duration_note59 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,79);      
-			          FIFO_PUSH(durations, duration_note59);
+                if (lastState8 & 0x0004) {
+                    duration_note59 = 0;
+                } else {
+                    FIFO_PUSH(notes, 79);
+                    FIFO_PUSH(durations, duration_note59);
 
-		        	  lastState8 ^=0x0004;   
-		           	duration_note59 = 0;  
-	          	}
+                    lastState8 ^= 0x0004;
+                    duration_note59 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState8&0x0004) {	
-             FIFO_PUSH(notes,207); 
-		          FIFO_PUSH(durations, duration_note59); 
-	          	lastState8 &= 0xFFFB; 
-	            duration_note59 = 0;
-	         }else {
-		          duration_note59 = 0;
-          }
+        } else if (lastState8 & 0x0004) {
+            FIFO_PUSH(notes, 207);
+            FIFO_PUSH(durations, duration_note59);
+            lastState8 &= 0xFFFB;
+            duration_note59 = 0;
+        } else {
+            duration_note59 = 0;
+        }
 
-	/*60 key */
+        /*60 key */
 
-      if (d18 & 0x0008) {
-       duration_note60++;
+        if (d18 & 0x0008) {
+            duration_note60++;
 
-     	   if (d28&0x0008) { 
+            if (d28 & 0x0008) {
 
-		         if (lastState8&0x0008) {
-		          	duration_note60 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,80);      
-			          FIFO_PUSH(durations, duration_note60);
+                if (lastState8 & 0x0008) {
+                    duration_note60 = 0;
+                } else {
+                    FIFO_PUSH(notes, 80);
+                    FIFO_PUSH(durations, duration_note60);
 
-		        	  lastState8 ^=0x0008;   
-		           	duration_note60 = 0;  
-	          	}
+                    lastState8 ^= 0x0008;
+                    duration_note60 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState8&0x0008) {	
-             FIFO_PUSH(notes,208); 
-		          FIFO_PUSH(durations, duration_note60); 
-	          	lastState8 &= 0xFFF7; 
-	            duration_note60 = 0;
-	         }else {
-		          duration_note60 = 0;
-          }
+        } else if (lastState8 & 0x0008) {
+            FIFO_PUSH(notes, 208);
+            FIFO_PUSH(durations, duration_note60);
+            lastState8 &= 0xFFF7;
+            duration_note60 = 0;
+        } else {
+            duration_note60 = 0;
+        }
 
-	/*61 key */
+        /*61 key */
 
-      if (d18 & 0x0010) {
-       duration_note61++;
+        if (d18 & 0x0010) {
+            duration_note61++;
 
-     	   if (d28&0x0010) { 
+            if (d28 & 0x0010) {
 
-		         if (lastState8&0x0010) {
-		          	duration_note61 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,81);      
-			          FIFO_PUSH(durations, duration_note61);
+                if (lastState8 & 0x0010) {
+                    duration_note61 = 0;
+                } else {
+                    FIFO_PUSH(notes, 81);
+                    FIFO_PUSH(durations, duration_note61);
 
-		        	  lastState8 ^=0x0010;   
-		           	duration_note61 = 0;  
-	          	}
+                    lastState8 ^= 0x0010;
+                    duration_note61 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState8&0x0010) {	
-             FIFO_PUSH(notes,209); 
-		          FIFO_PUSH(durations, duration_note61); 
-	          	lastState8 &= 0xFFEF; 
-	            duration_note61 = 0;
-	         }else {
-		          duration_note61 = 0;
-          }
+        } else if (lastState8 & 0x0010) {
+            FIFO_PUSH(notes, 209);
+            FIFO_PUSH(durations, duration_note61);
+            lastState8 &= 0xFFEF;
+            duration_note61 = 0;
+        } else {
+            duration_note61 = 0;
+        }
 
-	/*62 key */
+        /*62 key */
 
-      if (d18 & 0x0020) {
-       duration_note62++;
+        if (d18 & 0x0020) {
+            duration_note62++;
 
-     	   if (d28&0x0020) { 
+            if (d28 & 0x0020) {
 
-		         if (lastState8&0x0020) {
-		          	duration_note62 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,82);      
-			          FIFO_PUSH(durations, duration_note62);
+                if (lastState8 & 0x0020) {
+                    duration_note62 = 0;
+                } else {
+                    FIFO_PUSH(notes, 82);
+                    FIFO_PUSH(durations, duration_note62);
 
-		        	  lastState8 ^=0x0020;   
-		           	duration_note62 = 0;  
-	          	}
+                    lastState8 ^= 0x0020;
+                    duration_note62 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState8&0x0020) {	
-             FIFO_PUSH(notes,210); 
-		          FIFO_PUSH(durations, duration_note62); 
-	          	lastState8 &= 0xFFDF; 
-	            duration_note62 = 0;
-	         }else {
-		          duration_note62 = 0;
-          }
+        } else if (lastState8 & 0x0020) {
+            FIFO_PUSH(notes, 210);
+            FIFO_PUSH(durations, duration_note62);
+            lastState8 &= 0xFFDF;
+            duration_note62 = 0;
+        } else {
+            duration_note62 = 0;
+        }
 
-	/*63 key */
+        /*63 key */
 
-      if (d18 & 0x0040) {
-       duration_note63++;
+        if (d18 & 0x0040) {
+            duration_note63++;
 
-     	   if (d28&0x0040) { 
+            if (d28 & 0x0040) {
 
-		         if (lastState8&0x0040) {
-		          	duration_note63 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,83);      
-			          FIFO_PUSH(durations, duration_note63);
+                if (lastState8 & 0x0040) {
+                    duration_note63 = 0;
+                } else {
+                    FIFO_PUSH(notes, 83);
+                    FIFO_PUSH(durations, duration_note63);
 
-		        	  lastState8 ^=0x0040;   
-		           	duration_note63 = 0;  
-	          	}
+                    lastState8 ^= 0x0040;
+                    duration_note63 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState8&0x0040) {	
-             FIFO_PUSH(notes,211); 
-		          FIFO_PUSH(durations, duration_note63); 
-	          	lastState8 &= 0xFFBF; 
-	            duration_note63 = 0;
-	         }else {
-		          duration_note63 = 0;
-          }
+        } else if (lastState8 & 0x0040) {
+            FIFO_PUSH(notes, 211);
+            FIFO_PUSH(durations, duration_note63);
+            lastState8 &= 0xFFBF;
+            duration_note63 = 0;
+        } else {
+            duration_note63 = 0;
+        }
 
-	/*64 key */
+        /*64 key */
 
-      if (d18 & 0x0080) {
-       duration_note64++;
+        if (d18 & 0x0080) {
+            duration_note64++;
 
-     	   if (d28&0x0080) { 
+            if (d28 & 0x0080) {
 
-		         if (lastState8&0x0080) {
-		          	duration_note64 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,84);      
-			          FIFO_PUSH(durations, duration_note64);
+                if (lastState8 & 0x0080) {
+                    duration_note64 = 0;
+                } else {
+                    FIFO_PUSH(notes, 84);
+                    FIFO_PUSH(durations, duration_note64);
 
-		        	  lastState8 ^=0x0080;   
-		           	duration_note64 = 0;  
-	          	}
+                    lastState8 ^= 0x0080;
+                    duration_note64 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState8&0x0080) {	
-             FIFO_PUSH(notes,212); 
-		          FIFO_PUSH(durations, duration_note64); 
-	          	lastState8 &= 0xFF7F; 
-	            duration_note64 = 0;
-	         }else {
-		          duration_note64 = 0;
-          }
+        } else if (lastState8 & 0x0080) {
+            FIFO_PUSH(notes, 212);
+            FIFO_PUSH(durations, duration_note64);
+            lastState8 &= 0xFF7F;
+            duration_note64 = 0;
+        } else {
+            duration_note64 = 0;
+        }
 
-         	}
-      /* 9 chunk */ 
+    }
+    /* 9 chunk */
 
     GPIOE->BSRRH = GPIO_Pin_9; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d19 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d19 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_9; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d19&0x00FF){  
+    if (d19 & 0x00FF) {
 
-    GPIOE->BSRRH = GPIO_Pin_8; 
-    Delay(KEY_SWITCH_DELAY);  
-    d29 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOE->BSRRL = GPIO_Pin_8;  
+        GPIOE->BSRRH = GPIO_Pin_8;
+        Delay(KEY_SWITCH_DELAY);
+        d29 = ~GPIOA->IDR; //Read port state second contact
+        GPIOE->BSRRL = GPIO_Pin_8;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d29=0;
-     }
-if ((d19&0x00FF)|(lastState9&0x00FF)){
-	/*65 key */
+    } else {
+        d29 = 0;
+    }
+    if ((d19 & 0x00FF) | (lastState9 & 0x00FF)) {
+        /*65 key */
 
-      if (d19 & 0x0001) {
-       duration_note65++;
+        if (d19 & 0x0001) {
+            duration_note65++;
 
-     	   if (d29&0x0001) { 
+            if (d29 & 0x0001) {
 
-		         if (lastState9&0x0001) {
-		          	duration_note65 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,85);      
-			          FIFO_PUSH(durations, duration_note65);
+                if (lastState9 & 0x0001) {
+                    duration_note65 = 0;
+                } else {
+                    FIFO_PUSH(notes, 85);
+                    FIFO_PUSH(durations, duration_note65);
 
-		        	  lastState9 ^=0x0001;   
-		           	duration_note65 = 0;  
-	          	}
+                    lastState9 ^= 0x0001;
+                    duration_note65 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState9&0x0001) {	
-             FIFO_PUSH(notes,213); 
-		          FIFO_PUSH(durations, duration_note65); 
-	          	lastState9 &= 0xFFFE; 
-	            duration_note65 = 0;
-	         }else {
-		          duration_note65 = 0;
-          }
+        } else if (lastState9 & 0x0001) {
+            FIFO_PUSH(notes, 213);
+            FIFO_PUSH(durations, duration_note65);
+            lastState9 &= 0xFFFE;
+            duration_note65 = 0;
+        } else {
+            duration_note65 = 0;
+        }
 
-	/*66 key */
+        /*66 key */
 
-      if (d19 & 0x0002) {
-       duration_note66++;
+        if (d19 & 0x0002) {
+            duration_note66++;
 
-     	   if (d29&0x0002) { 
+            if (d29 & 0x0002) {
 
-		         if (lastState9&0x0002) {
-		          	duration_note66 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,86);      
-			          FIFO_PUSH(durations, duration_note66);
+                if (lastState9 & 0x0002) {
+                    duration_note66 = 0;
+                } else {
+                    FIFO_PUSH(notes, 86);
+                    FIFO_PUSH(durations, duration_note66);
 
-		        	  lastState9 ^=0x0002;   
-		           	duration_note66 = 0;  
-	          	}
+                    lastState9 ^= 0x0002;
+                    duration_note66 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState9&0x0002) {	
-             FIFO_PUSH(notes,214); 
-		          FIFO_PUSH(durations, duration_note66); 
-	          	lastState9 &= 0xFFFD; 
-	            duration_note66 = 0;
-	         }else {
-		          duration_note66 = 0;
-          }
+        } else if (lastState9 & 0x0002) {
+            FIFO_PUSH(notes, 214);
+            FIFO_PUSH(durations, duration_note66);
+            lastState9 &= 0xFFFD;
+            duration_note66 = 0;
+        } else {
+            duration_note66 = 0;
+        }
 
-	/*67 key */
+        /*67 key */
 
-      if (d19 & 0x0004) {
-       duration_note67++;
+        if (d19 & 0x0004) {
+            duration_note67++;
 
-     	   if (d29&0x0004) { 
+            if (d29 & 0x0004) {
 
-		         if (lastState9&0x0004) {
-		          	duration_note67 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,87);      
-			          FIFO_PUSH(durations, duration_note67);
+                if (lastState9 & 0x0004) {
+                    duration_note67 = 0;
+                } else {
+                    FIFO_PUSH(notes, 87);
+                    FIFO_PUSH(durations, duration_note67);
 
-		        	  lastState9 ^=0x0004;   
-		           	duration_note67 = 0;  
-	          	}
+                    lastState9 ^= 0x0004;
+                    duration_note67 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState9&0x0004) {	
-             FIFO_PUSH(notes,215); 
-		          FIFO_PUSH(durations, duration_note67); 
-	          	lastState9 &= 0xFFFB; 
-	            duration_note67 = 0;
-	         }else {
-		          duration_note67 = 0;
-          }
+        } else if (lastState9 & 0x0004) {
+            FIFO_PUSH(notes, 215);
+            FIFO_PUSH(durations, duration_note67);
+            lastState9 &= 0xFFFB;
+            duration_note67 = 0;
+        } else {
+            duration_note67 = 0;
+        }
 
-	/*68 key */
+        /*68 key */
 
-      if (d19 & 0x0008) {
-       duration_note68++;
+        if (d19 & 0x0008) {
+            duration_note68++;
 
-     	   if (d29&0x0008) { 
+            if (d29 & 0x0008) {
 
-		         if (lastState9&0x0008) {
-		          	duration_note68 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,88);      
-			          FIFO_PUSH(durations, duration_note68);
+                if (lastState9 & 0x0008) {
+                    duration_note68 = 0;
+                } else {
+                    FIFO_PUSH(notes, 88);
+                    FIFO_PUSH(durations, duration_note68);
 
-		        	  lastState9 ^=0x0008;   
-		           	duration_note68 = 0;  
-	          	}
+                    lastState9 ^= 0x0008;
+                    duration_note68 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState9&0x0008) {	
-             FIFO_PUSH(notes,216); 
-		          FIFO_PUSH(durations, duration_note68); 
-	          	lastState9 &= 0xFFF7; 
-	            duration_note68 = 0;
-	         }else {
-		          duration_note68 = 0;
-          }
+        } else if (lastState9 & 0x0008) {
+            FIFO_PUSH(notes, 216);
+            FIFO_PUSH(durations, duration_note68);
+            lastState9 &= 0xFFF7;
+            duration_note68 = 0;
+        } else {
+            duration_note68 = 0;
+        }
 
-	/*69 key */
+        /*69 key */
 
-      if (d19 & 0x0010) {
-       duration_note69++;
+        if (d19 & 0x0010) {
+            duration_note69++;
 
-     	   if (d29&0x0010) { 
+            if (d29 & 0x0010) {
 
-		         if (lastState9&0x0010) {
-		          	duration_note69 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,89);      
-			          FIFO_PUSH(durations, duration_note69);
+                if (lastState9 & 0x0010) {
+                    duration_note69 = 0;
+                } else {
+                    FIFO_PUSH(notes, 89);
+                    FIFO_PUSH(durations, duration_note69);
 
-		        	  lastState9 ^=0x0010;   
-		           	duration_note69 = 0;  
-	          	}
+                    lastState9 ^= 0x0010;
+                    duration_note69 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState9&0x0010) {	
-             FIFO_PUSH(notes,217); 
-		          FIFO_PUSH(durations, duration_note69); 
-	          	lastState9 &= 0xFFEF; 
-	            duration_note69 = 0;
-	         }else {
-		          duration_note69 = 0;
-          }
+        } else if (lastState9 & 0x0010) {
+            FIFO_PUSH(notes, 217);
+            FIFO_PUSH(durations, duration_note69);
+            lastState9 &= 0xFFEF;
+            duration_note69 = 0;
+        } else {
+            duration_note69 = 0;
+        }
 
-	/*70 key */
+        /*70 key */
 
-      if (d19 & 0x0020) {
-       duration_note70++;
+        if (d19 & 0x0020) {
+            duration_note70++;
 
-     	   if (d29&0x0020) { 
+            if (d29 & 0x0020) {
 
-		         if (lastState9&0x0020) {
-		          	duration_note70 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,90);      
-			          FIFO_PUSH(durations, duration_note70);
+                if (lastState9 & 0x0020) {
+                    duration_note70 = 0;
+                } else {
+                    FIFO_PUSH(notes, 90);
+                    FIFO_PUSH(durations, duration_note70);
 
-		        	  lastState9 ^=0x0020;   
-		           	duration_note70 = 0;  
-	          	}
+                    lastState9 ^= 0x0020;
+                    duration_note70 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState9&0x0020) {	
-             FIFO_PUSH(notes,218); 
-		          FIFO_PUSH(durations, duration_note70); 
-	          	lastState9 &= 0xFFDF; 
-	            duration_note70 = 0;
-	         }else {
-		          duration_note70 = 0;
-          }
+        } else if (lastState9 & 0x0020) {
+            FIFO_PUSH(notes, 218);
+            FIFO_PUSH(durations, duration_note70);
+            lastState9 &= 0xFFDF;
+            duration_note70 = 0;
+        } else {
+            duration_note70 = 0;
+        }
 
-	/*71 key */
+        /*71 key */
 
-      if (d19 & 0x0040) {
-       duration_note71++;
+        if (d19 & 0x0040) {
+            duration_note71++;
 
-     	   if (d29&0x0040) { 
+            if (d29 & 0x0040) {
 
-		         if (lastState9&0x0040) {
-		          	duration_note71 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,91);      
-			          FIFO_PUSH(durations, duration_note71);
+                if (lastState9 & 0x0040) {
+                    duration_note71 = 0;
+                } else {
+                    FIFO_PUSH(notes, 91);
+                    FIFO_PUSH(durations, duration_note71);
 
-		        	  lastState9 ^=0x0040;   
-		           	duration_note71 = 0;  
-	          	}
+                    lastState9 ^= 0x0040;
+                    duration_note71 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState9&0x0040) {	
-             FIFO_PUSH(notes,219); 
-		          FIFO_PUSH(durations, duration_note71); 
-	          	lastState9 &= 0xFFBF; 
-	            duration_note71 = 0;
-	         }else {
-		          duration_note71 = 0;
-          }
+        } else if (lastState9 & 0x0040) {
+            FIFO_PUSH(notes, 219);
+            FIFO_PUSH(durations, duration_note71);
+            lastState9 &= 0xFFBF;
+            duration_note71 = 0;
+        } else {
+            duration_note71 = 0;
+        }
 
-	/*72 key */
+        /*72 key */
 
-      if (d19 & 0x0080) {
-       duration_note72++;
+        if (d19 & 0x0080) {
+            duration_note72++;
 
-     	   if (d29&0x0080) { 
+            if (d29 & 0x0080) {
 
-		         if (lastState9&0x0080) {
-		          	duration_note72 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,92);      
-			          FIFO_PUSH(durations, duration_note72);
+                if (lastState9 & 0x0080) {
+                    duration_note72 = 0;
+                } else {
+                    FIFO_PUSH(notes, 92);
+                    FIFO_PUSH(durations, duration_note72);
 
-		        	  lastState9 ^=0x0080;   
-		           	duration_note72 = 0;  
-	          	}
+                    lastState9 ^= 0x0080;
+                    duration_note72 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState9&0x0080) {	
-             FIFO_PUSH(notes,220); 
-		          FIFO_PUSH(durations, duration_note72); 
-	          	lastState9 &= 0xFF7F; 
-	            duration_note72 = 0;
-	         }else {
-		          duration_note72 = 0;
-          }
+        } else if (lastState9 & 0x0080) {
+            FIFO_PUSH(notes, 220);
+            FIFO_PUSH(durations, duration_note72);
+            lastState9 &= 0xFF7F;
+            duration_note72 = 0;
+        } else {
+            duration_note72 = 0;
+        }
 
-         	}
-      /* 10 chunk */ 
+    }
+    /* 10 chunk */
 
     GPIOE->BSRRH = GPIO_Pin_12; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d110 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d110 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_12; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d110&0x00FF){  
+    if (d110 & 0x00FF) {
 
-    GPIOE->BSRRH = GPIO_Pin_10; 
-    Delay(KEY_SWITCH_DELAY);  
-    d210 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOE->BSRRL = GPIO_Pin_10;  
+        GPIOE->BSRRH = GPIO_Pin_10;
+        Delay(KEY_SWITCH_DELAY);
+        d210 = ~GPIOA->IDR; //Read port state second contact
+        GPIOE->BSRRL = GPIO_Pin_10;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d210=0;
-     }
-if ((d110&0x00FF)|(lastState10&0x00FF)){
-	/*73 key */
+    } else {
+        d210 = 0;
+    }
+    if ((d110 & 0x00FF) | (lastState10 & 0x00FF)) {
+        /*73 key */
 
-      if (d110 & 0x0001) {
-       duration_note73++;
+        if (d110 & 0x0001) {
+            duration_note73++;
 
-     	   if (d210&0x0001) { 
+            if (d210 & 0x0001) {
 
-		         if (lastState10&0x0001) {
-		          	duration_note73 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,93);      
-			          FIFO_PUSH(durations, duration_note73);
+                if (lastState10 & 0x0001) {
+                    duration_note73 = 0;
+                } else {
+                    FIFO_PUSH(notes, 93);
+                    FIFO_PUSH(durations, duration_note73);
 
-		        	  lastState10 ^=0x0001;   
-		           	duration_note73 = 0;  
-	          	}
+                    lastState10 ^= 0x0001;
+                    duration_note73 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState10&0x0001) {	
-             FIFO_PUSH(notes,221); 
-		          FIFO_PUSH(durations, duration_note73); 
-	          	lastState10 &= 0xFFFE; 
-	            duration_note73 = 0;
-	         }else {
-		          duration_note73 = 0;
-          }
+        } else if (lastState10 & 0x0001) {
+            FIFO_PUSH(notes, 221);
+            FIFO_PUSH(durations, duration_note73);
+            lastState10 &= 0xFFFE;
+            duration_note73 = 0;
+        } else {
+            duration_note73 = 0;
+        }
 
-	/*74 key */
+        /*74 key */
 
-      if (d110 & 0x0002) {
-       duration_note74++;
+        if (d110 & 0x0002) {
+            duration_note74++;
 
-     	   if (d210&0x0002) { 
+            if (d210 & 0x0002) {
 
-		         if (lastState10&0x0002) {
-		          	duration_note74 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,94);      
-			          FIFO_PUSH(durations, duration_note74);
+                if (lastState10 & 0x0002) {
+                    duration_note74 = 0;
+                } else {
+                    FIFO_PUSH(notes, 94);
+                    FIFO_PUSH(durations, duration_note74);
 
-		        	  lastState10 ^=0x0002;   
-		           	duration_note74 = 0;  
-	          	}
+                    lastState10 ^= 0x0002;
+                    duration_note74 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState10&0x0002) {	
-             FIFO_PUSH(notes,222); 
-		          FIFO_PUSH(durations, duration_note74); 
-	          	lastState10 &= 0xFFFD; 
-	            duration_note74 = 0;
-	         }else {
-		          duration_note74 = 0;
-          }
+        } else if (lastState10 & 0x0002) {
+            FIFO_PUSH(notes, 222);
+            FIFO_PUSH(durations, duration_note74);
+            lastState10 &= 0xFFFD;
+            duration_note74 = 0;
+        } else {
+            duration_note74 = 0;
+        }
 
-	/*75 key */
+        /*75 key */
 
-      if (d110 & 0x0004) {
-       duration_note75++;
+        if (d110 & 0x0004) {
+            duration_note75++;
 
-     	   if (d210&0x0004) { 
+            if (d210 & 0x0004) {
 
-		         if (lastState10&0x0004) {
-		          	duration_note75 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,95);      
-			          FIFO_PUSH(durations, duration_note75);
+                if (lastState10 & 0x0004) {
+                    duration_note75 = 0;
+                } else {
+                    FIFO_PUSH(notes, 95);
+                    FIFO_PUSH(durations, duration_note75);
 
-		        	  lastState10 ^=0x0004;   
-		           	duration_note75 = 0;  
-	          	}
+                    lastState10 ^= 0x0004;
+                    duration_note75 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState10&0x0004) {	
-             FIFO_PUSH(notes,223); 
-		          FIFO_PUSH(durations, duration_note75); 
-	          	lastState10 &= 0xFFFB; 
-	            duration_note75 = 0;
-	         }else {
-		          duration_note75 = 0;
-          }
+        } else if (lastState10 & 0x0004) {
+            FIFO_PUSH(notes, 223);
+            FIFO_PUSH(durations, duration_note75);
+            lastState10 &= 0xFFFB;
+            duration_note75 = 0;
+        } else {
+            duration_note75 = 0;
+        }
 
-	/*76 key */
+        /*76 key */
 
-      if (d110 & 0x0008) {
-       duration_note76++;
+        if (d110 & 0x0008) {
+            duration_note76++;
 
-     	   if (d210&0x0008) { 
+            if (d210 & 0x0008) {
 
-		         if (lastState10&0x0008) {
-		          	duration_note76 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,96);      
-			          FIFO_PUSH(durations, duration_note76);
+                if (lastState10 & 0x0008) {
+                    duration_note76 = 0;
+                } else {
+                    FIFO_PUSH(notes, 96);
+                    FIFO_PUSH(durations, duration_note76);
 
-		        	  lastState10 ^=0x0008;   
-		           	duration_note76 = 0;  
-	          	}
+                    lastState10 ^= 0x0008;
+                    duration_note76 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState10&0x0008) {	
-             FIFO_PUSH(notes,224); 
-		          FIFO_PUSH(durations, duration_note76); 
-	          	lastState10 &= 0xFFF7; 
-	            duration_note76 = 0;
-	         }else {
-		          duration_note76 = 0;
-          }
+        } else if (lastState10 & 0x0008) {
+            FIFO_PUSH(notes, 224);
+            FIFO_PUSH(durations, duration_note76);
+            lastState10 &= 0xFFF7;
+            duration_note76 = 0;
+        } else {
+            duration_note76 = 0;
+        }
 
-	/*77 key */
+        /*77 key */
 
-      if (d110 & 0x0010) {
-       duration_note77++;
+        if (d110 & 0x0010) {
+            duration_note77++;
 
-     	   if (d210&0x0010) { 
+            if (d210 & 0x0010) {
 
-		         if (lastState10&0x0010) {
-		          	duration_note77 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,97);      
-			          FIFO_PUSH(durations, duration_note77);
+                if (lastState10 & 0x0010) {
+                    duration_note77 = 0;
+                } else {
+                    FIFO_PUSH(notes, 97);
+                    FIFO_PUSH(durations, duration_note77);
 
-		        	  lastState10 ^=0x0010;   
-		           	duration_note77 = 0;  
-	          	}
+                    lastState10 ^= 0x0010;
+                    duration_note77 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState10&0x0010) {	
-             FIFO_PUSH(notes,225); 
-		          FIFO_PUSH(durations, duration_note77); 
-	          	lastState10 &= 0xFFEF; 
-	            duration_note77 = 0;
-	         }else {
-		          duration_note77 = 0;
-          }
+        } else if (lastState10 & 0x0010) {
+            FIFO_PUSH(notes, 225);
+            FIFO_PUSH(durations, duration_note77);
+            lastState10 &= 0xFFEF;
+            duration_note77 = 0;
+        } else {
+            duration_note77 = 0;
+        }
 
-	/*78 key */
+        /*78 key */
 
-      if (d110 & 0x0020) {
-       duration_note78++;
+        if (d110 & 0x0020) {
+            duration_note78++;
 
-     	   if (d210&0x0020) { 
+            if (d210 & 0x0020) {
 
-		         if (lastState10&0x0020) {
-		          	duration_note78 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,98);      
-			          FIFO_PUSH(durations, duration_note78);
+                if (lastState10 & 0x0020) {
+                    duration_note78 = 0;
+                } else {
+                    FIFO_PUSH(notes, 98);
+                    FIFO_PUSH(durations, duration_note78);
 
-		        	  lastState10 ^=0x0020;   
-		           	duration_note78 = 0;  
-	          	}
+                    lastState10 ^= 0x0020;
+                    duration_note78 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState10&0x0020) {	
-             FIFO_PUSH(notes,226); 
-		          FIFO_PUSH(durations, duration_note78); 
-	          	lastState10 &= 0xFFDF; 
-	            duration_note78 = 0;
-	         }else {
-		          duration_note78 = 0;
-          }
+        } else if (lastState10 & 0x0020) {
+            FIFO_PUSH(notes, 226);
+            FIFO_PUSH(durations, duration_note78);
+            lastState10 &= 0xFFDF;
+            duration_note78 = 0;
+        } else {
+            duration_note78 = 0;
+        }
 
-	/*79 key */
+        /*79 key */
 
-      if (d110 & 0x0040) {
-       duration_note79++;
+        if (d110 & 0x0040) {
+            duration_note79++;
 
-     	   if (d210&0x0040) { 
+            if (d210 & 0x0040) {
 
-		         if (lastState10&0x0040) {
-		          	duration_note79 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,99);      
-			          FIFO_PUSH(durations, duration_note79);
+                if (lastState10 & 0x0040) {
+                    duration_note79 = 0;
+                } else {
+                    FIFO_PUSH(notes, 99);
+                    FIFO_PUSH(durations, duration_note79);
 
-		        	  lastState10 ^=0x0040;   
-		           	duration_note79 = 0;  
-	          	}
+                    lastState10 ^= 0x0040;
+                    duration_note79 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState10&0x0040) {	
-             FIFO_PUSH(notes,227); 
-		          FIFO_PUSH(durations, duration_note79); 
-	          	lastState10 &= 0xFFBF; 
-	            duration_note79 = 0;
-	         }else {
-		          duration_note79 = 0;
-          }
+        } else if (lastState10 & 0x0040) {
+            FIFO_PUSH(notes, 227);
+            FIFO_PUSH(durations, duration_note79);
+            lastState10 &= 0xFFBF;
+            duration_note79 = 0;
+        } else {
+            duration_note79 = 0;
+        }
 
-	/*80 key */
+        /*80 key */
 
-      if (d110 & 0x0080) {
-       duration_note80++;
+        if (d110 & 0x0080) {
+            duration_note80++;
 
-     	   if (d210&0x0080) { 
+            if (d210 & 0x0080) {
 
-		         if (lastState10&0x0080) {
-		          	duration_note80 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,100);      
-			          FIFO_PUSH(durations, duration_note80);
+                if (lastState10 & 0x0080) {
+                    duration_note80 = 0;
+                } else {
+                    FIFO_PUSH(notes, 100);
+                    FIFO_PUSH(durations, duration_note80);
 
-		        	  lastState10 ^=0x0080;   
-		           	duration_note80 = 0;  
-	          	}
+                    lastState10 ^= 0x0080;
+                    duration_note80 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState10&0x0080) {	
-             FIFO_PUSH(notes,228); 
-		          FIFO_PUSH(durations, duration_note80); 
-	          	lastState10 &= 0xFF7F; 
-	            duration_note80 = 0;
-	         }else {
-		          duration_note80 = 0;
-          }
+        } else if (lastState10 & 0x0080) {
+            FIFO_PUSH(notes, 228);
+            FIFO_PUSH(durations, duration_note80);
+            lastState10 &= 0xFF7F;
+            duration_note80 = 0;
+        } else {
+            duration_note80 = 0;
+        }
 
-         	}
-      /* 11 chunk */ 
+    }
+    /* 11 chunk */
 
     GPIOE->BSRRH = GPIO_Pin_11; //Pin to zero
-    Delay(KEY_SWITCH_DELAY); 
-    d111 = ~GPIOA->IDR; //Read port state first contact 
+    Delay(KEY_SWITCH_DELAY);
+    d111 = ~GPIOA->IDR; //Read port state first contact
     GPIOE->BSRRL = GPIO_Pin_11; //Pin to 1
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
-    Delay(KEY_SWITCH_DELAY); 
+    GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+    GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+    GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
+    Delay(KEY_SWITCH_DELAY);
 
-    if (d111&0x00FF){  
+    if (d111 & 0x00FF) {
 
-    GPIOE->BSRRH = GPIO_Pin_13; 
-    Delay(KEY_SWITCH_DELAY);  
-    d211 = ~GPIOA->IDR; //Read port state second contact 
-    GPIOE->BSRRL = GPIO_Pin_13;  
+        GPIOE->BSRRH = GPIO_Pin_13;
+        Delay(KEY_SWITCH_DELAY);
+        d211 = ~GPIOA->IDR; //Read port state second contact
+        GPIOE->BSRRL = GPIO_Pin_13;
 
-     GPIOA->MODER |= 0x00005555;	//PA0-8 Áóäóò âûõîäàìè
-     GPIOA->ODR = 0x00FF;		//Âûñîêèé óðîâåíü íà PA0-8;
-     GPIOA->MODER &= 0xFFFF0000;	//PA0-8 Áóäóò âõîäàìè
+        GPIOA->MODER |= 0x00005555;    //PA0-8 Áóäóò âûõîäàìè
+        GPIOA->ODR = 0x00FF;       //Âûñîêèé óðîâåíü íà PA0-8;
+        GPIOA->MODER &= 0xFFFF0000;    //PA0-8 Áóäóò âõîäàìè
 
-    }else{ 
-         d211=0;
-     }
-if ((d111&0x00FF)|(lastState11&0x00FF)){
-	/*81 key */
+    } else {
+        d211 = 0;
+    }
+    if ((d111 & 0x00FF) | (lastState11 & 0x00FF)) {
+        /*81 key */
 
-      if (d111 & 0x0001) {
-       duration_note81++;
+        if (d111 & 0x0001) {
+            duration_note81++;
 
-     	   if (d211&0x0001) { 
+            if (d211 & 0x0001) {
 
-		         if (lastState11&0x0001) {
-		          	duration_note81 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,101);      
-			          FIFO_PUSH(durations, duration_note81);
+                if (lastState11 & 0x0001) {
+                    duration_note81 = 0;
+                } else {
+                    FIFO_PUSH(notes, 101);
+                    FIFO_PUSH(durations, duration_note81);
 
-		        	  lastState11 ^=0x0001;   
-		           	duration_note81 = 0;  
-	          	}
+                    lastState11 ^= 0x0001;
+                    duration_note81 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState11&0x0001) {	
-             FIFO_PUSH(notes,229); 
-		          FIFO_PUSH(durations, duration_note81); 
-	          	lastState11 &= 0xFFFE; 
-	            duration_note81 = 0;
-	         }else {
-		          duration_note81 = 0;
-          }
+        } else if (lastState11 & 0x0001) {
+            FIFO_PUSH(notes, 229);
+            FIFO_PUSH(durations, duration_note81);
+            lastState11 &= 0xFFFE;
+            duration_note81 = 0;
+        } else {
+            duration_note81 = 0;
+        }
 
-	/*82 key */
+        /*82 key */
 
-      if (d111 & 0x0002) {
-       duration_note82++;
+        if (d111 & 0x0002) {
+            duration_note82++;
 
-     	   if (d211&0x0002) { 
+            if (d211 & 0x0002) {
 
-		         if (lastState11&0x0002) {
-		          	duration_note82 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,102);      
-			          FIFO_PUSH(durations, duration_note82);
+                if (lastState11 & 0x0002) {
+                    duration_note82 = 0;
+                } else {
+                    FIFO_PUSH(notes, 102);
+                    FIFO_PUSH(durations, duration_note82);
 
-		        	  lastState11 ^=0x0002;   
-		           	duration_note82 = 0;  
-	          	}
+                    lastState11 ^= 0x0002;
+                    duration_note82 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState11&0x0002) {	
-             FIFO_PUSH(notes,230); 
-		          FIFO_PUSH(durations, duration_note82); 
-	          	lastState11 &= 0xFFFD; 
-	            duration_note82 = 0;
-	         }else {
-		          duration_note82 = 0;
-          }
+        } else if (lastState11 & 0x0002) {
+            FIFO_PUSH(notes, 230);
+            FIFO_PUSH(durations, duration_note82);
+            lastState11 &= 0xFFFD;
+            duration_note82 = 0;
+        } else {
+            duration_note82 = 0;
+        }
 
-	/*83 key */
+        /*83 key */
 
-      if (d111 & 0x0004) {
-       duration_note83++;
+        if (d111 & 0x0004) {
+            duration_note83++;
 
-     	   if (d211&0x0004) { 
+            if (d211 & 0x0004) {
 
-		         if (lastState11&0x0004) {
-		          	duration_note83 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,103);      
-			          FIFO_PUSH(durations, duration_note83);
+                if (lastState11 & 0x0004) {
+                    duration_note83 = 0;
+                } else {
+                    FIFO_PUSH(notes, 103);
+                    FIFO_PUSH(durations, duration_note83);
 
-		        	  lastState11 ^=0x0004;   
-		           	duration_note83 = 0;  
-	          	}
+                    lastState11 ^= 0x0004;
+                    duration_note83 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState11&0x0004) {	
-             FIFO_PUSH(notes,231); 
-		          FIFO_PUSH(durations, duration_note83); 
-	          	lastState11 &= 0xFFFB; 
-	            duration_note83 = 0;
-	         }else {
-		          duration_note83 = 0;
-          }
+        } else if (lastState11 & 0x0004) {
+            FIFO_PUSH(notes, 231);
+            FIFO_PUSH(durations, duration_note83);
+            lastState11 &= 0xFFFB;
+            duration_note83 = 0;
+        } else {
+            duration_note83 = 0;
+        }
 
-	/*84 key */
+        /*84 key */
 
-      if (d111 & 0x0008) {
-       duration_note84++;
+        if (d111 & 0x0008) {
+            duration_note84++;
 
-     	   if (d211&0x0008) { 
+            if (d211 & 0x0008) {
 
-		         if (lastState11&0x0008) {
-		          	duration_note84 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,104);      
-			          FIFO_PUSH(durations, duration_note84);
+                if (lastState11 & 0x0008) {
+                    duration_note84 = 0;
+                } else {
+                    FIFO_PUSH(notes, 104);
+                    FIFO_PUSH(durations, duration_note84);
 
-		        	  lastState11 ^=0x0008;   
-		           	duration_note84 = 0;  
-	          	}
+                    lastState11 ^= 0x0008;
+                    duration_note84 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState11&0x0008) {	
-             FIFO_PUSH(notes,232); 
-		          FIFO_PUSH(durations, duration_note84); 
-	          	lastState11 &= 0xFFF7; 
-	            duration_note84 = 0;
-	         }else {
-		          duration_note84 = 0;
-          }
+        } else if (lastState11 & 0x0008) {
+            FIFO_PUSH(notes, 232);
+            FIFO_PUSH(durations, duration_note84);
+            lastState11 &= 0xFFF7;
+            duration_note84 = 0;
+        } else {
+            duration_note84 = 0;
+        }
 
-	/*85 key */
+        /*85 key */
 
-      if (d111 & 0x0010) {
-       duration_note85++;
+        if (d111 & 0x0010) {
+            duration_note85++;
 
-     	   if (d211&0x0010) { 
+            if (d211 & 0x0010) {
 
-		         if (lastState11&0x0010) {
-		          	duration_note85 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,105);      
-			          FIFO_PUSH(durations, duration_note85);
+                if (lastState11 & 0x0010) {
+                    duration_note85 = 0;
+                } else {
+                    FIFO_PUSH(notes, 105);
+                    FIFO_PUSH(durations, duration_note85);
 
-		        	  lastState11 ^=0x0010;   
-		           	duration_note85 = 0;  
-	          	}
+                    lastState11 ^= 0x0010;
+                    duration_note85 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState11&0x0010) {	
-             FIFO_PUSH(notes,233); 
-		          FIFO_PUSH(durations, duration_note85); 
-	          	lastState11 &= 0xFFEF; 
-	            duration_note85 = 0;
-	         }else {
-		          duration_note85 = 0;
-          }
+        } else if (lastState11 & 0x0010) {
+            FIFO_PUSH(notes, 233);
+            FIFO_PUSH(durations, duration_note85);
+            lastState11 &= 0xFFEF;
+            duration_note85 = 0;
+        } else {
+            duration_note85 = 0;
+        }
 
-	/*86 key */
+        /*86 key */
 
-      if (d111 & 0x0020) {
-       duration_note86++;
+        if (d111 & 0x0020) {
+            duration_note86++;
 
-     	   if (d211&0x0020) { 
+            if (d211 & 0x0020) {
 
-		         if (lastState11&0x0020) {
-		          	duration_note86 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,106);      
-			          FIFO_PUSH(durations, duration_note86);
+                if (lastState11 & 0x0020) {
+                    duration_note86 = 0;
+                } else {
+                    FIFO_PUSH(notes, 106);
+                    FIFO_PUSH(durations, duration_note86);
 
-		        	  lastState11 ^=0x0020;   
-		           	duration_note86 = 0;  
-	          	}
+                    lastState11 ^= 0x0020;
+                    duration_note86 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState11&0x0020) {	
-             FIFO_PUSH(notes,234); 
-		          FIFO_PUSH(durations, duration_note86); 
-	          	lastState11 &= 0xFFDF; 
-	            duration_note86 = 0;
-	         }else {
-		          duration_note86 = 0;
-          }
+        } else if (lastState11 & 0x0020) {
+            FIFO_PUSH(notes, 234);
+            FIFO_PUSH(durations, duration_note86);
+            lastState11 &= 0xFFDF;
+            duration_note86 = 0;
+        } else {
+            duration_note86 = 0;
+        }
 
-	/*87 key */
+        /*87 key */
 
-      if (d111 & 0x0040) {
-       duration_note87++;
+        if (d111 & 0x0040) {
+            duration_note87++;
 
-     	   if (d211&0x0040) { 
+            if (d211 & 0x0040) {
 
-		         if (lastState11&0x0040) {
-		          	duration_note87 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,107);      
-			          FIFO_PUSH(durations, duration_note87);
+                if (lastState11 & 0x0040) {
+                    duration_note87 = 0;
+                } else {
+                    FIFO_PUSH(notes, 107);
+                    FIFO_PUSH(durations, duration_note87);
 
-		        	  lastState11 ^=0x0040;   
-		           	duration_note87 = 0;  
-	          	}
+                    lastState11 ^= 0x0040;
+                    duration_note87 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState11&0x0040) {	
-             FIFO_PUSH(notes,235); 
-		          FIFO_PUSH(durations, duration_note87); 
-	          	lastState11 &= 0xFFBF; 
-	            duration_note87 = 0;
-	         }else {
-		          duration_note87 = 0;
-          }
+        } else if (lastState11 & 0x0040) {
+            FIFO_PUSH(notes, 235);
+            FIFO_PUSH(durations, duration_note87);
+            lastState11 &= 0xFFBF;
+            duration_note87 = 0;
+        } else {
+            duration_note87 = 0;
+        }
 
-	/*88 key */
+        /*88 key */
 
-      if (d111 & 0x0080) {
-       duration_note88++;
+        if (d111 & 0x0080) {
+            duration_note88++;
 
-     	   if (d211&0x0080) { 
+            if (d211 & 0x0080) {
 
-		         if (lastState11&0x0080) {
-		          	duration_note88 = 0;
-	          	} else {
-	 	          	FIFO_PUSH(notes,108);      
-			          FIFO_PUSH(durations, duration_note88);
+                if (lastState11 & 0x0080) {
+                    duration_note88 = 0;
+                } else {
+                    FIFO_PUSH(notes, 108);
+                    FIFO_PUSH(durations, duration_note88);
 
-		        	  lastState11 ^=0x0080;   
-		           	duration_note88 = 0;  
-	          	}
+                    lastState11 ^= 0x0080;
+                    duration_note88 = 0;
+                }
 
-         	}
+            }
 
-         }else if (lastState11&0x0080) {	
-             FIFO_PUSH(notes,236); 
-		          FIFO_PUSH(durations, duration_note88); 
-	          	lastState11 &= 0xFF7F; 
-	            duration_note88 = 0;
-	         }else {
-		          duration_note88 = 0;
-          }
+        } else if (lastState11 & 0x0080) {
+            FIFO_PUSH(notes, 236);
+            FIFO_PUSH(durations, duration_note88);
+            lastState11 &= 0xFF7F;
+            duration_note88 = 0;
+        } else {
+            duration_note88 = 0;
+        }
 
-         	}
-		 
-				}	
-	
+    }
+
+}

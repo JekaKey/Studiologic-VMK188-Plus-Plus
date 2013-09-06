@@ -22,6 +22,7 @@
 #include "fifo.h"
 #include "keyboardscan.h"
 #include "midi.h"
+#include "hd44780.h"
 
 #define MIDI_BAUDRATE 31250                         //Midi speed baudrate
 #define CHECK_BIT(var,pos) ((var) & (1<<(pos)))     //Check bit in position
@@ -54,6 +55,14 @@ volatile char received_string[MAX_STRLEN + 1]; // this will hold the recieved st
 void Delay(__IO uint32_t nCount) {
     while (nCount--) {
     }
+}
+
+void delay( uint32_t c ) {
+    while ( --c );
+}
+
+void delayms( uint32_t c ) {
+    delay(100000);
 }
 
 /*
@@ -119,10 +128,10 @@ void init_GPIO(void) {
     TIM_TimeBaseStructInit(&timer);
 
     //Выставляем предделитель, 100uS
-    timer.TIM_Prescaler = 84-1;
+    timer.TIM_Prescaler = 84 - 1;
 
     //Тут значение, досчитав до которого таймер сгенерирует прерывание
-    timer.TIM_Period = 20 - 1; 
+    timer.TIM_Period = 20 - 1;
 
     //Предделитель таймера
     timer.TIM_ClockDivision = 0;
@@ -353,9 +362,8 @@ uint16_t ADC_GetSampleAvgNDeleteX(uint8_t N , uint8_t X) {
 }
 
 
-uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t out_max) {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 

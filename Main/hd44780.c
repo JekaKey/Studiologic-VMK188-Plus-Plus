@@ -201,3 +201,4 @@ void hd44780_write_line( uint8_t line, char *msg ) {
     if ( line >= HD44780_DISP_ROWS ) return;
     /* TODO: dokonèi... */
 }
+

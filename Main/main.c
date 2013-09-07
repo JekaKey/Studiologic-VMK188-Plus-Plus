@@ -57,12 +57,17 @@ void Delay(__IO uint32_t nCount) {
     }
 }
 
-void delay( uint32_t c ) {
-    while ( --c );
+void delay(volatile uint32_t c ) {
+    while ( --c ) {
+		__NOP();
+		}
 }
 
-void delayms( uint32_t c ) {
-    delay(100000);
+void delayms(volatile uint32_t c ) {
+		c++;
+		while ( --c ) {
+			delay(23080);
+		}
 }
 
 /*
@@ -107,7 +112,7 @@ void init_GPIO(void) {
     GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /*Configure GPIO pin */
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 |GPIO_Pin_1 |GPIO_Pin_2 |GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -115,7 +120,7 @@ void init_GPIO(void) {
     GPIO_Init(GPIOE, &GPIO_InitStruct);
 
     /*Configure GPIO pin */
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_15;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 |GPIO_Pin_1 |GPIO_Pin_2 |GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 |GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_15;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -368,7 +373,7 @@ uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t 
 
 
 int main(void) {
-
+		uint32_t i;
     firstInit();
 
     init_ADC();                                 //ADC init
@@ -376,9 +381,17 @@ int main(void) {
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
 
     //Тестовый кусок для Константина, отправляем  noteOn при включении
-    sendNoteOn(60, 90, 0);
-
-    GPIOD->BSRRL = GPIO_Pin_15;
+    //sendNoteOn(60, 90, 0);
+		delayms(400);
+		hd44780_init();
+	  hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF );
+	
+	
+	  hd44780_write_string("FATARMINATOR");
+	  hd44780_goto(2,4);
+	  hd44780_write_string("PROJECT  v0.1");
+    
+		GPIO_SetBits(GPIOD, GPIO_Pin_15);
 
     /* Основной цикл программы */
     while (1) {
@@ -436,6 +449,6 @@ void TIM4_IRQHandler() {
 
         // GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
         //Считываем состояние клавиш
-        readKeyState();
+        //readKeyState();
     }
 }

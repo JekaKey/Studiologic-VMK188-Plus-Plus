@@ -62,7 +62,7 @@
  *
  ***************************************************************/
 
-#define HD44780_CONF_BUS            HD44780_FUNC_BUS_4BIT
+#define HD44780_CONF_BUS            HD44780_FUNC_BUS_8BIT
 #define HD44780_CONF_LINES          HD44780_FUNC_LINES_2
 #define HD44780_CONF_FONT           HD44780_FUNC_FONT_5x8
 
@@ -75,17 +75,17 @@
 #define HD44780_DATABIT1            GPIO_Pin_1
 #define HD44780_DATABIT2            GPIO_Pin_2
 #define HD44780_DATABIT3            GPIO_Pin_3
-#define HD44780_DATABIT4            GPIO_Pin_0
-#define HD44780_DATABIT5            GPIO_Pin_1
-#define HD44780_DATABIT6            GPIO_Pin_2
-#define HD44780_DATABIT7            GPIO_Pin_3
+#define HD44780_DATABIT4            GPIO_Pin_4
+#define HD44780_DATABIT5            GPIO_Pin_5
+#define HD44780_DATABIT6            GPIO_Pin_6
+#define HD44780_DATABIT7            GPIO_Pin_7
 
 #define HD44780_RS_PORT             GPIOE
-#define HD44780_RS_BIT              GPIO_Pin_8
+#define HD44780_RS_BIT              GPIO_Pin_0
 #define HD44780_RW_PORT             GPIOE
-#define HD44780_RW_BIT              GPIO_Pin_10
+#define HD44780_RW_BIT              GPIO_Pin_1
 #define HD44780_EN_PORT             GPIOE
-#define HD44780_EN_BIT              GPIO_Pin_12
+#define HD44780_EN_BIT              GPIO_Pin_2
 
 
 /***************************************************************
@@ -102,7 +102,7 @@
 #define hd44780_EN_Off()                GPIO_ResetBits( HD44780_EN_PORT, HD44780_EN_BIT )
 
 
-#define hd44780_EN_high_delay()         delay( 0xfff )
+#define hd44780_EN_high_delay()         delay( 1250 )
 #define hd44780_init_delay()            delayms( 16 )
 #define hd44780_init_delay2()           delayms( 5 )
 #define hd44780_init_delay3()           delayms( 1 )
@@ -123,6 +123,7 @@ void hd44780_wr_data( uint8_t );
 void hd44780_init( void );
 void hd44780_write_string( char *s );
 void hd44780_write_line( uint8_t line, char *msg );
+void hd44780_goto( uint8_t line, uint8_t position);
 void delay( uint32_t c );
 void delayms( uint32_t c );
 

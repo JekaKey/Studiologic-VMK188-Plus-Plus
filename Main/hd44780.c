@@ -184,10 +184,9 @@ void hd44780_init( void ) {
     hd44780_clear();
 
     /* addr increment, shift cursor */
-    hd44780_entry( HD44780_ENTRY_ADDR_INC, HD44780_ENTRY_SHIFT_DISP );
+    hd44780_entry( HD44780_ENTRY_SHIFT_CURS, HD44780_ENTRY_ADDR_INC );
 
 }
-
 
 void hd44780_write_string( char *s ) {
     uint32_t i;
@@ -202,3 +201,8 @@ void hd44780_write_line( uint8_t line, char *msg ) {
     /* TODO: dokonèi... */
 }
 
+void hd44780_goto( uint8_t line,  uint8_t position) {
+	line--;
+	position--;
+	hd44780_ddram_addr((0x40 * line) + position);
+}

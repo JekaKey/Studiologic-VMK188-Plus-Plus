@@ -126,6 +126,9 @@ void init_GPIO(void) {
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOD, &GPIO_InitStruct);
+		
+		GPIOA->PUPDR |= 0x00005555;
+
 
     /* Настройка таймера 4 */
 
@@ -136,7 +139,7 @@ void init_GPIO(void) {
     timer.TIM_Prescaler = 84 - 1;
 
     //Тут значение, досчитав до которого таймер сгенерирует прерывание
-    timer.TIM_Period = 20 - 1;
+    timer.TIM_Period = 50 - 1;
 
     //Предделитель таймера
     timer.TIM_ClockDivision = 0;
@@ -373,7 +376,7 @@ uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t 
 
 
 int main(void) {
-		uint32_t i;
+//		uint32_t i;
     firstInit();
 
     init_ADC();                                 //ADC init
@@ -383,13 +386,13 @@ int main(void) {
     //Тестовый кусок для Константина, отправляем  noteOn при включении
     sendNoteOn(60, 90, 0);
 		delayms(400);
-		hd44780_init();
-	  hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF );
+//		hd44780_init();
+//	  hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF );
 	
 	
-	  hd44780_write_string("FATARMINATOR");
-	  hd44780_goto(2,4);
-	  hd44780_write_string("PROJECT  v0.1");
+//	  hd44780_write_string("FATARMINATOR");
+//	  hd44780_goto(2,4);
+//	  hd44780_write_string("PROJECT  v0.1");
     
 		GPIO_SetBits(GPIOD, GPIO_Pin_15);
 
@@ -449,6 +452,6 @@ void TIM4_IRQHandler() {
 
         // GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
         //Считываем состояние клавиш
-        //readKeyState();
+        readKeyState();
     }
 }

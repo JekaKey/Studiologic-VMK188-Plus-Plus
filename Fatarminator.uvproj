@@ -507,6 +507,16 @@
               <FileType>5</FileType>
               <FilePath>.\Main\keyboardscan.h</FilePath>
             </File>
+            <File>
+              <FileName>hd44780.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Main\hd44780.c</FilePath>
+            </File>
+            <File>
+              <FileName>hd44780.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Main\hd44780.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

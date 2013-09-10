@@ -384,15 +384,15 @@ int main(void) {
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
 
     //Тестовый кусок для Константина, отправляем  noteOn при включении
-    sendNoteOn(60, 90, 0);
+    //sendNoteOn(56, 90, 0);
 		delayms(400);
-//		hd44780_init();
-//	  hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF );
+  	hd44780_init();
+	  hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF );
 	
 	
-//	  hd44780_write_string("FATARMINATOR");
-//	  hd44780_goto(2,4);
-//	  hd44780_write_string("PROJECT  v0.1");
+	  hd44780_write_string("FATARMINATOR");
+	  hd44780_goto(2,4);
+	  hd44780_write_string("PROJECT  v0.1");
     
 		GPIO_SetBits(GPIOD, GPIO_Pin_15);
 

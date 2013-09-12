@@ -165,7 +165,6 @@
             <Capability>1</Capability>
             <DriverSelection>4103</DriverSelection>
           </Flash1>
-          <bUseTDR>0</bUseTDR>
           <Flash2>STLink\ST-LINKIII-KEIL_SWO.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -351,7 +350,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F4XX</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CMSIS;.\CMSIS\Device\ST\STM32F4xx\Include;.\Main;.\STM32F4xx_SPL\inc;.\STM32F4xx_SPL\src</IncludePath>
+              <IncludePath>.\CMSIS;.\CMSIS\Device\ST\STM32F4xx\Include;.\Main;.\STM32F4xx_SPL\inc;.\STM32F4xx_SPL\src;.\STM32_USB_Device_Library\Class\audio\inc;.\STM32_USB_Device_Library\Core\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -516,6 +515,61 @@
               <FileName>hd44780.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Main\hd44780.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>USB LIB</GroupName>
+          <Files>
+            <File>
+              <FileName>usbd_desc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Main\usbd_desc.h</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Main\usbd_conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>usb_conf.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Main\usb_conf.h</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_core.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_core.h</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_def.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_def.h</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_ioreq.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_ioreq.h</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_req.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_req.h</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_usr.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_usr.h</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_audio_core.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Class\audio\inc\usbd_audio_core.h</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_audio_out_if.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Class\audio\inc\usbd_audio_out_if.h</FilePath>
             </File>
           </Files>
         </Group>

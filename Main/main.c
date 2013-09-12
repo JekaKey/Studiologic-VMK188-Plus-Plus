@@ -2,6 +2,7 @@
 #define STM32F40XX
 
 #include "stm32f4xx.h"
+#include "core_cm4.h"
 #include "stm32f4xx_syscfg.h"
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
@@ -14,19 +15,17 @@
 
 #include "system_stm32f4xx.h"
 #include "stm32f4xx_conf.h"
-#include "core_cm4.h"
 
 #define MAIN
 
-#include "main.h"
 #include "fifo.h"
 #include "keyboardscan.h"
 #include "midi.h"
 #include "hd44780.h"
 
 #define MIDI_BAUDRATE 31250                         //Midi speed baudrate
-#define CHECK_BIT(var,pos) ((var) & (1<<(pos)))     //Check bit in position
 
+//USB_OTG_CORE_HANDLE USB_OTG_dev;
 
 TIM_TimeBaseInitTypeDef timer;
 
@@ -52,22 +51,17 @@ typedef struct {
 
 volatile char received_string[MAX_STRLEN + 1]; // this will hold the recieved string
 
-void Delay(__IO uint32_t nCount) {
-    while (nCount--) {
+void delay(volatile uint32_t c ) {
+    while ( --c ) {
+        __NOP();
     }
 }
 
-void delay(volatile uint32_t c ) {
-    while ( --c ) {
-		__NOP();
-		}
-}
-
 void delayms(volatile uint32_t c ) {
-		c++;
-		while ( --c ) {
-			delay(23080);
-		}
+    c++;
+    while ( --c ) {
+        delay(23080);
+    }
 }
 
 /*
@@ -112,7 +106,7 @@ void init_GPIO(void) {
     GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /*Configure GPIO pin */
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 |GPIO_Pin_1 |GPIO_Pin_2 |GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -120,14 +114,14 @@ void init_GPIO(void) {
     GPIO_Init(GPIOE, &GPIO_InitStruct);
 
     /*Configure GPIO pin */
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 |GPIO_Pin_1 |GPIO_Pin_2 |GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 |GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_15;
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_15;
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
     GPIO_Init(GPIOD, &GPIO_InitStruct);
-		
-		GPIOA->PUPDR |= 0x00005555;
+
+    GPIOA->PUPDR |= 0x00005555;
 
 
     /* Настройка таймера 4 */
@@ -279,6 +273,16 @@ void firstInit() {
     init_GPIO();                //GPIO init
     init_USART1(MIDI_BAUDRATE); //Midi init
 
+//       USBD_Init(&USB_OTG_dev,
+// #ifdef USE_USB_OTG_HS 
+//             USB_OTG_HS_CORE_ID,
+// #else            
+//             USB_OTG_FS_CORE_ID,
+// #endif 
+//             &USR_desc, 
+//             &AUDIO_cb, 
+//             &USR_cb);
+      
     //First port init, all for high
     GPIOB->BSRRL = 0xFC07;  // B0-B2, B10-B15
     GPIOC->BSRRL = 0x30;    // C4-C5
@@ -297,17 +301,17 @@ void firstInit() {
 }
 
 uint16_t readADC1(uint8_t channel) {
-    Delay(1000);
+    delay(1000);
     ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_56Cycles);
     // начинаем работу
-    Delay(1000);
+    delay(1000);
     ADC_SoftwareStartConv(ADC1);
-    Delay(1000);
+    delay(1000);
     ADC_SoftwareStartInjectedConv(ADC1);
-    Delay(1000);
+    delay(1000);
     // ждём пока преобразуется напряжение в код
     while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) {}
-    Delay(1000);
+    delay(1000);
     // очищаем статус
     // ADC_ClearFlag(ADC1, ADC_FLAG_EOC);
     // возвращаем результат
@@ -376,7 +380,7 @@ uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t 
 
 
 int main(void) {
-//		uint32_t i;
+    //      uint32_t i;
     firstInit();
 
     init_ADC();                                 //ADC init
@@ -385,16 +389,16 @@ int main(void) {
 
     //Тестовый кусок для Константина, отправляем  noteOn при включении
     //sendNoteOn(56, 90, 0);
-		delayms(400);
-  	hd44780_init();
-	  hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF );
-	
-	
-	  hd44780_write_string("FATARMINATOR");
-	  hd44780_goto(2,4);
-	  hd44780_write_string("PROJECT  v0.1");
-    
-		GPIO_SetBits(GPIOD, GPIO_Pin_15);
+    delayms(400);
+    hd44780_init();
+    hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF );
+
+
+    hd44780_write_string("FATARMINATOR");
+    hd44780_goto(2, 4);
+    hd44780_write_string("PROJECT  v0.1");
+
+    GPIO_SetBits(GPIOD, GPIO_Pin_15);
 
     /* Основной цикл программы */
     while (1) {

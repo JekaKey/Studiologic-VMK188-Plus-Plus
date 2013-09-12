@@ -255,7 +255,7 @@ uint16_t note_color (uint16_t note_num) {
 	return (0x0001 << ((note_num-21) % 12))&0x0A52;
 	
 }
-uint8_t getVelocity (uint16_t tickNum,  uint16_t black) {
+uint8_t getVelocity_on (uint16_t tickNum,  uint16_t black) {
 
 	
 	if (black) {
@@ -279,6 +279,29 @@ uint8_t getVelocity (uint16_t tickNum,  uint16_t black) {
   }  
 }
 
+uint8_t getVelocity_off (uint16_t tickNum,  uint16_t black) {
+
+	
+	if (black) {
+
+    if (tickNum >= max_ticks_black_off)
+        return 0;
+
+    if (tickNum <= min_ticks_black_off)
+        return 127;
+
+    return tick_factor_black_off / tickNum;
+		
+  } else {
+    if (tickNum >= max_ticks_white_off)
+        return 0;
+
+    if (tickNum <= min_ticks_white_off)
+        return 127;
+
+    return tick_factor_white_off / tickNum;		
+  }  
+}
 /**
 * Расчет velocity и запись в midi буффер
 */
@@ -294,9 +317,9 @@ void checkNoteArray(void) {
         FIFO_POP(notes);
 
         if ((curNote & 0x80) == 0) {
-            sendNoteOn(curNote, getVelocity(duration,note_color(curNote)), 0);
+            sendNoteOn(curNote, getVelocity_on(duration,note_color(curNote)), 0);
         } else {
-            sendNoteOff(curNote & 0x7F, 70, 0);
+            sendNoteOff(curNote & 0x7F, getVelocity_off(duration,note_color(curNote)), 0);
         }
 
     }

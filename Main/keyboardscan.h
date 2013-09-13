@@ -26,11 +26,8 @@
 #define min_ticks_black_off tick_factor_black_off / 127
 #define max_ticks_black_off tick_factor_black_off*2
 
-
-
-
 void readKeyState(void); 				//Считывание состояние клавиш
 uint8_t getVelocity_on(uint16_t tickNum, uint16_t black ); 	//Расчет velocity исходя из количества тиков
 uint8_t getVelocity_off(uint16_t tickNum, uint16_t black ); 	//Расчет velocity исходя из количества тиков
 void checkNoteArray(void);
-void Delay(__IO uint32_t nCount);
+void delay(volatile uint32_t c);

@@ -171,7 +171,7 @@ void init_ADC() {
     ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConvEdge_None;
     ADC_InitStructure.ADC_ExternalTrigConvEdge = 0;
     /* 12 битное преобразование. результат в 12 младших разрядах результата */
-    ADC_InitStructure.ADC_Resolution = ADC_Resolution_8b;
+    ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
     ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
 
     /* инициализация */
@@ -297,17 +297,17 @@ void firstInit() {
 }
 
 uint16_t readADC1(uint8_t channel) {
-    Delay(1000);
+//    delay(500);
     ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_56Cycles);
     // начинаем работу
-    Delay(1000);
+//    delay(500);
     ADC_SoftwareStartConv(ADC1);
-    Delay(1000);
+//    delay(500);
     ADC_SoftwareStartInjectedConv(ADC1);
-    Delay(1000);
+//    delay(500);
     // ждём пока преобразуется напряжение в код
     while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) {}
-    Delay(1000);
+//    delay(500);
     // очищаем статус
     // ADC_ClearFlag(ADC1, ADC_FLAG_EOC);
     // возвращаем результат
@@ -344,18 +344,37 @@ void Sort_tab(uint16_t tab[], uint8_t lenght) {
  * @param Numbre of ADC samples to be averaged
  * @retval The average value
  */
+
+uint16_t ADC_last;
+
+uint16_t ADC_GetSample(uint16_t delta) {
+	uint16_t adc_sample, adc_change;
+	adc_sample=readADC1(ADC_Channel_11);
+	if (adc_sample>ADC_last) {
+		adc_change=adc_sample-ADC_last;
+	}else{
+		adc_change=ADC_last-adc_sample;
+	}
+	if (adc_change>delta){
+		ADC_last=adc_sample;
+		return adc_sample>>5;
+	}else{
+		return ADC_last>>5;
+	}
+}
+
 uint16_t ADC_GetSampleAvgNDeleteX(uint8_t N , uint8_t X) {
     uint32_t avg_sample = 0x00;
     uint16_t adc_sample[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     uint8_t index = 0x00;
     for (index = 0x00; index < N; index++) {
         /* ADC start conv */
-        ADC_SoftwareStartConv(ADC1);
+//        ADC_SoftwareStartConv(ADC1);
         /* Wait end of conversion */
-        while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
+//        while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
         /* Store ADC samples */
-        // adc_sample[index] = ADC_GetConversionValue(ADC1);
-        adc_sample[index] = readADC1(ADC_Channel_10);
+       // adc_sample[index] = ADC_GetConversionValue(ADC1);
+        adc_sample[index] = readADC1(ADC_Channel_11);
     }
     /* Sort the N-X ADC samples */
     Sort_tab(adc_sample, N);
@@ -375,16 +394,16 @@ uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t 
 }
 
 
+Slider sliders;
+
 int main(void) {
-//		uint32_t i;
+		uint32_t i;
     firstInit();
 
     init_ADC();                                 //ADC init
 
     //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
 
-    //Тестовый кусок для Константина, отправляем  noteOn при включении
-    //sendNoteOn(56, 90, 0);
 		delayms(400);
   	hd44780_init();
 	  hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF );
@@ -395,6 +414,8 @@ int main(void) {
 	  hd44780_write_string("PROJECT  v0.1");
     
 		GPIO_SetBits(GPIOD, GPIO_Pin_15);
+	
+	 sendNoteOn(60, 70, 0);
 
     /* Основной цикл программы */
     while (1) {
@@ -404,16 +425,18 @@ int main(void) {
 
         //Проверка и отправка буффера midi сообщений
         sendMidiData();
+			
+//			  i=ADC_GetSample(0x80);
 
-        // count = FIFO_COUNT(midiMessagesArray);
+ //        count = FIFO_COUNT(midiMessagesArray);
 
-        // i = ADC_GetSampleAvgNDeleteX(8, 6) >> 1;
-
-        //        if (i != sliders.value) {
-        //                  __NOP();
-        //            sliders.value = i;
-        //            sendControlChange(64,i,0);
-        //        }
+ //       i = ADC_GetSampleAvgNDeleteX(8, 6) >> 1;
+//
+ //               if (i != sliders.value) {
+ //                         __NOP();
+ //                   sliders.value = i;
+ //                   sendControlChange(64,i,0);
+ //               }
 
     }
 }
@@ -441,10 +464,13 @@ void USART1_IRQHandler(void) {
 }
 
 /**
-Таймер для чтения состояния клавиш
+Таймер для чтения состояния клавиш и контроллеров
 **/
 
+uint16_t ticks_counter=0x0000;
+
 void TIM4_IRQHandler() {
+	  uint32_t i;
     if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
 
         //Очищаем бит
@@ -453,5 +479,17 @@ void TIM4_IRQHandler() {
         // GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
         //Считываем состояние клавиш
         readKeyState();
+			  ticks_counter++;
+			  if (ticks_counter>1000){ //контроллеры проверям реже, чем клавиши.
+					ticks_counter=0;
+          i=ADC_GetSample(0x80);	
+          if (i != sliders.value) {
+                __NOP();
+                sliders.value = i;
+                sendControlChange(64,i,0);
+					}	
+ 					
+				}
     }
+		
 }

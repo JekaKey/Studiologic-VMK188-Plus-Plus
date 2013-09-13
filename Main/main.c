@@ -273,16 +273,16 @@ void firstInit() {
     init_GPIO();                //GPIO init
     init_USART1(MIDI_BAUDRATE); //Midi init
 
-//       USBD_Init(&USB_OTG_dev,
-// #ifdef USE_USB_OTG_HS 
-//             USB_OTG_HS_CORE_ID,
-// #else            
-//             USB_OTG_FS_CORE_ID,
-// #endif 
-//             &USR_desc, 
-//             &AUDIO_cb, 
-//             &USR_cb);
-      
+    //       USBD_Init(&USB_OTG_dev,
+    // #ifdef USE_USB_OTG_HS
+    //             USB_OTG_HS_CORE_ID,
+    // #else
+    //             USB_OTG_FS_CORE_ID,
+    // #endif
+    //             &USR_desc,
+    //             &AUDIO_cb,
+    //             &USR_cb);
+
     //First port init, all for high
     GPIOB->BSRRL = 0xFC07;  // B0-B2, B10-B15
     GPIOC->BSRRL = 0x30;    // C4-C5
@@ -300,32 +300,44 @@ void firstInit() {
 
 }
 
+FlagStatus ADC_GetFlagStatus1(ADC_TypeDef* ADCx, uint8_t ADC_FLAG)
+{
+  FlagStatus bitstatus = RESET;
+  /* Check the parameters */
+  assert_param(IS_ADC_ALL_PERIPH(ADCx));
+  assert_param(IS_ADC_GET_FLAG(ADC_FLAG));
+
+  /* Check the status of the specified ADC flag */
+  if ((ADCx->SR & ADC_FLAG) != (uint8_t)RESET)
+  {
+    /* ADC_FLAG is set */
+    bitstatus = SET;
+  }
+  else
+  {
+    /* ADC_FLAG is reset */
+    bitstatus = RESET;
+  }
+  /* Return the ADC_FLAG status */
+  return  bitstatus;
+}
+
+
 uint16_t readADC1(uint8_t channel) {
-<<<<<<< HEAD
-//    delay(500);
+ 
+   
     ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_56Cycles);
     // начинаем работу
-//    delay(500);
     ADC_SoftwareStartConv(ADC1);
-//    delay(500);
     ADC_SoftwareStartInjectedConv(ADC1);
-//    delay(500);
     // ждём пока преобразуется напряжение в код
-    while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) {}
-//    delay(500);
-=======
-    delay(1000);
+    while (!ADC_GetFlagStatus1(ADC1, ADC_FLAG_EOC)) {}
     ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_56Cycles);
     // начинаем работу
-    delay(1000);
     ADC_SoftwareStartConv(ADC1);
-    delay(1000);
     ADC_SoftwareStartInjectedConv(ADC1);
-    delay(1000);
     // ждём пока преобразуется напряжение в код
-    while (!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC)) {}
-    delay(1000);
->>>>>>> 4579bd23ea9aeccb01df1b1e601ed5e289792e1a
+    while (!ADC_GetFlagStatus1(ADC1, ADC_FLAG_EOC)) {}
     // очищаем статус
     // ADC_ClearFlag(ADC1, ADC_FLAG_EOC);
     // возвращаем результат
@@ -366,19 +378,19 @@ void Sort_tab(uint16_t tab[], uint8_t lenght) {
 uint16_t ADC_last;
 
 uint16_t ADC_GetSample(uint16_t delta) {
-	uint16_t adc_sample, adc_change;
-	adc_sample=readADC1(ADC_Channel_11);
-	if (adc_sample>ADC_last) {
-		adc_change=adc_sample-ADC_last;
-	}else{
-		adc_change=ADC_last-adc_sample;
-	}
-	if (adc_change>delta){
-		ADC_last=adc_sample;
-		return adc_sample>>5;
-	}else{
-		return ADC_last>>5;
-	}
+    uint16_t adc_sample, adc_change;
+    adc_sample = readADC1(ADC_Channel_11);
+    if (adc_sample > ADC_last) {
+        adc_change = adc_sample - ADC_last;
+    } else {
+        adc_change = ADC_last - adc_sample;
+    }
+    if (adc_change > delta) {
+        ADC_last = adc_sample;
+        return adc_sample >> 5;
+    } else {
+        return ADC_last >> 5;
+    }
 }
 
 uint16_t ADC_GetSampleAvgNDeleteX(uint8_t N , uint8_t X) {
@@ -387,11 +399,11 @@ uint16_t ADC_GetSampleAvgNDeleteX(uint8_t N , uint8_t X) {
     uint8_t index = 0x00;
     for (index = 0x00; index < N; index++) {
         /* ADC start conv */
-//        ADC_SoftwareStartConv(ADC1);
+        //        ADC_SoftwareStartConv(ADC1);
         /* Wait end of conversion */
-//        while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
+        //        while (ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC) == RESET);
         /* Store ADC samples */
-       // adc_sample[index] = ADC_GetConversionValue(ADC1);
+        // adc_sample[index] = ADC_GetConversionValue(ADC1);
         adc_sample[index] = readADC1(ADC_Channel_11);
     }
     /* Sort the N-X ADC samples */
@@ -415,13 +427,12 @@ uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t 
 Slider sliders;
 
 int main(void) {
-		uint32_t i;
+    uint32_t i;
 
     firstInit();
 
     init_ADC();                                 //ADC init
 
-    //USART_puts(USART1, "Init complete! Hello World!rn"); //Тестовая мессага
 
 
     delayms(400);
@@ -441,19 +452,7 @@ int main(void) {
         checkNoteArray();
 
         //Проверка и отправка буффера midi сообщений
-        sendMidiData();
-			
-//			  i=ADC_GetSample(0x80);
-
- //        count = FIFO_COUNT(midiMessagesArray);
-
- //       i = ADC_GetSampleAvgNDeleteX(8, 6) >> 1;
-//
- //               if (i != sliders.value) {
- //                         __NOP();
- //                   sliders.value = i;
- //                   sendControlChange(64,i,0);
- //               }
+        sendMidiData(); 
 
     }
 }
@@ -484,10 +483,10 @@ void USART1_IRQHandler(void) {
 Таймер для чтения состояния клавиш и контроллеров
 **/
 
-uint16_t ticks_counter=0x0000;
+uint16_t ticks_counter = 0x0000;
 
 void TIM4_IRQHandler() {
-	  uint32_t i;
+    uint32_t i;
     if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
 
         //Очищаем бит
@@ -496,17 +495,17 @@ void TIM4_IRQHandler() {
         // GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
         //Считываем состояние клавиш
         readKeyState();
-			  ticks_counter++;
-			  if (ticks_counter>1000){ //контроллеры проверям реже, чем клавиши.
-					ticks_counter=0;
-          i=ADC_GetSample(0x80);	
-          if (i != sliders.value) {
+        ticks_counter++;
+        if (ticks_counter > 1000) { //контроллеры проверям реже, чем клавиши.
+            ticks_counter = 0;
+            i = ADC_GetSample(0x20);
+            if (i != sliders.value) {
                 __NOP();
                 sliders.value = i;
-                sendControlChange(64,i,0);
-					}	
- 					
-				}
+                sendControlChange(64, i, 0);
+            }
+
+        }
     }
-		
+
 }

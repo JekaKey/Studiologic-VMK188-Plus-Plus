@@ -323,27 +323,21 @@ FlagStatus ADC_GetFlagStatus1(ADC_TypeDef* ADCx, uint8_t ADC_FLAG)
 }
 
 
-uint16_t readADC1(uint8_t channel) {
- 
-   
-    ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_56Cycles);
-    // начинаем работу
-    ADC_SoftwareStartConv(ADC1);
-    ADC_SoftwareStartInjectedConv(ADC1);
-    // ждём пока преобразуется напряжение в код
-    while (!ADC_GetFlagStatus1(ADC1, ADC_FLAG_EOC)) {}
-    ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_56Cycles);
-    // начинаем работу
-    ADC_SoftwareStartConv(ADC1);
-    ADC_SoftwareStartInjectedConv(ADC1);
-    // ждём пока преобразуется напряжение в код
-    while (!ADC_GetFlagStatus1(ADC1, ADC_FLAG_EOC)) {}
-    // очищаем статус
-    // ADC_ClearFlag(ADC1, ADC_FLAG_EOC);
-    // возвращаем результат
-    return ADC_GetConversionValue(ADC1);
-}
 
+
+ uint16_t readADC1(uint8_t channel){
+     ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_28Cycles); 
+    // начинаем работу 
+     ADC_SoftwareStartConv(ADC1); 
+     // ждём пока преобразуется напряжение в код 
+    while(((ADC1->SR & ADC_FLAG_EOC)==RESET)){__NOP();} 
+     // очищаем статус 
+    ADC_ClearFlag(ADC1, ADC_FLAG_EOC);   //Добавил в качестве теста 
+     // возвращаем результат 
+    return ADC_GetConversionValue(ADC1); 
+		}
+	
+	
 /**DocID022945 Rev 4 29/33
 AN4073 Averaging of N-X ADC samples: source code
  * @brief Sort the N ADC samples

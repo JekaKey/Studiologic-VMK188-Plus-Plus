@@ -11,6 +11,7 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_usart.h"
 #include "fifo.h"
+#include "velocity.h"
 
 EXTERN FIFO8(128) midiMessagesArray; //Массив с миди данными для отправки
 EXTERN FIFO8(8) notes;         //Array for current note
@@ -24,6 +25,10 @@ typedef uint16_t word;
 enum kMIDIType {
 	NoteOff	              = 0x80,	///< Note Off
 	NoteOn                = 0x90,	///< Note On
+#if defined HIGHRES 
+	HiresPrefix1           = 0xB0, ///<Hi res Prefix
+	HiresPrefix2           = 0x58, ///<Hi res Prefix
+#endif	
 	AfterTouchPoly        = 0xA0,	///< Polyphonic AfterTouch
 	ControlChange         = 0xB0,	///< Control Change / Channel Mode
 	ProgramChange         = 0xC0,	///< Program Change
@@ -43,8 +48,13 @@ enum kMIDIType {
 	InvalidType           = 0x00    ///< For notifying errors
 };
 
+#if defined HIGHRES 
+void sendNoteOn(byte NoteNumber,word Velocity,byte Channel);
+void sendNoteOff(byte NoteNumber,word Velocity,byte Channel);
+#else
 void sendNoteOn(byte NoteNumber,byte Velocity,byte Channel);
 void sendNoteOff(byte NoteNumber,byte Velocity,byte Channel);
+#endif
 void sendProgramChange(byte ProgramNumber,byte Channel);
 void sendControlChange(byte ControlNumber, byte ControlValue,byte Channel);
 void sendPitchBend(word PitchValue,byte Channel);

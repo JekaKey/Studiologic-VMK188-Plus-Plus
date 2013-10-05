@@ -22,6 +22,8 @@
 #include "keyboardscan.h"
 #include "midi.h"
 #include "hd44780.h"
+#include "timer.h"
+
 
 #define MIDI_BAUDRATE 31250                         //Midi speed baudrate
 
@@ -130,10 +132,10 @@ void init_GPIO(void) {
     TIM_TimeBaseStructInit(&timer);
 
     //Выставляем предделитель, 100uS
-    timer.TIM_Prescaler = 84 - 1;
+    timer.TIM_Prescaler = TIMER_PRESCALER-1;
 
     //Тут значение, досчитав до которого таймер сгенерирует прерывание
-    timer.TIM_Period = 40 - 1;
+    timer.TIM_Period = TIMER_TIMPERIOD-1;
 
     //Предделитель таймера
     timer.TIM_ClockDivision = 0;
@@ -421,13 +423,13 @@ uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min, uint8_t 
 Slider sliders;
 
 int main(void) {
-    uint32_t i;
+//    uint32_t i;
 
     firstInit();
 
     init_ADC();                                 //ADC init
 
-
+    init_velocity();
 
     delayms(400);
     hd44780_init();

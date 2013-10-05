@@ -1,5 +1,23 @@
 #include "midi.h"
 
+
+#if defined HIGHRES 
+void sendNoteOn(byte NoteNumber, word Velocity, byte Channel) {
+	  FIFO_PUSH(midiMessagesArray, HiresPrefix1 ^ Channel);
+    FIFO_PUSH(midiMessagesArray, HiresPrefix2); 
+	  FIFO_PUSH(midiMessagesArray, (byte)(Velocity & 0x70));            //Скорость 
+  	FIFO_PUSH(midiMessagesArray, NoteOn ^ Channel);    //Событие и канал
+    FIFO_PUSH(midiMessagesArray, NoteNumber);          //Номер ноты
+    FIFO_PUSH(midiMessagesArray, (byte)(Velocity>>7));            //Скорость
+}
+
+void sendNoteOff(byte NoteNumber, word Velocity, byte Channel) {
+    FIFO_PUSH(midiMessagesArray, NoteOff ^ Channel);   //Событие и канал
+    FIFO_PUSH(midiMessagesArray, NoteNumber);          //Номер ноты
+    FIFO_PUSH(midiMessagesArray, (byte)(Velocity>>7));            //Скорость
+}
+
+#else
 void sendNoteOn(byte NoteNumber, byte Velocity, byte Channel) {
     FIFO_PUSH(midiMessagesArray, NoteOn ^ Channel);    //Событие и канал
     FIFO_PUSH(midiMessagesArray, NoteNumber);          //Номер ноты
@@ -12,6 +30,7 @@ void sendNoteOff(byte NoteNumber, byte Velocity, byte Channel) {
     FIFO_PUSH(midiMessagesArray, Velocity);            //Скорость
 }
 
+#endif
 void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel) {
     FIFO_PUSH(midiMessagesArray, ControlChange ^ Channel);      //Событие и канал
     FIFO_PUSH(midiMessagesArray, ControlNumber);                //Тип события

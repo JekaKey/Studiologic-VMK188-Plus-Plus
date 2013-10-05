@@ -2,6 +2,7 @@
 
 #include "keyboardscan.h"
 
+
 /* Current port state, first contact */
 uint8_t d11 = 0x00;
 uint8_t d12 = 0x00;
@@ -249,59 +250,7 @@ uint8_t getVelocity(uint16_t tickNum) {
 
 
 
-uint16_t note_color (uint16_t note_num) {
-	
 
-	return (0x0001 << ((note_num-21) % 12))&0x0A52;
-	
-}
-uint8_t getVelocity_on (uint16_t tickNum,  uint16_t black) {
-
-	
-	if (black) {
-
-    if (tickNum >= max_ticks_black)
-        return 0;
-
-    if (tickNum <= min_ticks_black)
-        return 127;
-
-    return tick_factor_black / tickNum;
-		
-  } else {
-    if (tickNum >= max_ticks_white)
-        return 0;
-
-    if (tickNum <= min_ticks_white)
-        return 127;
-
-    return tick_factor_white / tickNum;		
-  }  
-}
-
-uint8_t getVelocity_off (uint16_t tickNum,  uint16_t black) {
-
-	
-	if (black) {
-
-    if (tickNum >= max_ticks_black_off)
-        return 0;
-
-    if (tickNum <= min_ticks_black_off)
-        return 127;
-
-    return tick_factor_black_off / tickNum;
-		
-  } else {
-    if (tickNum >= max_ticks_white_off)
-        return 0;
-
-    if (tickNum <= min_ticks_white_off)
-        return 127;
-
-    return tick_factor_white_off / tickNum;		
-  }  
-}
 /**
 * Расчет velocity и запись в midi буффер
 */

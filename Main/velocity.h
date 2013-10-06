@@ -1,16 +1,7 @@
-#define HIGHRES
-
-#if defined HIGHRES 
-   #define MAXVELOCITY 0x3FFF
-#else 
-   #define MAXVELOCITY 0x7F
-#endif	 
-
-
 #include "stm32f4xx.h"
 
 
-
+#define MAXVELOCITY 0x3FFF
 #define tick_factor_white_off tick_factor_white *2
 #define min_ticks_white_off tick_factor_white_off / MAXVELOCITY
 #define max_ticks_white_off tick_factor_white_off*2
@@ -52,21 +43,14 @@ void calculate_velocity_formula (curve_points_type *cp);
 /*Return a color of a key*/
 uint16_t note_color (uint16_t note_num);
 
-#if defined HIGHRES
+
 
 /*Function calculate velocity for NoteOn*/
 uint16_t getVelocity_on (uint16_t tickNum,  uint16_t black);
 /*Function calculate velocity for NoteOff*/	
 uint16_t getVelocity_off (uint16_t tickNum,  uint16_t black);
 	
-#else
-	
-/*Function calculate velocity for NoteOn*/
-uint8_t getVelocity_on (uint16_t tickNum,  uint16_t black);
-/*Function calculate velocity for NoteOff*/	
-uint8_t getVelocity_off (uint16_t tickNum,  uint16_t black);
-	
-#endif	
+
 	
 	
 /*Set initial values for the velocity formulas parameters*/	

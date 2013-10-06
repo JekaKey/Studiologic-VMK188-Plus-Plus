@@ -517,6 +517,11 @@
               <FileType>5</FileType>
               <FilePath>.\Main\hd44780.h</FilePath>
             </File>
+            <File>
+              <FileName>velocity.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Main\velocity.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

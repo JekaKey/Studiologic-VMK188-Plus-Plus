@@ -48,13 +48,10 @@ enum kMIDIType {
 	InvalidType           = 0x00    ///< For notifying errors
 };
 
-#if defined HIGHRES 
+
 void sendNoteOn(byte NoteNumber,word Velocity,byte Channel);
 void sendNoteOff(byte NoteNumber,word Velocity,byte Channel);
-#else
-void sendNoteOn(byte NoteNumber,byte Velocity,byte Channel);
-void sendNoteOff(byte NoteNumber,byte Velocity,byte Channel);
-#endif
+
 void sendProgramChange(byte ProgramNumber,byte Channel);
 void sendControlChange(byte ControlNumber, byte ControlValue,byte Channel);
 void sendPitchBend(word PitchValue,byte Channel);

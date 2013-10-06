@@ -228,35 +228,18 @@ uint16_t duration;
 
 
 
-//Пересчет тиков в велосити
-//velocity=round(a/(x1+b)+c)
-
-/*
-uint8_t getVelocity(uint16_t tickNum) {
-
-    uint8_t velocity;
-
-    if (tickNum >= 990)
-        return 0;
-
-    if (tickNum <= 36)
-        return 127;
-
-    velocity = ((10500 / (tickNum + 41)) - 9);
-
-    return velocity;
-}
-*/
-
-
+uint8_t UseHighRes = 1;
+uint8_t MidiChannel = 0;
 
 
 /**
 * Расчет velocity и запись в midi буффер
 */
+
+word vel_test=0;
 void checkNoteArray(void) {
     //Проверяем буффер считанных клавиш с длительностями
-
+    word vel;
     if (FIFO_COUNT(notes) != 0) {
 
         curNote = FIFO_FRONT(notes);
@@ -266,9 +249,15 @@ void checkNoteArray(void) {
         FIFO_POP(notes);
 
         if ((curNote & 0x80) == 0) {
-            sendNoteOn(curNote, getVelocity_on(duration,note_color(curNote)), 0);
+           vel = getVelocity_on(duration,note_color(curNote));					
+					  if (UseHighRes){
+							  /*Send High Res Preffix*/
+							/*Now only for the test lowbyte=curNote, finally (vel & 0x7F)*/
+							  sendControlChange(0x58, (byte)curNote/*(vel & 0x7F)*/,MidiChannel);
+						 }	
+            sendNoteOn(curNote, vel, MidiChannel);
         } else {
-            sendNoteOff(curNote & 0x7F, getVelocity_off(duration,note_color(curNote)), 0);
+            sendNoteOff(curNote & 0x7F, getVelocity_off(duration,note_color(curNote)), MidiChannel);
         }
 
     }

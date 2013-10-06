@@ -23,7 +23,8 @@
 #include "midi.h"
 #include "hd44780.h"
 #include "timer.h"
-
+#include "usb_init.h"
+#include "usb_midi_io.h"
 
 #define MIDI_BAUDRATE 31250                         //Midi speed baudrate
 
@@ -430,6 +431,8 @@ int main(void) {
     init_ADC();                                 //ADC init
 
     init_velocity();
+	
+	  usb_init(); //Init everything for midiUSB
 
     delayms(400);
     hd44780_init();
@@ -499,6 +502,7 @@ void TIM4_IRQHandler() {
                 __NOP();
                 sliders.value = i;
                 sendControlChange(64, i, 0);
+                sendUSB_ControlChange(64, i, 0);							
             }
 
         }

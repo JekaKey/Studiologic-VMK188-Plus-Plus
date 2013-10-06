@@ -1,7 +1,7 @@
 #define STM32F40XX
 
 #include "keyboardscan.h"
-
+#include "usb_midi_io.h"
 
 /* Current port state, first contact */
 uint8_t d11 = 0x00;
@@ -251,13 +251,15 @@ void checkNoteArray(void) {
         if ((curNote & 0x80) == 0) {
            vel = getVelocity_on(duration,note_color(curNote));					
 					  if (UseHighRes){
-							  /*Send High Res Preffix*/
-							/*Now only for the test lowbyte=curNote, finally (vel & 0x7F)*/
-							  sendControlChange(0x58, (byte)curNote/*(vel & 0x7F)*/,MidiChannel);
+							  /*Send High Res Preffix*/					
+							  sendControlChange(0x58, (byte)(vel & 0x7F),MidiChannel); //to midi
+							  sendUSB_ControlChange(0x58, (byte)(vel & 0x7F),MidiChannel); //to usb
 						 }	
-            sendNoteOn(curNote, vel, MidiChannel);
+            sendNoteOn(curNote, vel, MidiChannel); //to midi
+						sendUSB_NoteOn(curNote, vel, MidiChannel); // to usb
         } else {
-            sendNoteOff(curNote & 0x7F, getVelocity_off(duration,note_color(curNote)), MidiChannel);
+            sendNoteOff(curNote & 0x7F, getVelocity_off(duration,note_color(curNote)), MidiChannel); //to midi
+            sendUSB_NoteOff(curNote & 0x7F, getVelocity_off(duration,note_color(curNote)), MidiChannel); //to usb
         }
 
     }

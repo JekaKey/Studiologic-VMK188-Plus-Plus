@@ -351,7 +351,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F4XX</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CMSIS;.\CMSIS\Device\ST\STM32F4xx\Include;.\Main;.\STM32F4xx_SPL\inc;.\STM32F4xx_SPL\src;.\STM32_USB_Device_Library\Core\inc;.\STM32F4xx_StdPeriph_Driver\inc;.\STM32_USB_OTG_Driver\inc;.\usb_midi\inc</IncludePath>
+              <IncludePath>.\CMSIS;.\CMSIS\Device\ST\STM32F4xx\Include;.\STM32F4xx_SPL\inc;.\STM32_USB_Device_Library\Core\inc;.\STM32_USB_OTG_Driver\inc;.\usb_midi\inc;.\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -396,31 +396,6 @@
               <FileName>startup_stm32f4xx.s</FileName>
               <FileType>2</FileType>
               <FilePath>.\startup_stm32f4xx.s</FilePath>
-            </File>
-            <File>
-              <FileName>system_stm32f4xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\system_stm32f4xx.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>CMSIS</GroupName>
-          <Files>
-            <File>
-              <FileName>stm32f4xx_conf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CMSIS\stm32f4xx_conf.h</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h</FilePath>
-            </File>
-            <File>
-              <FileName>system_stm32f4xx.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h</FilePath>
             </File>
             <File>
               <FileName>system_stm32f4xx.c</FileName>
@@ -483,44 +458,29 @@
           <GroupName>Main</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
+              <FileName>hd44780.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Main\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>fifo.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Main\fifo.h</FilePath>
-            </File>
-            <File>
-              <FileName>midi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Main\midi.c</FilePath>
+              <FilePath>.\src\hd44780.c</FilePath>
             </File>
             <File>
               <FileName>keyboardscan.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Main\keyboardscan.c</FilePath>
+              <FilePath>.\src\keyboardscan.c</FilePath>
             </File>
             <File>
-              <FileName>keyboardscan.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Main\keyboardscan.h</FilePath>
-            </File>
-            <File>
-              <FileName>hd44780.c</FileName>
+              <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Main\hd44780.c</FilePath>
+              <FilePath>.\src\main.c</FilePath>
             </File>
             <File>
-              <FileName>hd44780.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Main\hd44780.h</FilePath>
+              <FileName>midi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\midi.c</FilePath>
             </File>
             <File>
               <FileName>velocity.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Main\velocity.c</FilePath>
+              <FilePath>.\src\velocity.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -598,9 +558,6 @@
               <FilePath>.\STM32_USB_OTG_Driver\src\usb_dcd_int.c</FilePath>
             </File>
           </Files>
-        </Group>
-        <Group>
-          <GroupName>STM32F4xx_StdPeriph_Driver</GroupName>
         </Group>
       </Groups>
     </Target>

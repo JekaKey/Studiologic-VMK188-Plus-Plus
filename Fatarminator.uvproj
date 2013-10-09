@@ -338,7 +338,7 @@
             <Optim>4</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
-            <OneElfS>0</OneElfS>
+            <OneElfS>1</OneElfS>
             <Strict>0</Strict>
             <EnumInt>0</EnumInt>
             <PlainCh>0</PlainCh>
@@ -351,7 +351,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F4XX</Define>
               <Undefine></Undefine>
-              <IncludePath>.\CMSIS;.\CMSIS\Device\ST\STM32F4xx\Include;.\Main;.\STM32F4xx_SPL\inc;.\STM32F4xx_SPL\src;.\STM32_USB_Device_Library\Class\audio\inc;.\STM32_USB_Device_Library\Core\inc</IncludePath>
+              <IncludePath>.\CMSIS;.\CMSIS\Device\ST\STM32F4xx\Include;.\Main;.\STM32F4xx_SPL\inc;.\STM32F4xx_SPL\src;.\STM32_USB_Device_Library\Core\inc;.\STM32F4xx_StdPeriph_Driver\inc;.\STM32_USB_OTG_Driver\inc;.\usb_midi\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -525,59 +525,82 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>USB LIB</GroupName>
+          <GroupName>USB midi</GroupName>
           <Files>
             <File>
-              <FileName>usbd_desc.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Main\usbd_desc.h</FilePath>
+              <FileName>usb_bsp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\usb_midi\src\usb_bsp.c</FilePath>
             </File>
             <File>
-              <FileName>usbd_conf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Main\usbd_conf.h</FilePath>
+              <FileName>usb_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\usb_midi\src\usb_init.c</FilePath>
             </File>
             <File>
-              <FileName>usb_conf.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Main\usb_conf.h</FilePath>
+              <FileName>usb_midi_io.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\usb_midi\src\usb_midi_io.c</FilePath>
             </File>
             <File>
-              <FileName>usbd_core.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_core.h</FilePath>
+              <FileName>usb_midi_usr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\usb_midi\src\usb_midi_usr.c</FilePath>
             </File>
             <File>
-              <FileName>usbd_def.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_def.h</FilePath>
+              <FileName>usbd_midi_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\usb_midi\src\usbd_midi_core.c</FilePath>
             </File>
             <File>
-              <FileName>usbd_ioreq.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_ioreq.h</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_req.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_req.h</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_usr.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\STM32_USB_Device_Library\Core\inc\usbd_usr.h</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_audio_core.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\STM32_USB_Device_Library\Class\audio\inc\usbd_audio_core.h</FilePath>
-            </File>
-            <File>
-              <FileName>usbd_audio_out_if.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\STM32_USB_Device_Library\Class\audio\inc\usbd_audio_out_if.h</FilePath>
+              <FileName>usbd_midi_desc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\usb_midi\src\usbd_midi_desc.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>STM32_USB_Device_Library</GroupName>
+          <Files>
+            <File>
+              <FileName>usbd_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Core\src\usbd_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_ioreq.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Core\src\usbd_ioreq.c</FilePath>
+            </File>
+            <File>
+              <FileName>usbd_req.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\STM32_USB_Device_Library\Core\src\usbd_req.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>STM32_USB_OTG_Driver</GroupName>
+          <Files>
+            <File>
+              <FileName>usb_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\STM32_USB_OTG_Driver\src\usb_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_dcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\STM32_USB_OTG_Driver\src\usb_dcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb_dcd_int.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\STM32_USB_OTG_Driver\src\usb_dcd_int.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>STM32F4xx_StdPeriph_Driver</GroupName>
         </Group>
       </Groups>
     </Target>

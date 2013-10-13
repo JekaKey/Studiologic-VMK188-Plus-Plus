@@ -349,7 +349,7 @@
             <uSurpInc>0</uSurpInc>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_STDPERIPH_DRIVER,STM32F4XX</Define>
+              <Define>STM32F4XX,  USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
               <IncludePath>.\CMSIS;.\CMSIS\Device\ST\STM32F4xx\Include;.\STM32F4xx_SPL\inc;.\STM32_USB_Device_Library\Core\inc;.\STM32_USB_OTG_Driver\inc;.\usb_midi\inc;.\inc</IncludePath>
             </VariousControls>
@@ -416,11 +416,6 @@
               <FileName>stm32f4xx_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\STM32F4xx_SPL\src\stm32f4xx_tim.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f4xx_sdio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\STM32F4xx_SPL\src\stm32f4xx_sdio.c</FilePath>
             </File>
             <File>
               <FileName>stm32f4xx_rcc.c</FileName>

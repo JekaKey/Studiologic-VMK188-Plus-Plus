@@ -3,31 +3,6 @@
 #include "keyboardscan.h"
 #include "usb_midi_io.h"
 
-/* Current port state, first contact */
-uint8_t d11 = 0x00;
-uint8_t d12 = 0x00;
-uint8_t d13 = 0x00;
-uint8_t d14 = 0x00;
-uint8_t d15 = 0x00;
-uint8_t d16 = 0x00;
-uint8_t d17 = 0x00;
-uint8_t d18 = 0x00;
-uint8_t d19 = 0x00;
-uint8_t d110 = 0x00;
-uint8_t d111 = 0x00;
-
-/* Current port state, second contact */
-uint8_t d21 = 0x00;
-uint8_t d22 = 0x00;
-uint8_t d23 = 0x00;
-uint8_t d24 = 0x00;
-uint8_t d25 = 0x00;
-uint8_t d26 = 0x00;
-uint8_t d27 = 0x00;
-uint8_t d28 = 0x00;
-uint8_t d29 = 0x00;
-uint8_t d210 = 0x00;
-uint8_t d211 = 0x00;
 
 /* Last state key send in chunk */
 uint8_t lastState1 = 0x00;
@@ -267,7 +242,33 @@ void checkNoteArray(void) {
 
 
 void readKeyState(void) {
-      /* 1 chunk */ 
+/* Current port state, first contact */
+uint8_t d11 = 0x00;
+uint8_t d12 = 0x00;
+uint8_t d13 = 0x00;
+uint8_t d14 = 0x00;
+uint8_t d15 = 0x00;
+uint8_t d16 = 0x00;
+uint8_t d17 = 0x00;
+uint8_t d18 = 0x00;
+uint8_t d19 = 0x00;
+uint8_t d110 = 0x00;
+uint8_t d111 = 0x00;
+
+/* Current port state, second contact */
+uint8_t d21 = 0x00;
+uint8_t d22 = 0x00;
+uint8_t d23 = 0x00;
+uint8_t d24 = 0x00;
+uint8_t d25 = 0x00;
+uint8_t d26 = 0x00;
+uint8_t d27 = 0x00;
+uint8_t d28 = 0x00;
+uint8_t d29 = 0x00;
+uint8_t d210 = 0x00;
+uint8_t d211 = 0x00;
+
+	/* 1 chunk */ 
 
     GPIOE->BSRRH = GPIO_Pin_15; //Pin to zero
     delay(KEY_SWITCH_DELAY); 

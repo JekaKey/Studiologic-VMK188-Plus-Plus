@@ -2,17 +2,6 @@
 #define STM32F40XX
 
 #include "stm32f4xx.h"
-#include "core_cm4.h"
-#include "stm32f4xx_syscfg.h"
-#include "stm32f4xx_rcc.h"
-#include "stm32f4xx_gpio.h"
-#include "stm32f4xx_tim.h"
-#include "stm32f4xx_usart.h"
-#include "stm32f4xx_adc.h"
-#include "stm32f4xx_spi.h"
-#include "misc.h"
-#include "math.h"
-
 #include "system_stm32f4xx.h"
 #include "stm32f4xx_conf.h"
 

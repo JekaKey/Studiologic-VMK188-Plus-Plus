@@ -1,0 +1,3 @@
+#define TIMER_PRESCALER 84
+#define TIMER_TIMPERIOD 20
+

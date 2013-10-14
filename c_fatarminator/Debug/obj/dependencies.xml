@@ -1,0 +1,279 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dependencies>
+   <includePath signature="/ID:\piano\pianoproject\Fatarminator - CooCox\STM32_USB_Device_Library\Core\inc /ID:\piano\pianoproject /ID:\piano\pianoproject\Fatarminator - CooCox\inc /ID:\piano\pianoproject\Fatarminator - CooCox\usb_midi /ID:\piano\pianoproject\Fatarminator - CooCox\STM32_USB_OTG_Driver /ID:\piano\pianoproject\Fatarminator - CooCox\CMSIS\Device\ST\STM32F4xx\Include /ID:\piano\pianoproject\Fatarminator - CooCox\CMSIS\Include /ID:\piano\pianoproject\Fatarminator - CooCox\STM32_USB_Device_Library /ID:\piano\pianoproject\Fatarminator - CooCox\CMSIS /ID:\piano\pianoproject\Fatarminator - CooCox\STM32_USB_OTG_Driver\inc /ID:\piano\pianoproject\Fatarminator - CooCox\usb_midi\inc /ID:\piano\pianoproject\Fatarminator - CooCox\STM32F4xx_SPL\inc /ID:\piano\pianoproject\Fatarminator - CooCox /ID:\piano\pianoproject\Fatarminator - CooCox\CMSIS\Device\ST\STM32F4xx /ID:\piano\pianoproject\Fatarminator - CooCox\STM32_USB_Device_Library\Core /ID:\piano\pianoproject\Fatarminator - CooCox\CMSIS\Device\ST /ID:\piano\pianoproject\Fatarminator - CooCox\STM32F4xx_SPL">
+      <source file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_syscfg.h" lastModified="1418af3f5d0">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_rcc.h" lastModified="1418af3f5d0">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_ioreq.h" lastModified="1363add9570">
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_def.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_core.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\src\usb_bsp.c" lastModified="141698eff21">
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_bsp.h"/>
+         <include file="..\..\..\inc\stm32f4xx_conf.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\inc\misc.h" lastModified="1418af3f5d0">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_adc.h" lastModified="1418af3f5d0">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\inc\usb_midi_usr.h" lastModified="1415c94b6c0">
+         <include file="..\..\..\inc\stm32f4xx_conf.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_core.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\inc\usbd_midi_desc.h" lastModified="14176196812">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_def.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_core.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_Device_Library\Core\src\usbd_ioreq.c" lastModified="1363add9570">
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_ioreq.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\inc\usbd_desc.h" lastModified="14141fbe658">
+      </source>
+      <source file="..\..\..\STM32_USB_OTG_Driver\inc\usb_core.h" lastModified="1363add9d40">
+         <include file="..\..\..\usb_midi\inc\usb_conf.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_regs.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_defines.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd_int.h" lastModified="1363add9d40">
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\inc\usbd_midi_core.h" lastModified="1419b430a20">
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_ioreq.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_req.h"/>
+      </source>
+      <source file="..\..\..\src\stm32f4xx_it.c" lastModified="141a9c21497">
+         <include file="..\..\..\inc\stm32f4xx_it.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_core.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_core.h"/>
+      </source>
+      <source file="..\..\..\inc\hd44780.h" lastModified="140f85fc07e">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_gpio.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\src\usb_midi_io.c" lastModified="1418dcf1e12">
+         <include file="..\..\..\usb_midi\inc\usb_midi_io.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd.h"/>
+         <include file="..\..\..\inc\midi.h"/>
+      </source>
+      <source file="..\..\..\src\main.c" lastModified="141b227e402">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+         <include file="..\..\..\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h"/>
+         <include file="..\..\..\inc\stm32f4xx_conf.h"/>
+         <include file="..\..\..\inc\fifo.h"/>
+         <include file="..\..\..\inc\keyboardscan.h"/>
+         <include file="..\..\..\inc\midi.h"/>
+         <include file="..\..\..\inc\hd44780.h"/>
+         <include file="..\..\..\inc\timer.h"/>
+         <include file="..\..\..\usb_midi\inc\usb_init.h"/>
+         <include file="..\..\..\usb_midi\inc\usb_midi_io.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_OTG_Driver\src\usb_core.c" lastModified="1363add9d40">
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_core.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_bsp.h"/>
+      </source>
+      <source file="..\..\..\inc\fifo.h" lastModified="1406d46db99">
+      </source>
+      <source file="..\..\..\usb_midi\src\usbd_midi_desc.c" lastModified="1415c8aa4a0">
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_core.h"/>
+         <include file="..\..\..\usb_midi\inc\usbd_midi_desc.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_req.h"/>
+         <include file="..\..\..\usb_midi\inc\usbd_conf.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_regs.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\src\stm32f4xx_tim.c" lastModified="1418af3f5d0">
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_tim.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_rcc.h"/>
+      </source>
+      <source file="..\..\..\startup\startup_stm32f4xx.c" lastModified="141a9c8b2bd">
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_usart.h" lastModified="1418af3f5d0">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\inc\stm32f4xx_conf.h" lastModified="141a9c5ff04">
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_adc.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_exti.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_gpio.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_rcc.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_spi.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_syscfg.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_tim.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_usart.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\misc.h"/>
+      </source>
+      <source file="..\..\..\inc\keyboardscan.h" lastModified="141af1128da">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_gpio.h"/>
+         <include file="..\..\..\inc\fifo.h"/>
+         <include file="..\..\..\inc\midi.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_spi.h" lastModified="1418af3f5d0">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\inc\stm32f4xx.h" lastModified="1406d46d9a9">
+         <include file="..\..\..\CMSIS\Include\core_cm4.h"/>
+         <include file="..\..\..\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h"/>
+         <include file="..\..\..\inc\stm32f4xx_conf.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\src\usbd_midi_core.c" lastModified="141ae9c20a7">
+         <include file="..\..\..\usb_midi\inc\usbd_midi_core.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd.h"/>
+         <include file="..\..\..\usb_midi\inc\usbd_conf.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_core.h" lastModified="1363add9570">
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_def.h"/>
+         <include file="..\..\..\usb_midi\inc\usbd_conf.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\src\stm32f4xx_usart.c" lastModified="1418af3f5d0">
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_usart.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_rcc.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_OTG_Driver\inc\usb_bsp.h" lastModified="1363add9d40">
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_core.h"/>
+         <include file="..\..\..\usb_midi\inc\usb_conf.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_usr.h" lastModified="1363add9570">
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_core.h"/>
+      </source>
+      <source file="..\..\..\src\hd44780.c" lastModified="1411776e6a0">
+         <include file="..\..\..\inc\hd44780.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_OTG_Driver\inc\usb_regs.h" lastModified="1363add9d40">
+         <include file="..\..\..\usb_midi\inc\usb_conf.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_exti.h" lastModified="1418af3f5d0">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\inc\usbd_conf.h" lastModified="1416901abf8">
+         <include file="..\..\..\usb_midi\inc\usb_conf.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_gpio.h" lastModified="1418af3f5d0">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\inc\usb_midi_io.h" lastModified="1418da7418c">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_Device_Library\Core\src\usbd_core.c" lastModified="1363add9570">
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_core.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_req.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_ioreq.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd_int.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_bsp.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_OTG_Driver\inc\usb_defines.h" lastModified="1363add9d40">
+         <include file="..\..\..\usb_midi\inc\usb_conf.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\src\stm32f4xx_rcc.c" lastModified="1418af3f5d0">
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_rcc.h"/>
+      </source>
+      <source file="..\..\..\startup\system_stm32f4xx.c" lastModified="141acd292ba">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\CMSIS\Include\core_cm4_simd.h" lastModified="1406d46df7a">
+      </source>
+      <source file="..\..\..\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h" lastModified="1406d46d5c1">
+      </source>
+      <source file="..\..\..\src\midi.c" lastModified="1418cde6213">
+         <include file="..\..\..\inc\midi.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\inc\usb_init.h" lastModified="1418c86f4a2">
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd_int.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\src\stm32f4xx_adc.c" lastModified="1418af3f5d0">
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_adc.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_rcc.h"/>
+      </source>
+      <source file="..\..\..\inc\stm32f4xx_it.h" lastModified="141a9c2149f">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_req.h" lastModified="1363add9570">
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_def.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_core.h"/>
+         <include file="..\..\..\usb_midi\inc\usbd_conf.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\src\usb_midi_usr.c" lastModified="1416dad00de">
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_usr.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_ioreq.h"/>
+         <include file="..\..\..\usb_midi\inc\usb_midi_usr.h"/>
+      </source>
+      <source file="..\..\..\inc\timer.h" lastModified="141aeb4f0b0">
+      </source>
+      <source file="..\..\..\CMSIS\Include\core_cmInstr.h" lastModified="1406d46df7b">
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\src\stm32f4xx_exti.c" lastModified="1418af3f5d0">
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_exti.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\src\stm32f4xx_gpio.c" lastModified="1418af3f5d0">
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_gpio.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_rcc.h"/>
+      </source>
+      <source file="..\..\..\inc\velocity.h" lastModified="1418cde6231">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd.h" lastModified="1363add9d40">
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_core.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_tim.h" lastModified="1418af3f5d0">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_def.h" lastModified="1363add9570">
+         <include file="..\..\..\usb_midi\inc\usbd_conf.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\src\usb_init.c" lastModified="141a9c8b2b4">
+         <include file="..\..\..\usb_midi\inc\usb_midi_usr.h"/>
+         <include file="..\..\..\usb_midi\inc\usbd_midi_core.h"/>
+         <include file="..\..\..\usb_midi\inc\usbd_midi_desc.h"/>
+         <include file="..\..\..\usb_midi\inc\usb_midi_io.h"/>
+         <include file="..\..\..\usb_midi\inc\usb_init.h"/>
+      </source>
+      <source file="..\..\..\CMSIS\Include\core_cmFunc.h" lastModified="1406d46df7a">
+      </source>
+      <source file="..\..\..\inc\midi.h" lastModified="1418cde621d">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_usart.h"/>
+         <include file="..\..\..\inc\fifo.h"/>
+         <include file="..\..\..\inc\velocity.h"/>
+      </source>
+      <source file="..\..\..\CMSIS\Include\core_cm4.h" lastModified="1406d46db91">
+         <include file="..\..\..\CMSIS\Include\core_cmInstr.h"/>
+         <include file="..\..\..\CMSIS\Include\core_cmFunc.h"/>
+         <include file="..\..\..\CMSIS\Include\core_cm4_simd.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_Device_Library\Core\src\usbd_req.c" lastModified="1363add9570">
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_req.h"/>
+         <include file="..\..\..\STM32_USB_Device_Library\Core\inc\usbd_ioreq.h"/>
+         <include file="..\..\..\usb_midi\inc\usbd_desc.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\src\misc.c" lastModified="1418af3f5d0">
+         <include file="..\..\..\STM32F4xx_SPL\inc\misc.h"/>
+      </source>
+      <source file="..\..\..\src\velocity.c" lastModified="1418cde6227">
+         <include file="..\..\..\inc\velocity.h"/>
+         <include file="..\..\..\inc\timer.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\src\stm32f4xx_syscfg.c" lastModified="1418af3f5d0">
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_syscfg.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_rcc.h"/>
+      </source>
+      <source file="..\..\..\usb_midi\inc\usb_conf.h" lastModified="14157071540">
+         <include file="..\..\..\inc\stm32f4xx.h"/>
+      </source>
+      <source file="..\..\..\STM32F4xx_SPL\src\stm32f4xx_spi.c" lastModified="1418af3f5d0">
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_spi.h"/>
+         <include file="..\..\..\STM32F4xx_SPL\inc\stm32f4xx_rcc.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_OTG_Driver\src\usb_dcd_int.c" lastModified="1363add9d40">
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd_int.h"/>
+      </source>
+      <source file="..\..\..\STM32_USB_OTG_Driver\src\usb_dcd.c" lastModified="1363add9d40">
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_dcd.h"/>
+         <include file="..\..\..\STM32_USB_OTG_Driver\inc\usb_bsp.h"/>
+      </source>
+   </includePath>
+</dependencies>

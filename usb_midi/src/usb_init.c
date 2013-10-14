@@ -5,9 +5,9 @@
 #include "usb_midi_io.h"
 #include "usb_init.h"
 
-USB_OTG_CORE_HANDLE     USB_OTG_dev;
+__ALIGN_BEGIN USB_OTG_CORE_HANDLE     USB_OTG_dev __ALIGN_END;
 
-/*Should be called in Main to init usb port.*/
+/*Should be called in Main to initialize usb port.*/
 
 extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 
@@ -30,7 +30,7 @@ USBD_Init(&USB_OTG_dev,
 
 /*The main USB IRQ handler*/
 
-void OTG_FS_IRQHandler(void) {
-	USBD_OTG_ISR_Handler(&USB_OTG_dev);
-}
+//void OTG_FS_IRQHandler(void) {
+//	USBD_OTG_ISR_Handler(&USB_OTG_dev);
+//}
 

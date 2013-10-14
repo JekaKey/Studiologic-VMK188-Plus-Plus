@@ -47,8 +47,8 @@ static uint8_t usbd_midi_CfgDesc[MIDI_CONFIG_DESC_SIZE] =
 	/* Configuration 1 */
 	0x09,                                 /* bLength */
 	USB_CONFIGURATION_DESCRIPTOR_TYPE,    /* bDescriptorType */
-	LOBYTE(MIDI_CONFIG_DESC_SIZE),        /* wTotalLength  */
-	HIBYTE(MIDI_CONFIG_DESC_SIZE),
+	0x56, //LOBYTE(MIDI_CONFIG_DESC_SIZE),        /* wTotalLength  */
+	0x00,//HIBYTE(MIDI_CONFIG_DESC_SIZE),
 	0x02,                                 /* bNumInterfaces: two interfaces*/
 	0x01,                                 /* bConfigurationValue: ID of this configuration */
 	0x00,                                 /* iConfiguration: Unused*/
@@ -100,7 +100,7 @@ static uint8_t usbd_midi_CfgDesc[MIDI_CONFIG_DESC_SIZE] =
 	0x24,         /* descriptor type: CS_INTERFACE descriptor. */
 	0x01,         /* header functional descriptor */
 	0x0, 0x01,      /* bcdADC: Revision of this class specification. */
-	CLASS_SPECIFIC_DESC_SIZE, 0,         /* wTotalLength : 7+6+9+6+9+9+5+9+5*/
+	/*CLASS_SPECIFIC_DESC_SIZE*/0x32, 0,         /* wTotalLength : 7+6+9+6+9+9+5+9+5*/
 
 	// B.4.3 MIDI IN Jack Descriptor
 

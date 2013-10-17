@@ -17,6 +17,7 @@
 *.app
 
 #Others
+*.db
 *.sublime-project
 *.sublime-workspace
 *.d
@@ -38,7 +39,11 @@
 *.Uxus2
 *.lst
 *.uvopt
+*.cogui
 
 Fatarminator.uvopt
 
 .DS_Store
+#Build files
+Cocox/Release/*
+Cocox/Debug/*

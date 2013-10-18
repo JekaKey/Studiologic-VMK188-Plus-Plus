@@ -14,8 +14,8 @@
         <DefinedSymbols>
           <Define name="STM32F407VG"/>
           <Define name="STM32F4XX"/>
-          <Define name="__FPU_USED"/>
           <Define name="USE_STDPERIPH_DRIVER"/>
+          <Define name="__FPU_USED"/>
         </DefinedSymbols>
       </Compile>
       <Link useDefault="0">
@@ -37,7 +37,7 @@
       <Output>
         <Option name="OutputFileType" value="0"/>
         <Option name="Path" value="./"/>
-        <Option name="Name" value="Fatarminator"/>
+        <Option name="Name" value="Release"/>
         <Option name="HEX" value="1"/>
         <Option name="BIN" value="1"/>
       </Output>
@@ -62,8 +62,8 @@
       <Option name="org.coocox.codebugger.gdbjtag.core.portNumber" value="2009"/>
       <Option name="org.coocox.codebugger.gdbjtag.core.autoDownload" value="1"/>
       <Option name="org.coocox.codebugger.gdbjtag.core.verify" value="1"/>
-      <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Effected"/>
-      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F4xx_1024.elf"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Full Chip"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="./stm32f4xx_1024.elf"/>
     </DebugOption>
     <ExcludeFile/>
   </Target>
@@ -83,6 +83,7 @@
           <Define name="STM32F4XX"/>
           <Define name="__FPU_USED"/>
           <Define name="USE_STDPERIPH_DRIVER"/>
+          <Define name="IS_DEBUG"/>
         </DefinedSymbols>
       </Compile>
       <Link useDefault="0">
@@ -104,7 +105,7 @@
       <Output>
         <Option name="OutputFileType" value="0"/>
         <Option name="Path" value="./"/>
-        <Option name="Name" value="Fatarminator"/>
+        <Option name="Name" value="Debug"/>
         <Option name="HEX" value="1"/>
         <Option name="BIN" value="1"/>
       </Output>
@@ -160,9 +161,9 @@
     <File name="STM32_SPL/src/stm32f4xx_cryp_tdes.c" path="../STM32F4xx_SPL/src/stm32f4xx_cryp_tdes.c" type="1"/>
     <File name="STM32_USB_OTG_Driver/src" path="" type="2"/>
     <File name="CMSIS/core_cm0plus.h" path="../CMSIS/Include/core_cm0plus.h" type="1"/>
-    <File name="inc/midi.h" path="../inc/midi.h" type="1"/>
     <File name="CMSIS/core_cm4.h" path="../CMSIS/Include/core_cm4.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_exti.h" path="../STM32F4xx_SPL/inc/stm32f4xx_exti.h" type="1"/>
+    <File name="inc/midi.h" path="../inc/midi.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_hash.h" path="../STM32F4xx_SPL/inc/stm32f4xx_hash.h" type="1"/>
     <File name="CMSIS/core_cmInstr.h" path="../CMSIS/Include/core_cmInstr.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_syscfg.c" path="../STM32F4xx_SPL/src/stm32f4xx_syscfg.c" type="1"/>
@@ -256,9 +257,9 @@
     <File name="inc/main.h" path="../inc/main.h" type="1"/>
     <File name="STM32_USB_Device_Library/Core" path="" type="2"/>
     <File name="STM32_SPL/src/stm32f4xx_cryp_aes.c" path="../STM32F4xx_SPL/src/stm32f4xx_cryp_aes.c" type="1"/>
-    <File name="STM32_USB_OTG_Driver/src/usb_dcd.c" path="../STM32_USB_OTG_Driver/src/usb_dcd.c" type="1"/>
     <File name="inc/fifo.h" path="../inc/fifo.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_i2c.c" path="../STM32F4xx_SPL/src/stm32f4xx_i2c.c" type="1"/>
+    <File name="STM32_USB_OTG_Driver/src/usb_dcd.c" path="../STM32_USB_OTG_Driver/src/usb_dcd.c" type="1"/>
     <File name="STM32_SPL/src" path="" type="2"/>
     <File name="STM32_SPL/inc/stm32f4xx_cryp.h" path="../STM32F4xx_SPL/inc/stm32f4xx_cryp.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usbd_midi_desc.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_midi_desc.h" type="1"/>

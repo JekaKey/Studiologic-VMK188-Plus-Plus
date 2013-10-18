@@ -191,4 +191,5 @@ void hd44780_write_line(uint8_t line, char *msg) {
 
 void hd44780_goto(uint8_t line, uint8_t position) {
 	hd44780_ddram_addr((0x40 * (line - 1)) + (position - 1));
+	//test2
 }

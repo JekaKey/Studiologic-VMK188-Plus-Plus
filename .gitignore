@@ -40,10 +40,15 @@
 *.lst
 *.uvopt
 *.cogui
-
+*.coproj
+*.elf
+*.bin
+*.xml
+*.hex
+*.gitignore
 Fatarminator.uvopt
 
 .DS_Store
 #Build files
-Cocox/Release/*
+Cocox/Fatarminator/*
 Cocox/Debug/*

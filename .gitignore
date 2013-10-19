@@ -40,7 +40,6 @@
 *.lst
 *.uvopt
 *.cogui
-*.coproj
 *.elf
 *.bin
 *.xml

@@ -1,36 +1,36 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
    <processor signature="arm-none-eabi-gcc -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wall -g -nostartfiles -Map=Fatarminator.map -O3 --gc-sections -LC:\CooCox\CoIDE\configuration\ProgramData\Fatarminator -TC:\CooCox\CoIDE\configuration\ProgramData\Fatarminator/arm-gcc-link.ld -g">
-      <target file="Fatarminator.elf" lastModified="141d099f6ec">
-         <source file="..\obj\stm32f4xx_syscfg.o" lastModified="141d057f12e"/>
-         <source file="..\obj\usb_core.o" lastModified="141d057f36b"/>
-         <source file="..\obj\stm32f4xx_usart.o" lastModified="141d057f4d8"/>
-         <source file="..\obj\startup_stm32f4xx.o" lastModified="141d057f5db"/>
-         <source file="..\obj\usbd_core.o" lastModified="141d057f725"/>
-         <source file="..\obj\usb_init.o" lastModified="141d0593032"/>
-         <source file="..\obj\main.o" lastModified="141d099e811"/>
-         <source file="..\obj\stm32f4xx_rcc.o" lastModified="141d057fb4d"/>
-         <source file="..\obj\usb_midi_io.o" lastModified="141d057fc80"/>
-         <source file="..\obj\stm32f4xx_adc.o" lastModified="141d057fdeb"/>
-         <source file="..\obj\hd44780.o" lastModified="141d099e959"/>
-         <source file="..\obj\keyboardscan.o" lastModified="141d05800e5"/>
-         <source file="..\obj\usb_midi_usr.o" lastModified="141d0580203"/>
-         <source file="..\obj\stm32f4xx_gpio.o" lastModified="141d0580342"/>
-         <source file="..\obj\velocity.o" lastModified="141d0580478"/>
-         <source file="..\obj\system_stm32f4xx.o" lastModified="141d05805a0"/>
-         <source file="..\obj\usb_bsp.o" lastModified="141d05806d0"/>
-         <source file="..\obj\usbd_req.o" lastModified="141d058083d"/>
-         <source file="..\obj\usb_dcd_int.o" lastModified="141d05809b6"/>
-         <source file="..\obj\usbd_midi_core.o" lastModified="141d0580adf"/>
-         <source file="..\obj\stm32f4xx_spi.o" lastModified="141d0580c3e"/>
-         <source file="..\obj\stm32f4xx_rng.o" lastModified="141d0580d60"/>
-         <source file="..\obj\stm32f4xx_exti.o" lastModified="141d0580e84"/>
-         <source file="..\obj\misc.o" lastModified="141d0580fa9"/>
-         <source file="..\obj\usb_dcd.o" lastModified="141d0581101"/>
-         <source file="..\obj\usbd_ioreq.o" lastModified="141d058122a"/>
-         <source file="..\obj\usbd_midi_desc.o" lastModified="141d0581354"/>
-         <source file="..\obj\midi.o" lastModified="141d099ea86"/>
-         <source file="..\obj\stm32f4xx_tim.o" lastModified="141d0581694"/>
+      <target file="Fatarminator.elf" lastModified="141d0d66537">
+         <source file="..\obj\stm32f4xx_syscfg.o" lastModified="141d0cc43a4"/>
+         <source file="..\obj\usb_core.o" lastModified="141d0cc45e1"/>
+         <source file="..\obj\stm32f4xx_usart.o" lastModified="141d0cc474a"/>
+         <source file="..\obj\startup_stm32f4xx.o" lastModified="141d0cc484e"/>
+         <source file="..\obj\usbd_core.o" lastModified="141d0cc499d"/>
+         <source file="..\obj\usb_init.o" lastModified="141d0cc4ac1"/>
+         <source file="..\obj\main.o" lastModified="141d0cc4c49"/>
+         <source file="..\obj\stm32f4xx_rcc.o" lastModified="141d0cc4dc3"/>
+         <source file="..\obj\usb_midi_io.o" lastModified="141d0cc4ef8"/>
+         <source file="..\obj\stm32f4xx_adc.o" lastModified="141d0cc5064"/>
+         <source file="..\obj\hd44780.o" lastModified="141d0cc51a7"/>
+         <source file="..\obj\keyboardscan.o" lastModified="141d0d65a54"/>
+         <source file="..\obj\usb_midi_usr.o" lastModified="141d0cc547e"/>
+         <source file="..\obj\stm32f4xx_gpio.o" lastModified="141d0cc55bd"/>
+         <source file="..\obj\velocity.o" lastModified="141d0cc56f7"/>
+         <source file="..\obj\system_stm32f4xx.o" lastModified="141d0cc5821"/>
+         <source file="..\obj\usb_bsp.o" lastModified="141d0cc5952"/>
+         <source file="..\obj\usbd_req.o" lastModified="141d0cc5ac3"/>
+         <source file="..\obj\usb_dcd_int.o" lastModified="141d0cc5c3e"/>
+         <source file="..\obj\usbd_midi_core.o" lastModified="141d0cc5d6a"/>
+         <source file="..\obj\stm32f4xx_spi.o" lastModified="141d0cc5ece"/>
+         <source file="..\obj\stm32f4xx_rng.o" lastModified="141d0cc5ff3"/>
+         <source file="..\obj\stm32f4xx_exti.o" lastModified="141d0cc611c"/>
+         <source file="..\obj\misc.o" lastModified="141d0cc623f"/>
+         <source file="..\obj\usb_dcd.o" lastModified="141d0cc6397"/>
+         <source file="..\obj\usbd_ioreq.o" lastModified="141d0cc64c2"/>
+         <source file="..\obj\usbd_midi_desc.o" lastModified="141d0cc65ee"/>
+         <source file="..\obj\midi.o" lastModified="141d0cc6719"/>
+         <source file="..\obj\stm32f4xx_tim.o" lastModified="141d0cc6934"/>
       </target>
    </processor>
 </history>

@@ -34,11 +34,11 @@ uint8_t lastState11 = 0x00;
 #endif
 
 #if defined FULLCYCLES_STRUCT
-static uint8_t lastState[11] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+static uint8_t lastState[11] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 #endif
 
 #if defined FULLCYCLES_CASE
-static uint8_t lastState[11] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8_t lastState[11] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 #endif
 
 #if defined NOCYCLES
@@ -221,50 +221,52 @@ uint16_t duration_note88 = 0x0;
 #endif
 
 #if defined  SEMICYCLES
+
+
 uint16_t duration_note[88] =
 {	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0,};
+	0, 0};
 uint16_t lastState_key[88] =
 {	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0,};
+	0, 0};
 
 #endif
 
 #if defined  FULLCYCLES_CASE
 uint16_t duration_note[88] =
-{	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0,};
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, };
 uint16_t lastState_key[88] =
-{	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0,};
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, };
 
 #endif
 
 #if defined  FULLCYCLES_STRUCT
 uint16_t duration_note[88] =
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, };
+{	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0,};
 uint16_t lastState_key[88] =
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, };
+{	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0,};
 
 #endif
 
@@ -314,14 +316,14 @@ void checkNoteArray(void) {
 #if defined FULLCYCLES_STRUCT
 
 /*The array of structures for all 11 key blocks GPIO pins*/
- gpio_pins_type gpio_pins[11] = { { GPIOE, GPIO_Pin_15, GPIOE, GPIO_Pin_14 }, {
-		GPIOB, GPIO_Pin_11, GPIOB, GPIO_Pin_10 }, { GPIOB, GPIO_Pin_13, GPIOB,
-		GPIO_Pin_12 }, { GPIOB, GPIO_Pin_15, GPIOB, GPIO_Pin_14 }, { GPIOD,
-		GPIO_Pin_9, GPIOD, GPIO_Pin_8 },
-		{ GPIOC, GPIO_Pin_4, GPIOC, GPIO_Pin_5 }, { GPIOB, GPIO_Pin_0, GPIOB,
-				GPIO_Pin_1 }, { GPIOE, GPIO_Pin_7, GPIOB, GPIO_Pin_2 }, { GPIOE,
-				GPIO_Pin_9, GPIOE, GPIO_Pin_8 }, { GPIOE, GPIO_Pin_12, GPIOE,
-				GPIO_Pin_10 }, { GPIOE, GPIO_Pin_11, GPIOE, GPIO_Pin_13 } };
+gpio_pins_type gpio_pins[11] = { {GPIOE, GPIO_Pin_15, GPIOE, GPIO_Pin_14}, {
+		GPIOB, GPIO_Pin_11, GPIOB, GPIO_Pin_10}, {GPIOB, GPIO_Pin_13, GPIOB,
+		GPIO_Pin_12}, {GPIOB, GPIO_Pin_15, GPIOB, GPIO_Pin_14}, {GPIOD,
+		GPIO_Pin_9, GPIOD, GPIO_Pin_8},
+	{	GPIOC, GPIO_Pin_4, GPIOC, GPIO_Pin_5}, {GPIOB, GPIO_Pin_0, GPIOB,
+		GPIO_Pin_1}, {GPIOE, GPIO_Pin_7, GPIOB, GPIO_Pin_2}, {GPIOE,
+		GPIO_Pin_9, GPIOE, GPIO_Pin_8}, {GPIOE, GPIO_Pin_12, GPIOE,
+		GPIO_Pin_10}, {GPIOE, GPIO_Pin_11, GPIOE, GPIO_Pin_13}};
 
 /*Delay should be more long for full cycles code. The reason is unrecognized....*/
 volatile static key_delay(void) {
@@ -332,23 +334,23 @@ volatile static key_delay(void) {
 	__NOP();
 	__NOP();
 	__NOP();
-    __NOP();
+	__NOP();
 }
 
 void readKeyState(void) {
 
 	uint8_t d1, d2, i, j, chunk, chunk8;
-	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };//array with values for key select
+	uint8_t k[8] = {1, 2, 4, 8, 16, 32, 64, 128}; //array with values for key select
 
 	for (chunk = 0; chunk <= 10; chunk++) {
 		gpio_pins[chunk].first->BSRRH = gpio_pins[chunk].first_num; //Pin to zero
 		key_delay();
-		d1 = ~GPIOA->IDR; //Read port state first contact
-		gpio_pins[chunk].first->BSRRL = gpio_pins[chunk].first_num; //Pin to 1
+		d1 = ~GPIOA->IDR;//Read port state first contact
+		gpio_pins[chunk].first->BSRRL = gpio_pins[chunk].first_num;//Pin to 1
 
-		GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
-		GPIOA->ODR = 0x00FF; //High level on PA0-8;
-		GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
+		GPIOA->MODER |= 0x00005555;//PA0-8 Will be Output
+		GPIOA->ODR = 0x00FF;//High level on PA0-8;
+		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
 		if (d1) {
 			gpio_pins[chunk].second->BSRRH = gpio_pins[chunk].second_num;
@@ -356,9 +358,9 @@ void readKeyState(void) {
 			d2 = ~GPIOA->IDR; //Read port state second contact
 			gpio_pins[chunk].second->BSRRL = gpio_pins[chunk].second_num;
 
-			GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
-			GPIOA->ODR = 0x00FF; //High level on PA0-8;
-			GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
+			GPIOA->MODER |= 0x00005555;//PA0-8 Will be Output
+			GPIOA->ODR = 0x00FF;//High level on PA0-8;
+			GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
 			chunk8 = chunk * 8;
 			for (i = 0; i <= 7; i++) {
@@ -374,7 +376,7 @@ void readKeyState(void) {
 						}
 					} else {
 						if (duration_note[j] < 0xFFFF)
-							duration_note[j]++;
+						duration_note[j]++;
 					}
 
 				} else {
@@ -423,155 +425,155 @@ static void key_delay(void) {
 void readKeyState(void) {
 
 	uint8_t d1, d2, i, j, chunk, chunk8;
-	uint8_t k[8] = {1, 2, 4, 8, 16, 32, 64, 128};
+	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
 
 	for (chunk = 0; chunk <= 10; chunk++) {
 		switch (chunk) {
-			case 0:
+		case 0:
 			GPIOE->BSRRH = GPIO_Pin_15; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_15;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_15; //Pin to 1
 			break;
-			case 1:
-			GPIOB->BSRRH = GPIO_Pin_11;//Pin to zero
+		case 1:
+			GPIOB->BSRRH = GPIO_Pin_11; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOB->BSRRL = GPIO_Pin_11;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOB->BSRRL = GPIO_Pin_11; //Pin to 1
 			break;
-			case 2:
-			GPIOB->BSRRH = GPIO_Pin_13;//Pin to zero
+		case 2:
+			GPIOB->BSRRH = GPIO_Pin_13; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOB->BSRRL = GPIO_Pin_13;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOB->BSRRL = GPIO_Pin_13; //Pin to 1
 			break;
-			case 3:
-			GPIOB->BSRRH = GPIO_Pin_15;//Pin to zero
+		case 3:
+			GPIOB->BSRRH = GPIO_Pin_15; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOB->BSRRL = GPIO_Pin_15;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOB->BSRRL = GPIO_Pin_15; //Pin to 1
 			break;
-			case 4:
-			GPIOD->BSRRH = GPIO_Pin_9;//Pin to zero
+		case 4:
+			GPIOD->BSRRH = GPIO_Pin_9; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOD->BSRRL = GPIO_Pin_9;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOD->BSRRL = GPIO_Pin_9; //Pin to 1
 			break;
-			case 5:
-			GPIOC->BSRRH = GPIO_Pin_4;//Pin to zero
+		case 5:
+			GPIOC->BSRRH = GPIO_Pin_4; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOC->BSRRL = GPIO_Pin_4;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOC->BSRRL = GPIO_Pin_4; //Pin to 1
 			break;
-			case 6:
-			GPIOB->BSRRH = GPIO_Pin_0;//Pin to zero
+		case 6:
+			GPIOB->BSRRH = GPIO_Pin_0; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOB->BSRRL = GPIO_Pin_0;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOB->BSRRL = GPIO_Pin_0; //Pin to 1
 			break;
-			case 7:
-			GPIOE->BSRRH = GPIO_Pin_7;//Pin to zero
+		case 7:
+			GPIOE->BSRRH = GPIO_Pin_7; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_7;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_7; //Pin to 1
 			break;
-			case 8:
-			GPIOE->BSRRH = GPIO_Pin_9;//Pin to zero
+		case 8:
+			GPIOE->BSRRH = GPIO_Pin_9; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_9;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_9; //Pin to 1
 			break;
-			case 9:
-			GPIOE->BSRRH = GPIO_Pin_12;//Pin to zero
+		case 9:
+			GPIOE->BSRRH = GPIO_Pin_12; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_12;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_12; //Pin to 1
 			break;
-			case 10:
-			GPIOE->BSRRH = GPIO_Pin_11;//Pin to zero
+		case 10:
+			GPIOE->BSRRH = GPIO_Pin_11; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR;//Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_11;//Pin to 1
+			d1 = ~GPIOA->IDR; //Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_11; //Pin to 1
 			break;
 		}
 
 		GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
-		GPIOA->ODR = 0x00FF;//High level on PA0-8;
-		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
+		GPIOA->ODR = 0x00FF; //High level on PA0-8;
+		GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
 
 		if (d1) {
 			switch (chunk) {
-				case 0:
+			case 0:
 				GPIOE->BSRRH = GPIO_Pin_14;
 				key_delay();
 				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOE->BSRRL = GPIO_Pin_14;
 				break;
-				case 1:
+			case 1:
 				GPIOB->BSRRH = GPIO_Pin_10;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_10;
 				break;
-				case 2:
+			case 2:
 				GPIOB->BSRRH = GPIO_Pin_12;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_12;
 				break;
-				case 3:
+			case 3:
 				GPIOB->BSRRH = GPIO_Pin_14;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_14;
 				break;
-				case 4:
+			case 4:
 				GPIOD->BSRRH = GPIO_Pin_8;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOD->BSRRL = GPIO_Pin_8;
 				break;
-				case 5:
+			case 5:
 				GPIOC->BSRRH = GPIO_Pin_5;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOC->BSRRL = GPIO_Pin_5;
 				break;
-				case 6:
+			case 6:
 				GPIOB->BSRRH = GPIO_Pin_1;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_1;
 				break;
-				case 7:
+			case 7:
 				GPIOB->BSRRH = GPIO_Pin_2;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_2;
 				break;
-				case 8:
+			case 8:
 				GPIOE->BSRRH = GPIO_Pin_8;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOE->BSRRL = GPIO_Pin_8;
 				break;
-				case 9:
+			case 9:
 				GPIOE->BSRRH = GPIO_Pin_10;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOE->BSRRL = GPIO_Pin_10;
 				break;
-				case 10:
+			case 10:
 				GPIOE->BSRRH = GPIO_Pin_13;
 				key_delay();
-				d2 = ~GPIOA->IDR;//Read port state second contact
+				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOE->BSRRL = GPIO_Pin_13;
 				break;
 			}
 
 			GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
-			GPIOA->ODR = 0x00FF;//High level on PA0-8;
-			GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
+			GPIOA->ODR = 0x00FF; //High level on PA0-8;
+			GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
 
 			chunk8 = chunk * 8;
 			for (i = 0; i <= 7; i++) {
@@ -587,7 +589,7 @@ void readKeyState(void) {
 						}
 					} else {
 						if (duration_note[j] < 0xFFFF)
-						duration_note[j]++;
+							duration_note[j]++;
 					}
 
 				} else {
@@ -623,8 +625,7 @@ void readKeyState(void) {
 
 #if defined SEMICYCLES
 
-static void key_delay(void)
-{
+static void key_delay(void) {
 	__NOP();
 	__NOP();
 	__NOP();
@@ -633,12 +634,10 @@ static void key_delay(void)
 
 }
 
-void readKeyState(void)
-{
+void readKeyState(void) {
 
 	uint8_t d1, d2, i, j;
-	uint8_t k [8]=
-	{	1,2,4,8,16,32,64,128};
+	uint8_t k[8] = {1, 2, 4, 8, 16, 32, 64, 128};
 
 	/* 1 chunk */
 
@@ -651,8 +650,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOE->BSRRH = GPIO_Pin_14;
 		key_delay();
@@ -663,61 +661,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+0;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+21);
+		for (i = 0; i <= 7; i++) {
+			j = i + 0;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+21);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+149);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+149);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState1)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+0;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+149);
+		if (lastState1) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 0;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+149);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -733,8 +714,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOB->BSRRH = GPIO_Pin_10;
 		key_delay();
@@ -745,61 +725,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+8;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+29);
+		for (i = 0; i <= 7; i++) {
+			j = i + 8;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+29);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+157);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+157);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState2)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+8;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+157);
+		if (lastState2) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 8;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+157);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -815,8 +778,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOB->BSRRH = GPIO_Pin_12;
 		key_delay();
@@ -827,61 +789,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+16;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+37);
+		for (i = 0; i <= 7; i++) {
+			j = i + 16;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+37);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+165);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+165);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState3)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+16;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+165);
+		if (lastState3) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 16;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+165);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -897,8 +842,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOB->BSRRH = GPIO_Pin_14;
 		key_delay();
@@ -909,61 +853,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+24;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+45);
+		for (i = 0; i <= 7; i++) {
+			j = i + 24;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+45);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+173);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+173);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState4)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+24;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+173);
+		if (lastState4) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 24;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+173);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -979,8 +906,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOD->BSRRH = GPIO_Pin_8;
 		key_delay();
@@ -991,61 +917,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+32;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+53);
+		for (i = 0; i <= 7; i++) {
+			j = i + 32;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+53);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+181);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+181);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState5)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+32;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+181);
+		if (lastState5) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 32;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+181);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -1061,8 +970,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOC->BSRRH = GPIO_Pin_5;
 		key_delay();
@@ -1073,61 +981,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+40;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+61);
+		for (i = 0; i <= 7; i++) {
+			j = i + 40;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+61);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+189);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+189);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState6)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+40;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+189);
+		if (lastState6) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 40;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+189);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -1143,8 +1034,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOB->BSRRH = GPIO_Pin_1;
 		key_delay();
@@ -1155,61 +1045,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+48;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+69);
+		for (i = 0; i <= 7; i++) {
+			j = i + 48;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+69);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+197);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+197);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState7)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+48;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+197);
+		if (lastState7) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 48;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+197);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -1225,8 +1098,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOB->BSRRH = GPIO_Pin_2;
 		key_delay();
@@ -1237,61 +1109,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+56;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+77);
+		for (i = 0; i <= 7; i++) {
+			j = i + 56;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+77);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+205);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+205);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState8)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+56;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+205);
+		if (lastState8) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 56;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+205);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -1307,8 +1162,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOE->BSRRH = GPIO_Pin_8;
 		key_delay();
@@ -1319,61 +1173,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+64;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+85);
+		for (i = 0; i <= 7; i++) {
+			j = i + 64;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+85);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+213);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+213);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState9)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+64;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+213);
+		if (lastState9) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 64;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+213);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -1389,8 +1226,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOE->BSRRH = GPIO_Pin_10;
 		key_delay();
@@ -1401,61 +1237,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+72;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+93);
+		for (i = 0; i <= 7; i++) {
+			j = i + 72;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+93);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+221);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+221);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState10)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+72;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+221);
+		if (lastState10) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 72;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+221);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}
@@ -1471,8 +1290,7 @@ void readKeyState(void)
 	GPIOA->ODR = 0x00FF;//High level on PA0-8;
 	GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-	if (d1)
-	{
+	if (d1) {
 
 		GPIOE->BSRRH = GPIO_Pin_13;
 		key_delay();
@@ -1483,61 +1301,44 @@ void readKeyState(void)
 		GPIOA->ODR = 0x00FF;//High level on PA0-8;
 		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-		for (i = 0; i <= 7; i++)
-		{
-			j=i+80;
-			if (d1 & k[i])
-			{ // Key 0 in current chunk first sensor
-				if (d2 & k[i])
-				{ // Key 0 in current chunk second sensor
-					if (lastState_key[j])
-					{
-					}
-					else
-					{
-						FIFO_PUSH(notes,i+101);
+		for (i = 0; i <= 7; i++) {
+			j = i + 80;
+			if (d1 & k[i]) { // Key 0 in current chunk first sensor
+				if (d2 & k[i]) { // Key 0 in current chunk second sensor
+					if (lastState_key[j]) {
+					} else {
+						FIFO_PUSH(notes, i+101);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1;
 						duration_note[j] = 0x0;
 					}
-				}
-				else
-				{
-					if(duration_note[j] <0xFFFF) duration_note[j]++;
+				} else {
+					if (duration_note[j] < 0xFFFF)
+					duration_note[j]++;
 				}
 
-			}
-			else
-			{
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+229);
+			} else {
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+229);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 					duration_note[j] = 0x0;
-				}
-				else
-				{
+				} else {
 					duration_note[j] = 0x0;
 				}
 			}
 		}
-	}
-	else
-	{
+	} else {
 		d2 = 0x0;
-		if (lastState11)
-		{
-			for (i = 0; i <= 7; i++)
-			{
-				j=i+80;
-				if (lastState_key[j])
-				{
-					FIFO_PUSH(notes,i+229);
+		if (lastState11) {
+			for (i = 0; i <= 7; i++) {
+				j = i + 80;
+				if (lastState_key[j]) {
+					FIFO_PUSH(notes, i+229);
 					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				duration_note[j]= 0x0;
+				duration_note[j] = 0x0;
 			}
 		}
 	}

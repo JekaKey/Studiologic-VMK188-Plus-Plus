@@ -4,7 +4,7 @@
 /*Different variants of the code for best speed search*/
 
 
-//define NOCYCLES // The code doesn't use any cycles
+//#define NOCYCLES // The code doesn't use any cycles
 //#define SEMICYCLES // Cycle (8) is  only inside each keyboard block
 #define FULLCYCLES_STRUCT //Double cycle (11)*(8) GPIO pins are addressing via big structure.
 //#define FULLCYCLES_CASE  //Double cycle (11)*(8) GPIO pins are addressing in "switch" operator.

@@ -34,11 +34,11 @@ uint8_t lastState11 = 0x00;
 #endif
 
 #if defined FULLCYCLES_STRUCT
-static uint8_t lastState[11] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static uint8_t lastState[11] = {0};
 #endif
 
 #if defined FULLCYCLES_CASE
-static uint8_t lastState[11] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+static uint8_t lastState[11] = {0};
 #endif
 
 #if defined NOCYCLES
@@ -223,51 +223,20 @@ uint16_t duration_note88 = 0x0;
 #if defined  SEMICYCLES
 
 
-uint16_t duration_note[88] =
-{	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0};
-uint16_t lastState_key[88] =
-{	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0};
+uint16_t duration_note[88] = {0};
+
+uint16_t lastState_key[88] = {0};
 
 #endif
 
 #if defined  FULLCYCLES_CASE
-uint16_t duration_note[88] =
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, };
-uint16_t lastState_key[88] =
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-				0, 0, };
-
+uint16_t duration_note[88] = {0};
+uint16_t lastState_key[88] = {0};
 #endif
 
 #if defined  FULLCYCLES_STRUCT
-uint16_t duration_note[88] =
-{	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0,};
-uint16_t lastState_key[88] =
-{	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0,};
-
+uint16_t duration_note[88] = {0};
+uint16_t lastState_key[88] = {0};
 #endif
 
 static uint8_t curNote;
@@ -327,14 +296,26 @@ gpio_pins_type gpio_pins[11] = { {GPIOE, GPIO_Pin_15, GPIOE, GPIO_Pin_14}, {
 
 /*Delay should be more long for full cycles code. The reason is unrecognized....*/
 volatile static key_delay(void) {
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+/*
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+  __NOP();
+*/
 }
 
 void readKeyState(void) {
@@ -344,6 +325,7 @@ void readKeyState(void) {
 
 	for (chunk = 0; chunk <= 10; chunk++) {
 		gpio_pins[chunk].first->BSRRH = gpio_pins[chunk].first_num; //Pin to zero
+		chunk8 = chunk * 8;
 		key_delay();
 		d1 = ~GPIOA->IDR;//Read port state first contact
 		gpio_pins[chunk].first->BSRRL = gpio_pins[chunk].first_num;//Pin to 1
@@ -362,7 +344,6 @@ void readKeyState(void) {
 			GPIOA->ODR = 0x00FF;//High level on PA0-8;
 			GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
-			chunk8 = chunk * 8;
 			for (i = 0; i <= 7; i++) {
 				j = i + chunk8;
 				if (d1 & k[i]) { // Key 0 in current chunk first sensor
@@ -1348,7 +1329,12 @@ void readKeyState(void) {
 #endif
 
 #if defined NOCYCLES
-static void key_delay(void) {
+static volatile key_delay(void) {
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
 	__NOP();
 	__NOP();
 	__NOP();

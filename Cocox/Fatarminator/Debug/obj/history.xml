@@ -1,92 +1,95 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <history>
-   <processor signature="arm-none-eabi-gcc noversion nomachine -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wall -ffunction-sections -g -O3 -ftracer -fvpt -funroll-loops -fpeel-loops -fcx-limited-range -fno-zero-initialized-in-bss -c -DSTM32F407VG -DSTM32F4XX -D__FPU_USED -DUSE_STDPERIPH_DRIVER -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Core\inc -ID:\piano\pianoproject\fatarm_c -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS -ID:\piano\pianoproject\fatarm_c\Fatarminator\Cocox -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library -ID:\piano\pianoproject\fatarm_c\Fatarminator\inc -ID:\piano\pianoproject\fatarm_c\Fatarminator -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Class -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_OTG_Driver -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_OTG_Driver\inc -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32F4xx_SPL -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Class\Midi -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS\Device\ST\STM32F4xx\Include -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS\Device\ST -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Core -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS\Device\ST\STM32F4xx -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS\Include -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32F4xx_SPL\inc -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Class\Midi\inc">
-      <target file="stm32f4xx_exti.o" lastModified="141d0cc611c">
+   <processor signature="arm-none-eabi-gcc noversion nomachine -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wall -ffunction-sections -g -O3 -c -DSTM32F407VG -DSTM32F4XX -D__FPU_USED -DUSE_STDPERIPH_DRIVER -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Core\inc -ID:\piano\pianoproject\fatarm_c -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS -ID:\piano\pianoproject\fatarm_c\Fatarminator\Cocox -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library -ID:\piano\pianoproject\fatarm_c\Fatarminator\inc -ID:\piano\pianoproject\fatarm_c\Fatarminator -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Class -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_OTG_Driver -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_OTG_Driver\inc -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32F4xx_SPL -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Class\Midi -ID:\piano\pianoproject\fatarm_c\Fatarminator\src -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS\Device\ST\STM32F4xx\Include -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS\Device\ST -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Core -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS\Device\ST\STM32F4xx -ID:\piano\pianoproject\fatarm_c\Fatarminator\CMSIS\Include -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32_USB_Device_Library\Class\Midi\inc -ID:\piano\pianoproject\fatarm_c\Fatarminator\STM32F4xx_SPL\inc">
+      <target file="stm32f4xx_exti.o" lastModified="141e6ce046f">
          <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_exti.c" lastModified="141b80e44aa"/>
       </target>
-      <target file="stm32f4xx_gpio.o" lastModified="141d0cc55bd">
+      <target file="stm32f4xx_gpio.o" lastModified="141e6cdf955">
          <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_gpio.c" lastModified="141b80e44ac"/>
       </target>
-      <target file="usbd_core.o" lastModified="141d0cc499d">
+      <target file="usbd_core.o" lastModified="141e6cdedcb">
          <source file="..\..\..\..\STM32_USB_Device_Library\Core\src\usbd_core.c" lastModified="141b80e44b9"/>
       </target>
-      <target file="stm32f4xx_syscfg.o" lastModified="141d0cc43a4">
+      <target file="stm32f4xx_syscfg.o" lastModified="141e6cde6fb">
          <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_syscfg.c" lastModified="141b80e44b3"/>
       </target>
-      <target file="usbd_ioreq.o" lastModified="141d0cc64c2">
+      <target file="usbd_ioreq.o" lastModified="141e6ce0805">
          <source file="..\..\..\..\STM32_USB_Device_Library\Core\src\usbd_ioreq.c" lastModified="141b80e44b9"/>
       </target>
-      <target file="startup_stm32f4xx.o" lastModified="141d0cc484e">
+      <target file="startup_stm32f4xx.o" lastModified="141e6cdebbe">
          <source file="..\..\..\..\startup\startup_stm32f4xx.c" lastModified="141b80e44d2"/>
       </target>
-      <target file="stm32f4xx_tim.o" lastModified="141d0cc6934">
+      <target file="stm32f4xx_tim.o" lastModified="141e6ce0c55">
          <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_tim.c" lastModified="141b80e44b4"/>
       </target>
-      <target file="stm32f4xx_adc.o" lastModified="141d0cc5064">
+      <target file="stm32f4xx_adc.o" lastModified="141e6cdf416">
          <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_adc.c" lastModified="141b80e44a3"/>
       </target>
-      <target file="system_stm32f4xx.o" lastModified="141d0cc5821">
+      <target file="system_stm32f4xx.o" lastModified="141e6cdfbae">
          <source file="..\..\..\..\startup\system_stm32f4xx.c" lastModified="141b80e44d2"/>
       </target>
-      <target file="usb_bsp.o" lastModified="141d0cc5952">
+      <target file="usb_bsp.o" lastModified="141e6cdfcd8">
          <source file="..\..\..\..\STM32_USB_Device_Library\Class\Midi\src\usb_bsp.c" lastModified="141c782d168"/>
       </target>
-      <target file="misc.o" lastModified="141d0cc623f">
+      <target file="misc.o" lastModified="141e6ce058f">
          <source file="..\..\..\..\STM32F4xx_SPL\src\misc.c" lastModified="141b80e44a2"/>
       </target>
-      <target file="midi.o" lastModified="141d0cc6719">
+      <target file="sliders.o" lastModified="141e6dbf4e6">
+         <source file="..\..\..\..\src\sliders.c" lastModified="141e6dbe87c"/>
+      </target>
+      <target file="midi.o" lastModified="141e6ce0a55">
          <source file="..\..\..\..\src\midi.c" lastModified="141d0779004"/>
       </target>
-      <target file="usbd_req.o" lastModified="141d0cc5ac3">
+      <target file="usbd_req.o" lastModified="141e6cdfe40">
          <source file="..\..\..\..\STM32_USB_Device_Library\Core\src\usbd_req.c" lastModified="141b80e44ba"/>
       </target>
-      <target file="stm32f4xx_rng.o" lastModified="141d0cc5ff3">
+      <target file="stm32f4xx_rng.o" lastModified="141e6ce034b">
          <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_rng.c" lastModified="141b80e44b0"/>
       </target>
-      <target file="usb_midi_io.o" lastModified="141d0cc4ef8">
+      <target file="usb_midi_io.o" lastModified="141e6cdf2ae">
          <source file="..\..\..\..\STM32_USB_Device_Library\Class\Midi\src\usb_midi_io.c" lastModified="141c782d169"/>
       </target>
-      <target file="stm32f4xx_spi.o" lastModified="141d0cc5ece">
-         <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_spi.c" lastModified="141b80e44b3"/>
-      </target>
-      <target file="velocity.o" lastModified="141d0cc56f7">
+      <target file="velocity.o" lastModified="141e6cdfa8b">
          <source file="..\..\..\..\src\velocity.c" lastModified="141b80355f9"/>
       </target>
-      <target file="usb_dcd_int.o" lastModified="141d0cc5c3e">
+      <target file="stm32f4xx_spi.o" lastModified="141e6ce022b">
+         <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_spi.c" lastModified="141b80e44b3"/>
+      </target>
+      <target file="usb_dcd_int.o" lastModified="141e6cdffac">
          <source file="..\..\..\..\STM32_USB_OTG_Driver\src\usb_dcd_int.c" lastModified="141b80e44bf"/>
       </target>
-      <target file="usb_dcd.o" lastModified="141d0cc6397">
+      <target file="usb_dcd.o" lastModified="141e6ce06df">
          <source file="..\..\..\..\STM32_USB_OTG_Driver\src\usb_dcd.c" lastModified="141b80e44be"/>
       </target>
-      <target file="keyboardscan.o" lastModified="141d0d65a54">
-         <source file="..\..\..\..\src\keyboardscan.c" lastModified="141d0d63493"/>
-      </target>
-      <target file="stm32f4xx_rcc.o" lastModified="141d0cc4dc3">
+      <target file="stm32f4xx_rcc.o" lastModified="141e6cdf17d">
          <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_rcc.c" lastModified="141b80e44b0"/>
       </target>
-      <target file="usb_core.o" lastModified="141d0cc45e1">
+      <target file="keyboardscan.o" lastModified="141e6cdf6fb">
+         <source file="..\..\..\..\src\keyboardscan.c" lastModified="141d5f06677"/>
+      </target>
+      <target file="usb_core.o" lastModified="141e6cde957">
          <source file="..\..\..\..\STM32_USB_OTG_Driver\src\usb_core.c" lastModified="141b80e44be"/>
       </target>
-      <target file="usb_init.o" lastModified="141d0cc4ac1">
+      <target file="usb_init.o" lastModified="141e6cdeee8">
          <source file="..\..\..\..\STM32_USB_Device_Library\Class\Midi\src\usb_init.c" lastModified="141d0592d28"/>
       </target>
-      <target file="hd44780.o" lastModified="141d0cc51a7">
+      <target file="hd44780.o" lastModified="141e6cdf552">
          <source file="..\..\..\..\src\hd44780.c" lastModified="141d0779000"/>
       </target>
-      <target file="usbd_midi_core.o" lastModified="141d0cc5d6a">
+      <target file="usbd_midi_core.o" lastModified="141e6ce00d2">
          <source file="..\..\..\..\STM32_USB_Device_Library\Class\Midi\src\usbd_midi_core.c" lastModified="141c782d16a"/>
       </target>
-      <target file="usbd_midi_desc.o" lastModified="141d0cc65ee">
+      <target file="usbd_midi_desc.o" lastModified="141e6ce092f">
          <source file="..\..\..\..\STM32_USB_Device_Library\Class\Midi\src\usbd_midi_desc.c" lastModified="141c782d16a"/>
       </target>
-      <target file="usb_midi_usr.o" lastModified="141d0cc547e">
+      <target file="usb_midi_usr.o" lastModified="141e6cdf816">
          <source file="..\..\..\..\STM32_USB_Device_Library\Class\Midi\src\usb_midi_usr.c" lastModified="141c782d169"/>
       </target>
-      <target file="stm32f4xx_usart.o" lastModified="141d0cc474a">
-         <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_usart.c" lastModified="141b80e44b5"/>
+      <target file="main.o" lastModified="141e6dbf649">
+         <source file="..\..\..\..\src\main.c" lastModified="141e6dbe82f"/>
       </target>
-      <target file="main.o" lastModified="141d0cc4c49">
-         <source file="..\..\..\..\src\main.c" lastModified="141d0779002"/>
+      <target file="stm32f4xx_usart.o" lastModified="141e6cdeabb">
+         <source file="..\..\..\..\STM32F4xx_SPL\src\stm32f4xx_usart.c" lastModified="141b80e44b5"/>
       </target>
    </processor>
 </history>

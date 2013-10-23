@@ -23,15 +23,15 @@ FlagStatus ADC_GetFlagStatus1(ADC_TypeDef* ADCx, uint8_t ADC_FLAG) {
 
 uint16_t readADC1(uint8_t channel) {
 	ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_28Cycles);
-	//Р вЂ™Р’В Р В Р вЂ¦Р В Р’В°Р РЋРІР‚РЋР В РЎвЂ�Р В Р вЂ¦Р В Р’В°Р В Р’ВµР В РЎпїЅР вЂ™Р’В Р РЋР вЂљР В Р’В°Р В Р’В±Р В РЎвЂўР РЋРІР‚С™Р РЋРЎвЂњ
+    //Start
 	ADC_SoftwareStartConv(ADC1);
-	//Р вЂ™Р’В Р В Р’В¶Р В РўвЂ�Р РЋРІР‚пїЅР В РЎпїЅР вЂ™Р’В Р В РЎвЂ”Р В РЎвЂўР В РЎвЂќР В Р’В°Р вЂ™Р’В Р В РЎвЂ”Р РЋР вЂљР В Р’ВµР В РЎвЂўР В Р’В±Р РЋР вЂљР В Р’В°Р В Р’В·Р РЋРЎвЂњР В Р’ВµР РЋРІР‚С™Р РЋР С“Р РЋР РЏР вЂ™Р’В Р В Р вЂ¦Р В Р’В°Р В РЎвЂ”Р РЋР вЂљР РЋР РЏР В Р’В¶Р В Р’ВµР В Р вЂ¦Р В РЎвЂ�Р В Р’ВµР вЂ™Р’В Р В Р вЂ Р вЂ™Р’В Р В РЎвЂќР В РЎвЂўР В РўвЂ�
+    //Wait while a voltage is converting to a value
 	while (((ADC1->SR & ADC_FLAG_EOC) == RESET)) {
 		__NOP();
 	}
-	//Р вЂ™Р’В Р В РЎвЂўР РЋРІР‚РЋР В РЎвЂ�Р РЋРІР‚В°Р В Р’В°Р В Р’ВµР В РЎпїЅР вЂ™Р’В Р РЋР С“Р РЋРІР‚С™Р В Р’В°Р РЋРІР‚С™Р РЋРЎвЂњР РЋР С“
-	ADC_ClearFlag(ADC1, ADC_FLAG_EOC); //Р В РІР‚СњР В РЎвЂўР В Р’В±Р В Р’В°Р В Р вЂ Р В РЎвЂ�Р В Р’В»Р вЂ™Р’В Р В Р вЂ Р вЂ™Р’В Р В РЎвЂќР В Р’В°Р РЋРІР‚РЋР В Р’ВµР РЋР С“Р РЋРІР‚С™Р В Р вЂ Р В Р’ВµР вЂ™Р’В Р РЋРІР‚С™Р В Р’ВµР РЋР С“Р РЋРІР‚С™Р В Р’В°
-	//Р вЂ™Р’В Р В Р вЂ Р В РЎвЂўР В Р’В·Р В Р вЂ Р РЋР вЂљР В Р’В°Р РЋРІР‚В°Р В Р’В°Р В Р’ВµР В РЎпїЅР вЂ™Р’В Р РЋР вЂљР В Р’ВµР В Р’В·Р РЋРЎвЂњР В Р’В»Р РЋР Р‰Р РЋРІР‚С™Р В Р’В°Р РЋРІР‚С™
+    //Reset status
+	ADC_ClearFlag(ADC1, ADC_FLAG_EOC);
+    //Return a result
 	return ADC_GetConversionValue(ADC1);
 }
 
@@ -117,33 +117,33 @@ uint8_t map(uint8_t x, uint8_t in_min, uint8_t in_max, uint8_t out_min,
 void init_ADC() {
 	ADC_InitTypeDef ADC_InitStructure;
 	ADC_CommonInitTypeDef adc_init;
-	/* Р РЋР вЂљР В Р’В°Р В Р’В·Р РЋР вЂљР В Р’ВµР РЋРІвЂљВ¬Р В Р’В°Р В Р’ВµР В РЎпїЅ Р РЋРІР‚С™Р В Р’В°Р В РЎвЂќР РЋРІР‚С™Р В РЎвЂ�Р РЋР вЂљР В РЎвЂўР В Р вЂ Р В Р’В°Р В Р вЂ¦Р В РЎвЂ�Р В Р’Вµ AР В Р’В¦Р В РЎСџ1 */
+    /* ADC clock enabled*/
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
-	/* Р РЋР С“Р В Р’В±Р РЋР вЂљР В Р’В°Р РЋР С“Р РЋРІР‚в„–Р В Р вЂ Р В Р’В°Р В Р’ВµР В РЎпїЅ Р В Р вЂ¦Р В Р’В°Р РЋР С“Р РЋРІР‚С™Р РЋР вЂљР В РЎвЂўР В РІвЂћвЂ“Р В РЎвЂќР В РЎвЂ� Р В РЎвЂ™Р В Р’В¦Р В РЎСџ */
+    /*ADC reset*/
 	ADC_DeInit();
 
-	/* Р В РЎвЂ™Р В Р’В¦Р В РЎСџ Р РЋР вЂљР В Р’В°Р В Р’В±Р В РЎвЂўР РЋРІР‚С™Р В Р’В°Р РЋР вЂ№Р РЋРІР‚С™ Р В Р вЂ¦Р В Р’ВµР В Р’В·Р В Р’В°Р В Р вЂ Р В РЎвЂ�Р РЋР С“Р В РЎвЂ�Р В РЎпїЅР В РЎвЂў */
+    /*ADCs work independently*/
 	adc_init.ADC_Mode = ADC_Mode_Independent;
 	adc_init.ADC_Prescaler = ADC_Prescaler_Div2;
 
-	/* Р В Р вЂ Р РЋРІР‚в„–Р В РЎвЂќР В Р’В»Р РЋР вЂ№Р РЋРІР‚РЋР В Р’В°Р В Р’ВµР В РЎпїЅ scan conversion */
+    /*scan conversion turned on*/
 	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
-	/* Р В РЎСљР В Р’Вµ Р В РўвЂ�Р В Р’ВµР В Р’В»Р В Р’В°Р РЋРІР‚С™Р РЋР Р‰ Р В РўвЂ�Р В Р’В»Р В РЎвЂ�Р РЋРІР‚С™Р В Р’ВµР В Р’В»Р РЋР Р‰Р В Р вЂ¦Р РЋРІР‚в„–Р В Р’Вµ Р В РЎвЂ”Р РЋР вЂљР В Р’ВµР В РЎвЂўР В Р’В±Р РЋР вЂљР В Р’В°Р В Р’В·Р В РЎвЂўР В Р вЂ Р В Р’В°Р В Р вЂ¦Р В РЎвЂ�Р РЋР РЏ */
+    /*Do not use long conversion*/
 	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
 
-	/* Р В РЎСљР В Р’В°Р РЋРІР‚РЋР В РЎвЂ�Р В Р вЂ¦Р В Р’В°Р РЋРІР‚С™Р РЋР Р‰ Р В РЎвЂ”Р РЋР вЂљР В Р’ВµР В РЎвЂўР В Р’В±Р РЋР вЂљР В Р’В°Р В Р’В·Р В РЎвЂўР В Р вЂ Р В Р’В°Р В Р вЂ¦Р В РЎвЂ�Р В Р’Вµ Р В РЎвЂ”Р РЋР вЂљР В РЎвЂўР В РЎвЂ“Р РЋР вЂљР В Р’В°Р В РЎпїЅР В РЎпїЅР В Р вЂ¦Р В РЎвЂў, Р В Р’В° Р В Р вЂ¦Р В Р’Вµ Р В РЎвЂ”Р В РЎвЂў Р РЋР С“Р РЋР вЂљР В Р’В°Р В Р’В±Р В Р’В°Р РЋРІР‚С™Р РЋРІР‚в„–Р В Р вЂ Р В Р’В°Р В Р вЂ¦Р В РЎвЂ�Р РЋР вЂ№ Р РЋРІР‚С™Р РЋР вЂљР В РЎвЂ�Р В РЎвЂ“Р В Р’ВµР РЋР вЂљР В Р’В° */
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConvEdge_None;
+    /*start programm based conversion, don't use the trigger*/
+    ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConvEdge_None;
 	ADC_InitStructure.ADC_ExternalTrigConvEdge = 0;
-	/* 12 Р В Р’В±Р В РЎвЂ�Р РЋРІР‚С™Р В Р вЂ¦Р В РЎвЂўР В Р’Вµ Р В РЎвЂ”Р РЋР вЂљР В Р’ВµР В РЎвЂўР В Р’В±Р РЋР вЂљР В Р’В°Р В Р’В·Р В РЎвЂўР В Р вЂ Р В Р’В°Р В Р вЂ¦Р В РЎвЂ�Р В Р’Вµ. Р РЋР вЂљР В Р’ВµР В Р’В·Р РЋРЎвЂњР В Р’В»Р РЋР Р‰Р РЋРІР‚С™Р В Р’В°Р РЋРІР‚С™ Р В Р вЂ  12 Р В РЎпїЅР В Р’В»Р В Р’В°Р В РўвЂ�Р РЋРІвЂљВ¬Р В РЎвЂ�Р РЋРІР‚В¦ Р РЋР вЂљР В Р’В°Р В Р’В·Р РЋР вЂљР РЋР РЏР В РўвЂ�Р В Р’В°Р РЋРІР‚В¦ Р РЋР вЂљР В Р’ВµР В Р’В·Р РЋРЎвЂњР В Р’В»Р РЋР Р‰Р РЋРІР‚С™Р В Р’В°Р РЋРІР‚С™Р В Р’В° */
-	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
+    /*12 bit conversion, the result in the 12 low bits*/
+    ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
 
-	/* Р В РЎвЂ�Р В Р вЂ¦Р В РЎвЂ�Р РЋРІР‚В Р В РЎвЂ�Р В Р’В°Р В Р’В»Р В РЎвЂ�Р В Р’В·Р В Р’В°Р РЋРІР‚В Р В РЎвЂ�Р РЋР РЏ */
-	ADC_CommonInit(&adc_init);
+    /*Initialization*/
+    ADC_CommonInit(&adc_init);
 
 	ADC_Init(ADC1, &ADC_InitStructure);
-	/* Р В РІР‚в„ўР В РЎвЂќР В Р’В»Р РЋР вЂ№Р РЋРІР‚РЋР В Р’В°Р В Р’ВµР В РЎпїЅ Р В РЎвЂ™Р В Р’В¦Р В РЎСџ1 */
+    /*Switch on ADC*/
 	ADC_Cmd(ADC1, ENABLE);
 
 }

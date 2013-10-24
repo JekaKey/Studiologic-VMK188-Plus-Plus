@@ -54,4 +54,4 @@ uint16_t getVelocity_off (uint16_t tickNum,  uint16_t black);
 	
 	
 /*Set initial values for the velocity formulas parameters*/	
-void init_velocity(void);	
+void velocity_init(void);	

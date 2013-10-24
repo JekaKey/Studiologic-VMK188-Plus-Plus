@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Project version="2G - 1.7.5" name="Fatarminator">
-  <Target name="Fatarminator" isCurrent="1">
+  <Target name="Debug" isCurrent="1">
     <Device manufacturerId="9" manufacturerName="ST" chipId="344" chipName="STM32F407VG" boardId="" boardName=""/>
     <BuildOption>
       <Compile>
@@ -37,7 +37,74 @@
       <Output>
         <Option name="OutputFileType" value="0"/>
         <Option name="Path" value="./"/>
-        <Option name="Name" value="Fatarminator"/>
+        <Option name="Name" value="Debug"/>
+        <Option name="HEX" value="1"/>
+        <Option name="BIN" value="1"/>
+      </Output>
+      <User>
+        <UserRun name="Run#1" type="Before" checked="0" value=""/>
+        <UserRun name="Run#1" type="After" checked="0" value=""/>
+      </User>
+    </BuildOption>
+    <DebugOption>
+      <Option name="org.coocox.codebugger.gdbjtag.core.adapter" value="ST-Link"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.debugMode" value="SWD"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.clockDiv" value="1M"/>
+      <Option name="org.coocox.codebugger.gdbjtag.corerunToMain" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkgdbserver" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.userDefineGDBScript" value=""/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.targetEndianess" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.jlinkResetMode" value="Type 0: Normal"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.resetMode" value="SYSRESETREQ"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifSemihost" value="0"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ifCacheRom" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.ipAddress" value="127.0.0.1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.portNumber" value="2009"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.autoDownload" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.verify" value="1"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Effected"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F4xx_1024.elf"/>
+    </DebugOption>
+    <ExcludeFile/>
+  </Target>
+  <Target name="Release" isCurrent="0">
+    <Device manufacturerId="9" manufacturerName="ST" chipId="344" chipName="STM32F407VG" boardId="" boardName=""/>
+    <BuildOption>
+      <Compile>
+        <Option name="OptimizationLevel" value="3"/>
+        <Option name="UseFPU" value="0"/>
+        <Option name="UserEditCompiler" value=""/>
+        <Option name="FPU" value="2"/>
+        <Includepaths>
+          <Includepath path="."/>
+        </Includepaths>
+        <DefinedSymbols>
+          <Define name="STM32F407VG"/>
+          <Define name="STM32F4XX"/>
+          <Define name="__FPU_USED"/>
+          <Define name="USE_STDPERIPH_DRIVER"/>
+        </DefinedSymbols>
+      </Compile>
+      <Link useDefault="0">
+        <Option name="DiscardUnusedSection" value="0"/>
+        <Option name="UserEditLinkder" value=""/>
+        <Option name="UseMemoryLayout" value="1"/>
+        <Option name="LTO" value="0"/>
+        <Option name="IsNewStartupCode" value="1"/>
+        <Option name="Library" value="Not use C Library"/>
+        <LinkedLibraries/>
+        <MemoryAreas debugInFlashNotRAM="1">
+          <Memory name="IROM1" type="ReadOnly" size="0x00100000" startValue="0x08000000"/>
+          <Memory name="IRAM1" type="ReadWrite" size="0x00020000" startValue="0x20000000"/>
+          <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
+          <Memory name="IRAM2" type="ReadWrite" size="0x00010000" startValue="0x10000000"/>
+        </MemoryAreas>
+        <LocateLinkFile path="c:/coocox/coide/configuration/programdata/fatarminator/arm-gcc-link.ld" type="0"/>
+      </Link>
+      <Output>
+        <Option name="OutputFileType" value="0"/>
+        <Option name="Path" value="./"/>
+        <Option name="Name" value="Release"/>
         <Option name="HEX" value="1"/>
         <Option name="BIN" value="1"/>
       </Output>
@@ -78,7 +145,6 @@
     <File name="STM32_USB_Device_Library/Class midi/src/usb_midi_usr.c" path="../STM32_USB_Device_Library/Class/Midi/src/usb_midi_usr.c" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/src/usbd_midi_core.c" path="../STM32_USB_Device_Library/Class/Midi/src/usbd_midi_core.c" type="1"/>
     <File name="src" path="" type="2"/>
-    <File name="sliders.h" path="../src/sliders.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_spi.c" path="../STM32F4xx_SPL/src/stm32f4xx_spi.c" type="1"/>
     <File name="STM32_USB_OTG_Driver/inc/usb_defines.h" path="../STM32_USB_OTG_Driver/inc/usb_defines.h" type="1"/>
     <File name="src/midi.c" path="../src/midi.c" type="1"/>
@@ -90,13 +156,14 @@
     <File name="STM32_USB_Device_Library/Class midi/inc/usbd_midi_core.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_midi_core.h" type="1"/>
     <File name="STM32_USB_OTG_Driver/src" path="" type="2"/>
     <File name="CMSIS/core_cm0plus.h" path="../CMSIS/Include/core_cm0plus.h" type="1"/>
-    <File name="inc/midi.h" path="../inc/midi.h" type="1"/>
-    <File name="STM32_SPL/inc/stm32f4xx_exti.h" path="../STM32F4xx_SPL/inc/stm32f4xx_exti.h" type="1"/>
     <File name="CMSIS/core_cm4.h" path="../CMSIS/Include/core_cm4.h" type="1"/>
+    <File name="STM32_SPL/inc/stm32f4xx_exti.h" path="../STM32F4xx_SPL/inc/stm32f4xx_exti.h" type="1"/>
+    <File name="inc/midi.h" path="../inc/midi.h" type="1"/>
     <File name="CMSIS/core_cmInstr.h" path="../CMSIS/Include/core_cmInstr.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_syscfg.c" path="../STM32F4xx_SPL/src/stm32f4xx_syscfg.c" type="1"/>
-    <File name="STM32_USB_Device_Library/Class midi/inc/usbd_conf.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_conf.h" type="1"/>
+    <File name="inc/gpio_config.c" path="../src/gpio_config.c" type="1"/>
     <File name="startup/system_stm32f4xx.c" path="../startup/system_stm32f4xx.c" type="1"/>
+    <File name="STM32_USB_Device_Library/Class midi/inc/usbd_conf.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_conf.h" type="1"/>
     <File name="CMSIS/core_sc000.h" path="../CMSIS/Include/core_sc000.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_rng.c" path="../STM32F4xx_SPL/src/stm32f4xx_rng.c" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usb_conf.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_conf.h" type="1"/>
@@ -105,24 +172,24 @@
     <File name="inc/timer.h" path="../inc/timer.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_gpio.h" path="../STM32F4xx_SPL/inc/stm32f4xx_gpio.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/src" path="" type="2"/>
+    <File name="inc/sliders.h" path="../src/sliders.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/src/usb_bsp.c" path="../STM32_USB_Device_Library/Class/Midi/src/usb_bsp.c" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_rng.h" path="../STM32F4xx_SPL/inc/stm32f4xx_rng.h" type="1"/>
     <File name="CMSIS/stm32f4xx.h" path="../CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_adc.c" path="../STM32F4xx_SPL/src/stm32f4xx_adc.c" type="1"/>
-    <File name="STM32_USB_Device_Library/Core/inc/usbd_core.h" path="../STM32_USB_Device_Library/Core/inc/usbd_core.h" type="1"/>
     <File name="inc/keyboardscan.h" path="../inc/keyboardscan.h" type="1"/>
+    <File name="STM32_USB_Device_Library/Core/inc/usbd_core.h" path="../STM32_USB_Device_Library/Core/inc/usbd_core.h" type="1"/>
     <File name="STM32_USB_Device_Library/Core/inc/usbd_ioreq.h" path="../STM32_USB_Device_Library/Core/inc/usbd_ioreq.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_rcc.c" path="../STM32F4xx_SPL/src/stm32f4xx_rcc.c" type="1"/>
-    <File name="STM32_USB_Device_Library/Class midi/inc/usb_midi_io.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_midi_io.h" type="1"/>
     <File name="STM32_SPL/src/misc.c" path="../STM32F4xx_SPL/src/misc.c" type="1"/>
+    <File name="STM32_USB_Device_Library/Class midi/inc/usb_midi_io.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_midi_io.h" type="1"/>
     <File name="STM32_SPL" path="" type="2"/>
-    <File name="inc/stm32f4xx.h" path="../inc/stm32f4xx.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/src/usb_init.c" path="../STM32_USB_Device_Library/Class/Midi/src/usb_init.c" type="1"/>
     <File name="STM32_USB_Device_Library/Core/inc" path="" type="2"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usb_init.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_init.h" type="1"/>
     <File name="inc/stm32f4xx_conf.h" path="../inc/stm32f4xx_conf.h" type="1"/>
-    <File name="STM32_USB_OTG_Driver/inc" path="" type="2"/>
     <File name="STM32_SPL/inc/misc.h" path="../STM32F4xx_SPL/inc/misc.h" type="1"/>
+    <File name="STM32_USB_OTG_Driver/inc" path="" type="2"/>
     <File name="STM32_USB_OTG_Driver/inc/usb_dcd.h" path="../STM32_USB_OTG_Driver/inc/usb_dcd.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/src/usb_midi_io.c" path="../STM32_USB_Device_Library/Class/Midi/src/usb_midi_io.c" type="1"/>
     <File name="STM32_USB_Device_Library" path="" type="2"/>
@@ -140,6 +207,7 @@
     <File name="STM32_USB_Device_Library/Class midi/inc/usbd_desc.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_desc.h" type="1"/>
     <File name="STM32_USB_Device_Library/Core/inc/usbd_def.h" path="../STM32_USB_Device_Library/Core/inc/usbd_def.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi" path="" type="2"/>
+    <File name="src/gpio_config.h" path="../inc/gpio_config.h" type="1"/>
     <File name="src/main.c" path="../src/main.c" type="1"/>
     <File name="startup" path="" type="2"/>
     <File name="STM32_USB_Device_Library/Class midi/src/usbd_midi_desc.c" path="../STM32_USB_Device_Library/Class/Midi/src/usbd_midi_desc.c" type="1"/>
@@ -147,28 +215,28 @@
     <File name="STM32_USB_OTG_Driver/inc/usb_dcd_int.h" path="../STM32_USB_OTG_Driver/inc/usb_dcd_int.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usb_midi_usr.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_midi_usr.h" type="1"/>
     <File name="inc" path="" type="2"/>
-    <File name="STM32_USB_OTG_Driver/src/usb_dcd_int.c" path="../STM32_USB_OTG_Driver/src/usb_dcd_int.c" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usb_irq.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_irq.h" type="1"/>
+    <File name="STM32_USB_OTG_Driver/src/usb_dcd_int.c" path="../STM32_USB_OTG_Driver/src/usb_dcd_int.c" type="1"/>
     <File name="CMSIS/arm_common_tables.h" path="../CMSIS/Include/arm_common_tables.h" type="1"/>
-    <File name="CMSIS/core_cm3.h" path="../CMSIS/Include/core_cm3.h" type="1"/>
-    <File name="STM32_SPL/inc" path="" type="2"/>
     <File name="STM32_SPL/src/stm32f4xx_exti.c" path="../STM32F4xx_SPL/src/stm32f4xx_exti.c" type="1"/>
+    <File name="STM32_SPL/inc" path="" type="2"/>
+    <File name="CMSIS/core_cm3.h" path="../CMSIS/Include/core_cm3.h" type="1"/>
     <File name="inc/main.h" path="../inc/main.h" type="1"/>
     <File name="STM32_USB_Device_Library/Core" path="" type="2"/>
-    <File name="inc/fifo.h" path="../inc/fifo.h" type="1"/>
     <File name="STM32_USB_OTG_Driver/src/usb_dcd.c" path="../STM32_USB_OTG_Driver/src/usb_dcd.c" type="1"/>
+    <File name="inc/fifo.h" path="../inc/fifo.h" type="1"/>
     <File name="STM32_SPL/src" path="" type="2"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usbd_midi_desc.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_midi_desc.h" type="1"/>
     <File name="inc/hd44780.h" path="../inc/hd44780.h" type="1"/>
-    <File name="STM32_SPL/src/stm32f4xx_gpio.c" path="../STM32F4xx_SPL/src/stm32f4xx_gpio.c" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_tim.h" path="../STM32F4xx_SPL/inc/stm32f4xx_tim.h" type="1"/>
+    <File name="STM32_SPL/src/stm32f4xx_gpio.c" path="../STM32F4xx_SPL/src/stm32f4xx_gpio.c" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_rcc.h" path="../STM32F4xx_SPL/inc/stm32f4xx_rcc.h" type="1"/>
     <File name="CMSIS/core_sc300.h" path="../CMSIS/Include/core_sc300.h" type="1"/>
     <File name="startup/startup_stm32f4xx.c" path="../startup/startup_stm32f4xx.c" type="1"/>
-    <File name="STM32_USB_Device_Library/Core/src/usbd_req.c" path="../STM32_USB_Device_Library/Core/src/usbd_req.c" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_syscfg.h" path="../STM32F4xx_SPL/inc/stm32f4xx_syscfg.h" type="1"/>
+    <File name="STM32_USB_Device_Library/Core/src/usbd_req.c" path="../STM32_USB_Device_Library/Core/src/usbd_req.c" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc" path="" type="2"/>
-    <File name="STM32_USB_OTG_Driver/inc/usb_bsp.h" path="../STM32_USB_OTG_Driver/inc/usb_bsp.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_spi.h" path="../STM32F4xx_SPL/inc/stm32f4xx_spi.h" type="1"/>
+    <File name="STM32_USB_OTG_Driver/inc/usb_bsp.h" path="../STM32_USB_OTG_Driver/inc/usb_bsp.h" type="1"/>
   </Files>
 </Project>

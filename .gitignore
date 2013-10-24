@@ -51,3 +51,5 @@ Fatarminator.uvopt
 #Build files
 Cocox/Fatarminator/*
 Cocox/Debug/*
+Cocox/Release/*
+Cocox/logs/*

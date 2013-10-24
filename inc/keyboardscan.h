@@ -28,8 +28,6 @@ typedef struct {
 #endif
 
 
-
-
 void readKeyState(void); 				//Read state of all 88 keys and send info to FIFO
 void checkNoteArray(void);
 void delay(volatile uint32_t c);

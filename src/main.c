@@ -14,6 +14,7 @@
 #include "timer.h"
 #include "usb_init.h"
 #include "sliders.h"
+#include "gpio_config.h"
 
 #define MIDI_BAUDRATE 31250 //Midi speed baudrate
 //USB_OTG_CORE_HANDLE USB_OTG_dev;
@@ -200,15 +201,13 @@ void init_USART1(uint32_t baudrate) {
 	USART_Cmd(USART1, ENABLE);
 }
 
-void USART_puts(USART_TypeDef *USARTx, volatile char *s) {
+uint8_t SPI1_send(uint8_t data){
 
-	while (*s) {
-		// wait until data register is empty
-		while (!(USARTx->SR & 0x00000040))
-			;
-		USART_SendData(USARTx, *s);
-		*s++;
-	}
+	SPI1->DR = data; // write data to be transmitted to the SPI data register
+	while( !(SPI1->SR & SPI_I2S_FLAG_TXE) ); // wait until transmit complete
+	while( !(SPI1->SR & SPI_I2S_FLAG_RXNE) ); // wait until receive complete
+	while( SPI1->SR & SPI_I2S_FLAG_BSY ); // wait until SPI is not busy anymore
+	return SPI1->DR; // return received data from SPI data register
 }
 
 /**
@@ -219,15 +218,11 @@ void firstInit() {
 	init_GPIO(); //GPIO init
 	init_USART1(MIDI_BAUDRATE); //Midi init
 
-	//       USBD_Init(&USB_OTG_dev,
-	// #ifdef USE_USB_OTG_HS
-	//             USB_OTG_HS_CORE_ID,
-	// #else
-	//             USB_OTG_FS_CORE_ID,
-	// #endif
-	//             &USR_desc,
-	//             &AUDIO_cb,
-	//             &USR_cb);
+	init_ADC(); //ADC init
+
+	velocity_init();
+
+	usb_init(); //Init everything for midiUSB
 
 	//First port init, all for high
 	GPIOB->BSRRL = 0xFC07; // B0-B2, B10-B15
@@ -250,12 +245,6 @@ int main(void) {
 
 	firstInit();
 
-	init_ADC(); //ADC init
-
-	init_velocity();
-
-	usb_init(); //Init everything for midiUSB
-
 	delayms(400);
 	hd44780_init();
 	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON,
@@ -265,7 +254,7 @@ int main(void) {
 	hd44780_goto(2, 4);
 	hd44780_write_string("PROJECT  v0.1");
 
-	GPIO_SetBits(GPIOD, GPIO_Pin_15);
+	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 
 	//Main loop
 	while (1) {

@@ -81,6 +81,6 @@ static curve_points_type curve_points={3600,125*0x80,20000,31*0x80,101400,1*0x80
                                3000,118*0x80,20600,20*0x80,75000,1*0x80}; 
 
 
-void init_velocity(void){
+void velocity_init(void){
 	calculate_velocity_formula (&curve_points);
 }	

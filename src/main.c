@@ -217,6 +217,7 @@ void firstInit() {
 
 	init_GPIO(); //GPIO init
 	init_USART1(MIDI_BAUDRATE); //Midi init
+	SPI1_init();
 
 	init_ADC(); //ADC init
 
@@ -253,6 +254,11 @@ int main(void) {
 	hd44780_write_string("FATARMINATOR");
 	hd44780_goto(2, 4);
 	hd44780_write_string("PROJECT  v0.1");
+
+
+	//SPI test message
+	SPI1_send(0xAA);
+	SPI1_send(0xBB);
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 

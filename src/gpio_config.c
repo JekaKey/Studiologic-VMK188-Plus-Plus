@@ -45,7 +45,7 @@ void SPI1_init() {
 	SPI_InitStruct.SPI_CPOL = SPI_CPOL_Low; // clock is low when idle
 	SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge; // data sampled at first edge
 	SPI_InitStruct.SPI_NSS = SPI_NSS_Soft | SPI_NSSInternalSoft_Set; // set the NSS management to internal and pull internal NSS high
-	SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4; // SPI frequency is APB2 frequency / 4
+	SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16; // SPI frequency is APB2 frequency / 16
 	SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB; // data is transmitted MSB first
 	SPI_Init(SPI1, &SPI_InitStruct);
 

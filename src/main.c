@@ -35,7 +35,6 @@ void delayms(volatile uint32_t c) {
 	}
 }
 
-
 uint8_t SPI1_send(uint8_t data) {
 
 	SPI1->DR = data; // write data to be transmitted to the SPI data register
@@ -50,6 +49,17 @@ uint8_t SPI1_send(uint8_t data) {
 	return SPI1->DR; // return received data from SPI data register
 }
 
+uint8_t Memory_Read_Status(void) {
+	uint8_t temp;
+
+	GPIO_ResetBits(GPIOC, GPIO_Pin_3);
+	SPI1_send(0xD7);
+	temp = SPI1_send(0x00);
+	GPIO_SetBits(GPIOD, GPIO_Pin_15);
+
+	return temp;
+}
+
 /**
  * First init
  */
@@ -59,9 +69,9 @@ void firstInit() {
 	SPI1_init();
 	USART1_init();
 
-	init_ADC(); 		//ADC init
+	init_ADC(); //ADC init
 	velocity_init();
-	usb_init(); 		//Init everything for midiUSB
+	usb_init(); //Init everything for midiUSB
 
 	//TODO: move to gpio init module
 	//First port init, all for high
@@ -78,7 +88,7 @@ void firstInit() {
 }
 
 int main(void) {
-
+	uint8_t MEM_status;
 	firstInit();
 
 	delayms(400);
@@ -90,11 +100,10 @@ int main(void) {
 	hd44780_goto(2, 4);
 	hd44780_write_string("PROJECT  v0.1");
 
-	//SPI test message
-	GPIO_ResetBits(GPIOC, GPIO_Pin_3);
-	SPI1_send(0xAA);
-	SPI1_send(0xBB);
-	GPIO_SetBits(GPIOC, GPIO_Pin_3);
+	// Test memory
+	do {
+		MEM_status = Memory_Read_Status();
+	} while (!(MEM_status & 0x80));
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 
@@ -111,7 +120,7 @@ int main(void) {
 }
 
 /**
-Timer 4 interrupt
+ Timer 4 interrupt
  **/
 
 void TIM4_IRQHandler() {

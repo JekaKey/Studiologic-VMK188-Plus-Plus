@@ -63,7 +63,7 @@ void init_GPIO(void) {
 	GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 	/*Configure GPIO pin */
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -227,7 +227,7 @@ void firstInit() {
 
 	//First port init, all for high
 	GPIOB->BSRRL = 0xFC07; // B0-B2, B10-B15
-	GPIOC->BSRRL = 0x30; // C4-C5
+	GPIOC->BSRRL = 0x38; // C3-C5
 	GPIOD->BSRRL = 0x300; // D8-D9
 	GPIOE->BSRRL = 0xFF80; // E7-E15
 
@@ -255,10 +255,11 @@ int main(void) {
 	hd44780_goto(2, 4);
 	hd44780_write_string("PROJECT  v0.1");
 
-
 	//SPI test message
+	GPIO_ResetBits(GPIOC, GPIO_Pin_3);
 	SPI1_send(0xAA);
 	SPI1_send(0xBB);
+	GPIO_SetBits(GPIOC, GPIO_Pin_3);
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 

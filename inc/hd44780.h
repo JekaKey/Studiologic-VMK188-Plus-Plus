@@ -80,12 +80,12 @@
 #define HD44780_DATABIT6            GPIO_Pin_6
 #define HD44780_DATABIT7            GPIO_Pin_7
 
-#define HD44780_RS_PORT             GPIOE
-#define HD44780_RS_BIT              GPIO_Pin_0
-#define HD44780_RW_PORT             GPIOE
-#define HD44780_RW_BIT              GPIO_Pin_1
-#define HD44780_EN_PORT             GPIOE
-#define HD44780_EN_BIT              GPIO_Pin_2
+#define HD44780_RS_PORT             GPIOD
+#define HD44780_RS_BIT              GPIO_Pin_11
+#define HD44780_RW_PORT             GPIOB
+#define HD44780_RW_BIT              GPIO_Pin_6
+#define HD44780_EN_PORT             GPIOD
+#define HD44780_EN_BIT              GPIO_Pin_10
 
 
 /***************************************************************

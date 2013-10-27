@@ -87,9 +87,13 @@ void firstInit() {
 
 }
 
+
+
 int main(void) {
 	uint8_t MEM_status;
 	firstInit();
+	GPIO_SetBits(GPIOD, GPIO_Pin_10);
+	delayms(5000);
 
 	delayms(400);
 	hd44780_init();

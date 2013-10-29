@@ -34,7 +34,7 @@ uint8_t lastState11 = 0x00;
 #endif
 
 #if defined FULLCYCLES_STRUCT
-static uint8_t lastState[11] = {0};
+static uint8_t lastState[11] = { 0 };
 #endif
 
 #if defined FULLCYCLES_CASE
@@ -222,7 +222,6 @@ uint16_t duration_note88 = 0x0;
 
 #if defined  SEMICYCLES
 
-
 uint16_t duration_note[88] = {0};
 
 uint16_t lastState_key[88] = {0};
@@ -235,8 +234,8 @@ uint16_t lastState_key[88] = {0};
 #endif
 
 #if defined  FULLCYCLES_STRUCT
-uint16_t duration_note[88] = {0};
-uint16_t lastState_key[88] = {0};
+uint16_t duration_note[88] = { 0 };
+uint16_t lastState_key[88] = { 0 };
 #endif
 
 static uint8_t curNote;
@@ -285,54 +284,54 @@ void checkNoteArray(void) {
 #if defined FULLCYCLES_STRUCT
 
 /*The array of structures for all 11 key blocks GPIO pins*/
-gpio_pins_type gpio_pins[11] = { {GPIOE, GPIO_Pin_15, GPIOE, GPIO_Pin_14}, {
-		GPIOB, GPIO_Pin_11, GPIOB, GPIO_Pin_10}, {GPIOB, GPIO_Pin_13, GPIOB,
-		GPIO_Pin_12}, {GPIOB, GPIO_Pin_15, GPIOB, GPIO_Pin_14}, {GPIOD,
-		GPIO_Pin_9, GPIOD, GPIO_Pin_8},
-	{	GPIOC, GPIO_Pin_4, GPIOC, GPIO_Pin_5}, {GPIOB, GPIO_Pin_0, GPIOB,
-		GPIO_Pin_1}, {GPIOE, GPIO_Pin_7, GPIOB, GPIO_Pin_2}, {GPIOE,
-		GPIO_Pin_9, GPIOE, GPIO_Pin_8}, {GPIOE, GPIO_Pin_12, GPIOE,
-		GPIO_Pin_10}, {GPIOE, GPIO_Pin_11, GPIOE, GPIO_Pin_13}};
+gpio_pins_type gpio_pins[11] = { { GPIOE, GPIO_Pin_15, GPIOE, GPIO_Pin_14 }, {
+		GPIOB, GPIO_Pin_11, GPIOB, GPIO_Pin_10 }, { GPIOB, GPIO_Pin_13, GPIOB,
+		GPIO_Pin_12 }, { GPIOB, GPIO_Pin_15, GPIOB, GPIO_Pin_14 }, { GPIOD,
+		GPIO_Pin_9, GPIOD, GPIO_Pin_8 },
+		{ GPIOC, GPIO_Pin_4, GPIOC, GPIO_Pin_5 }, { GPIOB, GPIO_Pin_0, GPIOB,
+				GPIO_Pin_1 }, { GPIOE, GPIO_Pin_7, GPIOB, GPIO_Pin_2 }, { GPIOE,
+				GPIO_Pin_9, GPIOE, GPIO_Pin_8 }, { GPIOE, GPIO_Pin_12, GPIOE,
+				GPIO_Pin_10 }, { GPIOE, GPIO_Pin_11, GPIOE, GPIO_Pin_13 } };
 
 /*Delay should be more long for full cycles code. The reason is unrecognized....*/
 volatile static key_delay(void) {
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-/*
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-  __NOP();
-*/
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	/*
+	 __NOP();
+	 __NOP();
+	 __NOP();
+	 __NOP();
+	 __NOP();
+	 __NOP();
+	 __NOP();
+	 */
 }
 
 void readKeyState(void) {
 
 	uint8_t d1, d2, i, j, chunk, chunk8;
-	uint8_t k[8] = {1, 2, 4, 8, 16, 32, 64, 128}; //array with values for key select
+	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
 
 	for (chunk = 0; chunk <= 10; chunk++) {
 		gpio_pins[chunk].first->BSRRH = gpio_pins[chunk].first_num; //Pin to zero
 		chunk8 = chunk * 8;
 		key_delay();
-		d1 = ~GPIOA->IDR;//Read port state first contact
-		gpio_pins[chunk].first->BSRRL = gpio_pins[chunk].first_num;//Pin to 1
+		d1 = ~GPIOA->IDR; //Read port state first contact
+		gpio_pins[chunk].first->BSRRL = gpio_pins[chunk].first_num; //Pin to 1
 
-		GPIOA->MODER |= 0x00005555;//PA0-8 Will be Output
-		GPIOA->ODR = 0x00FF;//High level on PA0-8;
-		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
+		GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
+		GPIOA->ODR = 0x00FF; //High level on PA0-8;
+		GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
 
 		if (d1) {
 			gpio_pins[chunk].second->BSRRH = gpio_pins[chunk].second_num;
@@ -340,9 +339,9 @@ void readKeyState(void) {
 			d2 = ~GPIOA->IDR; //Read port state second contact
 			gpio_pins[chunk].second->BSRRL = gpio_pins[chunk].second_num;
 
-			GPIOA->MODER |= 0x00005555;//PA0-8 Will be Output
-			GPIOA->ODR = 0x00FF;//High level on PA0-8;
-			GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
+			GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
+			GPIOA->ODR = 0x00FF; //High level on PA0-8;
+			GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
 
 			for (i = 0; i <= 7; i++) {
 				j = i + chunk8;
@@ -357,7 +356,7 @@ void readKeyState(void) {
 						}
 					} else {
 						if (duration_note[j] < 0xFFFF)
-						duration_note[j]++;
+							duration_note[j]++;
 					}
 
 				} else {
@@ -406,155 +405,155 @@ static void key_delay(void) {
 void readKeyState(void) {
 
 	uint8_t d1, d2, i, j, chunk, chunk8;
-	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 };
+	uint8_t k[8] = {1, 2, 4, 8, 16, 32, 64, 128};
 
 	for (chunk = 0; chunk <= 10; chunk++) {
 		switch (chunk) {
-		case 0:
+			case 0:
 			GPIOE->BSRRH = GPIO_Pin_15; //Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_15; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_15;//Pin to 1
 			break;
-		case 1:
-			GPIOB->BSRRH = GPIO_Pin_11; //Pin to zero
+			case 1:
+			GPIOB->BSRRH = GPIO_Pin_11;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOB->BSRRL = GPIO_Pin_11; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOB->BSRRL = GPIO_Pin_11;//Pin to 1
 			break;
-		case 2:
-			GPIOB->BSRRH = GPIO_Pin_13; //Pin to zero
+			case 2:
+			GPIOB->BSRRH = GPIO_Pin_13;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOB->BSRRL = GPIO_Pin_13; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOB->BSRRL = GPIO_Pin_13;//Pin to 1
 			break;
-		case 3:
-			GPIOB->BSRRH = GPIO_Pin_15; //Pin to zero
+			case 3:
+			GPIOB->BSRRH = GPIO_Pin_15;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOB->BSRRL = GPIO_Pin_15; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOB->BSRRL = GPIO_Pin_15;//Pin to 1
 			break;
-		case 4:
-			GPIOD->BSRRH = GPIO_Pin_9; //Pin to zero
+			case 4:
+			GPIOD->BSRRH = GPIO_Pin_9;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOD->BSRRL = GPIO_Pin_9; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOD->BSRRL = GPIO_Pin_9;//Pin to 1
 			break;
-		case 5:
-			GPIOC->BSRRH = GPIO_Pin_4; //Pin to zero
+			case 5:
+			GPIOC->BSRRH = GPIO_Pin_4;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOC->BSRRL = GPIO_Pin_4; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOC->BSRRL = GPIO_Pin_4;//Pin to 1
 			break;
-		case 6:
-			GPIOB->BSRRH = GPIO_Pin_0; //Pin to zero
+			case 6:
+			GPIOB->BSRRH = GPIO_Pin_0;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOB->BSRRL = GPIO_Pin_0; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOB->BSRRL = GPIO_Pin_0;//Pin to 1
 			break;
-		case 7:
-			GPIOE->BSRRH = GPIO_Pin_7; //Pin to zero
+			case 7:
+			GPIOE->BSRRH = GPIO_Pin_7;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_7; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_7;//Pin to 1
 			break;
-		case 8:
-			GPIOE->BSRRH = GPIO_Pin_9; //Pin to zero
+			case 8:
+			GPIOE->BSRRH = GPIO_Pin_9;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_9; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_9;//Pin to 1
 			break;
-		case 9:
-			GPIOE->BSRRH = GPIO_Pin_12; //Pin to zero
+			case 9:
+			GPIOE->BSRRH = GPIO_Pin_12;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_12; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_12;//Pin to 1
 			break;
-		case 10:
-			GPIOE->BSRRH = GPIO_Pin_11; //Pin to zero
+			case 10:
+			GPIOE->BSRRH = GPIO_Pin_11;//Pin to zero
 			key_delay();
-			d1 = ~GPIOA->IDR; //Read port state first contact
-			GPIOE->BSRRL = GPIO_Pin_11; //Pin to 1
+			d1 = ~GPIOA->IDR;//Read port state first contact
+			GPIOE->BSRRL = GPIO_Pin_11;//Pin to 1
 			break;
 		}
 
 		GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
-		GPIOA->ODR = 0x00FF; //High level on PA0-8;
-		GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
+		GPIOA->ODR = 0x00FF;//High level on PA0-8;
+		GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
 		if (d1) {
 			switch (chunk) {
-			case 0:
+				case 0:
 				GPIOE->BSRRH = GPIO_Pin_14;
 				key_delay();
 				d2 = ~GPIOA->IDR; //Read port state second contact
 				GPIOE->BSRRL = GPIO_Pin_14;
 				break;
-			case 1:
+				case 1:
 				GPIOB->BSRRH = GPIO_Pin_10;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_10;
 				break;
-			case 2:
+				case 2:
 				GPIOB->BSRRH = GPIO_Pin_12;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_12;
 				break;
-			case 3:
+				case 3:
 				GPIOB->BSRRH = GPIO_Pin_14;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_14;
 				break;
-			case 4:
+				case 4:
 				GPIOD->BSRRH = GPIO_Pin_8;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOD->BSRRL = GPIO_Pin_8;
 				break;
-			case 5:
+				case 5:
 				GPIOC->BSRRH = GPIO_Pin_5;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOC->BSRRL = GPIO_Pin_5;
 				break;
-			case 6:
+				case 6:
 				GPIOB->BSRRH = GPIO_Pin_1;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_1;
 				break;
-			case 7:
+				case 7:
 				GPIOB->BSRRH = GPIO_Pin_2;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOB->BSRRL = GPIO_Pin_2;
 				break;
-			case 8:
+				case 8:
 				GPIOE->BSRRH = GPIO_Pin_8;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOE->BSRRL = GPIO_Pin_8;
 				break;
-			case 9:
+				case 9:
 				GPIOE->BSRRH = GPIO_Pin_10;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOE->BSRRL = GPIO_Pin_10;
 				break;
-			case 10:
+				case 10:
 				GPIOE->BSRRH = GPIO_Pin_13;
 				key_delay();
-				d2 = ~GPIOA->IDR; //Read port state second contact
+				d2 = ~GPIOA->IDR;//Read port state second contact
 				GPIOE->BSRRL = GPIO_Pin_13;
 				break;
 			}
 
 			GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
-			GPIOA->ODR = 0x00FF; //High level on PA0-8;
-			GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
+			GPIOA->ODR = 0x00FF;//High level on PA0-8;
+			GPIOA->MODER &= 0xFFFF0000;//PA0-8 Will be Input
 
 			chunk8 = chunk * 8;
 			for (i = 0; i <= 7; i++) {
@@ -570,7 +569,7 @@ void readKeyState(void) {
 						}
 					} else {
 						if (duration_note[j] < 0xFFFF)
-							duration_note[j]++;
+						duration_note[j]++;
 					}
 
 				} else {

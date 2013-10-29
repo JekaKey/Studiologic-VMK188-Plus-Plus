@@ -15,12 +15,8 @@
 #include "sliders.h"
 #include "gpio_config.h"
 
-uint16_t previousState;
 uint8_t count;
 uint16_t i;
-uint16_t min = 0xFFFF;
-uint16_t max = 0;
-uint8_t mid = 0;
 
 void delay(volatile uint32_t c) {
 	while (--c) {
@@ -68,7 +64,7 @@ void firstInit() {
 	GPIO_init();
 	SPI1_init();
 	USART1_init();
-
+	count = 100;
 	init_ADC(); //ADC init
 	velocity_init();
 	usb_init(); //Init everything for midiUSB
@@ -80,6 +76,7 @@ void firstInit() {
 	GPIOD->BSRRL = 0x300; // D8-D9
 	GPIOE->BSRRL = 0xFF80; // E7-E15
 
+
 	//Start key scan timer
 	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
 	TIM_Cmd(TIM4, ENABLE);
@@ -88,9 +85,10 @@ void firstInit() {
 }
 
 
-
 int main(void) {
+
 	uint8_t MEM_status;
+
 	firstInit();
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
 	delayms(5000);

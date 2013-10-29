@@ -13,7 +13,7 @@
 #include "fifo.h"
 #include "velocity.h"
 
-EXTERN FIFO8(128) midiMessagesArray; //Массив с миди данными для отправки
+EXTERN FIFO8(128) midiMessagesArray; //Array for midi messages buffer
 EXTERN FIFO8(8) notes;         //Array for current note
 EXTERN FIFO16(8) durations;    //Array for duration for current note
 
@@ -60,6 +60,6 @@ void sendPitchBend(word PitchValue,byte Channel);
 void sendPolyPressure(byte NoteNumber,byte Pressure,byte Channel);
 void sendAfterTouch(byte Pressure,byte Channel);
 
-void sendMidiData(void); //Отправка Миди данных из буффера
+void sendMidiData(void); //Send one midi message per run from buffer array
 
 #endif //MIDI_H

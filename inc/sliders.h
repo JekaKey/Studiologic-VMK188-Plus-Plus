@@ -11,5 +11,7 @@ typedef struct {
 	uint8_t reverse;
 } Slider;
 
+
+
 void init_ADC(void);
 void read_sliders(void);

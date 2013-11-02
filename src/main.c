@@ -68,6 +68,7 @@ void firstInit() {
 	init_ADC(); //ADC init
 	velocity_init();
 	usb_init(); //Init everything for midiUSB
+	init_sliders();
 
 	//TODO: move to gpio init module
 	//First port init, all for high

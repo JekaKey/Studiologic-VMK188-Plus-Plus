@@ -22,9 +22,7 @@ FlagStatus ADC_GetFlagStatus1(ADC_TypeDef* ADCx, uint8_t ADC_FLAG) {
 	return bitstatus;
 }
 
-uint16_t readADC(uint8_t channel, uint8_t index) {
-	switch (index) {
-	case 0:
+uint16_t readADC1(uint8_t channel) {
 		ADC_RegularChannelConfig(ADC1, channel, 1, ADC_SampleTime_28Cycles);
 		//Start
 		ADC_SoftwareStartConv(ADC1);
@@ -36,34 +34,6 @@ uint16_t readADC(uint8_t channel, uint8_t index) {
 		ADC_ClearFlag(ADC1, ADC_FLAG_EOC);
 		//Return a result
 		return ADC_GetConversionValue(ADC1);
-		break;
-	case 1:
-		ADC_RegularChannelConfig(ADC2, channel, 1, ADC_SampleTime_28Cycles);
-		//Start
-		ADC_SoftwareStartConv(ADC2);
-		//Wait while a voltage is converting to a value
-		while (((ADC2->SR & ADC_FLAG_EOC) == RESET)) {
-			__NOP();
-		}
-		//Reset status
-		ADC_ClearFlag(ADC2, ADC_FLAG_EOC);
-		//Return a result
-		return ADC_GetConversionValue(ADC2);
-		break;
-	case 2:
-		ADC_RegularChannelConfig(ADC3, channel, 1, ADC_SampleTime_28Cycles);
-		//Start
-		ADC_SoftwareStartConv(ADC3);
-		//Wait while a voltage is converting to a value
-		while (((ADC3->SR & ADC_FLAG_EOC) == RESET)) {
-			__NOP();
-		}
-		//Reset status
-		ADC_ClearFlag(ADC3, ADC_FLAG_EOC);
-		//Return a result
-		return ADC_GetConversionValue(ADC3);
-		break;
-	}
 }
 
 /**DocID022945 Rev 4 29/33
@@ -101,7 +71,7 @@ uint16_t ADC_last[3];
 
 uint16_t ADC_GetSample(uint16_t delta, uint8_t index) {
 	uint16_t adc_sample, adc_change;
-	adc_sample = readADC(ADC_Channel_11, index);
+	adc_sample = readADC1(ADC_Channel_10+index);
 	if (adc_sample > ADC_last[index]) {
 		adc_change = adc_sample - ADC_last[index];
 	} else {
@@ -117,7 +87,7 @@ uint16_t ADC_GetSample(uint16_t delta, uint8_t index) {
 
 uint16_t ADC_GetSampleAvgNDeleteX(uint8_t N, uint8_t X) {
 	uint32_t avg_sample = 0x00;
-	uint16_t adc_sample[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+	uint16_t adc_sample[8] = {0};
 	uint8_t index = 0x00;
 	for (index = 0x00; index < N; index++) {
 		/* ADC start conv */
@@ -149,7 +119,6 @@ void init_ADC() {
 	ADC_InitTypeDef ADC_InitStructure;
 	ADC_CommonInitTypeDef adc_init;
 
-	/*ADC1*/
 	/* ADC clock enabled*/
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
@@ -179,65 +148,6 @@ void init_ADC() {
 	/*Switch on ADC*/
 	ADC_Cmd(ADC1, ENABLE);
 
-	/*ADC2*/
-	/* ADC clock enabled*/
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2, ENABLE);
-
-	/*ADC reset*/
-	ADC_DeInit();
-
-	/*ADCs work independently*/
-	adc_init.ADC_Mode = ADC_Mode_Independent;
-	adc_init.ADC_Prescaler = ADC_Prescaler_Div2;
-
-	/*scan conversion turned on*/
-	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
-	/*Do not use long conversion*/
-	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
-
-	/*start programm based conversion, don't use the trigger*/
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConvEdge_None;
-	ADC_InitStructure.ADC_ExternalTrigConvEdge = 0;
-	/*12 bit conversion, the result in the 12 low bits*/
-	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-
-	/*Initialization*/
-	ADC_CommonInit(&adc_init);
-
-	ADC_Init(ADC2, &ADC_InitStructure);
-	/*Switch on ADC*/
-	ADC_Cmd(ADC2, ENABLE);
-
-	/*ADC3*/
-	/* ADC clock enabled*/
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC3, ENABLE);
-
-	/*ADC reset*/
-	ADC_DeInit();
-
-	/*ADCs work independently*/
-	adc_init.ADC_Mode = ADC_Mode_Independent;
-	adc_init.ADC_Prescaler = ADC_Prescaler_Div2;
-
-	/*scan conversion turned on*/
-	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
-	/*Do not use long conversion*/
-	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
-
-	/*start programm based conversion, don't use the trigger*/
-	ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConvEdge_None;
-	ADC_InitStructure.ADC_ExternalTrigConvEdge = 0;
-	/*12 bit conversion, the result in the 12 low bits*/
-	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
-	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-
-	/*Initialization*/
-	ADC_CommonInit(&adc_init);
-
-	ADC_Init(ADC3, &ADC_InitStructure);
-	/*Switch on ADC*/
-	ADC_Cmd(ADC3, ENABLE);
 
 }
 
@@ -301,7 +211,7 @@ void init_sliders(void) {
 
 	}
 
-	sliders[SLIDER_S1].active = 0;
+	sliders[SLIDER_S1].active = 1;
 	sliders[SLIDER_S1].reverse = 0;
 	sliders[SLIDER_S1].channel = 0;
 	sliders[SLIDER_S1].event = 7;

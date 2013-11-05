@@ -1,5 +1,8 @@
 #include "velocity.h"
 #include "timer.h" 
+#include "presets.h"
+
+int test = 1;
 
 /*Velocity curve formulas parameters for white & black keys*/
 static double Aw, Bw, Cw, Ab, Bb, Cb;
@@ -33,7 +36,7 @@ void calculate_velocity_formula(curve_points_type *cp) {
 
 /*Find a color of a key with number "note_num"*/
 uint16_t note_color(uint16_t note_num) {
-
+	//TODO: Reduce 21 for simplifys
 	return (0x0001 << ((note_num - 21) % 12)) & 0x0A52;
 }
 
@@ -71,7 +74,7 @@ uint16_t getVelocity_off(uint16_t tickNum, uint16_t black) {
 }
 
 /*This structure normally should be initialized by the info saved in the flash memory.
- Here it reproduces the data from the old Fatar VMK188 velocity curve  */
+ Here it reproduces the data from the old Studiologic VMK188 Plus velocity curve  */
 
 static curve_points_type curve_points = { 3600, 125 * 0x80, 20000, 31 * 0x80,
 		101400, 1 * 0x80, 3000, 118 * 0x80, 20600, 20 * 0x80, 75000, 1 * 0x80 };

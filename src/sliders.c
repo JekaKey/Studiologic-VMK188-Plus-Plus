@@ -1,5 +1,7 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_gpio.h"
+
+#include "presets.h"
 #include "sliders.h"
 #include "midi.h"
 #include "usb_midi_io.h"

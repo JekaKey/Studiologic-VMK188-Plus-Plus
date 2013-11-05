@@ -105,10 +105,9 @@ void firstInit() {
 int main(void) {
 
 	uint8_t MEM_status;
-
-	firstInit();
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
-	delayms(5000);
+	firstInit();
+
 
 	// Test memory
 	do {
@@ -117,7 +116,6 @@ int main(void) {
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 
-	preset.Id = 1;
 
 	//Main loop
 	while (1) {

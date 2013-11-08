@@ -7,6 +7,7 @@
 
 #define MAIN
 
+#include "presets.h"
 #include "fifo.h"
 #include "keyboardscan.h"
 #include "midi.h"
@@ -61,14 +62,34 @@ uint8_t Memory_Read_Status(void) {
  */
 void firstInit() {
 
+	//Hardware init
 	GPIO_init();
 	SPI1_init();
 	USART1_init();
+	usb_init(); //Init everything for midiUSB
+
+	//Software init
+	preset_load();
 	count = 100;
 	ADC_init_all(); //ADC init
 	velocity_init();
+<<<<<<< HEAD
 	usb_init(); //Init everything for midiUSB
 	sliders_init();
+=======
+	init_sliders();
+>>>>>>> 257b80815458fc31a69348071d3760446425676b
+
+	//Display
+	delayms(400);
+	hd44780_init();
+	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON,
+			HD44780_DISP_BLINK_OFF);
+
+	hd44780_write_string("FATARMINATOR");
+	hd44780_goto(2, 4);
+	hd44780_write_string("PROJECT  v0.1");
+
 
 	//TODO: move to gpio init module
 	//First port init, all for high
@@ -87,19 +108,9 @@ void firstInit() {
 int main(void) {
 
 	uint8_t MEM_status;
-
-	firstInit();
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
-	delayms(5000);
+	firstInit();
 
-	delayms(400);
-	hd44780_init();
-	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON,
-			HD44780_DISP_BLINK_OFF);
-
-	hd44780_write_string("FATARMINATOR");
-	hd44780_goto(2, 4);
-	hd44780_write_string("PROJECT  v0.1");
 
 	// Test memory
 	do {
@@ -107,6 +118,7 @@ int main(void) {
 	} while (!(MEM_status & 0x80));
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
+
 
 	//Main loop
 	while (1) {

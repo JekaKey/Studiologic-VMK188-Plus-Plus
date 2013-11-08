@@ -1,4 +1,5 @@
 #include "midi.h"
+#include "presets.h"
 
 void sendNoteOn(byte NoteNumber, word Velocity, byte Channel) {
 	FIFO_PUSH(midiMessagesArray, NoteOn ^ Channel);

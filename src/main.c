@@ -20,135 +20,131 @@ uint8_t count;
 uint16_t i;
 
 void delay(volatile uint32_t c) {
-	while (--c) {
-		__NOP();
-	}
+        while (--c) {
+                __NOP();
+        }
 }
 
 void delayms(volatile uint32_t c) {
-	c++;
-	while (--c) {
-		delay(23080);
-	}
+        c++;
+        while (--c) {
+                delay(23080);
+        }
 }
 
 uint8_t SPI1_send(uint8_t data) {
 
-	SPI1->DR = data; // write data to be transmitted to the SPI data register
-	while (!(SPI1->SR & SPI_I2S_FLAG_TXE))
-		; // wait until transmit complete
-	while (!(SPI1->SR & SPI_I2S_FLAG_RXNE))
-		;
-	// wait until receive complete
-	while (SPI1->SR & SPI_I2S_FLAG_BSY)
-		;
-	// wait until SPI is not busy anymore
-	return SPI1->DR; // return received data from SPI data register
+        SPI1->DR = data; // write data to be transmitted to the SPI data register
+        while (!(SPI1->SR & SPI_I2S_FLAG_TXE))
+                ; // wait until transmit complete
+        while (!(SPI1->SR & SPI_I2S_FLAG_RXNE))
+                ;
+        // wait until receive complete
+        while (SPI1->SR & SPI_I2S_FLAG_BSY)
+                ;
+        // wait until SPI is not busy anymore
+        return SPI1->DR; // return received data from SPI data register
 }
 
 uint8_t Memory_Read_Status(void) {
-	uint8_t temp;
+        uint8_t temp;
 
-	GPIO_ResetBits(GPIOC, GPIO_Pin_3);
-	SPI1_send(0xD7);
-	temp = SPI1_send(0x00);
-	GPIO_SetBits(GPIOD, GPIO_Pin_15);
+        GPIO_ResetBits(GPIOC, GPIO_Pin_3);
+        SPI1_send(0xD7);
+        temp = SPI1_send(0x00);
+        GPIO_SetBits(GPIOD, GPIO_Pin_15);
 
-	return temp;
+        return temp;
 }
 
 /**
- * First init
- */
+* First init
+*/
 void firstInit() {
 
-	//Hardware init
-	GPIO_init();
-	SPI1_init();
-	USART1_init();
-	usb_init(); //Init everything for midiUSB
+        //Hardware init
+        GPIO_init();
+        SPI1_init();
+        USART1_init();
+        usb_init(); //Init everything for midiUSB
 
-	//Software init
-	preset_load();
-	count = 100;
-	ADC_init_all(); //ADC init
-	velocity_init();
-<<<<<<< HEAD
-	usb_init(); //Init everything for midiUSB
-	sliders_init();
-=======
-	init_sliders();
->>>>>>> 257b80815458fc31a69348071d3760446425676b
+        //Software init
+        preset_load();
+        count = 100;
+        ADC_init_all(); //ADC init
+        velocity_init();
+        sliders_init();
 
-	//Display
-	delayms(400);
-	hd44780_init();
-	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON,
-			HD44780_DISP_BLINK_OFF);
+        //Display
+        delayms(400);
+        hd44780_init();
+        hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_ON,
+                        HD44780_DISP_BLINK_OFF);
 
-	hd44780_write_string("FATARMINATOR");
-	hd44780_goto(2, 4);
-	hd44780_write_string("PROJECT  v0.1");
+        hd44780_write_string("FATARMINATOR");
+        hd44780_goto(2, 4);
+        hd44780_write_string("PROJECT v0.1");
 
 
-	//TODO: move to gpio init module
-	//First port init, all for high
-	GPIOB->BSRRL = 0xFC07; // B0-B2, B10-B15
-	GPIOC->BSRRL = 0x38; // C3-C5
-	GPIOD->BSRRL = 0x300; // D8-D9
-	GPIOE->BSRRL = 0xFF80; // E7-E15
+        //TODO: move to gpio init module
+        //First port init, all for high
+        GPIOB->BSRRL = 0xFC07; // B0-B2, B10-B15
+        GPIOC->BSRRL = 0x38; // C3-C5
+        GPIOD->BSRRL = 0x300; // D8-D9
+        GPIOE->BSRRL = 0xFF80; // E7-E15
 
-	//Start key scan timer
-	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
-	TIM_Cmd(TIM4, ENABLE);
-	NVIC_EnableIRQ(TIM4_IRQn);
+
+        //Start key scan timer
+        TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+        TIM_Cmd(TIM4, ENABLE);
+        NVIC_EnableIRQ(TIM4_IRQn);
 
 }
+
 
 int main(void) {
 
-	uint8_t MEM_status;
-	GPIO_SetBits(GPIOD, GPIO_Pin_10);
-	firstInit();
+        uint8_t MEM_status;
+        GPIO_SetBits(GPIOD, GPIO_Pin_10);
+        firstInit();
 
 
-	// Test memory
-	do {
-		MEM_status = Memory_Read_Status();
-	} while (!(MEM_status & 0x80));
+        // Test memory
+        do {
+                MEM_status = Memory_Read_Status();
+        } while (!(MEM_status & 0x80));
 
-	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
+        GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 
 
-	//Main loop
-	while (1) {
+        //Main loop
+        while (1) {
 
-		//Check note array to calculate velocity
-		checkNoteArray();
+                //Check note array to calculate velocity
+                checkNoteArray();
 
-		//Send midi data
-		sendMidiData();
+                //Send midi data
+                sendMidiData();
 
-	}
+        }
 }
 
 /**
- Timer 4 interrupt
- **/
-
-static uint16_t sliders_ticks_counter = 0; // timer interrupts ticks counter
+Timer 4 interrupt
+**/
 
 void TIM4_IRQHandler() {
 
-	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
+        if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
 
-		//TODO: Rewrite this w/o SPL
-		//Clear interrupt bit
-		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
+                //TODO: Rewrite this w/o SPL
+                //Clear interrupt bit
+                TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
-		// GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
-		readKeyState();
-		read_sliders();
-	}
+                // GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+                readKeyState();
+                read_sliders();
+        }
 
 }
+

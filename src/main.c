@@ -65,10 +65,10 @@ void firstInit() {
 	SPI1_init();
 	USART1_init();
 	count = 100;
-	init_ADC(); //ADC init
+	ADC_init_all(); //ADC init
 	velocity_init();
 	usb_init(); //Init everything for midiUSB
-	init_sliders();
+	sliders_init();
 
 	//TODO: move to gpio init module
 	//First port init, all for high
@@ -77,14 +77,12 @@ void firstInit() {
 	GPIOD->BSRRL = 0x300; // D8-D9
 	GPIOE->BSRRL = 0xFF80; // E7-E15
 
-
 	//Start key scan timer
 	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
 	TIM_Cmd(TIM4, ENABLE);
 	NVIC_EnableIRQ(TIM4_IRQn);
 
 }
-
 
 int main(void) {
 
@@ -125,6 +123,8 @@ int main(void) {
 /**
  Timer 4 interrupt
  **/
+
+static uint16_t sliders_ticks_counter = 0; // timer interrupts ticks counter
 
 void TIM4_IRQHandler() {
 

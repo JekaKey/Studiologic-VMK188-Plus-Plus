@@ -2,7 +2,9 @@
 
 
 #define SLIDERS_TICKS_FACTOR 2000/TIMER_TIMPERIOD
-#define SLIDERS_DELTA 0x20
+#define SLIDERS_DELTA 0x80
+#define SLIDERS_MUX_DELAY 200/TIMER_TIMPERIOD
+#define SLIDERS_MEASURE_NUM 100
 
 #define SLIDER_S1 20
 #define SLIDER_S2 4
@@ -61,6 +63,8 @@
 #define SLIDER_AT_MIN_OUT 0
 #define SLIDER_AT_MAX_OUT 127
 
+enum Sliders_read_status_type {next_mux, next_adc, read_data, check_value};
+
 
 typedef struct {
 	uint8_t active;
@@ -76,6 +80,6 @@ typedef struct {
 
 
 
-void init_ADC(void);
+void ADC_init_all(void);
 void read_sliders(void);
-void init_sliders(void);
+void sliders_init(void);

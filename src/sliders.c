@@ -37,80 +37,6 @@ uint16_t ADC_convert(uint8_t adc_num) {
 	return ADC_Val;
 }
 
-static volatile mux_switch(uint8_t value) { //Switch multiplexors to next ring state
-	switch (value) {
-	case 0:
-		GPIOE->BSRRL = GPIO_Pin_0;
-		GPIOE->BSRRL = GPIO_Pin_1;
-		GPIOE->BSRRL = GPIO_Pin_2;
-		break;
-	case 1:
-		GPIOE->BSRRH = GPIO_Pin_0;
-		GPIOE->BSRRL = GPIO_Pin_1;
-		GPIOE->BSRRL = GPIO_Pin_2;
-		break;
-	case 2:
-		GPIOE->BSRRL = GPIO_Pin_0;
-		GPIOE->BSRRH = GPIO_Pin_1;
-		GPIOE->BSRRL = GPIO_Pin_2;
-		break;
-	case 3:
-		GPIOE->BSRRH = GPIO_Pin_0;
-		GPIOE->BSRRH = GPIO_Pin_1;
-		GPIOE->BSRRL = GPIO_Pin_2;
-	case 4:
-		GPIOE->BSRRL = GPIO_Pin_0;
-		GPIOE->BSRRL = GPIO_Pin_1;
-		GPIOE->BSRRH = GPIO_Pin_2;
-		break;
-	case 5:
-		GPIOE->BSRRH = GPIO_Pin_0;
-		GPIOE->BSRRL = GPIO_Pin_1;
-		GPIOE->BSRRH = GPIO_Pin_2;
-		break;
-	case 6:
-		GPIOE->BSRRL = GPIO_Pin_0;
-		GPIOE->BSRRH = GPIO_Pin_1;
-		GPIOE->BSRRH = GPIO_Pin_2;
-		break;
-	case 7:
-		GPIOE->BSRRH = GPIO_Pin_0;
-		GPIOE->BSRRH = GPIO_Pin_1;
-		GPIOE->BSRRH = GPIO_Pin_2;
-		break;
-	}
-}
-
-//static void mux_switch(uint8_t value) { //Switch multiplexors to next ring state
-//	switch (value) {
-//	case 0:
-//		GPIOE->BSRRL = GPIO_Pin_0;
-//		GPIOE->BSRRL = GPIO_Pin_1;
-//		GPIOE->BSRRL = GPIO_Pin_2;
-//		break;
-//	case 1:
-//		GPIOE->BSRRH = GPIO_Pin_0;
-//	case 2:
-//		GPIOE->BSRRL = GPIO_Pin_0;
-//		GPIOE->BSRRH = GPIO_Pin_1;
-//	case 3:
-//		GPIOE->BSRRH = GPIO_Pin_0;
-//	case 4:
-//		GPIOE->BSRRL = GPIO_Pin_0;
-//		GPIOE->BSRRL = GPIO_Pin_1;
-//		GPIOE->BSRRH = GPIO_Pin_2;
-//		break;
-//	case 5:
-//		GPIOE->BSRRH = GPIO_Pin_0;
-//		break;
-//	case 6:
-//		GPIOE->BSRRL = GPIO_Pin_0;
-//		GPIOE->BSRRH = GPIO_Pin_1;
-//		break;
-//	case 7:
-//		GPIOE->BSRRH = GPIO_Pin_0;
-//	}
-//}
 
 void ADC_init_all(void) {
 	ADC_InitTypeDef ADC_InitStructure;
@@ -162,92 +88,92 @@ void sliders_init(void) {
 
 	}
 
-/*	for (i = 8; i < 16; i++) {
-		sliders[i].active = 0;
-		sliders[i].reverse = 0;
-		sliders[i].channel = i;
-		sliders[i].min_in_value = SLIDER_R_MIN_IN;
-		sliders[i].max_in_value = SLIDER_R_MAX_IN;
-		sliders[i].min_out_value = SLIDER_R_MIN_OUT;
-		sliders[i].max_out_value = SLIDER_R_MAX_OUT;
+	/*	for (i = 8; i < 16; i++) {
+	 sliders[i].active = 0;
+	 sliders[i].reverse = 0;
+	 sliders[i].channel = i;
+	 sliders[i].min_in_value = SLIDER_R_MIN_IN;
+	 sliders[i].max_in_value = SLIDER_R_MAX_IN;
+	 sliders[i].min_out_value = SLIDER_R_MIN_OUT;
+	 sliders[i].max_out_value = SLIDER_R_MAX_OUT;
 
-	}
-	for (i = 17; i < 24; i++) {
-		sliders[i].active = 1;
-		sliders[i].reverse = 0;
-		sliders[i].channel = i;
-		sliders[i].min_in_value = SLIDER_R_MIN_IN;
-		sliders[i].max_in_value = SLIDER_R_MAX_IN;
-		sliders[i].min_out_value = SLIDER_R_MIN_OUT;
-		sliders[i].max_out_value = SLIDER_R_MAX_OUT;
-	}*/
-/*
-	sliders[SLIDER_S1].active = 0;
-	sliders[SLIDER_S1].reverse = 0;
-	sliders[SLIDER_S1].channel = 0;
-	sliders[SLIDER_S1].event = 7;
-	sliders[SLIDER_S1].min_in_value = SLIDER_S_MIN_IN;
-	sliders[SLIDER_S1].max_in_value = SLIDER_S_MAX_IN;
-	sliders[SLIDER_S1].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S1].max_out_value = SLIDER_S_MAX_OUT;
+	 }
+	 for (i = 17; i < 24; i++) {
+	 sliders[i].active = 1;
+	 sliders[i].reverse = 0;
+	 sliders[i].channel = i;
+	 sliders[i].min_in_value = SLIDER_R_MIN_IN;
+	 sliders[i].max_in_value = SLIDER_R_MAX_IN;
+	 sliders[i].min_out_value = SLIDER_R_MIN_OUT;
+	 sliders[i].max_out_value = SLIDER_R_MAX_OUT;
+	 }*/
+	/*
+	 sliders[SLIDER_S1].active = 0;
+	 sliders[SLIDER_S1].reverse = 0;
+	 sliders[SLIDER_S1].channel = 0;
+	 sliders[SLIDER_S1].event = 7;
+	 sliders[SLIDER_S1].min_in_value = SLIDER_S_MIN_IN;
+	 sliders[SLIDER_S1].max_in_value = SLIDER_S_MAX_IN;
+	 sliders[SLIDER_S1].min_out_value = SLIDER_S_MIN_OUT;
+	 sliders[SLIDER_S1].max_out_value = SLIDER_S_MAX_OUT;
 
-	sliders[SLIDER_S2].active = 0;
-	sliders[SLIDER_S1].event = 7;
+	 sliders[SLIDER_S2].active = 0;
+	 sliders[SLIDER_S1].event = 7;
 
-	sliders[SLIDER_P2].active = 0;
-	sliders[SLIDER_P2].reverse = 0;
-	sliders[SLIDER_P2].channel = 0;
-	sliders[SLIDER_P2].event = 64;
-	sliders[SLIDER_P2].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_P2].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_P2].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_P2].max_out_value = SLIDER_P_MAX_OUT;
+	 sliders[SLIDER_P2].active = 0;
+	 sliders[SLIDER_P2].reverse = 0;
+	 sliders[SLIDER_P2].channel = 0;
+	 sliders[SLIDER_P2].event = 64;
+	 sliders[SLIDER_P2].min_in_value = SLIDER_P_MIN_IN;
+	 sliders[SLIDER_P2].max_in_value = SLIDER_P_MAX_IN;
+	 sliders[SLIDER_P2].min_out_value = SLIDER_P_MIN_OUT;
+	 sliders[SLIDER_P2].max_out_value = SLIDER_P_MAX_OUT;
 
-	sliders[SLIDER_P1].active = 0;
-	sliders[SLIDER_P1].reverse = 0;
-	sliders[SLIDER_P1].channel = 0;
-	sliders[SLIDER_P1].event = 65;
-	sliders[SLIDER_P1].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_P1].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_P1].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_P1].max_out_value = SLIDER_P_MAX_OUT;
+	 sliders[SLIDER_P1].active = 0;
+	 sliders[SLIDER_P1].reverse = 0;
+	 sliders[SLIDER_P1].channel = 0;
+	 sliders[SLIDER_P1].event = 65;
+	 sliders[SLIDER_P1].min_in_value = SLIDER_P_MIN_IN;
+	 sliders[SLIDER_P1].max_in_value = SLIDER_P_MAX_IN;
+	 sliders[SLIDER_P1].min_out_value = SLIDER_P_MIN_OUT;
+	 sliders[SLIDER_P1].max_out_value = SLIDER_P_MAX_OUT;
 
-	sliders[SLIDER_P3].active = 0;
-	sliders[SLIDER_P3].reverse = 0;
-	sliders[SLIDER_P3].channel = 0;
-	sliders[SLIDER_P3].event = 66;
-	sliders[SLIDER_P3].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_P3].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_P3].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_P3].max_out_value = SLIDER_P_MAX_OUT;
+	 sliders[SLIDER_P3].active = 0;
+	 sliders[SLIDER_P3].reverse = 0;
+	 sliders[SLIDER_P3].channel = 0;
+	 sliders[SLIDER_P3].event = 66;
+	 sliders[SLIDER_P3].min_in_value = SLIDER_P_MIN_IN;
+	 sliders[SLIDER_P3].max_in_value = SLIDER_P_MAX_IN;
+	 sliders[SLIDER_P3].min_out_value = SLIDER_P_MIN_OUT;
+	 sliders[SLIDER_P3].max_out_value = SLIDER_P_MAX_OUT;
 
-	sliders[SLIDER_PITCH].active = 0;
-	sliders[SLIDER_PITCH].reverse = 0;
-	sliders[SLIDER_PITCH].channel = 0;
-	sliders[SLIDER_PITCH].event = 66;
-	sliders[SLIDER_PITCH].min_in_value = SLIDER_PITCH_MIN_IN;
-	sliders[SLIDER_PITCH].max_in_value = SLIDER_PITCH_MAX_IN;
-	sliders[SLIDER_PITCH].min_out_value = SLIDER_PITCH_MIN_OUT;
-	sliders[SLIDER_PITCH].max_out_value = SLIDER_PITCH_MAX_OUT;
+	 sliders[SLIDER_PITCH].active = 0;
+	 sliders[SLIDER_PITCH].reverse = 0;
+	 sliders[SLIDER_PITCH].channel = 0;
+	 sliders[SLIDER_PITCH].event = 66;
+	 sliders[SLIDER_PITCH].min_in_value = SLIDER_PITCH_MIN_IN;
+	 sliders[SLIDER_PITCH].max_in_value = SLIDER_PITCH_MAX_IN;
+	 sliders[SLIDER_PITCH].min_out_value = SLIDER_PITCH_MIN_OUT;
+	 sliders[SLIDER_PITCH].max_out_value = SLIDER_PITCH_MAX_OUT;
 
-	sliders[SLIDER_MOD].active = 0;
-	sliders[SLIDER_MOD].reverse = 0;
-	sliders[SLIDER_MOD].channel = 0;
-	sliders[SLIDER_MOD].event = 1;
-	sliders[SLIDER_MOD].min_in_value = SLIDER_MOD_MIN_IN;
-	sliders[SLIDER_MOD].max_in_value = SLIDER_MOD_MAX_IN;
-	sliders[SLIDER_MOD].min_out_value = SLIDER_MOD_MIN_OUT;
-	sliders[SLIDER_MOD].max_out_value = SLIDER_MOD_MAX_OUT;
+	 sliders[SLIDER_MOD].active = 0;
+	 sliders[SLIDER_MOD].reverse = 0;
+	 sliders[SLIDER_MOD].channel = 0;
+	 sliders[SLIDER_MOD].event = 1;
+	 sliders[SLIDER_MOD].min_in_value = SLIDER_MOD_MIN_IN;
+	 sliders[SLIDER_MOD].max_in_value = SLIDER_MOD_MAX_IN;
+	 sliders[SLIDER_MOD].min_out_value = SLIDER_MOD_MIN_OUT;
+	 sliders[SLIDER_MOD].max_out_value = SLIDER_MOD_MAX_OUT;
 
-	sliders[SLIDER_AT].active = 0;
-	sliders[SLIDER_AT].reverse = 0;
-	sliders[SLIDER_AT].channel = 0;
-	sliders[SLIDER_AT].event = 66;
-	sliders[SLIDER_AT].min_in_value = SLIDER_AT_MIN_IN;
-	sliders[SLIDER_AT].max_in_value = SLIDER_AT_MAX_IN;
-	sliders[SLIDER_AT].min_out_value = SLIDER_AT_MIN_OUT;
-	sliders[SLIDER_AT].max_out_value = SLIDER_AT_MAX_OUT;
-*/
+	 sliders[SLIDER_AT].active = 0;
+	 sliders[SLIDER_AT].reverse = 0;
+	 sliders[SLIDER_AT].channel = 0;
+	 sliders[SLIDER_AT].event = 66;
+	 sliders[SLIDER_AT].min_in_value = SLIDER_AT_MIN_IN;
+	 sliders[SLIDER_AT].max_in_value = SLIDER_AT_MAX_IN;
+	 sliders[SLIDER_AT].min_out_value = SLIDER_AT_MIN_OUT;
+	 sliders[SLIDER_AT].max_out_value = SLIDER_AT_MAX_OUT;
+	 */
 }
 
 static uint16_t tick_counter = 0; //Counter of timer ticks
@@ -282,7 +208,7 @@ void read_sliders() {
 		break;
 	case check_value:
 		ADC_value = ADC_sum / SLIDERS_MEASURE_NUM;
-		ADC_sum=0;
+		ADC_sum = 0;
 		if (ADC_value > ADC_old_values[slider_number]) {
 			ADC_change = ADC_value - ADC_old_values[slider_number];
 		} else {
@@ -320,7 +246,7 @@ void read_sliders() {
 		if (mux_pin > 7) {
 			mux_pin = 0;
 		}
-		mux_switch(mux_pin);
+		GPIOE->ODR = ~mux_pin; //next value to multipexors
 		slider_number = mux_pin * 3;
 		Sliders_read_status = wait_mux;
 		break;

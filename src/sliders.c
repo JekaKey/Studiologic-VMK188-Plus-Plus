@@ -37,25 +37,7 @@ uint16_t ADC_convert(uint8_t adc_num) {
 	return ADC_Val;
 }
 
-uint16_t ADC_values[24] = { 0 };
-
-uint16_t ADC_GetSample(uint8_t index, uint8_t slider_num) {
-	uint16_t adc_sample, adc_change;
-	adc_sample = ADC_convert(index);
-	if (adc_sample > ADC_last[slider_num]) {
-		adc_change = adc_sample - ADC_last[slider_num];
-	} else {
-		adc_change = ADC_last[slider_num] - adc_sample;
-	}
-	if (adc_change > SLIDERS_DELTA) {
-		ADC_last[slider_num] = adc_sample;
-		return adc_sample >> 5;
-	} else {
-		return ADC_last[slider_num] >> 5;
-	}
-}
-
-static void mux_switch(uint8_t value) { //Switch multiplexors to next ring state
+static volatile mux_switch(uint8_t value) { //Switch multiplexors to next ring state
 	switch (value) {
 	case 0:
 		GPIOE->BSRRL = GPIO_Pin_0;
@@ -145,8 +127,8 @@ void ADC_init_all(void) {
 	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
 	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-	ADC_Init(ADC1, &ADC_InitStructure);
 	ADC_Init(ADC2, &ADC_InitStructure);
+	ADC_Init(ADC1, &ADC_InitStructure);
 	ADC_Init(ADC3, &ADC_InitStructure);
 
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_144Cycles);
@@ -154,20 +136,22 @@ void ADC_init_all(void) {
 	ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 1, ADC_SampleTime_144Cycles);
 
 	/* Enable ADC1 to ADC3*/
-	ADC_Cmd(ADC1, ENABLE);
 	ADC_Cmd(ADC2, ENABLE);
+	ADC_Cmd(ADC1, ENABLE);
 	ADC_Cmd(ADC3, ENABLE);
 
 }
 
-Slider_type sliders[24];
+static Slider_type sliders[24];
+static enum Sliders_read_status_type {
+	next_mux, wait_mux, check_active, next_adc, read_data, check_value
+} Sliders_read_status = check_active;
 
 void sliders_init(void) {
 	uint8_t i;
-
 	sliders[SLIDER_EMPTY].active = 0;
 
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < 24; i++) {
 		sliders[i].active = 1;
 		sliders[i].reverse = 0;
 		sliders[i].channel = i;
@@ -178,7 +162,7 @@ void sliders_init(void) {
 
 	}
 
-	for (i = 8; i < 16; i++) {
+/*	for (i = 8; i < 16; i++) {
 		sliders[i].active = 0;
 		sliders[i].reverse = 0;
 		sliders[i].channel = i;
@@ -188,7 +172,16 @@ void sliders_init(void) {
 		sliders[i].max_out_value = SLIDER_R_MAX_OUT;
 
 	}
-
+	for (i = 17; i < 24; i++) {
+		sliders[i].active = 1;
+		sliders[i].reverse = 0;
+		sliders[i].channel = i;
+		sliders[i].min_in_value = SLIDER_R_MIN_IN;
+		sliders[i].max_in_value = SLIDER_R_MAX_IN;
+		sliders[i].min_out_value = SLIDER_R_MIN_OUT;
+		sliders[i].max_out_value = SLIDER_R_MAX_OUT;
+	}*/
+/*
 	sliders[SLIDER_S1].active = 0;
 	sliders[SLIDER_S1].reverse = 0;
 	sliders[SLIDER_S1].channel = 0;
@@ -254,83 +247,90 @@ void sliders_init(void) {
 	sliders[SLIDER_AT].max_in_value = SLIDER_AT_MAX_IN;
 	sliders[SLIDER_AT].min_out_value = SLIDER_AT_MIN_OUT;
 	sliders[SLIDER_AT].max_out_value = SLIDER_AT_MAX_OUT;
-
+*/
 }
 
-static uint16_t tick_counter = 0; //Counter of timer ticks for wait before measuring after next mux switch
-static uint16_t tick_counter_measure = 0; //Counter dor average window;
+static uint16_t tick_counter = 0; //Counter of timer ticks
 static uint8_t adc_counter = 0; //adc (multiplexor chip) number 0..2
 static uint8_t mux_pin = 0; //Multiplexor pin number 0..7
 static uint8_t slider_number; // Slider number from 0 to 23
-static uint16_t adc_sum[24] = { 0 }; //SUM of ADC measuring
-static Sliders_read_status_type Sliders_read_status = read_data;
+static uint32_t ADC_sum = 0; //SUM of ADC measuring
+uint16_t ADC_old_values[24] = { 0 };
 
 void read_sliders() {
-	uint16_t adc_value;
+	uint16_t ADC_value;
+	uint16_t ADC_change;
+	uint8_t midi_value;
 	switch (Sliders_read_status) {
-	case read_data:
+
+	case check_active:
 		if (sliders[slider_number].active) {
-			adc_sum[slider_number] += ADC_Convert(adc_counter);
-			tick_counter++;
-			if (tick_counter >= SLIDERS_MEASURE_NUM) {
-				tick_counter = 0;
-				Sliders_read_status = check_value;
-			}
+			Sliders_read_status = read_data;
 			break;
 		} else {
-			tick_counter = 0;
-			adc_counter++;
 			Sliders_read_status = next_adc;
 			break;
 		}
+	case read_data:
+
+		ADC_sum += ADC_convert(adc_counter);
+		tick_counter++;
+		if (tick_counter >= SLIDERS_MEASURE_NUM) {
+			tick_counter = 0;
+			Sliders_read_status = check_value;
+		}
+		break;
 	case check_value:
-		adc_value = adc_sum[slider_number] / SLIDERS_MEASURE_NUM;
-		if (adc_value != sliders[slider_number].value) {
-			sliders[slider_number].value = adc_value;
-			sendControlChange(sliders[slider_number].event, adc_value,
+		ADC_value = ADC_sum / SLIDERS_MEASURE_NUM;
+		ADC_sum=0;
+		if (ADC_value > ADC_old_values[slider_number]) {
+			ADC_change = ADC_value - ADC_old_values[slider_number];
+		} else {
+			ADC_change = ADC_old_values[slider_number] - ADC_value;
+		}
+		if (ADC_change > SLIDERS_DELTA) {
+			ADC_old_values[slider_number] = ADC_value;
+			midi_value = ADC_value >> 5;
+		} else {
+			midi_value = ADC_old_values[slider_number] >> 5;
+		}
+		if (midi_value != sliders[slider_number].value) {
+			sliders[slider_number].value = midi_value;
+			sendControlChange(sliders[slider_number].event, midi_value,
 					sliders[slider_number].channel);
-			sendUSB_ControlChange(slider_number, slider_number, mux_pin);
+			sendUSB_ControlChange(slider_number, midi_value, mux_pin);
 		}
 		tick_counter = 0;
 		Sliders_read_status = next_adc;
 		break;
 	case next_adc:
-		slider_number = (mux_pin * 3) + adc_counter;
-
+		adc_counter++;
+		if (adc_counter < 3) {
+			slider_number++;
+			Sliders_read_status = check_active;
+			break;
+		} else {
+			adc_counter = 0;
+			Sliders_read_status = next_mux;
+			break;
+		}
+		break;
 	case next_mux:
 		mux_pin++;
 		if (mux_pin > 7) {
 			mux_pin = 0;
 		}
 		mux_switch(mux_pin);
-
-
-		if (adc_counter <= 3) {
-			slider_number = (mux_pin * 3) + adc_counter;
-			if (sliders[slider_number].active) {
-				adc_sum[slider_number] += ADC_Convert(adc_counter);
-				if (tick_counter_measure >= SLIDERS_MEASURE_NUM) {
-					tick_counter_measure = 0;
-					tick_counter_measure++;
-					if (adc_value != sliders[slider_number].value) {
-						sliders[slider_number].value = adc_value;
-						sendControlChange(sliders[slider_number].event,
-								adc_value, sliders[slider_number].channel);
-						sendUSB_ControlChange(slider_number, slider_number,
-								mux_pin);
-//					sendControlChange(sliders[slider_number].event, adc_value,
-//							sliders[slider_number].channel);
-//					sendUSB_ControlChange(sliders[slider_number].event,
-//							adc_value, sliders[slider_number].channel);
-					}
-
-				}
-			} else {
-				adc_counter++;
-			}
-else		{ //On 4th
-			adc_counter = 0;
+		slider_number = mux_pin * 3;
+		Sliders_read_status = wait_mux;
+		break;
+	case wait_mux:
+		tick_counter++;
+		if (tick_counter >= SLIDERS_MUX_DELAY) {
+			tick_counter = 0;
+			Sliders_read_status = check_active;
 		}
+		break;
 	}
 }
 

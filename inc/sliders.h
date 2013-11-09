@@ -1,6 +1,5 @@
 #include "timer.h"
 
-
 #define SLIDERS_TICKS_FACTOR 2000/TIMER_TIMPERIOD
 #define SLIDERS_DELTA 0x80
 #define SLIDERS_MUX_DELAY 200/TIMER_TIMPERIOD
@@ -63,8 +62,6 @@
 #define SLIDER_AT_MIN_OUT 0
 #define SLIDER_AT_MAX_OUT 127
 
-enum Sliders_read_status_type {next_mux, next_adc, read_data, check_value};
-
 
 typedef struct {
 	uint8_t active;
@@ -77,8 +74,6 @@ typedef struct {
 	uint8_t max_out_value;
 	uint8_t reverse;
 } Slider_type;
-
-
 
 void ADC_init_all(void);
 void read_sliders(void);

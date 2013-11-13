@@ -9,50 +9,55 @@
 uint16_t ADC_convert(uint8_t adc_num) {
 	uint16_t ADC_Val;
 	switch (adc_num) {
-	case 0:
-		ADC_SoftwareStartConv(ADC1);
-		while (ADC_GetSoftwareStartConvStatus(ADC1) != RESET) {
+		case 0:
+			ADC_SoftwareStartConv(ADC1);
+			while (ADC_GetSoftwareStartConvStatus(ADC1) != RESET) {
+				ADC_Val = 0;
+			}
+			ADC_Val = ADC_GetConversionValue(ADC1);
+			break;
+		case 1:
+			ADC_SoftwareStartConv(ADC2);
+			while (ADC_GetSoftwareStartConvStatus(ADC2) != RESET) {
+				ADC_Val = 0;
+			}
+			ADC_Val = ADC_GetConversionValue(ADC2);
+			break;
+		case 3:
+			ADC_SoftwareStartConv(ADC3);
+			while (ADC_GetSoftwareStartConvStatus(ADC3) != RESET) {
+				ADC_Val = 0;
+			}
+			ADC_Val = ADC_GetConversionValue(ADC3);
+			break;
+		default:
 			ADC_Val = 0;
-		}
-		ADC_Val = ADC_GetConversionValue(ADC1);
-		break;
-	case 1:
-		ADC_SoftwareStartConv(ADC2);
-		while (ADC_GetSoftwareStartConvStatus(ADC2) != RESET) {
-			ADC_Val = 0;
-		}
-		ADC_Val = ADC_GetConversionValue(ADC2);
-		break;
-	case 3:
-		ADC_SoftwareStartConv(ADC3);
-		while (ADC_GetSoftwareStartConvStatus(ADC3) != RESET) {
-			ADC_Val = 0;
-		}
-		ADC_Val = ADC_GetConversionValue(ADC3);
-		break;
-	default:
-		ADC_Val = 0;
-		break;
+			break;
 	}
 	return ADC_Val;
 }
-
 
 void ADC_init_all(void) {
 	ADC_InitTypeDef ADC_InitStructure;
 	ADC_CommonInitTypeDef ADC_CommonInitStructure;
 	/* ADC Common configuration *************************************************/
 	ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
+	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
+	ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
+	ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
 	ADC_CommonInit(&ADC_CommonInitStructure);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC2, ENABLE);
-	/* ADC1 regular channel 10 to 15 configuration ************************************/
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3, ENABLE);
+
+	RCC_AHB1PeriphClockCmd(RCC_AHB1ENR_GPIOCEN, ENABLE);
+
+	ADC_DeInit();
+
 	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
 	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
 	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
 	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+	ADC_InitStructure.ADC_NbrOfConversion = 1;
 	ADC_Init(ADC2, &ADC_InitStructure);
 	ADC_Init(ADC1, &ADC_InitStructure);
 	ADC_Init(ADC3, &ADC_InitStructure);
@@ -179,7 +184,7 @@ void sliders_init(void) {
 static uint16_t tick_counter = 0; //Counter of timer ticks
 static uint8_t adc_counter = 0; //adc (multiplexor chip) number 0..2
 static uint8_t mux_pin = 0; //Multiplexor pin number 0..7
-static uint8_t slider_number; // Slider number from 0 to 23
+static uint8_t slider_number = 0; // Slider number from 0 to 23
 static uint32_t ADC_sum = 0; //SUM of ADC measuring
 uint16_t ADC_old_values[24] = { 0 };
 
@@ -187,76 +192,77 @@ void read_sliders() {
 	uint16_t ADC_value;
 	uint16_t ADC_change;
 	uint8_t midi_value;
+	uint16_t ODR_tmp;
 	switch (Sliders_read_status) {
 
-	case check_active:
-		if (sliders[slider_number].active) {
-			Sliders_read_status = read_data;
+		case check_active:
+			if (sliders[slider_number].active) {
+				Sliders_read_status = read_data;
+				break;
+			} else {
+				Sliders_read_status = next_adc;
+				break;
+			}
+		case read_data:
+
+			ADC_sum += ADC_convert(adc_counter);
+			tick_counter++;
+			if (tick_counter >= SLIDERS_MEASURE_NUM) {
+				tick_counter = 0;
+				Sliders_read_status = check_value;
+			}
 			break;
-		} else {
+		case check_value:
+			ADC_value = ADC_sum / SLIDERS_MEASURE_NUM;
+			ADC_sum = 0;
+			if (ADC_value > ADC_old_values[slider_number]) {
+				ADC_change = ADC_value - ADC_old_values[slider_number];
+			} else {
+				ADC_change = ADC_old_values[slider_number] - ADC_value;
+			}
+			if (ADC_change > SLIDERS_DELTA) {
+				ADC_old_values[slider_number] = ADC_value;
+				midi_value = ADC_value >> 5;
+			} else {
+				midi_value = ADC_old_values[slider_number] >> 5;
+			}
+			if (midi_value != sliders[slider_number].value) {
+				sliders[slider_number].value = midi_value;
+				sendControlChange(sliders[slider_number].event, midi_value, sliders[slider_number].channel);
+				sendUSB_ControlChange(slider_number, adc_counter, mux_pin + 1);
+			}
+			tick_counter = 0;
 			Sliders_read_status = next_adc;
 			break;
-		}
-	case read_data:
-
-		ADC_sum += ADC_convert(adc_counter);
-		tick_counter++;
-		if (tick_counter >= SLIDERS_MEASURE_NUM) {
-			tick_counter = 0;
-			Sliders_read_status = check_value;
-		}
-		break;
-	case check_value:
-		ADC_value = ADC_sum / SLIDERS_MEASURE_NUM;
-		ADC_sum = 0;
-		if (ADC_value > ADC_old_values[slider_number]) {
-			ADC_change = ADC_value - ADC_old_values[slider_number];
-		} else {
-			ADC_change = ADC_old_values[slider_number] - ADC_value;
-		}
-		if (ADC_change > SLIDERS_DELTA) {
-			ADC_old_values[slider_number] = ADC_value;
-			midi_value = ADC_value >> 5;
-		} else {
-			midi_value = ADC_old_values[slider_number] >> 5;
-		}
-		if (midi_value != sliders[slider_number].value) {
-			sliders[slider_number].value = midi_value;
-			sendControlChange(sliders[slider_number].event, midi_value,
-					sliders[slider_number].channel);
-			sendUSB_ControlChange(slider_number, midi_value, mux_pin);
-		}
-		tick_counter = 0;
-		Sliders_read_status = next_adc;
-		break;
-	case next_adc:
-		adc_counter++;
-		if (adc_counter < 3) {
-			slider_number++;
-			Sliders_read_status = check_active;
+		case next_adc:
+			adc_counter++;
+			if (adc_counter < 3) {
+				slider_number++;
+				Sliders_read_status = check_active;
+				break;
+			} else {
+				adc_counter = 0;
+				Sliders_read_status = next_mux;
+				break;
+			}
 			break;
-		} else {
-			adc_counter = 0;
-			Sliders_read_status = next_mux;
+		case next_mux:
+			mux_pin++;
+			if (mux_pin > 7) {
+				mux_pin = 0;
+			}
+			ODR_tmp = GPIOE->ODR;
+			GPIOE->ODR = (ODR_tmp & 0xFFF8) + mux_pin; //next value to multiplexors
+			slider_number = mux_pin * 3;
+			Sliders_read_status = wait_mux;
 			break;
-		}
-		break;
-	case next_mux:
-		mux_pin++;
-		if (mux_pin > 7) {
-			mux_pin = 0;
-		}
-		GPIOE->ODR = ~mux_pin; //next value to multipexors
-		slider_number = mux_pin * 3;
-		Sliders_read_status = wait_mux;
-		break;
-	case wait_mux:
-		tick_counter++;
-		if (tick_counter >= SLIDERS_MUX_DELAY) {
-			tick_counter = 0;
-			Sliders_read_status = check_active;
-		}
-		break;
+		case wait_mux:
+			tick_counter++;
+			if (tick_counter >= SLIDERS_MUX_DELAY) {
+				tick_counter = 0;
+				Sliders_read_status = check_active;
+			}
+			break;
 	}
 }
 

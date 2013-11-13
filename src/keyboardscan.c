@@ -271,12 +271,8 @@ void checkNoteArray(void) {
 			sendNoteOn(curNote, vel, preset.MidiChannel); //to midi
 			sendUSB_NoteOn(curNote, vel, preset.MidiChannel); // to usb
 		} else {
-			sendNoteOff(curNote & 0x7F,
-					getVelocity_off(duration, note_color(curNote)),
-					preset.MidiChannel); //to midi
-			sendUSB_NoteOff(curNote & 0x7F,
-					getVelocity_off(duration, note_color(curNote)),
-					preset.MidiChannel); //to usb
+			sendNoteOff(curNote & 0x7F, getVelocity_off(duration, note_color(curNote)), preset.MidiChannel); //to midi
+			sendUSB_NoteOff(curNote & 0x7F, getVelocity_off(duration, note_color(curNote)), preset.MidiChannel); //to usb
 		}
 
 	}
@@ -285,14 +281,8 @@ void checkNoteArray(void) {
 #if defined FULLCYCLES_STRUCT
 
 /*The array of structures for all 11 key blocks GPIO pins*/
-gpio_pins_type gpio_pins[11] = { { GPIOE, GPIO_Pin_15, GPIOE, GPIO_Pin_14 }, {
-		GPIOB, GPIO_Pin_11, GPIOB, GPIO_Pin_10 }, { GPIOB, GPIO_Pin_13, GPIOB,
-		GPIO_Pin_12 }, { GPIOB, GPIO_Pin_15, GPIOB, GPIO_Pin_14 }, { GPIOD,
-		GPIO_Pin_9, GPIOD, GPIO_Pin_8 },
-		{ GPIOC, GPIO_Pin_4, GPIOC, GPIO_Pin_5 }, { GPIOB, GPIO_Pin_0, GPIOB,
-				GPIO_Pin_1 }, { GPIOE, GPIO_Pin_7, GPIOB, GPIO_Pin_2 }, { GPIOE,
-				GPIO_Pin_9, GPIOE, GPIO_Pin_8 }, { GPIOE, GPIO_Pin_12, GPIOE,
-				GPIO_Pin_10 }, { GPIOE, GPIO_Pin_11, GPIOE, GPIO_Pin_13 } };
+gpio_pins_type gpio_pins[11] = { { GPIOE, GPIO_Pin_15, GPIOE, GPIO_Pin_14 }, { GPIOB, GPIO_Pin_11, GPIOB, GPIO_Pin_10 }, { GPIOB, GPIO_Pin_13, GPIOB, GPIO_Pin_12 }, { GPIOB, GPIO_Pin_15, GPIOB, GPIO_Pin_14 }, { GPIOD, GPIO_Pin_9, GPIOD, GPIO_Pin_8 }, { GPIOC, GPIO_Pin_4, GPIOC, GPIO_Pin_5 }, { GPIOB, GPIO_Pin_0, GPIOB, GPIO_Pin_1 }, { GPIOE, GPIO_Pin_7, GPIOB, GPIO_Pin_2 }, { GPIOE, GPIO_Pin_9, GPIOE, GPIO_Pin_8 }, { GPIOE, GPIO_Pin_12, GPIOE, GPIO_Pin_10 }, { GPIOE, GPIO_Pin_11, GPIOE,
+		GPIO_Pin_13 } };
 
 /*Delay should be more long for full cycles code. The reason is unrecognized....*/
 volatile static key_delay(void) {

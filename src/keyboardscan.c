@@ -266,13 +266,10 @@ void checkNoteArray(void) {
 			if (preset.HighResEnable) {
 				/*Send High Res Preffix*/
 				sendControlChange(0x58, (byte) (vel & 0x7F), preset.MidiChannel); //to midi
-				sendUSB_ControlChange(0x58, (byte) (vel & 0x7F), preset.MidiChannel); //to usb
 			}
 			sendNoteOn(curNote, vel, preset.MidiChannel); //to midi
-			sendUSB_NoteOn(curNote, vel, preset.MidiChannel); // to usb
 		} else {
 			sendNoteOff(curNote & 0x7F, getVelocity_off(duration, note_color(curNote)), preset.MidiChannel); //to midi
-			sendUSB_NoteOff(curNote & 0x7F, getVelocity_off(duration, note_color(curNote)), preset.MidiChannel); //to usb
 		}
 
 	}

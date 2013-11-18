@@ -18,6 +18,13 @@
         uint8_t head;\
     }
 
+#define FIFO32( size )\
+    struct {\
+        uint32_t buf[size];\
+        uint8_t tail;\
+        uint8_t head;\
+    }
+
 
 //fifo заполнено?
 #define FIFO_IS_FULL(fifo)   ((fifo.head-fifo.tail)==(sizeof(fifo.buf) / sizeof(fifo.buf[0]))

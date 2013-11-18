@@ -1,6 +1,8 @@
 #include "usb_midi_io.h"
 #include "usb_dcd.h"
 #include "midi.h"
+#include "fifo.h"
+
 
 extern USB_OTG_CORE_HANDLE USB_OTG_dev;
 

@@ -16,6 +16,7 @@
 #include "sliders.h"
 #include "gpio_config.h"
 
+
 uint8_t count;
 uint16_t i;
 
@@ -101,6 +102,26 @@ void firstInit() {
 
 }
 
+extern FIFO32(128) midi_usb_in; //FIFO buffer for 32-bit midi packets from a computer defined in "usbd_midi_core.c"
+
+/***********************************************/
+/*    This function is just for usb IN test    */
+/*  It resend to the computer all received data*/
+void midi_resend(void){
+	uint32_t midipacket;
+	uint8_t test;
+
+
+	test = FIFO_COUNT(midi_usb_in);
+	if (test != 0) {
+			midipacket=FIFO_FRONT(midi_usb_in);
+			FIFO_POP(midi_usb_in);
+			usb_midi_DataTx(&midipacket, 4);
+
+	}
+}
+
+/**********************************************/
 
 int main(void) {
 
@@ -125,6 +146,8 @@ int main(void) {
 
                 //Send midi data
                 sendMidiData();
+
+                midi_resend();
 
         }
 }

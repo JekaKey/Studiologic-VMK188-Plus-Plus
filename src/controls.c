@@ -468,7 +468,7 @@ void read_controls() {
 				buttons_active=0;
 				break;
 			}else {
-				controls_read_status = read_buttons;
+				controls_read_status = read_encoders;
                 break;
 			}
 		case check_button:

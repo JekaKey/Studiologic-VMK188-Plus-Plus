@@ -3,6 +3,14 @@
 #include "presets.h"
 #include "keyboardscan.h"
 #include "usb_midi_io.h"
+#include "fifo.h"
+
+
+FIFO8(128) midiMessagesArray; //Array for midi messages buffer
+FIFO8(8) notes; //Array for current note
+FIFO16(8) durations; //Array for duration for current note
+
+
 
 #if defined NOCYCLES
 /* Last state key send in chunk */
@@ -251,7 +259,6 @@ uint8_t MidiChannel = 0;
 
 word vel_test = 0;
 void checkNoteArray(void) {
-	//Проверяем буффер считанных клавиш с длительностями
 	word vel;
 	if (FIFO_COUNT(notes) != 0) {
 

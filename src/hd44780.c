@@ -1,5 +1,8 @@
 #include "hd44780.h"
 
+volatile uint8_t hd44780_active=0;
+extern uint8_t buttons_active;
+
 void hd44780_wr_hi_nibble(uint8_t data) {
 
 	if (data & 0x10) {
@@ -29,6 +32,7 @@ void hd44780_wr_hi_nibble(uint8_t data) {
 
 	/* reset the EN signal */
 	hd44780_EN_Off();
+
 
 }
 
@@ -81,6 +85,12 @@ void hd44780_write( uint8_t data ) {
 
 /* 8bit bus version */
 void hd44780_write(uint8_t data) {
+	while (buttons_active){
+
+	}
+
+	hd44780_active=1;
+
 	/* set the data bits */
 	if (data & 0x01) {
 		GPIO_SetBits(HD44780_DATAPORT, HD44780_DATABIT0);
@@ -129,21 +139,47 @@ void hd44780_write(uint8_t data) {
 
 	/* reset the ce line */hd44780_EN_Off();
 	hd44780_init_end_delay();
+	hd44780_active=0;
 
 }
 #endif /* HD44780_CONF_BUS == HD44780_FUNC_BUS_8BIT */
 
 void hd44780_wr_cmd(uint8_t cmd) {
+	while (buttons_active){
+
+	}
+
+	hd44780_active=1;
+
 	hd44780_RS_Off();
 	hd44780_write(cmd);
+
+	hd44780_active=0;
+
 }
 
 void hd44780_wr_data(uint8_t data) {
+	while (buttons_active){
+
+	}
+
+	hd44780_active=1;
+
 	hd44780_RS_On();
 	hd44780_write(data);
+
+	hd44780_active=0;
+
 }
 
 void hd44780_init(void) {
+
+	while (buttons_active){
+
+	}
+
+	hd44780_active=1;
+
 	/* clear control bits */
 	hd44780_EN_Off();
 	hd44780_RS_Off();
@@ -175,6 +211,12 @@ void hd44780_init(void) {
 	/* addr increment, shift cursor */
 	hd44780_entry( HD44780_ENTRY_SHIFT_CURS, HD44780_ENTRY_ADDR_INC);
 
+	/*cursor to zero position*/
+	hd44780_ddram_addr(0);
+
+	hd44780_active=0;
+
+
 }
 
 void hd44780_write_string(char *s) {
@@ -190,5 +232,10 @@ void hd44780_write_line(uint8_t line, char *msg) {
 }
 
 void hd44780_goto(uint8_t line, uint8_t position) {
+	while (buttons_active){
+
+	}
+	hd44780_active=1;
 	hd44780_ddram_addr((0x40 * (line - 1)) + (position - 1));
+	hd44780_active=0;
 }

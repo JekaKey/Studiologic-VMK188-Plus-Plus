@@ -2,9 +2,12 @@
 #include "stm32f4xx_gpio.h"
 
 #include "presets.h"
-#include "sliders.h"
+#include "controls.h"
 #include "midi.h"
 #include "usb_midi_io.h"
+#include "fifo.h"
+
+FIFO16(128) control_events;
 
 uint16_t ADC_convert(uint8_t adc_num) {
 	uint16_t ADC_Val;
@@ -74,9 +77,9 @@ void ADC_init_all(void) {
 }
 
 static Slider_type sliders[24];
-static enum Sliders_read_status_type {
-	next_mux, wait_mux, check_active, next_adc, read_data, check_value
-} Sliders_read_status = check_active;
+static enum controls_read_status_type {
+	next_mux, wait_mux, check_active, next_adc, read_data, check_value, read_buttons, check_button, next_buttons_chunk, read_encoders
+} controls_read_status = check_active;
 
 void slider_init_struct(uint8_t num) {
 	if (sliders[num].reverse) {
@@ -330,6 +333,15 @@ static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
 static uint8_t slider_number = 0; // Slider number from 0 to 23
 static uint32_t ADC_sum = 0; //SUM of ADC measuring
 uint16_t ADC_old_values[24] = { 0 };
+button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
+static uint8_t buttons_chunk = 0;
+static uint8_t buttons_state[24] = { 0 };
+static uint8_t buttons;
+static uint8_t button_counter = 0; //Number of a button in chunk
+static uint8_t encoder1_state = 0;
+static uint8_t encoder2_state = 0;
+extern uint8_t hd44780_active;
+uint8_t buttons_active=0;
 
 void slider_midi_send(uint8_t num, uint16_t value) {
 	int midi_value;
@@ -356,18 +368,35 @@ void slider_midi_send(uint8_t num, uint16_t value) {
 	}
 }
 
-void read_sliders() {
+volatile static void buttons_delay(void) {
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
+}
+
+void read_controls() {
 	uint16_t ADC_value;
 	uint16_t ADC_change;
 	uint16_t ODR_tmp, tmp;
-	switch (Sliders_read_status) {
+	static uint8_t button_number; //Number of current button;
+	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
+
+	switch (controls_read_status) {
 
 		case check_active:
 			if (sliders[slider_number].active) {
-				Sliders_read_status = read_data;
+				controls_read_status = read_data;
 				break;
 			} else {
-				Sliders_read_status = next_adc;
+				controls_read_status = next_adc;
 				break;
 			}
 		case read_data:
@@ -376,7 +405,7 @@ void read_sliders() {
 			tick_counter++;
 			if (tick_counter >= SLIDERS_MEASURE_NUM) {
 				tick_counter = 0;
-				Sliders_read_status = check_value;
+				controls_read_status = check_value;
 			}
 			break;
 		case check_value:
@@ -392,17 +421,17 @@ void read_sliders() {
 				slider_midi_send(slider_number, ADC_value);
 			}
 			tick_counter = 0;
-			Sliders_read_status = next_adc;
+			controls_read_status = next_adc;
 			break;
 		case next_adc:
 			adc_counter++;
 			if (adc_counter < 3) {
 				slider_number++;
-				Sliders_read_status = check_active;
+				controls_read_status = read_buttons;
 				break;
 			} else {
 				adc_counter = 0;
-				Sliders_read_status = next_mux;
+				controls_read_status = next_mux;
 				break;
 			}
 			break;
@@ -415,14 +444,64 @@ void read_sliders() {
 			tmp = ODR_tmp + ((mux_pin & 0x0006) << 7) + ((mux_pin & 0x0001) << 6); //next value to multiplexors PC6, PC8, PC9
 			GPIOC->ODR = tmp;
 			slider_number = mux_pin * 3;
-			Sliders_read_status = wait_mux;
+			controls_read_status = wait_mux;
 			break;
 		case wait_mux:
 			tick_counter++;
 			if (tick_counter >= SLIDERS_MUX_DELAY) {
 				tick_counter = 0;
-				Sliders_read_status = check_active;
+				controls_read_status = read_buttons;
 			}
+			break;
+		case read_buttons:
+			if (!hd44780_active) {
+				buttons_active=1;
+				GPIOD->ODR |= 0x00FF; //High level on PA0-7;
+				GPIOD->MODER &= 0xFFFF0000; //PA0-7 Will be Input
+				button_ports[buttons_chunk].port->BSRRH = button_ports[buttons_chunk].pin;
+				buttons_delay();
+				buttons = ~GPIOD->IDR; //Read buttons state
+				button_ports[buttons_chunk].port->BSRRL = button_ports[buttons_chunk].pin;
+				GPIOD->MODER |= 0x00005555; //PA0-7 Will be Output
+				GPIOD->ODR |= 0x00FF; //High level on PA0-7;
+				controls_read_status = check_button;
+				buttons_active=0;
+				break;
+			}else {
+				controls_read_status = read_buttons;
+                break;
+			}
+		case check_button:
+			button_number = buttons_chunk * 8 + button_counter;
+
+			if (buttons & k[button_counter]) {
+				if (buttons_state[button_number] == 0) {
+					buttons_state[button_number] = 1;
+					FIFO_PUSH(control_events, (uint16_t)(button_number));
+				}
+			} else {
+				if (buttons_state[button_number] != 0) {
+					buttons_state[button_number] = 0;
+					FIFO_PUSH(control_events, 0xFF00|(uint16_t)(button_number));
+				}
+			}
+			button_counter++;
+			if (button_counter > 7) {
+				button_counter = 0;
+				controls_read_status = next_buttons_chunk;
+			}
+			break;
+		case next_buttons_chunk:
+			buttons_chunk++;
+			if (buttons_chunk > 2) {
+				buttons_chunk = 0;
+				controls_read_status = read_encoders;
+			} else {
+				controls_read_status = read_buttons;
+			}
+			break;
+		case read_encoders:
+			controls_read_status = check_active;
 			break;
 	}
 }

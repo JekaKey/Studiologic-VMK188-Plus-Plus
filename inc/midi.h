@@ -13,10 +13,6 @@
 #include "fifo.h"
 #include "velocity.h"
 
-EXTERN FIFO8(128) midiMessagesArray; //Array for midi messages buffer
-EXTERN FIFO8(8) notes; //Array for current note
-EXTERN FIFO16(8) durations; //Array for duration for current note
-
 /*! Type definition for practical use (because "unsigned char" is a bit long to write.. )*/
 typedef uint8_t byte;
 typedef uint16_t word;

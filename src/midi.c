@@ -5,10 +5,15 @@
 uint8_t message_buff[4];
 
 
+extern FIFO8(128) midiMessagesArray; //Array for midi messages buffer
+extern FIFO8(8) notes; //Array for current note
+extern FIFO16(8) durations; //Array for duration for current note
+
+
 
 
 void sendNoteOn(byte NoteNumber, word Velocity, byte Channel) {
-	message_buff[0] = 0x09; //USB-MIDI NoteOn preffix
+	message_buff[0] = 0x09; //USB-MIDI NoteOn prefix
 	message_buff[1] = NoteOn ^ Channel;
 	message_buff[2] = NoteNumber;
 	message_buff[3] = (uint8_t)(Velocity >> 7);
@@ -20,7 +25,7 @@ void sendNoteOn(byte NoteNumber, word Velocity, byte Channel) {
 }
 
 void sendNoteOff(byte NoteNumber, word Velocity, byte Channel) {
-	message_buff[0] = 0x08;  //USB-MIDI NoteOff preffix
+	message_buff[0] = 0x08;  //USB-MIDI NoteOff prefix
 	message_buff[1] = NoteOff ^ Channel;
 	message_buff[2] = NoteNumber;
 	message_buff[3] = (uint8_t)(Velocity >> 7);
@@ -32,7 +37,7 @@ void sendNoteOff(byte NoteNumber, word Velocity, byte Channel) {
 }
 
 void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel) {
-	message_buff[0] = 0x0B;  //USB-MIDI CC preffix
+	message_buff[0] = 0x0B;  //USB-MIDI CC prefix
 	message_buff[1] = ControlChange ^ Channel;
 	message_buff[2] = ControlNumber;
 	message_buff[3] = ControlValue;
@@ -44,7 +49,7 @@ void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel) {
 }
 
 void sendPitchBend(byte Value, byte Channel){
-	message_buff[0] = 0x0E; //USB-MIDI Pitch preffix
+	message_buff[0] = 0x0E; //USB-MIDI Pitch prefix
 	message_buff[1] = PitchBend ^ Channel;
 	message_buff[2] = 0;
 	message_buff[3] = Value;
@@ -56,7 +61,7 @@ void sendPitchBend(byte Value, byte Channel){
 }
 
 void sendAfterTouch(byte Preasure, byte Channel){
-	message_buff[0] = 0x0D; //USB-MIDI AfterTouch preffix
+	message_buff[0] = 0x0D; //USB-MIDI AfterTouch prefix
 	message_buff[1] = AfterTouchChannel ^ Channel;
 	message_buff[2] = Preasure;
 	message_buff[3] = 0;

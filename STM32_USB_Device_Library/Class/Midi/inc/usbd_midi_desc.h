@@ -20,10 +20,10 @@ extern USBD_DEVICE midi_Descriptor;
 #define USBD_LANGID_STRING            0x409
 #define USBD_MANUFACTURER_STRING      "Nekto"
 
-#define USBD_PRODUCT_HS_STRING        "Fatarminator"
+#define USBD_PRODUCT_HS_STRING        "VMK188++"
 #define USBD_SERIALNUMBER_HS_STRING   "00000000011B"
 
-#define USBD_PRODUCT_FS_STRING        "Fatarminator"
+#define USBD_PRODUCT_FS_STRING        "VMK188++"
 #define USBD_SERIALNUMBER_FS_STRING   "00000000011C"
 
 #define USBD_CONFIGURATION_HS_STRING  "Fatarminator Config HS"

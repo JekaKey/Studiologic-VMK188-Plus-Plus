@@ -1,4 +1,7 @@
+#include "stm32f4xx.h"
 #include "timer.h"
+#include "stm32f4xx_gpio.h"
+
 
 #define SLIDERS_TICKS_FACTOR 2000/TIMER_TIMPERIOD
 #define SLIDERS_DELTA 0x20
@@ -62,6 +65,25 @@
 #define SLIDER_AT_MIN_OUT 0
 #define SLIDER_AT_MAX_OUT 127
 
+#define ENCODER1_PORT            GPIOC
+#define ENCODER1_PIN        GPIO_Pin_13
+
+#define ENCODER2_PORT            GPIOC
+#define ENCODER2_PIN        GPIO_Pin_11
+
+
+#define LED_EN_PORT              GPIOE
+#define LED_EN_PIN         GPIO_Pin_3
+
+#define BUTTON0_PORT              GPIOE
+#define BUTTON0_PIN         GPIO_Pin_0
+
+#define BUTTON1_PORT              GPIOE
+#define BUTTON1_PIN         GPIO_Pin_1
+
+#define BUTTON2_PORT              GPIOE
+#define BUTTON2_PIN         GPIO_Pin_2
+
 
 typedef struct {
 	uint8_t active;
@@ -77,6 +99,19 @@ typedef struct {
 	double b;
 } Slider_type;
 
+
+typedef struct {
+	GPIO_TypeDef * port;
+	uint16_t pin;
+} button_port_type;
+
+typedef struct {
+	uint8_t active;
+	uint8_t channel;
+	uint8_t event;
+} Button_type;
+
+
 void ADC_init_all(void);
-void read_sliders(void);
+void read_controls(void);
 void sliders_init(void);

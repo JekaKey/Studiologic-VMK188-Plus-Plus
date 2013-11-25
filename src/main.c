@@ -126,6 +126,9 @@ void btoa(uint8_t value, char* buffer) {
 }
 /***************************************************************************/
 /*Function for the testing of buttons, encoders, and the display*/
+
+int encoder_counter=0;
+
 void checkContol_events(void) {
 	uint8_t test;
 	uint16_t event;
@@ -136,17 +139,34 @@ void checkContol_events(void) {
 		event = FIFO_FRONT(control_events);
 		FIFO_POP(control_events);
 		hd44780_goto(1, 1);
-		hd44780_write_string("Butt ");
-		btoa((uint8_t)(event & 0x00ff), st);
-		hd44780_write_string(st);
-		if ((event & 0xff00) == 0) {
-			hd44780_write_string(" down  ");
-			sendControlChange(22, (byte) (event & 0x00ff), 1);
+		if ((event & 0x00FF) == 0x00FF) {
+			if (event == 0x01FF) {
+				encoder_counter++;
+				if (encoder_counter>99)
+					encoder_counter=0;
+				hd44780_write_string("Encoder right ");
+				btoa((uint8_t)(encoder_counter), st);
+				hd44780_write_string(st);
+			} else {
+				encoder_counter--;
+				if (encoder_counter<0)
+					encoder_counter=99;
+				hd44780_write_string("Encoder left  ");
+				btoa((uint8_t)(encoder_counter), st);
+				hd44780_write_string(st);
+			}
 		} else {
-			hd44780_write_string("  up   ");
-			sendControlChange(23, (byte) (event & 0x00ff), 1);
+			hd44780_write_string("Butt ");
+			btoa((uint8_t)(event & 0x00FF), st);
+			hd44780_write_string(st);
+			if ((event & 0xFF00) == 0) {
+				hd44780_write_string(" down     ");
+				sendControlChange(22, (byte) (event & 0x00FF), 1);
+			} else {
+				hd44780_write_string("  up      ");
+				sendControlChange(23, (byte) (event & 0x00FF), 1);
+			}
 		}
-
 	}
 
 }

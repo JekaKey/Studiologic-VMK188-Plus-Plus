@@ -189,80 +189,80 @@ void sliders_init(void) {
 	sliders[SLIDER_R1].reverse = 0;
 	sliders[SLIDER_R1].channel = 0;
 	sliders[SLIDER_R1].event = 71;
-	sliders[SLIDER_R1].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_R1].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_R1].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_R1].max_out_value = SLIDER_P_MAX_OUT;
+	sliders[SLIDER_R1].min_in_value = SLIDER_R_MIN_IN;
+	sliders[SLIDER_R1].max_in_value = SLIDER_R_MAX_IN;
+	sliders[SLIDER_R1].min_out_value = SLIDER_R_MIN_OUT;
+	sliders[SLIDER_R1].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R1);
 
 	sliders[SLIDER_R2].active = 1;
 	sliders[SLIDER_R2].reverse = 0;
 	sliders[SLIDER_R2].channel = 0;
 	sliders[SLIDER_R2].event = 72;
-	sliders[SLIDER_R2].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_R2].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_R2].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_R2].max_out_value = SLIDER_P_MAX_OUT;
+	sliders[SLIDER_R2].min_in_value = SLIDER_R_MIN_IN;
+	sliders[SLIDER_R2].max_in_value = SLIDER_R_MAX_IN;
+	sliders[SLIDER_R2].min_out_value = SLIDER_R_MIN_OUT;
+	sliders[SLIDER_R2].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R2);
 
 	sliders[SLIDER_R3].active = 1;
 	sliders[SLIDER_R3].reverse = 0;
 	sliders[SLIDER_R3].channel = 0;
 	sliders[SLIDER_R3].event = 73;
-	sliders[SLIDER_R3].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_R3].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_R3].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_R3].max_out_value = SLIDER_P_MAX_OUT;
+	sliders[SLIDER_R3].min_in_value = SLIDER_R_MIN_IN;
+	sliders[SLIDER_R3].max_in_value = SLIDER_R_MAX_IN;
+	sliders[SLIDER_R3].min_out_value = SLIDER_R_MIN_OUT;
+	sliders[SLIDER_R3].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R3);
 
 	sliders[SLIDER_R4].active = 1;
 	sliders[SLIDER_R4].reverse = 0;
 	sliders[SLIDER_R4].channel = 0;
 	sliders[SLIDER_R4].event = 74;
-	sliders[SLIDER_R4].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_R4].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_R4].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_R4].max_out_value = SLIDER_P_MAX_OUT;
+	sliders[SLIDER_R4].min_in_value = SLIDER_R_MIN_IN;
+	sliders[SLIDER_R4].max_in_value = SLIDER_R_MAX_IN;
+	sliders[SLIDER_R4].min_out_value = SLIDER_R_MIN_OUT;
+	sliders[SLIDER_R4].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R4);
 
 	sliders[SLIDER_R5].active = 1;
 	sliders[SLIDER_R5].reverse = 0;
 	sliders[SLIDER_R5].channel = 0;
 	sliders[SLIDER_R5].event = 75;
-	sliders[SLIDER_R5].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_R5].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_R5].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_R5].max_out_value = SLIDER_P_MAX_OUT;
+	sliders[SLIDER_R5].min_in_value = SLIDER_R_MIN_IN;
+	sliders[SLIDER_R5].max_in_value = SLIDER_R_MAX_IN;
+	sliders[SLIDER_R5].min_out_value = SLIDER_R_MIN_OUT;
+	sliders[SLIDER_R5].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R5);
 
 	sliders[SLIDER_R6].active = 1;
 	sliders[SLIDER_R6].reverse = 0;
 	sliders[SLIDER_R6].channel = 0;
 	sliders[SLIDER_R6].event = 76;
-	sliders[SLIDER_R6].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_R6].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_R6].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_R6].max_out_value = SLIDER_P_MAX_OUT;
+	sliders[SLIDER_R6].min_in_value = SLIDER_R_MIN_IN;
+	sliders[SLIDER_R6].max_in_value = SLIDER_R_MAX_IN;
+	sliders[SLIDER_R6].min_out_value = SLIDER_R_MIN_OUT;
+	sliders[SLIDER_R6].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R6);
 
 	sliders[SLIDER_R7].active = 1;
 	sliders[SLIDER_R7].reverse = 0;
 	sliders[SLIDER_R7].channel = 0;
 	sliders[SLIDER_R7].event = 77;
-	sliders[SLIDER_R7].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_R7].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_R7].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_R7].max_out_value = SLIDER_P_MAX_OUT;
+	sliders[SLIDER_R7].min_in_value = SLIDER_R_MIN_IN;
+	sliders[SLIDER_R7].max_in_value = SLIDER_R_MAX_IN;
+	sliders[SLIDER_R7].min_out_value = SLIDER_R_MIN_OUT;
+	sliders[SLIDER_R7].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R7);
 
 	sliders[SLIDER_R8].active = 1;
 	sliders[SLIDER_R8].reverse = 0;
 	sliders[SLIDER_R8].channel = 0;
 	sliders[SLIDER_R8].event = 78;
-	sliders[SLIDER_R8].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_R8].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_R8].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_R8].max_out_value = SLIDER_P_MAX_OUT;
+	sliders[SLIDER_R8].min_in_value = SLIDER_R_MIN_IN;
+	sliders[SLIDER_R8].max_in_value = SLIDER_R_MAX_IN;
+	sliders[SLIDER_R8].min_out_value = SLIDER_R_MIN_OUT;
+	sliders[SLIDER_R8].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R8);
 
 	sliders[SLIDER_P2].active = 1;
@@ -338,10 +338,11 @@ static uint8_t buttons_chunk = 0;
 static uint8_t buttons_state[24] = { 0 };
 static uint8_t buttons;
 static uint8_t button_counter = 0; //Number of a button in chunk
-static uint8_t encoder1_state = 0;
-static uint8_t encoder2_state = 0;
+static uint8_t encoder_state = 3;
+static uint8_t encoder_zero = 0;
 extern uint8_t hd44780_active;
-uint8_t buttons_active=0;
+uint8_t buttons_active = 0;
+uint16_t test_idr = 1234;
 
 void slider_midi_send(uint8_t num, uint16_t value) {
 	int midi_value;
@@ -368,7 +369,7 @@ void slider_midi_send(uint8_t num, uint16_t value) {
 	}
 }
 
-volatile static void buttons_delay(void) {
+static void volatile buttons_delay(void) {
 	__NOP();
 	__NOP();
 	__NOP();
@@ -385,7 +386,7 @@ volatile static void buttons_delay(void) {
 void read_controls() {
 	uint16_t ADC_value;
 	uint16_t ADC_change;
-	uint16_t ODR_tmp, tmp;
+	uint16_t ODR_tmp, IDR_tmp, tmp;
 	static uint8_t button_number; //Number of current button;
 	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
 
@@ -441,7 +442,7 @@ void read_controls() {
 				mux_pin = 0;
 			}
 			ODR_tmp = GPIOC->ODR & 0xFCBF;
-			tmp = ODR_tmp + ((mux_pin & 0x0006) << 7) + ((mux_pin & 0x0001) << 6); //next value to multiplexors PC6, PC8, PC9
+			tmp = ODR_tmp | ((mux_pin & 0x0006) << 7) | ((mux_pin & 0x0001) << 6); //next value to multiplexors PC6, PC8, PC9
 			GPIOC->ODR = tmp;
 			slider_number = mux_pin * 3;
 			controls_read_status = wait_mux;
@@ -455,7 +456,7 @@ void read_controls() {
 			break;
 		case read_buttons:
 			if (!hd44780_active) {
-				buttons_active=1;
+				buttons_active = 1;
 				GPIOD->ODR |= 0x00FF; //High level on PA0-7;
 				GPIOD->MODER &= 0xFFFF0000; //PA0-7 Will be Input
 				button_ports[buttons_chunk].port->BSRRH = button_ports[buttons_chunk].pin;
@@ -465,11 +466,11 @@ void read_controls() {
 				GPIOD->MODER |= 0x00005555; //PA0-7 Will be Output
 				GPIOD->ODR |= 0x00FF; //High level on PA0-7;
 				controls_read_status = check_button;
-				buttons_active=0;
+				buttons_active = 0;
 				break;
-			}else {
+			} else {
 				controls_read_status = read_encoders;
-                break;
+				break;
 			}
 		case check_button:
 			button_number = buttons_chunk * 8 + button_counter;
@@ -478,11 +479,13 @@ void read_controls() {
 				if (buttons_state[button_number] == 0) {
 					buttons_state[button_number] = 1;
 					FIFO_PUSH(control_events, (uint16_t)(button_number));
+					//send pressed
 				}
 			} else {
 				if (buttons_state[button_number] != 0) {
 					buttons_state[button_number] = 0;
 					FIFO_PUSH(control_events, 0xFF00|(uint16_t)(button_number));
+					//send depressed
 				}
 			}
 			button_counter++;
@@ -501,8 +504,42 @@ void read_controls() {
 			}
 			break;
 		case read_encoders:
-			controls_read_status = check_active;
-			break;
+			test_idr = GPIOC->IDR;
+			IDR_tmp = (uint8_t)(((ENCODER1_PORT->IDR & ENCODER1_PIN) >> 12) | ((ENCODER2_PORT->IDR & ENCODER2_PIN) >> 11)); //Read both encoder signals from the same port because  ENCODER1_PORT=ENCODER2_PORT =GPIOC
+			if (IDR_tmp == encoder_state) {
+				controls_read_status = check_active;
+				break;
+			} else {
+				if (IDR_tmp == 0) {
+					encoder_zero = 1;
+					encoder_state = 0;
+					controls_read_status = check_active;
+					break;
+				} else if (IDR_tmp == 3) {
+					if (encoder_zero) {
+						if (encoder_state == 1) {
+							encoder_state = 3;
+							FIFO_PUSH(control_events, 0x01FF);
+							controls_read_status = check_active;
+							encoder_zero = 0;
+							break;
+						} else if (encoder_state == 2) {
+							encoder_state = 3;
+							FIFO_PUSH(control_events, 0x02FF);
+							controls_read_status = check_active;
+							encoder_zero = 0;
+							break;
+						}
+					} else {
+						encoder_state = IDR_tmp;
+						controls_read_status = check_active;
+						break;
+					}
+				} else {
+					encoder_state = IDR_tmp;
+					controls_read_status = check_active;
+					break;
+				}
+			}
 	}
 }
-

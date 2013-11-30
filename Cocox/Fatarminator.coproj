@@ -89,9 +89,9 @@
     <File name="STM32_USB_Device_Library/Class midi/inc/usbd_midi_core.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_midi_core.h" type="1"/>
     <File name="STM32_USB_OTG_Driver/src" path="" type="2"/>
     <File name="CMSIS/core_cm0plus.h" path="../CMSIS/Include/core_cm0plus.h" type="1"/>
+    <File name="inc/midi.h" path="../inc/midi.h" type="1"/>
     <File name="CMSIS/core_cm4.h" path="../CMSIS/Include/core_cm4.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_exti.h" path="../STM32F4xx_SPL/inc/stm32f4xx_exti.h" type="1"/>
-    <File name="inc/midi.h" path="../inc/midi.h" type="1"/>
     <File name="CMSIS/core_cmInstr.h" path="../CMSIS/Include/core_cmInstr.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_syscfg.c" path="../STM32F4xx_SPL/src/stm32f4xx_syscfg.c" type="1"/>
     <File name="CMSIS/core_sc000.h" path="../CMSIS/Include/core_sc000.h" type="1"/>

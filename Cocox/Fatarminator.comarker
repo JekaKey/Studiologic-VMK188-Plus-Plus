@@ -2,7 +2,7 @@
 <breakpoints>
 <breakpoint enabled="true" persistant="true" registered="true">
 <resource path="/Fatarminator/src/controls.c" type="1"/>
-<marker lineNumber="393" type="org.eclipse.cdt.debug.core.cLineBreakpointMarker">
+<marker lineNumber="363" type="org.eclipse.cdt.debug.core.cLineBreakpointMarker">
 <attrib name="enabled" value="true"/>
 <attrib name="org.eclipse.cdt.debug.core.condition" value=""/>
 <attrib name="org.eclipse.debug.core.id" value="org.eclipse.cdt.debug.core"/>
@@ -16,8 +16,8 @@
 <attrib name="registered" value="true"/>
 <attrib name="path" value="/Fatarminator/src/controls.c"/>
 <attrib name="org.eclipse.cdt.debug.core.sourceHandle" value="D:\piano\pianoproject\fatarm_c\Fatarminator\src\controls.c"/>
-<attrib name="org.eclipse.debug.core.enabled" value="true"/>
 <attrib name="org.eclipse.cdt.debug.core.ignoreCount" value="0"/>
+<attrib name="org.eclipse.debug.core.enabled" value="true"/>
 </marker>
 </breakpoint>
 </breakpoints>

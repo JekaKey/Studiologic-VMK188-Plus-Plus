@@ -173,14 +173,32 @@ void checkContol_events(void) {
 
 int main(void) {
 
-	uint8_t MEM_status;
+	volatile uint8_t readArr[10];
+
+
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
 	firstInit();
 
-	// Test memory
-	do {
-		MEM_status = Memory_Read_Status();
-	} while (!(MEM_status & 0x80));
+
+	memory_wait_ready();
+
+//	memory_page_to_buffer(1,0);
+//
+//	readArr[0] = memory_read_uint8_t_to_buffer(1,0);
+//	readArr[1] = memory_read_uint8_t_to_buffer(1,1);
+//	readArr[2] = memory_read_uint8_t_to_buffer(1,2);
+//	readArr[3] = memory_read_uint8_t_to_buffer(1,3);
+//	readArr[4] = memory_read_uint8_t_to_buffer(1,4);
+
+//
+//	memory_send_uint8_t_to_buffer(1,0,0xAA);
+//	memory_send_uint8_t_to_buffer(1,1,0xBB);
+//	memory_send_uint8_t_to_buffer(1,2,0xCC);
+//	memory_send_uint8_t_to_buffer(1,3,0xDD);
+//	memory_send_uint8_t_to_buffer(1,4,0xEE);
+//	memory_send_uint8_t_to_buffer(1,5,0xFF);
+//
+//	memory_buffer_to_page(1,0);
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 

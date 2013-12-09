@@ -4,7 +4,7 @@ void preset_load() {
 
 	preset.Id = 1;
 	preset.HighResEnable = 1;
-	preset.MidiChannel = 1;
+	preset.MidiChannel = 0;
 
 }
 
@@ -50,7 +50,8 @@ void memory_wait_ready() {
 
 }
 
-void memory_send_command(uint8_t opcode, uint8_t adress_byte1, uint8_t adress_byte2, uint8_t adress_byte3) {
+void memory_send_command(uint8_t opcode, uint8_t adress_byte1,
+		uint8_t adress_byte2, uint8_t adress_byte3) {
 
 }
 
@@ -98,6 +99,50 @@ void memory_buffer_to_page(uint8_t buffer, uint16_t target_number_page) {
 
 }
 
+void memory_send_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t data) {
+
+	memory_start(); //CS memory
+
+	if (buffer = 1)
+		memory_transfer_data(0x84); // Command - Buffer 1
+	else
+		memory_transfer_data(0x87); // Command - Buffer 2
+
+	memory_transfer_data(0x00); // Address - x x x x x x x x
+	memory_transfer_data(0x00); // Address - x x x x x x x B
+	memory_transfer_data(from_byte); // Address - B B B B B B B B
+
+	memory_transfer_data(0x00); //Dummy byte
+
+	memory_transfer_data(data); //Data byte
+
+	memory_stop(); //CS memory
+
+}
+
+uint8_t memory_read_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte) {
+	uint8_t return_data;
+
+	memory_start(); //CS memory
+
+	if (buffer = 1)
+		memory_transfer_data(0xD4); // Command - Buffer 1
+	else
+		memory_transfer_data(0xD6); // Command - Buffer 2
+
+	memory_transfer_data(0x00); // Address - x x x x x x x x
+	memory_transfer_data(0x00); // Address - x x x x x x x B
+	memory_transfer_data(from_byte); // Address - B B B B B B B B
+
+	memory_transfer_data(0x00); //Dummy byte
+
+	return_data = memory_transfer_data(0x00); //Return data
+
+	memory_stop(); //CS memory
+
+	return return_data;
+}
+
 /* WRITE DATA
  SPI1_start();
 
@@ -106,11 +151,11 @@ void memory_buffer_to_page(uint8_t buffer, uint16_t target_number_page) {
  SPI1_send(0x00); // Address - x x x x x x x B
  SPI1_send(0x00); // Address - B B B B B B B B
  SPI1_send(0x00); // ??? 1 Dummy Byte ???
- SPI1_send(0x12); // первый байт
- SPI1_send(0x23); // второй байт
- SPI1_send(0x34); // третий байт
- SPI1_send(0x45); // четвертый байт
- SPI1_send(0x56); // пятый байт
+ SPI1_send(0x12); // ГЇГҐГ°ГўГ»Г© ГЎГ Г©ГІ
+ SPI1_send(0x23); // ГўГІГ®Г°Г®Г© ГЎГ Г©ГІ
+ SPI1_send(0x34); // ГІГ°ГҐГІГЁГ© ГЎГ Г©ГІ
+ SPI1_send(0x45); // Г·ГҐГІГўГҐГ°ГІГ»Г© ГЎГ Г©ГІ
+ SPI1_send(0x56); // ГЇГїГІГ»Г© ГЎГ Г©ГІ
 
  SPI1_stop();
 
@@ -144,11 +189,11 @@ void memory_buffer_to_page(uint8_t buffer, uint16_t target_number_page) {
  SPI1_send(0x00); // Address - x x x x x x x B
  SPI1_send(0x00); // Address - B B B B B B B B
  SPI1_send(0x00); // 1 Dummy Byte
- buffer[0] = SPI1_send(0x00); // первый байт
- buffer[1] = SPI1_send(0x00); // второй байт
- buffer[2] = SPI1_send(0x00); // третий байт
- buffer[3] = SPI1_send(0x00); // четвертый байт
- buffer[4] = SPI1_send(0x00); // пятый байт
+ buffer[0] = SPI1_send(0x00); // ГЇГҐГ°ГўГ»Г© ГЎГ Г©ГІ
+ buffer[1] = SPI1_send(0x00); // ГўГІГ®Г°Г®Г© ГЎГ Г©ГІ
+ buffer[2] = SPI1_send(0x00); // ГІГ°ГҐГІГЁГ© ГЎГ Г©ГІ
+ buffer[3] = SPI1_send(0x00); // Г·ГҐГІГўГҐГ°ГІГ»Г© ГЎГ Г©ГІ
+ buffer[4] = SPI1_send(0x00); // ГЇГїГІГ»Г© ГЎГ Г©ГІ
  SPI1_stop();
 
 

@@ -33,6 +33,31 @@ void delayms(volatile uint32_t c) {
 	}
 }
 
+uint8_t SPI1_send(uint8_t data) {
+
+	SPI1->DR = data; // write data to be transmitted to the SPI data register
+	while (!(SPI1->SR & SPI_I2S_FLAG_TXE))
+		; // wait until transmit complete
+	while (!(SPI1->SR & SPI_I2S_FLAG_RXNE))
+		;
+	// wait until receive complete
+	while (SPI1->SR & SPI_I2S_FLAG_BSY)
+		;
+	// wait until SPI is not busy anymore
+	return SPI1->DR; // return received data from SPI data register
+}
+
+uint8_t Memory_Read_Status(void) {
+	uint8_t temp;
+
+	GPIO_ResetBits(GPIOC, GPIO_Pin_3);
+	SPI1_send(0xD7);
+	temp = SPI1_send(0x00);
+	GPIO_SetBits(GPIOD, GPIO_Pin_15);
+
+	return temp;
+}
+
 /**
  * First init
  */
@@ -102,7 +127,7 @@ void btoa(uint8_t value, char* buffer) {
 /***************************************************************************/
 /*Function for the testing of buttons, encoders, and the display*/
 
-int encoder_counter = 0;
+int encoder_counter=0;
 
 void checkContol_events(void) {
 	uint8_t test;
@@ -117,15 +142,15 @@ void checkContol_events(void) {
 		if ((event & 0x00FF) == 0x00FF) {
 			if (event == 0x01FF) {
 				encoder_counter++;
-				if (encoder_counter > 99)
-					encoder_counter = 0;
+				if (encoder_counter>99)
+					encoder_counter=0;
 				hd44780_write_string("Encoder right ");
 				btoa((uint8_t)(encoder_counter), st);
 				hd44780_write_string(st);
 			} else {
 				encoder_counter--;
-				if (encoder_counter < 0)
-					encoder_counter = 99;
+				if (encoder_counter<0)
+					encoder_counter=99;
 				hd44780_write_string("Encoder left  ");
 				btoa((uint8_t)(encoder_counter), st);
 				hd44780_write_string(st);
@@ -148,12 +173,32 @@ void checkContol_events(void) {
 
 int main(void) {
 
-	volatile uint8_t buffer[10];
+	volatile uint8_t readArr[10];
+
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
-
 	firstInit();
 
+
+	memory_wait_ready();
+
+	memory_page_to_buffer(1,0);
+//
+//	readArr[0] = memory_read_uint8_t_to_buffer(1,0);
+//	readArr[1] = memory_read_uint8_t_to_buffer(1,1);
+//	readArr[2] = memory_read_uint8_t_to_buffer(1,2);
+//	readArr[3] = memory_read_uint8_t_to_buffer(1,3);
+//	readArr[4] = memory_read_uint8_t_to_buffer(1,4);
+
+//
+//	memory_send_uint8_t_to_buffer(1,0,0xAA);
+//	memory_send_uint8_t_to_buffer(1,1,0xBB);
+//	memory_send_uint8_t_to_buffer(1,2,0xCC);
+//	memory_send_uint8_t_to_buffer(1,3,0xDD);
+//	memory_send_uint8_t_to_buffer(1,4,0xEE);
+//	memory_send_uint8_t_to_buffer(1,5,0xFF);
+//
+//	memory_buffer_to_page(1,0);
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 

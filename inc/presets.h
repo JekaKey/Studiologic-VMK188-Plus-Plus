@@ -27,6 +27,11 @@ void memory_buffer_to_page(uint8_t buffer, uint16_t target_number_page);
 void memory_page_to_buffer(uint8_t buffer, uint16_t target_number_page);
 void memory_read_buffer(uint8_t buffer, uint8_t from_byte);
 
+void memory_send_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t data);
+void memory_send_uint16_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint16_t data);
+uint8_t memory_read_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte);
+uint16_t memory_read_uint16_t_to_buffer(uint8_t buffer, uint8_t from_byte);
+
 uint8_t memory_ready_status(void);
 void memory_wait_ready(void);
 

@@ -9,6 +9,37 @@
 
 FIFO16(128) control_events;
 
+uint16_t ADC_convert(uint8_t adc_num) {
+	uint16_t ADC_Val;
+	switch (adc_num) {
+		case 0:
+			ADC_SoftwareStartConv(ADC1);
+			while (ADC_GetSoftwareStartConvStatus(ADC1) != RESET) {
+				ADC_Val = 0;
+			}
+			ADC_Val = ADC_GetConversionValue(ADC1);
+			break;
+		case 1:
+			ADC_SoftwareStartConv(ADC2);
+			while (ADC_GetSoftwareStartConvStatus(ADC2) != RESET) {
+				ADC_Val = 0;
+			}
+			ADC_Val = ADC_GetConversionValue(ADC2);
+			break;
+		case 2:
+			ADC_SoftwareStartConv(ADC3);
+			while (ADC_GetSoftwareStartConvStatus(ADC3) != RESET) {
+				ADC_Val = 0;
+			}
+			ADC_Val = ADC_GetConversionValue(ADC3);
+			break;
+		default:
+			ADC_Val = 0;
+			break;
+	}
+	return ADC_Val;
+}
+
 void ADC_init_all(void) {
 	ADC_InitTypeDef ADC_InitStructure;
 	ADC_CommonInitTypeDef ADC_CommonInitStructure;
@@ -26,7 +57,7 @@ void ADC_init_all(void) {
 
 	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
 	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
-	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
 	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
 	ADC_InitStructure.ADC_NbrOfConversion = 1;
@@ -47,8 +78,8 @@ void ADC_init_all(void) {
 
 static Slider_type sliders[24];
 static enum controls_read_status_type {
-	next_mux, wait_mux, read_data, check_value, read_buttons, check_button, next_buttons_chunk, read_encoders
-} controls_read_status = read_data;
+	next_mux, wait_mux, check_active, next_adc, read_data, check_value, read_buttons, check_button, next_buttons_chunk, read_encoders
+} controls_read_status = check_active;
 
 void slider_init_struct(uint8_t num) {
 	if (sliders[num].reverse) {
@@ -297,11 +328,10 @@ void sliders_init(void) {
 }
 
 static uint16_t tick_counter = 0; //Counter of timer ticks
+static uint8_t adc_counter = 0; //adc (multiplexor chip) number 0..2
 static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
 static uint8_t slider_number = 0; // Slider number from 0 to 23
-static uint32_t ADC1_sum = 0; //SUM of ADC1 measuring
-static uint32_t ADC2_sum = 0; //SUM of ADC2 measuring
-static uint32_t ADC3_sum = 0; //SUM of ADC3 measuring
+static uint32_t ADC_sum = 0; //SUM of ADC measuring
 uint16_t ADC_old_values[24] = { 0 };
 button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
 static uint8_t buttons_chunk = 0;
@@ -362,21 +392,17 @@ void read_controls() {
 
 	switch (controls_read_status) {
 
+		case check_active:
+			if (sliders[slider_number].active) {
+				controls_read_status = read_data;
+				break;
+			} else {
+				controls_read_status = next_adc;
+				break;
+			}
 		case read_data:
-			ADC_SoftwareStartConv(ADC1);
-			while (ADC_GetSoftwareStartConvStatus(ADC1) != RESET) {
-			}
-			ADC1_sum += ADC_GetConversionValue(ADC1);
 
-			ADC_SoftwareStartConv(ADC2);
-			while (ADC_GetSoftwareStartConvStatus(ADC2) != RESET) {
-			}
-			ADC2_sum += ADC_GetConversionValue(ADC2);
-
-			ADC_SoftwareStartConv(ADC3);
-			while (ADC_GetSoftwareStartConvStatus(ADC3) != RESET) {
-			}
-			ADC3_sum += ADC_GetConversionValue(ADC3);
+			ADC_sum += ADC_convert(adc_counter);
 			tick_counter++;
 			if (tick_counter >= SLIDERS_MEASURE_NUM) {
 				tick_counter = 0;
@@ -384,59 +410,31 @@ void read_controls() {
 			}
 			break;
 		case check_value:
-			if (sliders[slider_number].active) {
-				ADC_value = ADC1_sum / SLIDERS_MEASURE_NUM;
-				ADC1_sum = 0;
-				if (ADC_value > ADC_old_values[slider_number]) {
-					ADC_change = ADC_value - ADC_old_values[slider_number];
-				} else {
-					ADC_change = ADC_old_values[slider_number] - ADC_value;
-				}
-				if (ADC_change > SLIDERS_DELTA) {
-					ADC_old_values[slider_number] = ADC_value;
-					slider_midi_send(slider_number, ADC_value);
-				}
+			ADC_value = ADC_sum / SLIDERS_MEASURE_NUM;
+			ADC_sum = 0;
+			if (ADC_value > ADC_old_values[slider_number]) {
+				ADC_change = ADC_value - ADC_old_values[slider_number];
+			} else {
+				ADC_change = ADC_old_values[slider_number] - ADC_value;
 			}
-			else {
-				ADC1_sum = 0;
+			if (ADC_change > SLIDERS_DELTA) {
+				ADC_old_values[slider_number] = ADC_value;
+				slider_midi_send(slider_number, ADC_value);
 			}
-			slider_number++;
-
-			if (sliders[slider_number].active) {
-				ADC_value = ADC2_sum / SLIDERS_MEASURE_NUM;
-				ADC2_sum = 0;
-				if (ADC_value > ADC_old_values[slider_number]) {
-					ADC_change = ADC_value - ADC_old_values[slider_number];
-				} else {
-					ADC_change = ADC_old_values[slider_number] - ADC_value;
-				}
-				if (ADC_change > SLIDERS_DELTA) {
-					ADC_old_values[slider_number] = ADC_value;
-					slider_midi_send(slider_number, ADC_value);
-				}
+			tick_counter = 0;
+			controls_read_status = next_adc;
+			break;
+		case next_adc:
+			adc_counter++;
+			if (adc_counter < 3) {
+				slider_number++;
+				controls_read_status = read_buttons;
+				break;
+			} else {
+				adc_counter = 0;
+				controls_read_status = next_mux;
+				break;
 			}
-			else {
-				ADC2_sum = 0;
-			}
-			slider_number++;
-
-			if (sliders[slider_number].active) {
-				ADC_value = ADC3_sum / SLIDERS_MEASURE_NUM;
-				ADC3_sum = 0;
-				if (ADC_value > ADC_old_values[slider_number]) {
-					ADC_change = ADC_value - ADC_old_values[slider_number];
-				} else {
-					ADC_change = ADC_old_values[slider_number] - ADC_value;
-				}
-				if (ADC_change > SLIDERS_DELTA) {
-					ADC_old_values[slider_number] = ADC_value;
-					slider_midi_send(slider_number, ADC_value);
-				}
-			}
-			else {
-				ADC3_sum = 0;
-			}
-			controls_read_status = next_mux;
 			break;
 		case next_mux:
 			mux_pin++;
@@ -509,37 +507,37 @@ void read_controls() {
 			test_idr = GPIOC->IDR;
 			IDR_tmp = (uint8_t)(((ENCODER1_PORT->IDR & ENCODER1_PIN) >> 12) | ((ENCODER2_PORT->IDR & ENCODER2_PIN) >> 11)); //Read both encoder signals from the same port because  ENCODER1_PORT=ENCODER2_PORT =GPIOC
 			if (IDR_tmp == encoder_state) {
-				controls_read_status = read_data;
+				controls_read_status = check_active;
 				break;
 			} else {
 				if (IDR_tmp == 0) {
 					encoder_zero = 1;
 					encoder_state = 0;
-					controls_read_status = read_data;
+					controls_read_status = check_active;
 					break;
 				} else if (IDR_tmp == 3) {
 					if (encoder_zero) {
 						if (encoder_state == 1) {
 							encoder_state = 3;
 							FIFO_PUSH(control_events, 0x01FF);
-							controls_read_status = read_data;
+							controls_read_status = check_active;
 							encoder_zero = 0;
 							break;
 						} else if (encoder_state == 2) {
 							encoder_state = 3;
 							FIFO_PUSH(control_events, 0x02FF);
-							controls_read_status = read_data;
+							controls_read_status = check_active;
 							encoder_zero = 0;
 							break;
 						}
 					} else {
 						encoder_state = IDR_tmp;
-						controls_read_status = read_data;
+						controls_read_status = check_active;
 						break;
 					}
 				} else {
 					encoder_state = IDR_tmp;
-					controls_read_status = read_data;
+					controls_read_status = check_active;
 					break;
 				}
 			}

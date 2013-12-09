@@ -26,11 +26,11 @@ extern USBD_DEVICE midi_Descriptor;
 #define USBD_PRODUCT_FS_STRING        "VMK188++"
 #define USBD_SERIALNUMBER_FS_STRING   "00000000011C"
 
-#define USBD_CONFIGURATION_HS_STRING  "VMK188++ Config HS"
-#define USBD_INTERFACE_HS_STRING      "VMK188++ Interface HS"
+#define USBD_CONFIGURATION_HS_STRING  "Fatarminator Config HS"
+#define USBD_INTERFACE_HS_STRING      "Fatarminator Interface HS"
 
-#define USBD_CONFIGURATION_FS_STRING  "VMK188++ Config FS"
-#define USBD_INTERFACE_FS_STRING      "VMK188++ Interface FS"
+#define USBD_CONFIGURATION_FS_STRING  "Fatarminator Config FS"
+#define USBD_INTERFACE_FS_STRING      "Fatarminator Interface FS"
 
 
 

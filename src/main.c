@@ -33,31 +33,6 @@ void delayms(volatile uint32_t c) {
 	}
 }
 
-uint8_t SPI1_send(uint8_t data) {
-
-	SPI1->DR = data; // write data to be transmitted to the SPI data register
-	while (!(SPI1->SR & SPI_I2S_FLAG_TXE))
-		; // wait until transmit complete
-	while (!(SPI1->SR & SPI_I2S_FLAG_RXNE))
-		;
-	// wait until receive complete
-	while (SPI1->SR & SPI_I2S_FLAG_BSY)
-		;
-	// wait until SPI is not busy anymore
-	return SPI1->DR; // return received data from SPI data register
-}
-
-uint8_t Memory_Read_Status(void) {
-	uint8_t temp;
-
-	GPIO_ResetBits(GPIOC, GPIO_Pin_3);
-	SPI1_send(0xD7);
-	temp = SPI1_send(0x00);
-	GPIO_SetBits(GPIOD, GPIO_Pin_15);
-
-	return temp;
-}
-
 /**
  * First init
  */
@@ -127,7 +102,7 @@ void btoa(uint8_t value, char* buffer) {
 /***************************************************************************/
 /*Function for the testing of buttons, encoders, and the display*/
 
-int encoder_counter=0;
+int encoder_counter = 0;
 
 void checkContol_events(void) {
 	uint8_t test;
@@ -142,15 +117,15 @@ void checkContol_events(void) {
 		if ((event & 0x00FF) == 0x00FF) {
 			if (event == 0x01FF) {
 				encoder_counter++;
-				if (encoder_counter>99)
-					encoder_counter=0;
+				if (encoder_counter > 99)
+					encoder_counter = 0;
 				hd44780_write_string("Encoder right ");
 				btoa((uint8_t)(encoder_counter), st);
 				hd44780_write_string(st);
 			} else {
 				encoder_counter--;
-				if (encoder_counter<0)
-					encoder_counter=99;
+				if (encoder_counter < 0)
+					encoder_counter = 99;
 				hd44780_write_string("Encoder left  ");
 				btoa((uint8_t)(encoder_counter), st);
 				hd44780_write_string(st);
@@ -173,14 +148,12 @@ void checkContol_events(void) {
 
 int main(void) {
 
-	uint8_t MEM_status;
+	volatile uint8_t buffer[10];
+
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
+
 	firstInit();
 
-	// Test memory
-	do {
-		MEM_status = Memory_Read_Status();
-	} while (!(MEM_status & 0x80));
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 

@@ -20,6 +20,9 @@
 uint8_t count;
 uint16_t i;
 
+extern FIFO32(128) midi_usb_in; //FIFO buffer for 32-bit midi packets from a computer defined in "usbd_midi_core.c"
+extern FIFO16(128) control_events;
+
 void delay(volatile uint32_t c) {
 	while (--c) {
 		__NOP();
@@ -91,14 +94,12 @@ void firstInit() {
 	GPIOE->ODR |= 0xFF80; // E7-E15
 
 	//Start key scan timer
-	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
-	TIM_Cmd(TIM4, ENABLE);
-	NVIC_EnableIRQ(TIM4_IRQn);
+//	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+//	TIM_Cmd(TIM4, ENABLE);
+//	NVIC_EnableIRQ(TIM4_IRQn);
 
 }
 
-extern FIFO32(128) midi_usb_in; //FIFO buffer for 32-bit midi packets from a computer defined in "usbd_midi_core.c"
-extern FIFO16(128) control_events;
 
 /***********************************************/
 /*    This function is just for usb IN test    */
@@ -109,8 +110,12 @@ void midi_resend(void) {
 
 	test = FIFO_COUNT(midi_usb_in);
 	if (test != 0) {
-		midipacket = FIFO_FRONT(midi_usb_in);
+
+		//Send recive ok message
+		midipacket = 0xF704F004;
+
 		FIFO_POP(midi_usb_in);
+
 		usb_midi_DataTx(&midipacket, 4);
 
 	}
@@ -179,26 +184,11 @@ int main(void) {
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
 	firstInit();
 
-
-	memory_wait_ready();
-
-	memory_page_to_buffer(1,0);
+//	memory_page_to_buffer(1,0);
 //
-//	readArr[0] = memory_read_uint8_t_to_buffer(1,0);
-//	readArr[1] = memory_read_uint8_t_to_buffer(1,1);
-//	readArr[2] = memory_read_uint8_t_to_buffer(1,2);
-//	readArr[3] = memory_read_uint8_t_to_buffer(1,3);
-//	readArr[4] = memory_read_uint8_t_to_buffer(1,4);
+//	readArr[0] = memory_read_uint8_t(1,1);
 
-//
-//	memory_send_uint8_t_to_buffer(1,0,0xAA);
-//	memory_send_uint8_t_to_buffer(1,1,0xBB);
-//	memory_send_uint8_t_to_buffer(1,2,0xCC);
-//	memory_send_uint8_t_to_buffer(1,3,0xDD);
-//	memory_send_uint8_t_to_buffer(1,4,0xEE);
-//	memory_send_uint8_t_to_buffer(1,5,0xFF);
-//
-//	memory_buffer_to_page(1,0);
+	memory_read_array(1, 0, readArr);
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 
@@ -211,7 +201,7 @@ int main(void) {
 		//Send midi data
 		sendMidiData();
 		checkContol_events();
-		//midi_resend();
+		midi_resend();
 
 	}
 }

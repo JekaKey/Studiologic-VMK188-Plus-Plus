@@ -29,8 +29,10 @@ void memory_read_buffer(uint8_t buffer, uint8_t from_byte);
 
 void memory_send_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t data);
 void memory_send_uint16_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint16_t data);
-uint8_t memory_read_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte);
-uint16_t memory_read_uint16_t_to_buffer(uint8_t buffer, uint8_t from_byte);
+uint8_t memory_read_uint8_t(uint8_t buffer, uint8_t from_byte);
+uint16_t memory_read_uint16_t(uint8_t buffer, uint8_t from_byte);
+
+void memory_read_array(uint8_t buffer, uint8_t from_byte, uint8_t *array);
 
 uint8_t memory_ready_status(void);
 void memory_wait_ready(void);

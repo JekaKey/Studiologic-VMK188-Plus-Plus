@@ -50,8 +50,7 @@ void memory_wait_ready() {
 
 }
 
-void memory_send_command(uint8_t opcode, uint8_t adress_byte1,
-		uint8_t adress_byte2, uint8_t adress_byte3) {
+void memory_send_command(uint8_t opcode, uint8_t adress_byte1, uint8_t adress_byte2, uint8_t adress_byte3) {
 
 }
 
@@ -112,15 +111,13 @@ void memory_send_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t da
 	memory_transfer_data(0x00); // Address - x x x x x x x B
 	memory_transfer_data(from_byte); // Address - B B B B B B B B
 
-	memory_transfer_data(0x00); //Dummy byte
-
-	memory_transfer_data(data); //Data byte
+	memory_transfer_data(data); //Dummy byte
 
 	memory_stop(); //CS memory
 
 }
 
-uint8_t memory_read_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte) {
+uint8_t memory_read_uint8_t(uint8_t buffer, uint8_t from_byte) {
 	uint8_t return_data;
 
 	memory_start(); //CS memory
@@ -143,61 +140,7 @@ uint8_t memory_read_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte) {
 	return return_data;
 }
 
-/* WRITE DATA
- SPI1_start();
-
- SPI1_send(0x87); // Command - Write Buffer 2
- SPI1_send(0x00); // Address - x x x x x x x x
- SPI1_send(0x00); // Address - x x x x x x x B
- SPI1_send(0x00); // Address - B B B B B B B B
- SPI1_send(0x00); // ??? 1 Dummy Byte ???
- SPI1_send(0x12); // ïåðâûé áàéò
- SPI1_send(0x23); // âòîðîé áàéò
- SPI1_send(0x34); // òðåòèé áàéò
- SPI1_send(0x45); // ÷åòâåðòûé áàéò
- SPI1_send(0x56); // ïÿòûé áàéò
-
- SPI1_stop();
+void memory_read_array(uint8_t buffer, uint8_t from_byte, uint8_t *array) {
 
 
- SPI1_start();
-
- SPI1_send(0x86); // Command - Buffer 2
- SPI1_send(0x0A); // Address - x x x P P P P P
- SPI1_send(0x74); // Address - P P P P P P P x
- SPI1_send(0x00); // Address - x x x x x x x x
-
- SPI1_stop();
- */
-
-/* READ DATA
-
- SPI1_start();
- SPI1_send(0x53); // Command - Buffer 1
- SPI1_send(0x0A); // Address - x x x P P P P P
- SPI1_send(0x74); // Address - P P P P P P P x
- SPI1_send(0x00); // Address - x x x x x x x x
- SPI1_stop();
-
- do {
- MEM_status = Memory_Read_Status();
- } while (!(MEM_status & 0x80));
-
- SPI1_start();
- SPI1_send(0xD1); // Command - Read Buffer 1
- SPI1_send(0x00); // Address - x x x x x x x x
- SPI1_send(0x00); // Address - x x x x x x x B
- SPI1_send(0x00); // Address - B B B B B B B B
- SPI1_send(0x00); // 1 Dummy Byte
- buffer[0] = SPI1_send(0x00); // ïåðâûé áàéò
- buffer[1] = SPI1_send(0x00); // âòîðîé áàéò
- buffer[2] = SPI1_send(0x00); // òðåòèé áàéò
- buffer[3] = SPI1_send(0x00); // ÷åòâåðòûé áàéò
- buffer[4] = SPI1_send(0x00); // ïÿòûé áàéò
- SPI1_stop();
-
-
-
- do {
- MEM_status = Memory_Read_Status();
- } while (!(MEM_status & 0x80)); */
+}

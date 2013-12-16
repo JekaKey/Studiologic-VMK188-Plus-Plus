@@ -18,7 +18,7 @@ extern USBD_DEVICE midi_Descriptor;
 #define USBD_PID                     0x0000
 
 #define USBD_LANGID_STRING            0x409
-#define USBD_MANUFACTURER_STRING      "Nekto"
+#define USBD_MANUFACTURER_STRING      "Studiologic"
 
 #define USBD_PRODUCT_HS_STRING        "VMK188++"
 #define USBD_SERIALNUMBER_HS_STRING   "00000000011B"

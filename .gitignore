@@ -46,6 +46,8 @@
 *.hex
 *.gitignore
 Fatarminator.uvopt
+*.comarker
+*.cogui
 
 .DS_Store
 #Build files

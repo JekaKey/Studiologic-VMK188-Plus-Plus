@@ -82,7 +82,8 @@ void firstInit() {
 	//Display
 	delayms(400);
 	hd44780_init();
-	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
+	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_OFF,
+			HD44780_DISP_BLINK_OFF);
 
 	hd44780_write_string("     VMK188++");
 
@@ -93,13 +94,12 @@ void firstInit() {
 	GPIOD->ODR |= 0x300; // D8-D9
 	GPIOE->ODR |= 0xFF80; // E7-E15
 
-	//Start key scan timer
-//	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
-//	TIM_Cmd(TIM4, ENABLE);
-//	NVIC_EnableIRQ(TIM4_IRQn);
+//	Start key scan timer
+	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+	TIM_Cmd(TIM4, ENABLE);
+	NVIC_EnableIRQ(TIM4_IRQn);
 
 }
-
 
 /***********************************************/
 /*    This function is just for usb IN test    */
@@ -115,6 +115,7 @@ void midi_resend(void) {
 		midipacket = 0xF704F004;
 
 		FIFO_POP(midi_usb_in);
+		q
 
 		usb_midi_DataTx(&midipacket, 4);
 
@@ -132,7 +133,7 @@ void btoa(uint8_t value, char* buffer) {
 /***************************************************************************/
 /*Function for the testing of buttons, encoders, and the display*/
 
-int encoder_counter=0;
+int encoder_counter = 0;
 
 void checkContol_events(void) {
 	uint8_t test;
@@ -147,15 +148,15 @@ void checkContol_events(void) {
 		if ((event & 0x00FF) == 0x00FF) {
 			if (event == 0x01FF) {
 				encoder_counter++;
-				if (encoder_counter>99)
-					encoder_counter=0;
+				if (encoder_counter > 99)
+					encoder_counter = 0;
 				hd44780_write_string("Encoder right ");
 				btoa((uint8_t)(encoder_counter), st);
 				hd44780_write_string(st);
 			} else {
 				encoder_counter--;
-				if (encoder_counter<0)
-					encoder_counter=99;
+				if (encoder_counter < 0)
+					encoder_counter = 99;
 				hd44780_write_string("Encoder left  ");
 				btoa((uint8_t)(encoder_counter), st);
 				hd44780_write_string(st);
@@ -179,7 +180,6 @@ void checkContol_events(void) {
 int main(void) {
 
 	volatile uint8_t readArr[10];
-
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
 	firstInit();

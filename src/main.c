@@ -115,8 +115,6 @@ void midi_resend(void) {
 		midipacket = 0xF704F004;
 
 		FIFO_POP(midi_usb_in);
-		q
-
 		usb_midi_DataTx(&midipacket, 4);
 
 	}

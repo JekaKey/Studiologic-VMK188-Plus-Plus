@@ -17,6 +17,8 @@
 typedef uint8_t byte;
 typedef uint16_t word;
 
+#define OK_SYSEX 0xF704F004;
+
 /*! Enumeration of MIDI types */
 enum kMIDIType {
 	NoteOff = 0x80, ///< Note Off
@@ -52,5 +54,6 @@ void sendPolyPressure(byte NoteNumber, byte Pressure, byte Channel);
 void sendAfterTouch(byte Pressure, byte Channel);
 
 void sendMidiData(void); //Send one midi message per run from buffer array
+void reciveMidiData(void);
 
 #endif //MIDI_H

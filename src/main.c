@@ -22,6 +22,7 @@ uint16_t i;
 
 extern FIFO32(128) midi_usb_in;
 extern FIFO16(128) control_events;
+extern FIFO16(128) sliders_events;
 
 void delay(volatile uint32_t c) {
 	while (--c) {
@@ -88,6 +89,19 @@ void btoa(uint8_t value, char* buffer) {
 
 int encoder_counter = 0;
 
+void checkSliders_events(void){
+	uint8_t test;
+	uint16_t event;
+
+	test = FIFO_COUNT(sliders_events);
+	if (test != 0) {
+		event = FIFO_FRONT(sliders_events);
+		FIFO_POP(sliders_events);
+		slider_midi_send(event);
+	}
+
+}
+
 void checkContol_events(void) {
 	uint8_t test;
 	uint16_t event;
@@ -147,7 +161,7 @@ int main(void) {
 		//Send/receive midi data
 		receiveMidiData();
 		sendMidiData();
-
+        checkSliders_events();
 		checkContol_events();
 
 	}

@@ -8,6 +8,7 @@
 #include "fifo.h"
 
 FIFO16(128) control_events;
+FIFO16(128) sliders_events;
 
 void ADC_init_all(void) {
 	ADC_InitTypeDef ADC_InitStructure;
@@ -303,6 +304,7 @@ static uint32_t ADC1_sum = 0; //SUM of ADC1 measuring
 static uint32_t ADC2_sum = 0; //SUM of ADC2 measuring
 static uint32_t ADC3_sum = 0; //SUM of ADC3 measuring
 uint16_t ADC_old_values[24] = { 0 };
+uint8_t sliders_old_values[24] = { 0 };
 button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
 static uint8_t buttons_chunk = 0;
 static uint8_t buttons_state[24] = { 0 };
@@ -312,9 +314,8 @@ static uint8_t encoder_state = 3;
 static uint8_t encoder_zero = 0;
 extern uint8_t hd44780_active;
 uint8_t buttons_active = 0;
-uint16_t test_idr = 1234;
 
-void slider_midi_send(uint8_t num, uint16_t value) {
+static void slider_FIFO_send(uint8_t num, uint16_t value) {
 	int midi_value;
 	midi_value = (uint8_t)(sliders[num].a * value + sliders[num].b);
 	if (midi_value > 127) {
@@ -323,6 +324,15 @@ void slider_midi_send(uint8_t num, uint16_t value) {
 	if (midi_value < 0) {
 		midi_value = 0;
 	}
+	if (midi_value!=sliders_old_values[num]){
+		FIFO_PUSH(sliders_events, (((uint16_t)(midi_value))<<8)+num);
+		sliders_old_values[num]=midi_value;
+	}
+}
+
+void slider_midi_send(uint16_t value) {
+	uint8_t num = (uint8_t)(value & 0x00FF);
+	uint8_t midi_value = (uint8_t)(value >> 8);
 	switch (num) {
 		case SLIDER_PITCH:
 			sendPitchBend((uint8_t)(midi_value), sliders[num].channel);
@@ -353,8 +363,7 @@ static void volatile buttons_delay(void) {
 	__NOP();
 }
 
-
-uint16_t median(uint16_t* a){
+uint16_t median(uint16_t* a) {
 	if (a[0] < a[1]) {
 		if (a[1] < a[2]) {
 			return a[1];
@@ -365,7 +374,7 @@ uint16_t median(uint16_t* a){
 				return a[2];
 			}
 		}
-	}else {
+	} else {
 		if (a[1] > a[2]) {
 			return a[1];
 		} else {
@@ -428,7 +437,7 @@ void read_controls() {
 				}
 				if (ADC_change > SLIDERS_DELTA) {
 					ADC_old_values[slider_number] = ADC_value;
-					slider_midi_send(slider_number, ADC_value);
+					slider_FIFO_send(slider_number, ADC_value);
 				}
 			} else {
 				ADC1_sum = 0;
@@ -445,7 +454,7 @@ void read_controls() {
 				}
 				if (ADC_change > SLIDERS_DELTA) {
 					ADC_old_values[slider_number] = ADC_value;
-					slider_midi_send(slider_number, ADC_value);
+					slider_FIFO_send(slider_number, ADC_value);
 				}
 			} else {
 				ADC2_sum = 0;
@@ -462,7 +471,7 @@ void read_controls() {
 				}
 				if (ADC_change > SLIDERS_DELTA) {
 					ADC_old_values[slider_number] = ADC_value;
-					slider_midi_send(slider_number, ADC_value);
+					slider_FIFO_send(slider_number, ADC_value);
 				}
 			} else {
 				ADC3_sum = 0;
@@ -537,7 +546,6 @@ void read_controls() {
 			}
 			break;
 		case read_encoders:
-			test_idr = GPIOC->IDR;
 			IDR_tmp = (uint8_t)(((ENCODER1_PORT->IDR & ENCODER1_PIN) >> 12) | ((ENCODER2_PORT->IDR & ENCODER2_PIN) >> 11)); //Read both encoder signals from the same port because  ENCODER1_PORT=ENCODER2_PORT =GPIOC
 			if (IDR_tmp == encoder_state) {
 				controls_read_status = read_data;

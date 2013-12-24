@@ -36,7 +36,7 @@
 #define SLIDER_EMPTY 8
 
 #define SLIDER_S_MIN_IN 0
-#define SLIDER_S_MAX_IN 3200
+#define SLIDER_S_MAX_IN 4050
 #define SLIDER_S_MIN_OUT 0
 #define SLIDER_S_MAX_OUT 127
 

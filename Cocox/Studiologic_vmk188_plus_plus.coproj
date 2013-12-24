@@ -101,8 +101,8 @@
     <File name="CMSIS/core_cmInstr.h" path="../CMSIS/Include/core_cmInstr.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_syscfg.c" path="../STM32F4xx_SPL/src/stm32f4xx_syscfg.c" type="1"/>
     <File name="CMSIS/core_sc000.h" path="../CMSIS/Include/core_sc000.h" type="1"/>
-    <File name="STM32_USB_Device_Library/Class midi/inc/usbd_conf.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_conf.h" type="1"/>
     <File name="startup/system_stm32f4xx.c" path="../startup/system_stm32f4xx.c" type="1"/>
+    <File name="STM32_USB_Device_Library/Class midi/inc/usbd_conf.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_conf.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_rng.c" path="../STM32F4xx_SPL/src/stm32f4xx_rng.c" type="1"/>
     <File name="CMSIS/core_cmFunc.h" path="../CMSIS/Include/core_cmFunc.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usb_conf.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_conf.h" type="1"/>
@@ -187,10 +187,10 @@
     <File name="inc/buttons.h" path="../inc/buttons.h" type="1"/>
     <File name="CMSIS/arm_common_tables.h" path="../CMSIS/Include/arm_common_tables.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_fsmc.c" path="../STM32F4xx_SPL/src/stm32f4xx_fsmc.c" type="1"/>
-    <File name="CMSIS/core_cm3.h" path="../CMSIS/Include/core_cm3.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_exti.c" path="../STM32F4xx_SPL/src/stm32f4xx_exti.c" type="1"/>
-    <File name="STM32_SPL/inc" path="" type="2"/>
     <File name="STM32_SPL/inc/stm32f4xx_flash.h" path="../STM32F4xx_SPL/inc/stm32f4xx_flash.h" type="1"/>
+    <File name="STM32_SPL/inc" path="" type="2"/>
+    <File name="CMSIS/core_cm3.h" path="../CMSIS/Include/core_cm3.h" type="1"/>
     <File name="inc/main.h" path="../inc/main.h" type="1"/>
     <File name="STM32_USB_Device_Library/Core" path="" type="2"/>
     <File name="STM32_SPL/src/stm32f4xx_cryp_aes.c" path="../STM32F4xx_SPL/src/stm32f4xx_cryp_aes.c" type="1"/>

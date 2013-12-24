@@ -165,10 +165,10 @@ void checkContol_events(void) {
 			hd44780_write_string(st);
 			if ((event & 0xFF00) == 0) {
 				hd44780_write_string(" down     ");
-				sendControlChange(22, (byte) (event & 0x00FF), 1);
+//				sendControlChange(22, (byte) (event & 0x00FF), 1);
 			} else {
 				hd44780_write_string("  up      ");
-				sendControlChange(23, (byte) (event & 0x00FF), 1);
+//				sendControlChange(23, (byte) (event & 0x00FF), 1);
 			}
 		}
 	}

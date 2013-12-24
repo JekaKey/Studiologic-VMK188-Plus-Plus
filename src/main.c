@@ -20,7 +20,7 @@
 uint8_t count;
 uint16_t i;
 
-extern FIFO32(128) midi_usb_in; //FIFO buffer for 32-bit midi packets from a computer defined in "usbd_midi_core.c"
+extern FIFO32(128) midi_usb_in;
 extern FIFO16(128) control_events;
 
 void delay(volatile uint32_t c) {
@@ -34,31 +34,6 @@ void delayms(volatile uint32_t c) {
 	while (--c) {
 		delay(23080);
 	}
-}
-
-uint8_t SPI1_send(uint8_t data) {
-
-	SPI1->DR = data; // write data to be transmitted to the SPI data register
-	while (!(SPI1->SR & SPI_I2S_FLAG_TXE))
-		; // wait until transmit complete
-	while (!(SPI1->SR & SPI_I2S_FLAG_RXNE))
-		;
-	// wait until receive complete
-	while (SPI1->SR & SPI_I2S_FLAG_BSY)
-		;
-	// wait until SPI is not busy anymore
-	return SPI1->DR; // return received data from SPI data register
-}
-
-uint8_t Memory_Read_Status(void) {
-	uint8_t temp;
-
-	GPIO_ResetBits(GPIOC, GPIO_Pin_3);
-	SPI1_send(0xD7);
-	temp = SPI1_send(0x00);
-	GPIO_SetBits(GPIOD, GPIO_Pin_15);
-
-	return temp;
 }
 
 /**
@@ -82,8 +57,7 @@ void firstInit() {
 	//Display
 	delayms(400);
 	hd44780_init();
-	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_OFF,
-			HD44780_DISP_BLINK_OFF);
+	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
 
 	hd44780_write_string("     VMK188++");
 
@@ -99,25 +73,6 @@ void firstInit() {
 	TIM_Cmd(TIM4, ENABLE);
 	NVIC_EnableIRQ(TIM4_IRQn);
 
-}
-
-/***********************************************/
-/*    This function is just for usb IN test    */
-/*  It resends to the computer all received data*/
-void midi_resend(void) {
-	uint32_t midipacket;
-	uint8_t test;
-
-	test = FIFO_COUNT(midi_usb_in);
-	if (test != 0) {
-
-		//Send recive ok message
-		midipacket = 0xF704F004;
-
-		FIFO_POP(midi_usb_in);
-		usb_midi_DataTx(&midipacket, 4);
-
-	}
 }
 
 /**********************************************/
@@ -177,16 +132,9 @@ void checkContol_events(void) {
 
 int main(void) {
 
-	volatile uint8_t readArr[10];
-
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
+
 	firstInit();
-
-//	memory_page_to_buffer(1,0);
-//
-//	readArr[0] = memory_read_uint8_t(1,1);
-
-	memory_read_array(1, 0, readArr);
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
 
@@ -196,10 +144,11 @@ int main(void) {
 		//Check note array to calculate velocity
 		checkNoteArray();
 
-		//Send midi data
+		//Send/receive midi data
+		receiveMidiData();
 		sendMidiData();
+
 		checkContol_events();
-		midi_resend();
 
 	}
 }

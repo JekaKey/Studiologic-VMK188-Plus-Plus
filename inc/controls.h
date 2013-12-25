@@ -114,3 +114,5 @@ void slider_midi_send(uint16_t value);
 void ADC_init_all(void);
 void read_controls(void);
 void sliders_init(void);
+void checkContol_events(void);
+void checkSliders_events(void);

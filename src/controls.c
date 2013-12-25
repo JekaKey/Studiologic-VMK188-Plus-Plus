@@ -6,6 +6,7 @@
 #include "midi.h"
 #include "usb_midi_io.h"
 #include "fifo.h"
+#include "hd44780.h"
 
 FIFO16(128) control_events;
 FIFO16(128) sliders_events;
@@ -303,12 +304,18 @@ static uint8_t slider_number = 0; // Slider number from 0 to 23
 static uint32_t ADC1_sum = 0; //SUM of ADC1 measuring
 static uint32_t ADC2_sum = 0; //SUM of ADC2 measuring
 static uint32_t ADC3_sum = 0; //SUM of ADC3 measuring
+static uint16_t ADC1_min=0xFFFF;//Minimum ADC result in measuring set
+static uint16_t ADC1_max=0;//Maxmum ADC result in measuring set
+static uint16_t ADC2_min=0xFFFF;
+static uint16_t ADC2_max=0;
+static uint16_t ADC3_min=0xFFFF;
+static uint16_t ADC3_max=0;
 uint16_t ADC_old_values[24] = { 0 };
 uint8_t sliders_old_values[24] = { 0 };
 button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
 static uint8_t buttons_chunk = 0;
 static uint8_t buttons_state[24] = { 0 };
-static uint8_t buttons;
+static uint8_t buttons; //result of IDR reading
 static uint8_t button_counter = 0; //Number of a button in chunk
 static uint8_t encoder_state = 3;
 static uint8_t encoder_zero = 0;
@@ -324,9 +331,9 @@ static void slider_FIFO_send(uint8_t num, uint16_t value) {
 	if (midi_value < 0) {
 		midi_value = 0;
 	}
-	if (midi_value!=sliders_old_values[num]){
+	if (midi_value != sliders_old_values[num]) {
 		FIFO_PUSH(sliders_events, (((uint16_t)(midi_value))<<8)+num);
-		sliders_old_values[num]=midi_value;
+		sliders_old_values[num] = midi_value;
 	}
 }
 
@@ -397,6 +404,7 @@ void read_controls() {
 	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
 	uint8_t i;
 	uint16_t adc1_arr[3], adc2_arr[3], adc3_arr[3];
+	uint16_t adc_med;
 	switch (controls_read_status) {
 
 		case read_data:
@@ -416,9 +424,30 @@ void read_controls() {
 				}
 				adc3_arr[i] = ADC_GetConversionValue(ADC3);
 			}
-			ADC1_sum += median(adc1_arr);
-			ADC2_sum += median(adc2_arr);
-			ADC3_sum += median(adc3_arr);
+			adc_med = median(adc1_arr);
+			ADC1_sum += adc_med;
+			if (adc_med > ADC1_max) {
+				ADC1_max = adc_med;
+			}
+			if (adc_med < ADC1_min) {
+				ADC1_min = adc_med;
+			}
+			adc_med = median(adc2_arr);
+			ADC2_sum += adc_med;
+			if (adc_med > ADC2_max) {
+				ADC2_max = adc_med;
+			}
+			if (adc_med < ADC2_min) {
+				ADC2_min = adc_med;
+			}
+			adc_med = median(adc3_arr);
+			ADC3_sum += adc_med;
+			if (adc_med > ADC3_max) {
+				ADC3_max = adc_med;
+			}
+			if (adc_med < ADC3_min) {
+				ADC3_min = adc_med;
+			}
 			tick_counter++;
 			if (tick_counter >= SLIDERS_MEASURE_NUM) {
 				tick_counter = 0;
@@ -428,8 +457,10 @@ void read_controls() {
 			break;
 		case check_value:
 			if (sliders[slider_number].active) {
-				ADC_value = ADC1_sum / SLIDERS_MEASURE_NUM;
+				ADC_value = (ADC1_sum -ADC1_min-ADC1_max)/ (SLIDERS_MEASURE_NUM-2);
 				ADC1_sum = 0;
+				ADC1_min=0xFFFF;
+				ADC1_max=0;
 				if (ADC_value > ADC_old_values[slider_number]) {
 					ADC_change = ADC_value - ADC_old_values[slider_number];
 				} else {
@@ -441,12 +472,16 @@ void read_controls() {
 				}
 			} else {
 				ADC1_sum = 0;
+				ADC1_min=0xFFFF;
+				ADC1_max=0;
 			}
 			slider_number++;
 
 			if (sliders[slider_number].active) {
-				ADC_value = ADC2_sum / SLIDERS_MEASURE_NUM;
+				ADC_value = (ADC2_sum -ADC2_min-ADC2_max)/ (SLIDERS_MEASURE_NUM-2);
 				ADC2_sum = 0;
+				ADC2_min=0xFFFF;
+				ADC2_max=0;
 				if (ADC_value > ADC_old_values[slider_number]) {
 					ADC_change = ADC_value - ADC_old_values[slider_number];
 				} else {
@@ -458,12 +493,16 @@ void read_controls() {
 				}
 			} else {
 				ADC2_sum = 0;
+				ADC2_min=0xFFFF;
+				ADC2_max=0;
 			}
 			slider_number++;
 
 			if (sliders[slider_number].active) {
-				ADC_value = ADC3_sum / SLIDERS_MEASURE_NUM;
+				ADC_value = (ADC3_sum -ADC3_min-ADC3_max)/ (SLIDERS_MEASURE_NUM-2);
 				ADC3_sum = 0;
+				ADC3_min=0xFFFF;
+				ADC3_max=0;
 				if (ADC_value > ADC_old_values[slider_number]) {
 					ADC_change = ADC_value - ADC_old_values[slider_number];
 				} else {
@@ -475,10 +514,12 @@ void read_controls() {
 				}
 			} else {
 				ADC3_sum = 0;
+				ADC3_min=0xFFFF;
+				ADC3_max=0;
 			}
 			controls_read_status = next_mux;
 			break;
-		case next_mux:
+		case next_mux: //Switch multiplexors to next state
 			mux_pin++;
 			if (mux_pin > 7) {
 				mux_pin = 0;
@@ -489,7 +530,7 @@ void read_controls() {
 			slider_number = mux_pin * 3;
 			controls_read_status = wait_mux;
 			break;
-		case wait_mux:
+		case wait_mux: //Waiting several ticks after multiplexors switch
 			tick_counter++;
 			if (tick_counter >= SLIDERS_MUX_DELAY) {
 				tick_counter = 0;
@@ -584,3 +625,69 @@ void read_controls() {
 			}
 	}
 }
+
+/**********************************************/
+
+void btoa(uint8_t value, char* buffer) {
+	buffer += 2;
+	*buffer = 0;
+	*--buffer = value % 10 + 48;
+	*--buffer = value / 10 + 48;
+}
+/***************************************************************************/
+/*Function for the testing of buttons, encoders, and the display*/
+
+int encoder_counter = 0; //test variable will removed after test
+
+/*Check Sliders FIFO buffer*/
+void checkSliders_events(void){
+	uint16_t event;
+	if (FIFO_COUNT(sliders_events) != 0) {
+		event = FIFO_FRONT(sliders_events);
+		FIFO_POP(sliders_events);
+		slider_midi_send(event);
+	}
+
+}
+
+/*Check buttons and encoder FIFO buffer*/
+void checkContol_events(void) {
+	uint16_t event;
+	char st[10];
+
+	if (FIFO_COUNT(control_events) != 0) {
+		event = FIFO_FRONT(control_events);
+		FIFO_POP(control_events);
+		hd44780_goto(1, 1);
+		if ((event & 0x00FF) == 0x00FF) {
+			if (event == 0x01FF) {
+				encoder_counter++;
+				if (encoder_counter > 99)
+					encoder_counter = 0;
+				hd44780_write_string("Encoder right ");
+				btoa((uint8_t)(encoder_counter), st);
+				hd44780_write_string(st);
+			} else {
+				encoder_counter--;
+				if (encoder_counter < 0)
+					encoder_counter = 99;
+				hd44780_write_string("Encoder left  ");
+				btoa((uint8_t)(encoder_counter), st);
+				hd44780_write_string(st);
+			}
+		} else {
+			hd44780_write_string("Butt ");
+			btoa((uint8_t)(event & 0x00FF), st);
+			hd44780_write_string(st);
+			if ((event & 0xFF00) == 0) {
+				hd44780_write_string(" down     ");
+//				sendControlChange(22, (byte) (event & 0x00FF), 1);
+			} else {
+				hd44780_write_string("  up      ");
+//				sendControlChange(23, (byte) (event & 0x00FF), 1);
+			}
+		}
+	}
+
+}
+

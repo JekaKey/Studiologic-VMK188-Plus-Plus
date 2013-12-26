@@ -48,10 +48,8 @@
 Fatarminator.uvopt
 *.comarker
 *.cogui
+*.coproj
 
 .DS_Store
 #Build files
-Cocox/Fatarminator/*
-Cocox/Debug/*
-Cocox/Release/*
-Cocox/logs/*
+Cocox/*

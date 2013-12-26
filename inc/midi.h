@@ -13,11 +13,13 @@
 #include "fifo.h"
 #include "velocity.h"
 
+#define OK_SYSEX 0xF704F004;
+
 /*! Type definition for practical use (because "unsigned char" is a bit long to write.. )*/
 typedef uint8_t byte;
 typedef uint16_t word;
 
-#define OK_SYSEX 0xF704F004;
+
 
 /*! Enumeration of MIDI types */
 enum kMIDIType {
@@ -54,6 +56,6 @@ void sendPolyPressure(byte NoteNumber, byte Pressure, byte Channel);
 void sendAfterTouch(byte Pressure, byte Channel);
 
 void sendMidiData(void); //Send one midi message per run from buffer array
-void reciveMidiData(void);
+void receiveMidiData(void);
 
 #endif //MIDI_H

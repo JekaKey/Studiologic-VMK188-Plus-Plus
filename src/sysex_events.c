@@ -1,6 +1,6 @@
 #include "sysex_events.h"
 
-FIFO8(128) sysexArray;
+
 
 void sysex_parse_event() {
 

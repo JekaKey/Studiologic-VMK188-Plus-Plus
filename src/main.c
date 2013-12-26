@@ -20,8 +20,9 @@
 uint8_t count;
 uint16_t i;
 
-extern FIFO32(128) midi_usb_in;
-extern FIFO16(128) control_events;
+//extern FIFO32(128) midi_usb_in;
+//extern FIFO16(128) control_events;
+//extern FIFO16(128) sliders_events;
 
 void delay(volatile uint32_t c) {
 	while (--c) {
@@ -75,60 +76,6 @@ void firstInit() {
 
 }
 
-/**********************************************/
-
-void btoa(uint8_t value, char* buffer) {
-	buffer += 2;
-	*buffer = 0;
-	*--buffer = value % 10 + 48;
-	*--buffer = value / 10 + 48;
-}
-/***************************************************************************/
-/*Function for the testing of buttons, encoders, and the display*/
-
-int encoder_counter = 0;
-
-void checkContol_events(void) {
-	uint8_t test;
-	uint16_t event;
-	char st[10];
-
-	test = FIFO_COUNT(control_events);
-	if (test != 0) {
-		event = FIFO_FRONT(control_events);
-		FIFO_POP(control_events);
-		hd44780_goto(1, 1);
-		if ((event & 0x00FF) == 0x00FF) {
-			if (event == 0x01FF) {
-				encoder_counter++;
-				if (encoder_counter > 99)
-					encoder_counter = 0;
-				hd44780_write_string("Encoder right ");
-				btoa((uint8_t)(encoder_counter), st);
-				hd44780_write_string(st);
-			} else {
-				encoder_counter--;
-				if (encoder_counter < 0)
-					encoder_counter = 99;
-				hd44780_write_string("Encoder left  ");
-				btoa((uint8_t)(encoder_counter), st);
-				hd44780_write_string(st);
-			}
-		} else {
-			hd44780_write_string("Butt ");
-			btoa((uint8_t)(event & 0x00FF), st);
-			hd44780_write_string(st);
-			if ((event & 0xFF00) == 0) {
-				hd44780_write_string(" down     ");
-				sendControlChange(22, (byte) (event & 0x00FF), 1);
-			} else {
-				hd44780_write_string("  up      ");
-				sendControlChange(23, (byte) (event & 0x00FF), 1);
-			}
-		}
-	}
-
-}
 
 int main(void) {
 
@@ -147,7 +94,7 @@ int main(void) {
 		//Send/receive midi data
 		receiveMidiData();
 		sendMidiData();
-
+        checkSliders_events();
 		checkContol_events();
 
 	}

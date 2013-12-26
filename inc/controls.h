@@ -3,10 +3,9 @@
 #include "stm32f4xx_gpio.h"
 
 
-#define SLIDERS_TICKS_FACTOR 2000/TIMER_TIMPERIOD
 #define SLIDERS_DELTA 0x10
-#define SLIDERS_MUX_DELAY 200/TIMER_TIMPERIOD
-#define SLIDERS_MEASURE_NUM 100
+#define SLIDERS_MUX_DELAY 80/TIMER_TIMPERIOD
+#define SLIDERS_MEASURE_NUM 20
 
 #define SLIDER_S1 14
 #define SLIDER_S2 4
@@ -36,7 +35,7 @@
 #define SLIDER_EMPTY 8
 
 #define SLIDER_S_MIN_IN 0
-#define SLIDER_S_MAX_IN 3200
+#define SLIDER_S_MAX_IN 4050
 #define SLIDER_S_MIN_OUT 0
 #define SLIDER_S_MAX_OUT 127
 
@@ -111,7 +110,9 @@ typedef struct {
 	uint8_t event;
 } Button_type;
 
-
+void slider_midi_send(uint16_t value);
 void ADC_init_all(void);
 void read_controls(void);
 void sliders_init(void);
+void checkContol_events(void);
+void checkSliders_events(void);

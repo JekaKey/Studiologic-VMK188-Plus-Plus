@@ -6,39 +6,10 @@
 #include "midi.h"
 #include "usb_midi_io.h"
 #include "fifo.h"
+#include "hd44780.h"
 
 FIFO16(128) control_events;
-
-uint16_t ADC_convert(uint8_t adc_num) {
-	uint16_t ADC_Val;
-	switch (adc_num) {
-		case 0:
-			ADC_SoftwareStartConv(ADC1);
-			while (ADC_GetSoftwareStartConvStatus(ADC1) != RESET) {
-				ADC_Val = 0;
-			}
-			ADC_Val = ADC_GetConversionValue(ADC1);
-			break;
-		case 1:
-			ADC_SoftwareStartConv(ADC2);
-			while (ADC_GetSoftwareStartConvStatus(ADC2) != RESET) {
-				ADC_Val = 0;
-			}
-			ADC_Val = ADC_GetConversionValue(ADC2);
-			break;
-		case 2:
-			ADC_SoftwareStartConv(ADC3);
-			while (ADC_GetSoftwareStartConvStatus(ADC3) != RESET) {
-				ADC_Val = 0;
-			}
-			ADC_Val = ADC_GetConversionValue(ADC3);
-			break;
-		default:
-			ADC_Val = 0;
-			break;
-	}
-	return ADC_Val;
-}
+FIFO16(128) sliders_events;
 
 void ADC_init_all(void) {
 	ADC_InitTypeDef ADC_InitStructure;
@@ -57,7 +28,7 @@ void ADC_init_all(void) {
 
 	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
 	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
-	ADC_InitStructure.ADC_ContinuousConvMode = DISABLE;
+	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
 	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
 	ADC_InitStructure.ADC_NbrOfConversion = 1;
@@ -78,8 +49,8 @@ void ADC_init_all(void) {
 
 static Slider_type sliders[24];
 static enum controls_read_status_type {
-	next_mux, wait_mux, check_active, next_adc, read_data, check_value, read_buttons, check_button, next_buttons_chunk, read_encoders
-} controls_read_status = check_active;
+	next_mux, wait_mux, read_data, check_value, read_buttons, check_button, next_buttons_chunk, read_encoders
+} controls_read_status = read_data;
 
 void slider_init_struct(uint8_t num) {
 	if (sliders[num].reverse) {
@@ -328,23 +299,30 @@ void sliders_init(void) {
 }
 
 static uint16_t tick_counter = 0; //Counter of timer ticks
-static uint8_t adc_counter = 0; //adc (multiplexor chip) number 0..2
 static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
 static uint8_t slider_number = 0; // Slider number from 0 to 23
-static uint32_t ADC_sum = 0; //SUM of ADC measuring
+static uint32_t ADC1_sum = 0; //SUM of ADC1 measuring
+static uint32_t ADC2_sum = 0; //SUM of ADC2 measuring
+static uint32_t ADC3_sum = 0; //SUM of ADC3 measuring
+static uint16_t ADC1_min=0xFFFF;//Minimum ADC result in measuring set
+static uint16_t ADC1_max=0;//Maxmum ADC result in measuring set
+static uint16_t ADC2_min=0xFFFF;
+static uint16_t ADC2_max=0;
+static uint16_t ADC3_min=0xFFFF;
+static uint16_t ADC3_max=0;
 uint16_t ADC_old_values[24] = { 0 };
+uint8_t sliders_old_values[24] = { 0 };
 button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
 static uint8_t buttons_chunk = 0;
 static uint8_t buttons_state[24] = { 0 };
-static uint8_t buttons;
+static uint8_t buttons; //result of IDR reading
 static uint8_t button_counter = 0; //Number of a button in chunk
 static uint8_t encoder_state = 3;
 static uint8_t encoder_zero = 0;
 extern uint8_t hd44780_active;
 uint8_t buttons_active = 0;
-uint16_t test_idr = 1234;
 
-void slider_midi_send(uint8_t num, uint16_t value) {
+static void slider_FIFO_send(uint8_t num, uint16_t value) {
 	int midi_value;
 	midi_value = (uint8_t)(sliders[num].a * value + sliders[num].b);
 	if (midi_value > 127) {
@@ -353,6 +331,15 @@ void slider_midi_send(uint8_t num, uint16_t value) {
 	if (midi_value < 0) {
 		midi_value = 0;
 	}
+	if (midi_value != sliders_old_values[num]) {
+		FIFO_PUSH(sliders_events, (((uint16_t)(midi_value))<<8)+num);
+		sliders_old_values[num] = midi_value;
+	}
+}
+
+void slider_midi_send(uint16_t value) {
+	uint8_t num = (uint8_t)(value & 0x00FF);
+	uint8_t midi_value = (uint8_t)(value >> 8);
 	switch (num) {
 		case SLIDER_PITCH:
 			sendPitchBend((uint8_t)(midi_value), sliders[num].channel);
@@ -383,60 +370,156 @@ static void volatile buttons_delay(void) {
 	__NOP();
 }
 
+uint16_t median(uint16_t* a) {
+	if (a[0] < a[1]) {
+		if (a[1] < a[2]) {
+			return a[1];
+		} else {
+			if (a[0] < a[2]) {
+				return a[0];
+			} else {
+				return a[2];
+			}
+		}
+	} else {
+		if (a[1] > a[2]) {
+			return a[1];
+		} else {
+			if (a[0] > a[2]) {
+				return a[2];
+			} else {
+				return a[0];
+			}
+		}
+
+	}
+
+}
+
 void read_controls() {
 	uint16_t ADC_value;
 	uint16_t ADC_change;
 	uint16_t ODR_tmp, IDR_tmp, tmp;
 	static uint8_t button_number; //Number of current button;
 	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
-
+	uint8_t i;
+	uint16_t adc1_arr[3], adc2_arr[3], adc3_arr[3];
+	uint16_t adc_med;
 	switch (controls_read_status) {
 
-		case check_active:
-			if (sliders[slider_number].active) {
-				controls_read_status = read_data;
-				break;
-			} else {
-				controls_read_status = next_adc;
-				break;
-			}
 		case read_data:
+			for (i = 0; i < 3; i++) {
+				ADC_SoftwareStartConv(ADC1);
+				while (ADC_GetSoftwareStartConvStatus(ADC1) != RESET) {
+				}
+				adc1_arr[i] = ADC_GetConversionValue(ADC1);
 
-			ADC_sum += ADC_convert(adc_counter);
+				ADC_SoftwareStartConv(ADC2);
+				while (ADC_GetSoftwareStartConvStatus(ADC2) != RESET) {
+				}
+				adc2_arr[i] = ADC_GetConversionValue(ADC2);
+
+				ADC_SoftwareStartConv(ADC3);
+				while (ADC_GetSoftwareStartConvStatus(ADC3) != RESET) {
+				}
+				adc3_arr[i] = ADC_GetConversionValue(ADC3);
+			}
+			adc_med = median(adc1_arr);
+			ADC1_sum += adc_med;
+			if (adc_med > ADC1_max) {
+				ADC1_max = adc_med;
+			}
+			if (adc_med < ADC1_min) {
+				ADC1_min = adc_med;
+			}
+			adc_med = median(adc2_arr);
+			ADC2_sum += adc_med;
+			if (adc_med > ADC2_max) {
+				ADC2_max = adc_med;
+			}
+			if (adc_med < ADC2_min) {
+				ADC2_min = adc_med;
+			}
+			adc_med = median(adc3_arr);
+			ADC3_sum += adc_med;
+			if (adc_med > ADC3_max) {
+				ADC3_max = adc_med;
+			}
+			if (adc_med < ADC3_min) {
+				ADC3_min = adc_med;
+			}
 			tick_counter++;
 			if (tick_counter >= SLIDERS_MEASURE_NUM) {
 				tick_counter = 0;
 				controls_read_status = check_value;
 			}
+
 			break;
 		case check_value:
-			ADC_value = ADC_sum / SLIDERS_MEASURE_NUM;
-			ADC_sum = 0;
-			if (ADC_value > ADC_old_values[slider_number]) {
-				ADC_change = ADC_value - ADC_old_values[slider_number];
+			if (sliders[slider_number].active) {
+				ADC_value = (ADC1_sum -ADC1_min-ADC1_max)/ (SLIDERS_MEASURE_NUM-2);
+				ADC1_sum = 0;
+				ADC1_min=0xFFFF;
+				ADC1_max=0;
+				if (ADC_value > ADC_old_values[slider_number]) {
+					ADC_change = ADC_value - ADC_old_values[slider_number];
+				} else {
+					ADC_change = ADC_old_values[slider_number] - ADC_value;
+				}
+				if (ADC_change > SLIDERS_DELTA) {
+					ADC_old_values[slider_number] = ADC_value;
+					slider_FIFO_send(slider_number, ADC_value);
+				}
 			} else {
-				ADC_change = ADC_old_values[slider_number] - ADC_value;
+				ADC1_sum = 0;
+				ADC1_min=0xFFFF;
+				ADC1_max=0;
 			}
-			if (ADC_change > SLIDERS_DELTA) {
-				ADC_old_values[slider_number] = ADC_value;
-				slider_midi_send(slider_number, ADC_value);
-			}
-			tick_counter = 0;
-			controls_read_status = next_adc;
-			break;
-		case next_adc:
-			adc_counter++;
-			if (adc_counter < 3) {
-				slider_number++;
-				controls_read_status = read_buttons;
-				break;
+			slider_number++;
+
+			if (sliders[slider_number].active) {
+				ADC_value = (ADC2_sum -ADC2_min-ADC2_max)/ (SLIDERS_MEASURE_NUM-2);
+				ADC2_sum = 0;
+				ADC2_min=0xFFFF;
+				ADC2_max=0;
+				if (ADC_value > ADC_old_values[slider_number]) {
+					ADC_change = ADC_value - ADC_old_values[slider_number];
+				} else {
+					ADC_change = ADC_old_values[slider_number] - ADC_value;
+				}
+				if (ADC_change > SLIDERS_DELTA) {
+					ADC_old_values[slider_number] = ADC_value;
+					slider_FIFO_send(slider_number, ADC_value);
+				}
 			} else {
-				adc_counter = 0;
-				controls_read_status = next_mux;
-				break;
+				ADC2_sum = 0;
+				ADC2_min=0xFFFF;
+				ADC2_max=0;
 			}
+			slider_number++;
+
+			if (sliders[slider_number].active) {
+				ADC_value = (ADC3_sum -ADC3_min-ADC3_max)/ (SLIDERS_MEASURE_NUM-2);
+				ADC3_sum = 0;
+				ADC3_min=0xFFFF;
+				ADC3_max=0;
+				if (ADC_value > ADC_old_values[slider_number]) {
+					ADC_change = ADC_value - ADC_old_values[slider_number];
+				} else {
+					ADC_change = ADC_old_values[slider_number] - ADC_value;
+				}
+				if (ADC_change > SLIDERS_DELTA) {
+					ADC_old_values[slider_number] = ADC_value;
+					slider_FIFO_send(slider_number, ADC_value);
+				}
+			} else {
+				ADC3_sum = 0;
+				ADC3_min=0xFFFF;
+				ADC3_max=0;
+			}
+			controls_read_status = next_mux;
 			break;
-		case next_mux:
+		case next_mux: //Switch multiplexors to next state
 			mux_pin++;
 			if (mux_pin > 7) {
 				mux_pin = 0;
@@ -447,7 +530,7 @@ void read_controls() {
 			slider_number = mux_pin * 3;
 			controls_read_status = wait_mux;
 			break;
-		case wait_mux:
+		case wait_mux: //Waiting several ticks after multiplexors switch
 			tick_counter++;
 			if (tick_counter >= SLIDERS_MUX_DELAY) {
 				tick_counter = 0;
@@ -504,42 +587,107 @@ void read_controls() {
 			}
 			break;
 		case read_encoders:
-			test_idr = GPIOC->IDR;
 			IDR_tmp = (uint8_t)(((ENCODER1_PORT->IDR & ENCODER1_PIN) >> 12) | ((ENCODER2_PORT->IDR & ENCODER2_PIN) >> 11)); //Read both encoder signals from the same port because  ENCODER1_PORT=ENCODER2_PORT =GPIOC
 			if (IDR_tmp == encoder_state) {
-				controls_read_status = check_active;
+				controls_read_status = read_data;
 				break;
 			} else {
 				if (IDR_tmp == 0) {
 					encoder_zero = 1;
 					encoder_state = 0;
-					controls_read_status = check_active;
+					controls_read_status = read_data;
 					break;
 				} else if (IDR_tmp == 3) {
 					if (encoder_zero) {
 						if (encoder_state == 1) {
 							encoder_state = 3;
 							FIFO_PUSH(control_events, 0x01FF);
-							controls_read_status = check_active;
+							controls_read_status = read_data;
 							encoder_zero = 0;
 							break;
 						} else if (encoder_state == 2) {
 							encoder_state = 3;
 							FIFO_PUSH(control_events, 0x02FF);
-							controls_read_status = check_active;
+							controls_read_status = read_data;
 							encoder_zero = 0;
 							break;
 						}
 					} else {
 						encoder_state = IDR_tmp;
-						controls_read_status = check_active;
+						controls_read_status = read_data;
 						break;
 					}
 				} else {
 					encoder_state = IDR_tmp;
-					controls_read_status = check_active;
+					controls_read_status = read_data;
 					break;
 				}
 			}
 	}
 }
+
+/**********************************************/
+
+void btoa(uint8_t value, char* buffer) {
+	buffer += 2;
+	*buffer = 0;
+	*--buffer = value % 10 + 48;
+	*--buffer = value / 10 + 48;
+}
+/***************************************************************************/
+/*Function for the testing of buttons, encoders, and the display*/
+
+int encoder_counter = 0; //test variable will removed after test
+
+/*Check Sliders FIFO buffer*/
+void checkSliders_events(void){
+	uint16_t event;
+	if (FIFO_COUNT(sliders_events) != 0) {
+		event = FIFO_FRONT(sliders_events);
+		FIFO_POP(sliders_events);
+		slider_midi_send(event);
+	}
+
+}
+
+/*Check buttons and encoder FIFO buffer*/
+void checkContol_events(void) {
+	uint16_t event;
+	char st[10];
+
+	if (FIFO_COUNT(control_events) != 0) {
+		event = FIFO_FRONT(control_events);
+		FIFO_POP(control_events);
+		hd44780_goto(1, 1);
+		if ((event & 0x00FF) == 0x00FF) {
+			if (event == 0x01FF) {
+				encoder_counter++;
+				if (encoder_counter > 99)
+					encoder_counter = 0;
+				hd44780_write_string("Encoder right ");
+				btoa((uint8_t)(encoder_counter), st);
+				hd44780_write_string(st);
+			} else {
+				encoder_counter--;
+				if (encoder_counter < 0)
+					encoder_counter = 99;
+				hd44780_write_string("Encoder left  ");
+				btoa((uint8_t)(encoder_counter), st);
+				hd44780_write_string(st);
+			}
+		} else {
+			hd44780_write_string("Butt ");
+			btoa((uint8_t)(event & 0x00FF), st);
+			hd44780_write_string(st);
+			if ((event & 0xFF00) == 0) {
+				hd44780_write_string(" down     ");
+//				sendControlChange(22, (byte) (event & 0x00FF), 1);
+			} else {
+				hd44780_write_string("  up      ");
+//				sendControlChange(23, (byte) (event & 0x00FF), 1);
+			}
+		}
+	}
+
+}
+

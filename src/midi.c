@@ -1,7 +1,8 @@
-#include "midi.h"
 #include "presets.h"
 #include "usb_midi_io.h"
 #include "sysex_events.h"
+#include "midi.h"
+
 
 uint8_t message_buff[4];
 

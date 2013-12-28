@@ -16,13 +16,11 @@
 #include "controls.h"
 #include "gpio_config.h"
 #include "usb_midi_io.h"
+#include "menu.h"
 
 uint8_t count;
 uint16_t i;
 
-//extern FIFO32(128) midi_usb_in;
-//extern FIFO16(128) control_events;
-//extern FIFO16(128) sliders_events;
 
 void delay(volatile uint32_t c) {
 	while (--c) {
@@ -96,7 +94,7 @@ int main(void) {
 		receiveMidiData();
 		sendMidiData();
         checkSliders_events();
-		checkContol_events();
+		checkControl_events();
 
 
 	}

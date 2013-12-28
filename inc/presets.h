@@ -5,8 +5,10 @@
 
 typedef struct {
 	uint8_t Id; //
+	uint8_t Name[16];
 	uint8_t MidiChannel; //0-16
 	uint8_t HighResEnable; //bool
+	uint8_t analogMidiEnable; //bool
 
 } presetType;
 
@@ -27,10 +29,10 @@ void memory_buffer_to_page(uint8_t buffer, uint16_t target_number_page);
 void memory_page_to_buffer(uint8_t buffer, uint16_t target_number_page);
 void memory_read_buffer(uint8_t buffer, uint8_t from_byte);
 
-void memory_send_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t data);
-void memory_send_uint16_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint16_t data);
-uint8_t memory_read_uint8_t(uint8_t buffer, uint8_t from_byte);
-uint16_t memory_read_uint16_t(uint8_t buffer, uint8_t from_byte);
+void memory_send_8bit_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t data);
+void memory_send_16bit_to_buffer(uint8_t buffer, uint8_t from_byte, uint16_t data);
+uint8_t memory_read_8bit(uint8_t buffer, uint8_t from_byte);
+uint16_t memory_read_16bit(uint8_t buffer, uint8_t from_byte);
 
 void memory_read_array(uint8_t buffer, uint8_t from_byte, uint8_t *array);
 

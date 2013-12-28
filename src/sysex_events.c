@@ -1,6 +1,7 @@
 #include "sysex_events.h"
+#include "presets.h"
 
-
+FIFO8(128) sysexArray;
 
 void sysex_parse_event() {
 
@@ -34,6 +35,21 @@ void sysex_run_command(uint16_t command) {
 			break;
 		case 4:
 			GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
+			break;
+		case 100:
+
+			break;
+		case 101:
+
+			break;
+		case 102:
+
+			break;
+		case 103:
+
+			break;
+		case 104:
+
 			break;
 		default:
 			//Send sysex command not found

@@ -3,8 +3,14 @@
 void preset_load() {
 
 	preset.Id = 1;
-	preset.HighResEnable = 1;
+
+	preset.Name[0] = 't';
+	preset.Name[1] = 'e';
+	preset.Name[2] = 's';
+	preset.Name[3] = 't';
+
 	preset.MidiChannel = 0;
+	preset.HighResEnable = 1;
 
 }
 
@@ -98,7 +104,7 @@ void memory_buffer_to_page(uint8_t buffer, uint16_t target_number_page) {
 
 }
 
-void memory_send_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t data) {
+void memory_send_8bit_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t data) {
 
 	memory_start(); //CS memory
 
@@ -111,13 +117,33 @@ void memory_send_uint8_t_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t da
 	memory_transfer_data(0x00); // Address - x x x x x x x B
 	memory_transfer_data(from_byte); // Address - B B B B B B B B
 
-	memory_transfer_data(data); //Dummy byte
+	memory_transfer_data(data);
 
 	memory_stop(); //CS memory
 
 }
 
-uint8_t memory_read_uint8_t(uint8_t buffer, uint8_t from_byte) {
+void memory_send_16bit_to_buffer(uint8_t buffer, uint8_t from_byte, uint16_t data) {
+
+	memory_start(); //CS memory
+
+	if (buffer = 1)
+		memory_transfer_data(0x84); // Command - Buffer 1
+	else
+		memory_transfer_data(0x87); // Command - Buffer 2
+
+	memory_transfer_data(0x00); // Address - x x x x x x x x
+	memory_transfer_data(0x00); // Address - x x x x x x x B
+	memory_transfer_data(from_byte); // Address - B B B B B B B B
+
+	memory_transfer_data(data & 0xFF);
+	memory_transfer_data((data >> 8) & 0xFF);
+
+	memory_stop(); //CS memory
+
+}
+
+uint8_t memory_read_8bit(uint8_t buffer, uint8_t from_byte) {
 	uint8_t return_data;
 
 	memory_start(); //CS memory
@@ -140,7 +166,25 @@ uint8_t memory_read_uint8_t(uint8_t buffer, uint8_t from_byte) {
 	return return_data;
 }
 
-void memory_read_array(uint8_t buffer, uint8_t from_byte, uint8_t *array) {
+uint16_t memory_read_16bit(uint8_t buffer, uint8_t from_byte) {
+	uint16_t return_data;
 
+	memory_start(); //CS memory
 
+	if (buffer = 1)
+		memory_transfer_data(0xD4); // Command - Buffer 1
+	else
+		memory_transfer_data(0xD6); // Command - Buffer 2
+
+	memory_transfer_data(0x00); // Address - x x x x x x x x
+	memory_transfer_data(0x00); // Address - x x x x x x x B
+	memory_transfer_data(from_byte); // Address - B B B B B B B B
+
+	memory_transfer_data(0x00); //Dummy byte
+
+	return_data = memory_transfer_data(0x00); //Return data
+
+	memory_stop(); //CS memory
+
+	return return_data;
 }

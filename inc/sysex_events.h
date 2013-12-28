@@ -7,7 +7,7 @@
 #include "fifo.h"
 #include "presets.h"
 
-FIFO8(128) sysexArray;
+
 
 void sysex_parse_event(void);
 void sysex_run_command(uint16_t command);

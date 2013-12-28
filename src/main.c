@@ -78,6 +78,7 @@ void firstInit() {
 
 
 int main(void) {
+	uint32_t midipacket;
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
 
@@ -96,6 +97,7 @@ int main(void) {
 		sendMidiData();
         checkSliders_events();
 		checkContol_events();
+
 
 	}
 }

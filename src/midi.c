@@ -98,15 +98,20 @@ void receiveMidiData(void) {
 			//TODO: create midi sysex function
 
 			//Send receive sysex ok message
-			midipacket = OK_SYSEX;
+			midipacket = 0x0100F004;
 			usb_midi_DataTx(&midipacket, 4);
-		} else if ((midiMessage & 0xF) == 0x7) {
+			midipacket = 0x0000F705;
+			usb_midi_DataTx(&midipacket, 4);
+		} else if ((midiMessage & 0xF) == 0x5 || (midiMessage & 0xF) == 0x6 || (midiMessage & 0xF) == 0x7) {
 
 			//Find and run sysex command
 			sysex_parse_event();
-
-			midipacket = OK_SYSEX;
+			//Send receive sysex ok message
+			midipacket = 0x0100F004;
 			usb_midi_DataTx(&midipacket, 4);
+			midipacket = 0x0000F705;
+			usb_midi_DataTx(&midipacket, 4);
+
 		}
 
 		FIFO_POP(midi_usb_in);

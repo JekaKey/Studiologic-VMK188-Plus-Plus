@@ -21,7 +21,6 @@
 uint8_t count;
 uint16_t i;
 
-
 void delay(volatile uint32_t c) {
 	while (--c) {
 		__NOP();
@@ -74,10 +73,7 @@ void firstInit() {
 
 }
 
-
 int main(void) {
-	uint32_t midipacket;
-
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
 
 	firstInit();
@@ -93,9 +89,8 @@ int main(void) {
 		//Send/receive midi data
 		receiveMidiData();
 		sendMidiData();
-        checkSliders_events();
+		checkSliders_events();
 		checkControl_events();
-
 
 	}
 }

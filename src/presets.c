@@ -2,15 +2,18 @@
 
 void preset_load() {
 
+	//load preset data
+	memory_page_to_buffer(1, 10);
+	memory_page_to_buffer(2, 11);
+
 	preset.Id = 1;
 
-	preset.Name[0] = 't';
-	preset.Name[1] = 'e';
-	preset.Name[2] = 's';
-	preset.Name[3] = 't';
+//	for (uint8_t var = 0; var < 16; ++var) {
+//		preset.Name[var] = memory_read_8bit(1, var + 2);
+//	}
 
 	preset.MidiChannel = 0;
-	preset.HighResEnable = 1;
+	preset.HighResEnable = 0;
 
 }
 

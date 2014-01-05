@@ -19,8 +19,6 @@
 typedef uint8_t byte;
 typedef uint16_t word;
 
-
-
 /*! Enumeration of MIDI types */
 enum kMIDIType {
 	NoteOff = 0x80, ///< Note Off

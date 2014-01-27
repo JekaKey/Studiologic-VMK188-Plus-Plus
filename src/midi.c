@@ -95,7 +95,7 @@ void receiveMidiData(void) {
 		//add only sysex messages into sysexArray
 		if ((midiMessage & 0xF) == 0x4) {
 
-			FIFO_PUSH(sysexArray, ((midiMessage&0xF000000)>>24)|((midiMessage&0xFF0000)>>12));
+			FIFO_PUSH(sysexArray, ((midiMessage&0xF000000)>>20)|((midiMessage&0xF0000)>>16));
 			//TODO: create midi sysex function
 
 			//Send receive sysex ok message
@@ -107,6 +107,7 @@ void receiveMidiData(void) {
 
 			//Find and run sysex command
 			sysex_parse_event();
+
 			//Send receive sysex ok message
 			midipacket = 0x0100F004;
 			usb_midi_DataTx((uint8_t*)(&midipacket), 4);

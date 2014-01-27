@@ -66,7 +66,7 @@ void sliders_init(void) {
 
 	sliders[SLIDER_EMPTY].active = 0;
 
-	sliders[SLIDER_S1].active = 1;
+	sliders[SLIDER_S1].active = 0;
 	sliders[SLIDER_S1].reverse = 0;
 	sliders[SLIDER_S1].channel = 0;
 	sliders[SLIDER_S1].event = 7;
@@ -76,7 +76,7 @@ void sliders_init(void) {
 	sliders[SLIDER_S1].max_out_value = SLIDER_S_MAX_OUT;
 	slider_init_struct(SLIDER_S1);
 
-	sliders[SLIDER_S2].active = 1;
+	sliders[SLIDER_S2].active = 0;
 	sliders[SLIDER_S2].reverse = 0;
 	sliders[SLIDER_S2].channel = 0;
 	sliders[SLIDER_S2].event = 22;
@@ -86,7 +86,7 @@ void sliders_init(void) {
 	sliders[SLIDER_S2].max_out_value = SLIDER_S_MAX_OUT;
 	slider_init_struct(SLIDER_S2);
 
-	sliders[SLIDER_S3].active = 1;
+	sliders[SLIDER_S3].active = 0;
 	sliders[SLIDER_S3].reverse = 0;
 	sliders[SLIDER_S3].channel = 0;
 	sliders[SLIDER_S3].event = 23;
@@ -96,7 +96,7 @@ void sliders_init(void) {
 	sliders[SLIDER_S3].max_out_value = SLIDER_S_MAX_OUT;
 	slider_init_struct(SLIDER_S3);
 
-	sliders[SLIDER_S4].active = 1;
+	sliders[SLIDER_S4].active = 0;
 	sliders[SLIDER_S4].reverse = 0;
 	sliders[SLIDER_S4].channel = 0;
 	sliders[SLIDER_S4].event = 24;
@@ -106,7 +106,7 @@ void sliders_init(void) {
 	sliders[SLIDER_S4].max_out_value = SLIDER_S_MAX_OUT;
 	slider_init_struct(SLIDER_S4);
 
-	sliders[SLIDER_S5].active = 1;
+	sliders[SLIDER_S5].active = 0;
 	sliders[SLIDER_S5].reverse = 0;
 	sliders[SLIDER_S5].channel = 0;
 	sliders[SLIDER_S5].event = 25;
@@ -116,7 +116,7 @@ void sliders_init(void) {
 	sliders[SLIDER_S5].max_out_value = SLIDER_S_MAX_OUT;
 	slider_init_struct(SLIDER_S5);
 
-	sliders[SLIDER_S6].active = 1;
+	sliders[SLIDER_S6].active = 0;
 	sliders[SLIDER_S6].reverse = 0;
 	sliders[SLIDER_S6].channel = 0;
 	sliders[SLIDER_S6].event = 26;
@@ -126,7 +126,7 @@ void sliders_init(void) {
 	sliders[SLIDER_S6].max_out_value = SLIDER_S_MAX_OUT;
 	slider_init_struct(SLIDER_S6);
 
-	sliders[SLIDER_S7].active = 1;
+	sliders[SLIDER_S7].active = 0;
 	sliders[SLIDER_S7].reverse = 0;
 	sliders[SLIDER_S7].channel = 0;
 	sliders[SLIDER_S7].event = 27;
@@ -136,7 +136,7 @@ void sliders_init(void) {
 	sliders[SLIDER_S7].max_out_value = SLIDER_S_MAX_OUT;
 	slider_init_struct(SLIDER_S7);
 
-	sliders[SLIDER_S8].active = 1;
+	sliders[SLIDER_S8].active = 0;
 	sliders[SLIDER_S8].reverse = 0;
 	sliders[SLIDER_S8].channel = 0;
 	sliders[SLIDER_S8].event = 28;
@@ -146,7 +146,7 @@ void sliders_init(void) {
 	sliders[SLIDER_S8].max_out_value = SLIDER_S_MAX_OUT;
 	slider_init_struct(SLIDER_S8);
 
-	sliders[SLIDER_S9].active = 1;
+	sliders[SLIDER_S9].active = 0;
 	sliders[SLIDER_S9].reverse = 0;
 	sliders[SLIDER_S9].channel = 0;
 	sliders[SLIDER_S9].event = 29;
@@ -156,7 +156,7 @@ void sliders_init(void) {
 	sliders[SLIDER_S9].max_out_value = SLIDER_S_MAX_OUT;
 	slider_init_struct(SLIDER_S9);
 
-	sliders[SLIDER_R1].active = 1;
+	sliders[SLIDER_R1].active = 0;
 	sliders[SLIDER_R1].reverse = 0;
 	sliders[SLIDER_R1].channel = 0;
 	sliders[SLIDER_R1].event = 71;
@@ -166,7 +166,7 @@ void sliders_init(void) {
 	sliders[SLIDER_R1].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R1);
 
-	sliders[SLIDER_R2].active = 1;
+	sliders[SLIDER_R2].active = 0;
 	sliders[SLIDER_R2].reverse = 0;
 	sliders[SLIDER_R2].channel = 0;
 	sliders[SLIDER_R2].event = 72;
@@ -176,7 +176,7 @@ void sliders_init(void) {
 	sliders[SLIDER_R2].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R2);
 
-	sliders[SLIDER_R3].active = 1;
+	sliders[SLIDER_R3].active = 0;
 	sliders[SLIDER_R3].reverse = 0;
 	sliders[SLIDER_R3].channel = 0;
 	sliders[SLIDER_R3].event = 73;
@@ -186,7 +186,7 @@ void sliders_init(void) {
 	sliders[SLIDER_R3].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R3);
 
-	sliders[SLIDER_R4].active = 1;
+	sliders[SLIDER_R4].active = 0;
 	sliders[SLIDER_R4].reverse = 0;
 	sliders[SLIDER_R4].channel = 0;
 	sliders[SLIDER_R4].event = 74;
@@ -196,7 +196,7 @@ void sliders_init(void) {
 	sliders[SLIDER_R4].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R4);
 
-	sliders[SLIDER_R5].active = 1;
+	sliders[SLIDER_R5].active = 0;
 	sliders[SLIDER_R5].reverse = 0;
 	sliders[SLIDER_R5].channel = 0;
 	sliders[SLIDER_R5].event = 75;
@@ -206,7 +206,7 @@ void sliders_init(void) {
 	sliders[SLIDER_R5].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R5);
 
-	sliders[SLIDER_R6].active = 1;
+	sliders[SLIDER_R6].active = 0;
 	sliders[SLIDER_R6].reverse = 0;
 	sliders[SLIDER_R6].channel = 0;
 	sliders[SLIDER_R6].event = 76;
@@ -216,7 +216,7 @@ void sliders_init(void) {
 	sliders[SLIDER_R6].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R6);
 
-	sliders[SLIDER_R7].active = 1;
+	sliders[SLIDER_R7].active = 0;
 	sliders[SLIDER_R7].reverse = 0;
 	sliders[SLIDER_R7].channel = 0;
 	sliders[SLIDER_R7].event = 77;
@@ -226,7 +226,7 @@ void sliders_init(void) {
 	sliders[SLIDER_R7].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R7);
 
-	sliders[SLIDER_R8].active = 1;
+	sliders[SLIDER_R8].active = 0;
 	sliders[SLIDER_R8].reverse = 0;
 	sliders[SLIDER_R8].channel = 0;
 	sliders[SLIDER_R8].event = 78;
@@ -235,16 +235,6 @@ void sliders_init(void) {
 	sliders[SLIDER_R8].min_out_value = SLIDER_R_MIN_OUT;
 	sliders[SLIDER_R8].max_out_value = SLIDER_R_MAX_OUT;
 	slider_init_struct(SLIDER_R8);
-
-	sliders[SLIDER_P2].active = 1;
-	sliders[SLIDER_P2].reverse = 1;
-	sliders[SLIDER_P2].channel = 0;
-	sliders[SLIDER_P2].event = 64;
-	sliders[SLIDER_P2].min_in_value = SLIDER_P_MIN_IN;
-	sliders[SLIDER_P2].max_in_value = SLIDER_P_MAX_IN;
-	sliders[SLIDER_P2].min_out_value = SLIDER_P_MIN_OUT;
-	sliders[SLIDER_P2].max_out_value = SLIDER_P_MAX_OUT;
-	slider_init_struct(SLIDER_P2);
 
 	sliders[SLIDER_P1].active = 0;
 	sliders[SLIDER_P1].reverse = 0;
@@ -256,6 +246,16 @@ void sliders_init(void) {
 	sliders[SLIDER_P1].max_out_value = SLIDER_P_MAX_OUT;
 	slider_init_struct(SLIDER_P1);
 
+	sliders[SLIDER_P2].active = 1;
+	sliders[SLIDER_P2].reverse = 1;
+	sliders[SLIDER_P2].channel = 0;
+	sliders[SLIDER_P2].event = 64;
+	sliders[SLIDER_P2].min_in_value = SLIDER_P_MIN_IN;
+	sliders[SLIDER_P2].max_in_value = SLIDER_P_MAX_IN;
+	sliders[SLIDER_P2].min_out_value = SLIDER_P_MIN_OUT;
+	sliders[SLIDER_P2].max_out_value = SLIDER_P_MAX_OUT;
+	slider_init_struct(SLIDER_P2);
+
 	sliders[SLIDER_P3].active = 0;
 	sliders[SLIDER_P3].reverse = 0;
 	sliders[SLIDER_P3].channel = 0;
@@ -266,7 +266,7 @@ void sliders_init(void) {
 	sliders[SLIDER_P3].max_out_value = SLIDER_P_MAX_OUT;
 	slider_init_struct(SLIDER_P3);
 
-	sliders[SLIDER_PITCH].active = 1;
+	sliders[SLIDER_PITCH].active = 0;
 	sliders[SLIDER_PITCH].reverse = 0;
 	sliders[SLIDER_PITCH].channel = 0;
 	sliders[SLIDER_PITCH].event = 66;
@@ -276,7 +276,7 @@ void sliders_init(void) {
 	sliders[SLIDER_PITCH].max_out_value = SLIDER_PITCH_MAX_OUT;
 	slider_init_struct(SLIDER_PITCH);
 
-	sliders[SLIDER_MOD].active = 1;
+	sliders[SLIDER_MOD].active = 0;
 	sliders[SLIDER_MOD].reverse = 0;
 	sliders[SLIDER_MOD].channel = 0;
 	sliders[SLIDER_MOD].event = 1;
@@ -304,12 +304,12 @@ static uint8_t slider_number = 0; // Slider number from 0 to 23
 static uint32_t ADC1_sum = 0; //SUM of ADC1 measuring
 static uint32_t ADC2_sum = 0; //SUM of ADC2 measuring
 static uint32_t ADC3_sum = 0; //SUM of ADC3 measuring
-static uint16_t ADC1_min=0xFFFF;//Minimum ADC result in measuring set
-static uint16_t ADC1_max=0;//Maxmum ADC result in measuring set
-static uint16_t ADC2_min=0xFFFF;
-static uint16_t ADC2_max=0;
-static uint16_t ADC3_min=0xFFFF;
-static uint16_t ADC3_max=0;
+static uint16_t ADC1_min = 0xFFFF; //Minimum ADC result in measuring set
+static uint16_t ADC1_max = 0; //Maxmum ADC result in measuring set
+static uint16_t ADC2_min = 0xFFFF;
+static uint16_t ADC2_max = 0;
+static uint16_t ADC3_min = 0xFFFF;
+static uint16_t ADC3_max = 0;
 uint16_t ADC_old_values[24] = { 0 };
 uint8_t sliders_old_values[24] = { 0 };
 button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
@@ -457,10 +457,10 @@ void read_controls() {
 			break;
 		case check_value:
 			if (sliders[slider_number].active) {
-				ADC_value = (ADC1_sum -ADC1_min-ADC1_max)/ (SLIDERS_MEASURE_NUM-2);
+				ADC_value = (ADC1_sum - ADC1_min - ADC1_max) / (SLIDERS_MEASURE_NUM - 2);
 				ADC1_sum = 0;
-				ADC1_min=0xFFFF;
-				ADC1_max=0;
+				ADC1_min = 0xFFFF;
+				ADC1_max = 0;
 				if (ADC_value > ADC_old_values[slider_number]) {
 					ADC_change = ADC_value - ADC_old_values[slider_number];
 				} else {
@@ -472,16 +472,16 @@ void read_controls() {
 				}
 			} else {
 				ADC1_sum = 0;
-				ADC1_min=0xFFFF;
-				ADC1_max=0;
+				ADC1_min = 0xFFFF;
+				ADC1_max = 0;
 			}
 			slider_number++;
 
 			if (sliders[slider_number].active) {
-				ADC_value = (ADC2_sum -ADC2_min-ADC2_max)/ (SLIDERS_MEASURE_NUM-2);
+				ADC_value = (ADC2_sum - ADC2_min - ADC2_max) / (SLIDERS_MEASURE_NUM - 2);
 				ADC2_sum = 0;
-				ADC2_min=0xFFFF;
-				ADC2_max=0;
+				ADC2_min = 0xFFFF;
+				ADC2_max = 0;
 				if (ADC_value > ADC_old_values[slider_number]) {
 					ADC_change = ADC_value - ADC_old_values[slider_number];
 				} else {
@@ -493,16 +493,16 @@ void read_controls() {
 				}
 			} else {
 				ADC2_sum = 0;
-				ADC2_min=0xFFFF;
-				ADC2_max=0;
+				ADC2_min = 0xFFFF;
+				ADC2_max = 0;
 			}
 			slider_number++;
 
 			if (sliders[slider_number].active) {
-				ADC_value = (ADC3_sum -ADC3_min-ADC3_max)/ (SLIDERS_MEASURE_NUM-2);
+				ADC_value = (ADC3_sum - ADC3_min - ADC3_max) / (SLIDERS_MEASURE_NUM - 2);
 				ADC3_sum = 0;
-				ADC3_min=0xFFFF;
-				ADC3_max=0;
+				ADC3_min = 0xFFFF;
+				ADC3_max = 0;
 				if (ADC_value > ADC_old_values[slider_number]) {
 					ADC_change = ADC_value - ADC_old_values[slider_number];
 				} else {
@@ -514,8 +514,8 @@ void read_controls() {
 				}
 			} else {
 				ADC3_sum = 0;
-				ADC3_min=0xFFFF;
-				ADC3_max=0;
+				ADC3_min = 0xFFFF;
+				ADC3_max = 0;
 			}
 			controls_read_status = next_mux;
 			break;
@@ -626,9 +626,8 @@ void read_controls() {
 	}
 }
 
-
 /*Check Sliders FIFO buffer*/
-void checkSliders_events(void){
+void checkSliders_events(void) {
 	uint16_t event;
 	if (FIFO_COUNT(sliders_events) != 0) {
 		event = FIFO_FRONT(sliders_events);
@@ -637,5 +636,4 @@ void checkSliders_events(void){
 	}
 
 }
-
 

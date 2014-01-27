@@ -2,7 +2,6 @@
 #include "timer.h"
 #include "stm32f4xx_gpio.h"
 
-
 #define SLIDERS_DELTA 0x10
 #define SLIDERS_MUX_DELAY 80/TIMER_TIMPERIOD
 #define SLIDERS_MEASURE_NUM 20
@@ -44,8 +43,8 @@
 #define SLIDER_R_MIN_OUT 0
 #define SLIDER_R_MAX_OUT 127
 
-#define SLIDER_P_MIN_IN 300
-#define SLIDER_P_MAX_IN 2000
+#define SLIDER_P_MIN_IN 415
+#define SLIDER_P_MAX_IN 1750
 #define SLIDER_P_MIN_OUT 0
 #define SLIDER_P_MAX_OUT 127
 
@@ -70,7 +69,6 @@
 #define ENCODER2_PORT            GPIOC
 #define ENCODER2_PIN        GPIO_Pin_11
 
-
 #define LED_EN_PORT              GPIOE
 #define LED_EN_PIN         GPIO_Pin_3
 
@@ -82,10 +80,6 @@
 
 #define BUTTON2_PORT              GPIOE
 #define BUTTON2_PIN         GPIO_Pin_2
-
-
-
-
 
 typedef struct {
 	uint8_t active;
@@ -100,7 +94,6 @@ typedef struct {
 	double a; // a & b are the parameters in slider formula y=a*x+b;
 	double b;
 } Slider_type;
-
 
 typedef struct {
 	GPIO_TypeDef * port;

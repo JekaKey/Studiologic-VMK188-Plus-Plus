@@ -100,18 +100,18 @@ void receiveMidiData(void) {
 
 			//Send receive sysex ok message
 			midipacket = 0x0100F004;
-			usb_midi_DataTx(&midipacket, 4);
+			usb_midi_DataTx((uint8_t*)(&midipacket), 4);
 			midipacket = 0x0000F705;
-			usb_midi_DataTx(&midipacket, 4);
+			usb_midi_DataTx((uint8_t*)(&midipacket), 4);
 		} else if ((midiMessage & 0xF) == 0x5 || (midiMessage & 0xF) == 0x6 || (midiMessage & 0xF) == 0x7) {
 
 			//Find and run sysex command
 			sysex_parse_event();
 			//Send receive sysex ok message
 			midipacket = 0x0100F004;
-			usb_midi_DataTx(&midipacket, 4);
+			usb_midi_DataTx((uint8_t*)(&midipacket), 4);
 			midipacket = 0x0000F705;
-			usb_midi_DataTx(&midipacket, 4);
+			usb_midi_DataTx((uint8_t*)(&midipacket), 4);
 
 		}
 

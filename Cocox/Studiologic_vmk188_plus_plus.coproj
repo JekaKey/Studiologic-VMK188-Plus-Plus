@@ -142,8 +142,8 @@
     <File name="inc/stm32f4xx_conf.h" path="../inc/stm32f4xx_conf.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usb_init.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_init.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_pwr.c" path="../STM32F4xx_SPL/src/stm32f4xx_pwr.c" type="1"/>
-    <File name="STM32_SPL/inc/misc.h" path="../STM32F4xx_SPL/inc/misc.h" type="1"/>
     <File name="STM32_USB_OTG_Driver/inc" path="" type="2"/>
+    <File name="STM32_SPL/inc/misc.h" path="../STM32F4xx_SPL/inc/misc.h" type="1"/>
     <File name="STM32_USB_OTG_Driver/inc/usb_dcd.h" path="../STM32_USB_OTG_Driver/inc/usb_dcd.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_can.h" path="../STM32F4xx_SPL/inc/stm32f4xx_can.h" type="1"/>
     <File name="inc/controls.h" path="../inc/controls.h" type="1"/>
@@ -181,8 +181,8 @@
     <File name="STM32_SPL/src/stm32f4xx_usart.c" path="../STM32F4xx_SPL/src/stm32f4xx_usart.c" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_cryp.c" path="../STM32F4xx_SPL/src/stm32f4xx_cryp.c" type="1"/>
     <File name="STM32_USB_OTG_Driver/inc/usb_dcd_int.h" path="../STM32_USB_OTG_Driver/inc/usb_dcd_int.h" type="1"/>
-    <File name="STM32_USB_Device_Library/Class midi/inc/usb_midi_usr.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_midi_usr.h" type="1"/>
     <File name="inc" path="" type="2"/>
+    <File name="STM32_USB_Device_Library/Class midi/inc/usb_midi_usr.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_midi_usr.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usb_irq.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_irq.h" type="1"/>
     <File name="STM32_USB_OTG_Driver/src/usb_dcd_int.c" path="../STM32_USB_OTG_Driver/src/usb_dcd_int.c" type="1"/>
     <File name="src/gpio_config.c" path="../src/gpio_config.c" type="1"/>
@@ -191,8 +191,8 @@
     <File name="CMSIS/arm_common_tables.h" path="../CMSIS/Include/arm_common_tables.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_fsmc.c" path="../STM32F4xx_SPL/src/stm32f4xx_fsmc.c" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_flash.h" path="../STM32F4xx_SPL/inc/stm32f4xx_flash.h" type="1"/>
-    <File name="STM32_SPL/src/stm32f4xx_exti.c" path="../STM32F4xx_SPL/src/stm32f4xx_exti.c" type="1"/>
     <File name="STM32_SPL/inc" path="" type="2"/>
+    <File name="STM32_SPL/src/stm32f4xx_exti.c" path="../STM32F4xx_SPL/src/stm32f4xx_exti.c" type="1"/>
     <File name="CMSIS/core_cm3.h" path="../CMSIS/Include/core_cm3.h" type="1"/>
     <File name="inc/main.h" path="../inc/main.h" type="1"/>
     <File name="STM32_USB_Device_Library/Core" path="" type="2"/>
@@ -211,8 +211,8 @@
     <File name="startup/startup_stm32f4xx.c" path="../startup/startup_stm32f4xx.c" type="1"/>
     <File name="STM32_USB_Device_Library/Core/src/usbd_req.c" path="../STM32_USB_Device_Library/Core/src/usbd_req.c" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_syscfg.h" path="../STM32F4xx_SPL/inc/stm32f4xx_syscfg.h" type="1"/>
-    <File name="inc/sysex_events.h" path="../inc/sysex_events.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc" path="" type="2"/>
+    <File name="inc/sysex_events.h" path="../inc/sysex_events.h" type="1"/>
     <File name="STM32_USB_OTG_Driver/inc/usb_bsp.h" path="../STM32_USB_OTG_Driver/inc/usb_bsp.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_spi.h" path="../STM32F4xx_SPL/inc/stm32f4xx_spi.h" type="1"/>
   </Files>

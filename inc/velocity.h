@@ -16,24 +16,24 @@
 for white and black keys. 
 The curve ia a hyperbola with the formula: Y=A/(x+B)+C, where 
 x - time period between two sensors of a key (in microseconds)
-y - velocity value 0..127
+y - velocity value 0.0..127.0
 For white and black keys formula constants A,B,C are different because there is a 
 difference in their mechanical behaviour.
 */
 
 typedef struct {
-	double xw1;
-	double yw1;
-	double xw2;
-	double yw2;
-	double xw3;
-	double yw3;
-	double xb1;
-	double yb1;
-	double xb2;
-	double yb2;
-	double xb3;
-	double yb3;
+	uint32_t xw1;
+	uint32_t yw1;
+	uint32_t xw2;
+	uint32_t yw2;
+	uint32_t xw3;
+	uint32_t yw3;
+	uint32_t xb1;
+	uint32_t yb1;
+	uint32_t xb2;
+	uint32_t yb2;
+	uint32_t xb3;
+	uint32_t yb3;
 	} curve_points_type;
 
 

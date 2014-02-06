@@ -75,7 +75,6 @@ void firstInit() {
 
 int main(void) {
 
-	uint32_t midipacket;
 
 	GPIO_SetBits(GPIOD, GPIO_Pin_10);
 

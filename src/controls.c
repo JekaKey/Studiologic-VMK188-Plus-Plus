@@ -356,7 +356,7 @@ void slider_midi_send(uint16_t value) {
 	}
 }
 
-void volatile buttons_delay(void) {
+void buttons_delay(void) {
 	__NOP();
 	__NOP();
 	__NOP();

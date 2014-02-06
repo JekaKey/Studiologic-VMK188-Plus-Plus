@@ -70,7 +70,7 @@ void memory_page_to_buffer(uint8_t buffer, uint16_t target_number_page) {
 
 	memory_start(); //CS memory
 
-	if (buffer = 1)
+	if (buffer == 1)
 		memory_transfer_data(0x53); // Command - Buffer 1
 	else
 		memory_transfer_data(0x55); // Command - Buffer 2
@@ -92,7 +92,7 @@ void memory_buffer_to_page(uint8_t buffer, uint16_t target_number_page) {
 
 	memory_start(); //CS memory
 
-	if (buffer = 1)
+	if (buffer == 1)
 		memory_transfer_data(0x83); // Command - Buffer 1
 	else
 		memory_transfer_data(0x86); // Command - Buffer 2
@@ -111,7 +111,7 @@ void memory_send_8bit_to_buffer(uint8_t buffer, uint8_t from_byte, uint8_t data)
 
 	memory_start(); //CS memory
 
-	if (buffer = 1)
+	if (buffer == 1)
 		memory_transfer_data(0x84); // Command - Buffer 1
 	else
 		memory_transfer_data(0x87); // Command - Buffer 2
@@ -130,7 +130,7 @@ void memory_send_16bit_to_buffer(uint8_t buffer, uint8_t from_byte, uint16_t dat
 
 	memory_start(); //CS memory
 
-	if (buffer = 1)
+	if (buffer == 1)
 		memory_transfer_data(0x84); // Command - Buffer 1
 	else
 		memory_transfer_data(0x87); // Command - Buffer 2
@@ -151,7 +151,7 @@ uint8_t memory_read_8bit(uint8_t buffer, uint8_t from_byte) {
 
 	memory_start(); //CS memory
 
-	if (buffer = 1)
+	if (buffer == 1)
 		memory_transfer_data(0xD4); // Command - Buffer 1
 	else
 		memory_transfer_data(0xD6); // Command - Buffer 2
@@ -174,7 +174,7 @@ uint16_t memory_read_16bit(uint8_t buffer, uint8_t from_byte) {
 
 	memory_start(); //CS memory
 
-	if (buffer = 1)
+	if (buffer == 1)
 		memory_transfer_data(0xD4); // Command - Buffer 1
 	else
 		memory_transfer_data(0xD6); // Command - Buffer 2

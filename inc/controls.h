@@ -111,3 +111,5 @@ void ADC_init_all(void);
 void read_controls(void);
 void sliders_init(void);
 void checkSliders_events(void);
+
+void buttons_delay(void) __attribute__((optimize(0)));

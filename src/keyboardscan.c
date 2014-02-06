@@ -289,7 +289,7 @@ gpio_pins_type gpio_pins[11] = { { GPIOE, GPIO_Pin_15, GPIOE, GPIO_Pin_14 }, { G
 		GPIO_Pin_13 } };
 
 /*Delay should be more long for full cycles code. The reason is unrecognized....*/
-volatile static void key_delay(void) {
+void key_delay(void) {
 	__NOP();
 	__NOP();
 	__NOP();

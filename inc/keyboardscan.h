@@ -27,3 +27,4 @@ typedef struct {
 void readKeyState(void); //Read state of all 88 keys and send info to FIFO
 void checkNoteArray(void);
 void delay(volatile uint32_t c);
+void key_delay(void) __attribute__((optimize(0)));

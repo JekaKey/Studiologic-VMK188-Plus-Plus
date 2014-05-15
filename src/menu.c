@@ -252,6 +252,9 @@ void button_handler_curves(uint8_t button) {
 
 }
 
+/*this function is calling if any setup button pressed, according to
+ * the interface status it calls button_handlers
+ */
 void setup_button_action(uint8_t button) {
 	switch (interface_status) {
 		case status_presets: {
@@ -269,7 +272,7 @@ void setup_button_action(uint8_t button) {
 	}
 }
 
-void button_action(void) {
+void button_action(void) { /* call button handler according to button pressed*/
 	uint8_t result = checkButtons_events();
 	if (result == 0) {
 		return;

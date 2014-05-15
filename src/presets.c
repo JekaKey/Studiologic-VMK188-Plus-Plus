@@ -13,7 +13,7 @@ void preset_load() {
 //	}
 
 	preset.MidiChannel = 0;
-	preset.HighResEnable = 0;
+	preset.HighResEnable = 1;
 
 }
 

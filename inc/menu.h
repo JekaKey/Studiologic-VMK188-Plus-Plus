@@ -54,3 +54,4 @@ typedef struct PROGMEM{
 void interface_init (void);
 void checkControl_events(void);
 uint8_t checkButtons_events(void);
+

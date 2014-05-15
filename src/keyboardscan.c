@@ -315,9 +315,9 @@ void readKeyState(void) {
 		d1 = ~GPIOA->IDR; //Read port state first contact
 		gpio_pins[chunk].first->BSRRL = gpio_pins[chunk].first_num; //Pin to 1
 
-		GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
-		GPIOA->ODR = 0x00FF; //High level on PA0-8;
-		GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
+		GPIOA->MODER |= 0x00005555; //PA0-7 Will be Output
+		GPIOA->ODR = 0x00FF; //High level on PA0-7;
+		GPIOA->MODER &= 0xFFFF0000; //PA0-7 Will be Input
 
 		if (d1) {
 			gpio_pins[chunk].second->BSRRH = gpio_pins[chunk].second_num;
@@ -325,9 +325,9 @@ void readKeyState(void) {
 			d2 = ~GPIOA->IDR; //Read port state second contact
 			gpio_pins[chunk].second->BSRRL = gpio_pins[chunk].second_num;
 
-			GPIOA->MODER |= 0x00005555; //PA0-8 Will be Output
-			GPIOA->ODR = 0x00FF; //High level on PA0-8;
-			GPIOA->MODER &= 0xFFFF0000; //PA0-8 Will be Input
+			GPIOA->MODER |= 0x00005555; //PA0-7 Will be Output
+			GPIOA->ODR = 0x00FF; //High level on PA0-7;
+			GPIOA->MODER &= 0xFFFF0000; //PA0-7 Will be Input
 
 			for (i = 0; i <= 7; i++) {
 				j = i + chunk8;

@@ -66,7 +66,7 @@ void sliders_init(void) {
 
 	sliders[SLIDER_EMPTY].active = 0;
 
-	sliders[SLIDER_S1].active = 0;
+	sliders[SLIDER_S1].active = 1;
 	sliders[SLIDER_S1].reverse = 0;
 	sliders[SLIDER_S1].channel = 0;
 	sliders[SLIDER_S1].event = 7;
@@ -286,7 +286,7 @@ void sliders_init(void) {
 	sliders[SLIDER_MOD].max_out_value = SLIDER_MOD_MAX_OUT;
 	slider_init_struct(SLIDER_MOD);
 
-	sliders[SLIDER_AT].active = 0;
+	sliders[SLIDER_AT].active = 1;
 	sliders[SLIDER_AT].reverse = 0;
 	sliders[SLIDER_AT].channel = 0;
 	sliders[SLIDER_AT].event = 66;
@@ -540,14 +540,14 @@ void read_controls() {
 		case read_buttons:
 			if (!hd44780_active) {
 				buttons_active = 1;
-				GPIOD->ODR |= 0x00FF; //High level on PA0-7;
-				GPIOD->MODER &= 0xFFFF0000; //PA0-7 Will be Input
+				GPIOD->ODR |= 0x00FF; //High level on PD0-7;
+				GPIOD->MODER &= 0xFFFF0000; //PD0-7 Will be Input
 				button_ports[buttons_chunk].port->BSRRH = button_ports[buttons_chunk].pin;
 				buttons_delay();
 				buttons = ~GPIOD->IDR; //Read buttons state
 				button_ports[buttons_chunk].port->BSRRL = button_ports[buttons_chunk].pin;
-				GPIOD->MODER |= 0x00005555; //PA0-7 Will be Output
-				GPIOD->ODR |= 0x00FF; //High level on PA0-7;
+				GPIOD->MODER |= 0x00005555; //PD0-7 Will be Output
+				GPIOD->ODR |= 0x00FF; //High level on PD0-7;
 				controls_read_status = check_button;
 				buttons_active = 0;
 				break;

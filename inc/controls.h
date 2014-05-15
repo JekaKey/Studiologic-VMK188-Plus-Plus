@@ -2,7 +2,7 @@
 #include "timer.h"
 #include "stm32f4xx_gpio.h"
 
-#define SLIDERS_DELTA 0x10
+#define SLIDERS_DELTA 0x08
 #define SLIDERS_MUX_DELAY 80/TIMER_TIMPERIOD
 #define SLIDERS_MEASURE_NUM 20
 

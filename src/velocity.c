@@ -36,7 +36,7 @@ void calculate_velocity_formula(curve_points_type *cp) {
 
 /*Find a color of a key with number "note_num"*/
 uint16_t note_color(uint16_t note_num) {
-	//TODO: Reduce 21 for simplifys
+	//TODO: Reduce 21 for simplify
 	return (0x0001 << ((note_num - 21) % 12)) & 0x0A52;
 }
 

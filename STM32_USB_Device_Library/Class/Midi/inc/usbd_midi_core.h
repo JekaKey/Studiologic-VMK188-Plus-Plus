@@ -27,7 +27,7 @@
 /*Descriptors defines*/
 
 #define CLASS_SPECIFIC_DESC_SIZE                7+6+9+9+5+9+5
-#define MIDI_CONFIG_DESC_SIZE 					9+9+9+9+CLASS_SPECIFIC_DESC_SIZE //Full size of interface descriptors
+#define MIDI_CONFIG_DESC_SIZE 			9+9+9+9+CLASS_SPECIFIC_DESC_SIZE //Full size of interface descriptors
 #define USB_CONFIGURATION_DESCRIPTOR_TYPE       0x02
 #define USB_INTERFACE_DESCRIPTOR_TYPE           0x04
 #define USB_DEVICE_CLASS_AUDIO                  0x01

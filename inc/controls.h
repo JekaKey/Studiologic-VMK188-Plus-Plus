@@ -63,23 +63,23 @@
 #define SLIDER_AT_MIN_OUT 0
 #define SLIDER_AT_MAX_OUT 127
 
-#define ENCODER1_PORT            GPIOC
-#define ENCODER1_PIN        GPIO_Pin_13
+#define ENCODER1_PORT            GPIOD
+#define ENCODER1_PIN        GPIO_Pin_0
 
-#define ENCODER2_PORT            GPIOC
-#define ENCODER2_PIN        GPIO_Pin_11
+#define ENCODER2_PORT            GPIOD
+#define ENCODER2_PIN        GPIO_Pin_1
 
-#define LED_EN_PORT              GPIOE
-#define LED_EN_PIN         GPIO_Pin_3
+#define LED_EN_PORT              GPIOB
+#define LED_EN_PIN         GPIO_Pin_7
 
-#define BUTTON0_PORT              GPIOE
-#define BUTTON0_PIN         GPIO_Pin_0
+#define BUTTON0_PORT              GPIOD
+#define BUTTON0_PIN         GPIO_Pin_4
 
-#define BUTTON1_PORT              GPIOE
-#define BUTTON1_PIN         GPIO_Pin_1
+#define BUTTON1_PORT              GPIOD
+#define BUTTON1_PIN         GPIO_Pin_5
 
-#define BUTTON2_PORT              GPIOE
-#define BUTTON2_PIN         GPIO_Pin_2
+#define BUTTON2_PORT              GPIOD
+#define BUTTON2_PIN         GPIO_Pin_6
 
 typedef struct {
 	uint8_t active;

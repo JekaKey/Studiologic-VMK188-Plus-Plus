@@ -14,7 +14,7 @@ void GPIO_init() {
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOE | RCC_AHB1Periph_GPIOD, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
 
-	/*Configure GPIO pin */
+	/*Configure GPIO pin keyboard read*/
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -29,13 +29,7 @@ void GPIO_init() {
 	GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 	/*Configure GPIO pin */
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2;
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AN;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-	/*Configure GPIO pin */
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
@@ -43,34 +37,73 @@ void GPIO_init() {
 	GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	/*Configure GPIO pin */
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_8 | GPIO_Pin_9;
+	GPIO_InitStruct.GPIO_Pin =  GPIO_Pin_8 |GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
-	GPIO_InitStruct.GPIO_OType = GPIO_OType_OD;
+	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_Init(GPIOC, &GPIO_InitStruct);
+	GPIO_Init(GPIOE, &GPIO_InitStruct);
 
 	/*Configure GPIO pin */
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_13;
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-	/*Configure GPIO pin */
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12| GPIO_Pin_13| GPIO_Pin_14| GPIO_Pin_15;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-	/*Configure GPIO pin */
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3| GPIO_Pin_7 | GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+	/*Configure GPIO pin leds on the board*/
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+
+	/*Configure GPIO pin ADC1, ADC2, ADS3*/
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AN;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	/*Configure GPIO pin  buttons output bus PD4, PD5, PD6*/
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+	/*Configure GPIO pin multiplexors select*/
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+	GPIO_InitStruct.GPIO_OType = GPIO_OType_OD; //Must be OD. They works with resistors to VDD
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	/*Configure GPIO pin input from the encoder */
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+	/*Configure GPIO pin PD0-PD7 - Display out +keyboard IN (will switch in/out) */
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+	/*Configure GPIO pin PB8 - PB9 - Display RS & Enable*/
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 ;
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 
 	TIM_TimeBaseInitTypeDef timer;
@@ -82,52 +115,53 @@ void GPIO_init() {
 	TIM_TimeBaseInit(TIM4, &timer);
 }
 
-void SPI1_init() {
 
-	/* Private typedef ---------------------------------------------------------*/
-	GPIO_InitTypeDef GPIO_InitStruct;
-	SPI_InitTypeDef SPI_InitStruct;
-
-	/*Enable or disable the AHB1 peripheral clock */
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
-
-	/*Configure GPIO pin */
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
-	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
-	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
-	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
-	GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-	/*Configure GPIO pin alternate function */
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource3, GPIO_AF_SPI1);
-
-	/*Configure GPIO pin alternate function */
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource4, GPIO_AF_SPI1);
-
-	/*Configure GPIO pin alternate function */
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource5, GPIO_AF_SPI1);
-
-	/*Enable peripheral clock */
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
-
-	/* configure SPI1 in Mode 0
-	 * CPOL = 0 --> clock is low when idle
-	 * CPHA = 0 --> data is sampled at the first edge
-	 */
-	SPI_InitStruct.SPI_Direction = SPI_Direction_2Lines_FullDuplex; // set to full duplex mode, seperate MOSI and MISO lines
-	SPI_InitStruct.SPI_Mode = SPI_Mode_Master; // transmit in master mode, NSS pin has to be always high
-	SPI_InitStruct.SPI_DataSize = SPI_DataSize_8b; // one packet of data is 8 bits wide
-	SPI_InitStruct.SPI_CPOL = SPI_CPOL_Low; // clock is low when idle
-	SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge; // data sampled at first edge
-	SPI_InitStruct.SPI_NSS = SPI_NSS_Soft | SPI_NSSInternalSoft_Set; // set the NSS management to internal and pull internal NSS high
-	SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16; // SPI frequency is APB2 frequency / 16
-	SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB; // data is transmitted MSB first
-	SPI_Init(SPI1, &SPI_InitStruct);
-
-	SPI_Cmd(SPI1, ENABLE); // enable SPI1
-
-}
+//void SPI1_init() {
+//
+//	/* Private typedef ---------------------------------------------------------*/
+//	GPIO_InitTypeDef GPIO_InitStruct;
+//	SPI_InitTypeDef SPI_InitStruct;
+//
+//	/*Enable or disable the AHB1 peripheral clock */
+//	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+//
+//	/*Configure GPIO pin */
+//	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
+//	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
+//	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+//	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;
+//	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
+//	GPIO_Init(GPIOB, &GPIO_InitStruct);
+//
+//	/*Configure GPIO pin alternate function */
+//	GPIO_PinAFConfig(GPIOB, GPIO_PinSource3, GPIO_AF_SPI1);
+//
+//	/*Configure GPIO pin alternate function */
+//	GPIO_PinAFConfig(GPIOB, GPIO_PinSource4, GPIO_AF_SPI1);
+//
+//	/*Configure GPIO pin alternate function */
+//	GPIO_PinAFConfig(GPIOB, GPIO_PinSource5, GPIO_AF_SPI1);
+//
+//	/*Enable peripheral clock */
+//	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
+//
+//	/* configure SPI1 in Mode 0
+//	 * CPOL = 0 --> clock is low when idle
+//	 * CPHA = 0 --> data is sampled at the first edge
+//	 */
+//	SPI_InitStruct.SPI_Direction = SPI_Direction_2Lines_FullDuplex; // set to full duplex mode, seperate MOSI and MISO lines
+//	SPI_InitStruct.SPI_Mode = SPI_Mode_Master; // transmit in master mode, NSS pin has to be always high
+//	SPI_InitStruct.SPI_DataSize = SPI_DataSize_8b; // one packet of data is 8 bits wide
+//	SPI_InitStruct.SPI_CPOL = SPI_CPOL_Low; // clock is low when idle
+//	SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge; // data sampled at first edge
+//	SPI_InitStruct.SPI_NSS = SPI_NSS_Soft | SPI_NSSInternalSoft_Set; // set the NSS management to internal and pull internal NSS high
+//	SPI_InitStruct.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16; // SPI frequency is APB2 frequency / 16
+//	SPI_InitStruct.SPI_FirstBit = SPI_FirstBit_MSB; // data is transmitted MSB first
+//	SPI_Init(SPI1, &SPI_InitStruct);
+//
+//	SPI_Cmd(SPI1, ENABLE); // enable SPI1
+//
+//}
 
 void USART1_init() {
 	/* This is a concept that has to do with the libraries provided by ST
@@ -151,24 +185,24 @@ void USART1_init() {
 	/* enable the peripheral clock for the pins used by
 	 * USART1, PB6 for TX and PB7 for RX
 	 */
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 
 	/* This sequence sets up the TX and RX pins
 	 * so they work correctly with the USART1 peripheral
 	 */
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7; // Pins 6 (TX) and 7 (RX) are used
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10; // Pins PA9 (TX) and PA10 (RX) are used
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF; // the pins are configured as alternate function so the USART peripheral has access to them
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; // this defines the IO speed and has nothing to do with the baudrate!
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP; // this defines the output type as push pull mode (as opposed to open drain)
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP; // this activates the pullup resistors on the IO pins
-	GPIO_Init(GPIOB, &GPIO_InitStruct); // now all the values are passed to the GPIO_Init() function which sets the GPIO registers
+	GPIO_Init(GPIOA, &GPIO_InitStruct); // now all the values are passed to the GPIO_Init() function which sets the GPIO registers
 
 	/* The RX and TX pins are now connected to their AF
 	 * so that the USART1 can take over control of the
 	 * pins
 	 */
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource6, GPIO_AF_USART1); //
-	GPIO_PinAFConfig(GPIOB, GPIO_PinSource7, GPIO_AF_USART1);
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource9, GPIO_AF_USART1); //
+	GPIO_PinAFConfig(GPIOA, GPIO_PinSource10, GPIO_AF_USART1);
 
 	/* Now the USART_InitStruct is used to define the
 	 * properties of USART1

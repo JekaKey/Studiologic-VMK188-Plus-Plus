@@ -408,7 +408,7 @@ void read_controls() {
 	switch (controls_read_status) {
 
 		case read_data:
-			for (i = 0; i < 3; i++) {
+			for (i = 0; i < 3; i++) { //read all ADC1, ADC2, ADC3 3 times each and add to sum. Paralle search min & max values foe each ADC to remove them from sum in future
 				ADC_SoftwareStartConv(ADC1);
 				while (ADC_GetSoftwareStartConvStatus(ADC1) != RESET) {
 				}
@@ -424,7 +424,7 @@ void read_controls() {
 				}
 				adc3_arr[i] = ADC_GetConversionValue(ADC3);
 			}
-			adc_med = median(adc1_arr);
+			adc_med = median(adc1_arr);//apply median filter to all  ADC values
 			ADC1_sum += adc_med;
 			if (adc_med > ADC1_max) {
 				ADC1_max = adc_med;
@@ -455,18 +455,18 @@ void read_controls() {
 			}
 
 			break;
-		case check_value:
+		case check_value://Calculate ADC results after many measurements.
 			if (sliders[slider_number].active) {
-				ADC_value = (ADC1_sum - ADC1_min - ADC1_max) / (SLIDERS_MEASURE_NUM - 2);
+				ADC_value = (ADC1_sum - ADC1_min - ADC1_max) / (SLIDERS_MEASURE_NUM - 2);//Remove min & max values and calculate average per SLIDERS_MEASURE_NUM-2 measurements
 				ADC1_sum = 0;
 				ADC1_min = 0xFFFF;
 				ADC1_max = 0;
-				if (ADC_value > ADC_old_values[slider_number]) {
+				if (ADC_value > ADC_old_values[slider_number]) {//Compare changes with SLIDERS_DELTA.
 					ADC_change = ADC_value - ADC_old_values[slider_number];
 				} else {
 					ADC_change = ADC_old_values[slider_number] - ADC_value;
 				}
-				if (ADC_change > SLIDERS_DELTA) {
+				if (ADC_change > SLIDERS_DELTA) {//Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
 					slider_FIFO_send(slider_number, ADC_value);
 				}
@@ -477,6 +477,7 @@ void read_controls() {
 			}
 			slider_number++;
 
+            /*same for ADC2*/
 			if (sliders[slider_number].active) {
 				ADC_value = (ADC2_sum - ADC2_min - ADC2_max) / (SLIDERS_MEASURE_NUM - 2);
 				ADC2_sum = 0;
@@ -498,6 +499,7 @@ void read_controls() {
 			}
 			slider_number++;
 
+	        /*same for ADC3*/
 			if (sliders[slider_number].active) {
 				ADC_value = (ADC3_sum - ADC3_min - ADC3_max) / (SLIDERS_MEASURE_NUM - 2);
 				ADC3_sum = 0;
@@ -524,9 +526,9 @@ void read_controls() {
 			if (mux_pin > 7) {
 				mux_pin = 0;
 			}
-			ODR_tmp = GPIOC->ODR & 0xFCBF;
-			tmp = ODR_tmp | ((mux_pin & 0x0006) << 7) | ((mux_pin & 0x0001) << 6); //next value to multiplexors PC6, PC8, PC9
-			GPIOC->ODR = tmp;
+			ODR_tmp = GPIOB->ODR & 0xFF8F; //PB4, PB5, PB6
+			tmp = ODR_tmp | (mux_pin << 4); //next value to multiplexors PB4, PB5, PB6
+			GPIOB->ODR = tmp;
 			slider_number = mux_pin * 3;
 			controls_read_status = wait_mux;
 			break;
@@ -538,16 +540,16 @@ void read_controls() {
 			}
 			break;
 		case read_buttons:
-			if (!hd44780_active) {
-				buttons_active = 1;
-				GPIOD->ODR |= 0x00FF; //High level on PD0-7;
-				GPIOD->MODER &= 0xFFFF0000; //PD0-7 Will be Input
+			if (!hd44780_active) {//If display is writing we do not read buttons to avoid pins conflict.
+				buttons_active = 1;//Set to prevent display usage in this moment. The display should wait buttons_active = 0;
+				GPIOE->ODR |= 0x00FF; //High level on PE0-7;
+				GPIOE->MODER &= 0xFFFF0000; //PE0-7 Will be Input
 				button_ports[buttons_chunk].port->BSRRH = button_ports[buttons_chunk].pin;
 				buttons_delay();
-				buttons = ~GPIOD->IDR; //Read buttons state
+				buttons = ~GPIOE->IDR; //Read buttons state
 				button_ports[buttons_chunk].port->BSRRL = button_ports[buttons_chunk].pin;
-				GPIOD->MODER |= 0x00005555; //PD0-7 Will be Output
-				GPIOD->ODR |= 0x00FF; //High level on PD0-7;
+				GPIOE->MODER |= 0x00005555; //PE0-7 Will be Output
+				GPIOE->ODR |= 0x00FF; //High level on PD0-7;
 				controls_read_status = check_button;
 				buttons_active = 0;
 				break;
@@ -587,8 +589,9 @@ void read_controls() {
 			}
 			break;
 		case read_encoders:
-			IDR_tmp = (uint8_t)(((ENCODER1_PORT->IDR & ENCODER1_PIN) >> 12) | ((ENCODER2_PORT->IDR & ENCODER2_PIN) >> 11)); //Read both encoder signals from the same port because  ENCODER1_PORT=ENCODER2_PORT =GPIOC
-			if (IDR_tmp == encoder_state) {
+			/*Read both encoder signals from the same port because  ENCODER1_PORT=ENCODER2_PORT =GPIOD*/
+			IDR_tmp = (uint8_t)((ENCODER1_PORT->IDR & ENCODER1_PIN) | (ENCODER2_PORT->IDR & ENCODER2_PIN));
+			if (IDR_tmp == encoder_state) { //State is not changed
 				controls_read_status = read_data;
 				break;
 			} else {
@@ -597,17 +600,17 @@ void read_controls() {
 					encoder_state = 0;
 					controls_read_status = read_data;
 					break;
-				} else if (IDR_tmp == 3) {
+				} else if (IDR_tmp == 3) { // This means the encoder is in unstable average position because it is turned.
 					if (encoder_zero) {
-						if (encoder_state == 1) {
+						if (encoder_state == 1) {//Direction depends previos state
 							encoder_state = 3;
-							FIFO_PUSH(control_events, 0x01FF);
+							FIFO_PUSH(control_events, 0x02FF);
 							controls_read_status = read_data;
 							encoder_zero = 0;
 							break;
 						} else if (encoder_state == 2) {
 							encoder_state = 3;
-							FIFO_PUSH(control_events, 0x02FF);
+							FIFO_PUSH(control_events, 0x01FF);
 							controls_read_status = read_data;
 							encoder_zero = 0;
 							break;

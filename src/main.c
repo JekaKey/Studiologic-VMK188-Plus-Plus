@@ -41,12 +41,12 @@ void firstInit() {
 
 	//Hardware init
 	GPIO_init();
-	SPI1_init();
+//	SPI1_init();
 	USART1_init();
 	usb_init(); //Init everything for midiUSB
 
 	//Software init
-	preset_load();
+//	preset_load();
 	count = 100;
 	ADC_init_all(); //ADC init
 	velocity_init();
@@ -61,10 +61,10 @@ void firstInit() {
 
 	//TODO: move to gpio init module
 	//First port init, all for high
-	GPIOB->ODR |= 0xFC07; // B0-B2, B10-B15
-	GPIOC->ODR |= 0x38; // C3-C5
-	GPIOD->ODR |= 0x300; // D8-D9
-	GPIOE->ODR |= 0xFF80; // E7-E15
+//	GPIOB->ODR |= 0xFC07; // B0-B2, B10-B15
+//	GPIOC->ODR |= 0x38; // C3-C5
+//	GPIOD->ODR |= 0x300; // D8-D9
+//	GPIOE->ODR |= 0xFF80; // E7-E15
 
 //	Start key scan timer
 	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
@@ -76,11 +76,11 @@ void firstInit() {
 int main(void) {
 
 
-	GPIO_SetBits(GPIOD, GPIO_Pin_10);
-
 	firstInit();
 
-	GPIO_SetBits(GPIOD, GPIO_Pin_15); //Test blue led
+//	GPIO_SetBits(GPIOC, GPIO_Pin_13); //Light the green led
+//	GPIO_SetBits(GPIOC, GPIO_Pin_14); //Light the blue led
+	GPIO_SetBits(GPIOC, GPIO_Pin_15); //Light the red led
 
 	//Main loop
 	while (1) {
@@ -109,7 +109,6 @@ void TIM4_IRQHandler() {
 		//Clear interrupt bit
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
-		// GPIO_ToggleBits(GPIOD, GPIO_Pin_15);
 		readKeyState();
 		read_controls();
 	}

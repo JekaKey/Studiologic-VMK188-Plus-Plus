@@ -183,7 +183,7 @@ void hd44780_init(void) {
 	/* clear control bits */
 	hd44780_EN_Off();
 	hd44780_RS_Off();
-	hd44780_RW_Off();
+//	hd44780_RW_Off();
 
 	/* wait initial delay for LCD to settle */
 	/* reset procedure - 3 function calls resets the device */hd44780_init_delay();

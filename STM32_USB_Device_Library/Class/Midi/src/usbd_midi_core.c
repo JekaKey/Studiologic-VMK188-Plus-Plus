@@ -47,7 +47,7 @@ static uint8_t usbd_midi_CfgDesc[MIDI_CONFIG_DESC_SIZE] = {
 		0x01, /* bConfigurationValue: ID of this configuration */
 		0x00, /* iConfiguration: Unused*/
 		0x80, /* bmAttributes  = bus powered */
-		0x96, /* bMaxPower = 150 mA*/
+		0x4B, /* bMaxPower = 150 mA*/
 		/* 09 byte*/
 
 		// B.3.1 Standard AC Interface Descriptor

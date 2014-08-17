@@ -51,6 +51,7 @@ typedef struct PROGMEM{
 #define ENCODER_LEFT 25
 #define ENCODER_RIGHT 26
 
+void btoa(uint8_t value, char* buffer);
 void interface_init (void);
 void checkControl_events(void);
 uint8_t checkButtons_events(void);

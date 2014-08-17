@@ -117,7 +117,7 @@
 
 #include "ff.h"			/* Declarations of FatFs API */
 #include "diskio.h"		/* Declarations of disk I/O functions */
-
+#include "leds.h"
 
 
 
@@ -762,8 +762,9 @@ FRESULT sync_window (
 
 	if (fs->wflag) {	/* Write back the sector if it is dirty */
 		wsect = fs->winsect;	/* Current sector number */
-		if (disk_write(fs->drv, fs->win, wsect, 1))
+		if (disk_write(fs->drv, fs->win, wsect, 1)){
 			return FR_DISK_ERR;
+		}
 		fs->wflag = 0;
 		if (wsect - fs->fatbase < fs->fsize) {		/* Is it in the FAT area? */
 			for (nf = fs->n_fats; nf >= 2; nf--) {	/* Reflect the change to all FAT copies */
@@ -2662,16 +2663,21 @@ FRESULT f_write (
 	const BYTE *wbuff = (const BYTE*)buff;
 	BYTE csect;
 
+//	LED_light(2);
 
 	*bw = 0;	/* Clear write byte counter */
 
 	res = validate(fp);						/* Check validity */
-	if (res != FR_OK) LEAVE_FF(fp->fs, res);
-	if (fp->err)							/* Check error */
+	if (res != FR_OK){
+		LEAVE_FF(fp->fs, res);
+	}
+	if (fp->err){/* Check error */
 		LEAVE_FF(fp->fs, (FRESULT)fp->err);
+	}
 	if (!(fp->flag & FA_WRITE))				/* Check access mode */
 		LEAVE_FF(fp->fs, FR_DENIED);
 	if (fp->fptr + btw < fp->fptr) btw = 0;	/* File size cannot reach 4GB */
+//	LED_light(1);
 
 	for ( ;  btw;							/* Repeat until all data written */
 		wbuff += wcnt, fp->fptr += wcnt, *bw += wcnt, btw -= wcnt) {
@@ -2691,8 +2697,13 @@ FRESULT f_write (
 						clst = create_chain(fp->fs, fp->clust);	/* Follow or stretch cluster chain on the FAT */
 				}
 				if (clst == 0) break;		/* Could not allocate a new cluster (disk full) */
-				if (clst == 1) ABORT(fp->fs, FR_INT_ERR);
-				if (clst == 0xFFFFFFFF) ABORT(fp->fs, FR_DISK_ERR);
+				if (clst == 1) {
+					ABORT(fp->fs, FR_INT_ERR);
+				}
+				if (clst == 0xFFFFFFFF){
+					ABORT(fp->fs, FR_DISK_ERR);
+				}
+
 				fp->clust = clst;			/* Update current cluster */
 				if (fp->sclust == 0) fp->sclust = clst;	/* Set start cluster if the first write */
 			}
@@ -2701,8 +2712,9 @@ FRESULT f_write (
 				ABORT(fp->fs, FR_DISK_ERR);
 #else
 			if (fp->flag & FA__DIRTY) {		/* Write-back sector cache */
-				if (disk_write(fp->fs->drv, fp->buf, fp->dsect, 1))
+				if (disk_write(fp->fs->drv, fp->buf, fp->dsect, 1)){
 					ABORT(fp->fs, FR_DISK_ERR);
+				}
 				fp->flag &= ~FA__DIRTY;
 			}
 #endif
@@ -2713,8 +2725,9 @@ FRESULT f_write (
 			if (cc) {						/* Write maximum contiguous sectors directly */
 				if (csect + cc > fp->fs->csize)	/* Clip at cluster boundary */
 					cc = fp->fs->csize - csect;
-				if (disk_write(fp->fs->drv, wbuff, sect, cc))
+				if (disk_write(fp->fs->drv, wbuff, sect, cc)){
 					ABORT(fp->fs, FR_DISK_ERR);
+				}
 #if _FS_MINIMIZE <= 2
 #if _FS_TINY
 				if (fp->fs->winsect - sect < cc) {	/* Refill sector cache if it gets invalidated by the direct write */
@@ -2739,8 +2752,9 @@ FRESULT f_write (
 #else
 			if (fp->dsect != sect) {		/* Fill sector cache with file data */
 				if (fp->fptr < fp->fsize &&
-					disk_read(fp->fs->drv, fp->buf, sect, 1))
+					disk_read(fp->fs->drv, fp->buf, sect, 1)){
 						ABORT(fp->fs, FR_DISK_ERR);
+				}
 			}
 #endif
 			fp->dsect = sect;
@@ -2755,8 +2769,10 @@ FRESULT f_write (
 #else
 		mem_cpy(&fp->buf[fp->fptr % SS(fp->fs)], wbuff, wcnt);	/* Fit partial sector */
 		fp->flag |= FA__DIRTY;
+
 #endif
 	}
+	LED_light(7);
 
 	if (fp->fptr > fp->fsize) fp->fsize = fp->fptr;	/* Update file size if needed */
 	fp->flag |= FA__WRITTEN;						/* Set file change flag */

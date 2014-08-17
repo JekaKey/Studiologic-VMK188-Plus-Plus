@@ -228,11 +228,14 @@
 #include "fatfs_sd_sdio.h"
 #include "stm32f4xx_sdio.h"
 #include "stm32f4xx_dma.h"
+
+#include "leds.h"
+#include "hd44780.h"
 /*
 #include "tm_stm32f4_usart.h"
 #define logf(x)	TM_USART_Puts(USART1, x); TM_USART_Puts(USART1, "\n");
 */
-#define logf(x)
+#define logf(x) string2usb(x);// hd44780_rewrite_string(x);
 
 
 static uint32_t CardType = SDIO_STD_CAPACITY_SD_CARD_V1_1;
@@ -1342,6 +1345,8 @@ SD_Error SD_ReadBlock (uint8_t *readbuff, uint64_t ReadAddr, uint16_t BlockSize)
  */
 SD_Error SD_ReadMultiBlocks (uint8_t *readbuff, uint64_t ReadAddr, uint16_t BlockSize, uint32_t NumberOfBlocks)
 {
+
+
         SD_Error errorstatus = SD_OK;
         TransferError = SD_OK;
         TransferEnd = 0;
@@ -1354,9 +1359,10 @@ SD_Error SD_ReadMultiBlocks (uint8_t *readbuff, uint64_t ReadAddr, uint16_t Bloc
         SD_LowLevel_DMA_RxConfig ((uint32_t *) readbuff, (NumberOfBlocks * BlockSize));
         SDIO_DMACmd (ENABLE);
 #endif
-
         if (CardType == SDIO_HIGH_CAPACITY_SD_CARD ) {
-                BlockSize = 512;
+
+
+        	    BlockSize = 512;
                 ReadAddr /= 512;
         }
 
@@ -1420,6 +1426,7 @@ SD_Error SD_WaitReadOperation (void)
                 timeout--;
         }
 
+
         logf ("1.5\r\n");
         //logf ("2 DMAEndOfTransfer = %d, TransferEnd = %d, TransferError = %d, timeout = %d\r\n", DMAEndOfTransfer, TransferEnd, TransferError, timeout);
 
@@ -1430,6 +1437,7 @@ SD_Error SD_WaitReadOperation (void)
         while (((SDIO ->STA & SDIO_FLAG_RXACT)) && (timeout > 0)) {
                 timeout--;
         }
+
 
         logf ("3\r\n");
 
@@ -1706,6 +1714,7 @@ SD_Error SD_WaitWriteOperation (void)
                 timeout--;
         }
 
+
         DMAEndOfTransfer = 0x00;
 
         timeout = SD_DATATIMEOUT;
@@ -1770,7 +1779,8 @@ SD_Error SD_StopTransfer (void)
         SDIO_SendCommand (&SDIO_CmdInitStructure);
 
         errorstatus = CmdResp1Error (SD_CMD_STOP_TRANSMISSION );
-
+        if (errorstatus = SD_OK){
+        }
         return (errorstatus);
 }
 
@@ -2010,33 +2020,38 @@ SD_Error SD_ProcessIRQSrc (void)
 {
         if (SDIO_GetITStatus (SDIO_IT_DATAEND) != RESET) {
                 TransferError = SD_OK;
+//                LED_light(1);
                 SDIO_ClearITPendingBit (SDIO_IT_DATAEND);
                 TransferEnd = 1;
-                logf ("SDIO IRQ : TransferEnd = 1, OK\r\n");
+                logf ("TransferEnd = 1, OK\r\n");
         }
         else if (SDIO_GetITStatus (SDIO_IT_DCRCFAIL) != RESET) {
                 SDIO_ClearITPendingBit (SDIO_IT_DCRCFAIL);
                 TransferError = SD_DATA_CRC_FAIL;
                 logf ("SDIO IRQ : SD_DATA_CRC_FAIL\r\n");
-        }
+         }
         else if (SDIO_GetITStatus (SDIO_IT_DTIMEOUT) != RESET) {
                 SDIO_ClearITPendingBit (SDIO_IT_DTIMEOUT);
                 TransferError = SD_DATA_TIMEOUT;
+//                LED_light(3);
                 logf ("SDIO IRQ : SD_DATA_TIMEOUT\r\n");
         }
         else if (SDIO_GetITStatus (SDIO_IT_RXOVERR) != RESET) {
                 SDIO_ClearITPendingBit (SDIO_IT_RXOVERR);
                 TransferError = SD_RX_OVERRUN;
+//                LED_light(4);
                 logf ("SDIO IRQ : SD_RX_OVERRUN\r\n");
         }
         else if (SDIO_GetITStatus (SDIO_IT_TXUNDERR) != RESET) {
                 SDIO_ClearITPendingBit (SDIO_IT_TXUNDERR);
                 TransferError = SD_TX_UNDERRUN;
+//                LED_light(5);
                 logf ("SDIO IRQ : SD_TX_UNDERRUN\r\n");
         }
         else if (SDIO_GetITStatus (SDIO_IT_STBITERR) != RESET) {
                 SDIO_ClearITPendingBit (SDIO_IT_STBITERR);
                 TransferError = SD_START_BIT_ERR;
+//                LED_light(6);
                 logf ("SDIO IRQ : SD_START_BIT_ERR\r\n");
         }
 

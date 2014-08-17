@@ -239,3 +239,8 @@ void hd44780_goto(uint8_t line, uint8_t position) {
 	hd44780_ddram_addr((0x40 * (line - 1)) + (position - 1));
 	hd44780_active=0;
 }
+
+void hd44780_rewrite_string( char *s ){
+	hd44780_goto(1,1);
+	hd44780_write_string(s);
+}

@@ -18,6 +18,14 @@
 #include "usb_midi_io.h"
 #include "menu.h"
 
+#include "defines.h"
+//#include "tm_stm32f4_delay.h"
+//#include "tm_stm32f4_disco.h"
+#include "tm_stm32f4_fatfs.h"
+
+
+#include "leds.h"
+
 uint8_t count;
 uint16_t i;
 
@@ -73,14 +81,58 @@ void firstInit() {
 
 }
 
+
+
 int main(void) {
 
 
 	firstInit();
+    delay(500);
+//	LED_light(LED2 | LED3);
 
-//	GPIO_SetBits(GPIOC, GPIO_Pin_13); //Light the green led
-//	GPIO_SetBits(GPIOC, GPIO_Pin_14); //Light the blue led
-	GPIO_SetBits(GPIOC, GPIO_Pin_15); //Light the red led
+/*test SD*/
+
+    //Fatfs object
+    FATFS FatFs;
+    //File object
+    FIL fil;
+    //Free and total space
+    uint32_t total, free;
+
+    //Initialize system
+ //   SystemInit();
+    //Initialize delays
+ //   TM_DELAY_Init();
+
+    //Mount drive
+    if (f_mount(&FatFs, "", 1) == FR_OK) {
+        //Mounted OK, turn on RED LED
+//    	LED_light(1);
+
+        //Try to open file
+        if (f_open(&fil, "first_file.txt", FA_OPEN_ALWAYS | FA_READ | FA_WRITE) == FR_OK) {
+            //File opened, turn off RED and turn on GREEN led
+//        	LED_light(2);
+
+            //If we put more than 0 characters (everything OK)
+            if (f_puts("First string in my file\n", &fil) > 0) {
+//            	LED_light(3);
+                if (TM_FATFS_DriveSize(&total, &free) == FR_OK) {
+//                    LED_light(4);
+
+                    //Data for drive size are valid
+                }
+
+                //Turn on both leds
+ //               LED_light(7);
+            }
+            //Close file, don't forget this!
+            f_close(&fil);
+        }
+
+        //Unmount drive, don't forget this!
+        f_mount(0, "", 1);
+    }
 
 	//Main loop
 	while (1) {

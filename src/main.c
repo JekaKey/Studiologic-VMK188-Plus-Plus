@@ -107,7 +107,7 @@ int main(void) {
     //Mount drive
     if (f_mount(&FatFs, "", 1) == FR_OK) {
         //Mounted OK, turn on RED LED
-//    	LED_light(1);
+    	LED_light(1);
 
         //Try to open file
         if (f_open(&fil, "first_file.txt", FA_OPEN_ALWAYS | FA_READ | FA_WRITE) == FR_OK) {

@@ -54,7 +54,7 @@
 #endif
 
 #ifndef FATFS_SDIO_4BIT
-#define FATFS_SDIO_4BIT						1
+#define FATFS_SDIO_4BIT						0
 #endif
 
 #if FATFS_USE_DETECT_PIN > 0

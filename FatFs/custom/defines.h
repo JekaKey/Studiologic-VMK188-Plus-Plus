@@ -16,4 +16,4 @@
 
 //Activate SDIO 4-bit mode
 //#define FATFS_SDIO
-#define FATFS_SDIO_4BIT 1
+#define FATFS_SDIO_4BIT 0

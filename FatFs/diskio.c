@@ -6,21 +6,22 @@
 /* This is an example of glue functions to attach various exsisting      */
 /* storage control module to the FatFs module with a defined API.        */
 /*-----------------------------------------------------------------------*/
-
-#include "diskio.h"		/* FatFs lower layer API */
-
-#if FATFS_USE_SDIO == 1
-	#include "fatfs_sd_sdio.h"
-#else
-	#include "fatfs_sd.h"
-#endif
+/* Angepasst von UB                                                      */
+/* V:1.0 / 26.02.2013                                                    */
+/*-----------------------------------------------------------------------*/
 
 
+
+#include "diskio.h"		// FatFs lower layer API
+#include "stm32_ub_usbdisk.h"	// UB: USB drive control
+#include "stm32_ub_atadrive.h"	// UB: ATA drive control
+#include "stm32_ub_sdcard.h"	// UB: MMC/SDC control
 
 /* Definitions of physical drive number for each media */
-#define ATA		0
-#define MMC		1
-#define USB		2
+#define MMC		0
+#define USB		1
+#define ATA		2
+
 
 /*-----------------------------------------------------------------------*/
 /* Inidialize a Drive                                                    */
@@ -30,15 +31,50 @@ DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber (0..) */
 )
 {
-	if (pdrv) {
-		return STA_NOINIT;
+	DSTATUS stat;
+	int result;
+
+	switch (pdrv) {
+	case ATA :
+		result = ATA_disk_initialize();
+
+		// translate the reslut code here
+		if(result==0) {
+		  stat=0;
+		}
+		else {
+		  stat=STA_NOINIT;
+		}
+
+		return stat;
+
+	case MMC :
+		result = MMC_disk_initialize();
+
+		// translate the reslut code here
+		if(result==0) {
+		  stat=0;
+		}
+		else {
+		  stat=STA_NOINIT;
+		}
+
+		return stat;
+
+	case USB :
+		result = USB_disk_initialize();
+
+		// translate the reslut code here
+		if(result==0) {
+		  stat=0;
+		}
+		else {
+		  stat=STA_NOINIT;
+		}
+
+		return stat;
 	}
-	
-#if FATFS_USE_SDIO == 1
-	return TM_FATFS_SD_SDIO_disk_initialize();
-#else
-	return TM_FATFS_SD_disk_initialize();
-#endif
+	return STA_NOINIT;
 }
 
 
@@ -51,15 +87,50 @@ DSTATUS disk_status (
 	BYTE pdrv		/* Physical drive nmuber (0..) */
 )
 {
-	if (pdrv) {
-		return STA_NOINIT;
+	DSTATUS stat;
+	int result;
+
+	switch (pdrv) {
+	case ATA :
+		result = ATA_disk_status();
+
+		// translate the reslut code here
+		if(result==0) {
+		  stat=0;
+		}
+		else {
+		  stat=STA_NODISK | STA_NOINIT;
+		}
+
+		return stat;
+
+	case MMC :
+		result = MMC_disk_status();
+
+		// translate the reslut code here
+		if(result==0) {
+		  stat=0;
+		}
+		else {
+		  stat=STA_NODISK | STA_NOINIT;
+		}
+
+		return stat;
+
+	case USB :
+		result = USB_disk_status();
+
+		// translate the reslut code here
+		if(result==0) {
+		  stat=0;
+		}
+		else {
+		  stat=STA_NODISK | STA_NOINIT;
+		}
+
+		return stat;
 	}
-	
-#if FATFS_USE_SDIO == 1
-	return TM_FATFS_SD_SDIO_disk_status();
-#else
-	return TM_FATFS_SD_disk_status();
-#endif
+	return STA_NOINIT;
 }
 
 
@@ -72,18 +143,58 @@ DRESULT disk_read (
 	BYTE pdrv,		/* Physical drive nmuber (0..) */
 	BYTE *buff,		/* Data buffer to store read data */
 	DWORD sector,	/* Sector address (LBA) */
-	UINT count		/* Number of sectors to read (1..128) */
+	BYTE count		/* Number of sectors to read (1..128) */
 )
 {
-	if (pdrv || !count) {
-		return RES_PARERR;		/* Check parameter */
-	}
+	DRESULT res;
+	int result;
 
-#if FATFS_USE_SDIO == 1
-	return TM_FATFS_SD_SDIO_disk_read(buff, sector, count);
-#else
-	return TM_FATFS_SD_disk_read(buff, sector, count);
-#endif
+	switch (pdrv) {
+	case ATA :
+		// translate the arguments here
+
+		result = ATA_disk_read(buff, sector, count);
+
+		// translate the reslut code here
+		if(result==0) {
+		  res=RES_OK;
+		}
+		else {
+		  res=RES_ERROR;
+		}
+
+		return res;
+
+	case MMC :
+		// translate the arguments here
+		result = MMC_disk_read(buff, sector, count);
+
+		// translate the reslut code here
+		if(result==0) {
+		  res=RES_OK;
+		}
+		else {
+		  res=RES_ERROR;
+		}
+
+		return res;
+
+	case USB :
+		// translate the arguments here
+
+		result = USB_disk_read(buff, sector, count);
+
+		// translate the reslut code here
+		if(result==0) {
+		  res=RES_OK;
+		}
+		else {
+		  res=RES_ERROR;
+		}
+
+		return res;
+	}
+	return RES_PARERR;
 }
 
 
@@ -97,18 +208,59 @@ DRESULT disk_write (
 	BYTE pdrv,			/* Physical drive nmuber (0..) */
 	const BYTE *buff,	/* Data to be written */
 	DWORD sector,		/* Sector address (LBA) */
-	UINT count			/* Number of sectors to write (1..128) */
+	BYTE count			/* Number of sectors to write (1..128) */
 )
 {
-	if (pdrv || !count) {
-		return RES_PARERR;		/* Check parameter */
+	DRESULT res;
+	int result;
+
+	switch (pdrv) {
+	case ATA :
+		// translate the arguments here
+
+		result = ATA_disk_write(buff, sector, count);
+
+		// translate the reslut code here
+		if(result==0) {
+		  res=RES_OK;
+		}
+		else {
+		  res=RES_ERROR;
+		}
+
+		return res;
+
+	case MMC :
+		// translate the arguments here
+
+		result = MMC_disk_write(buff, sector, count);
+
+		// translate the reslut code here
+		if(result==0) {
+		  res=RES_OK;
+		}
+		else {
+		  res=RES_ERROR;
+		}
+
+		return res;
+
+	case USB :
+		// translate the arguments here
+
+		result = USB_disk_write(buff, sector, count);
+
+		// translate the reslut code here
+		if(result==0) {
+		  res=RES_OK;
+		}
+		else {
+		  res=RES_ERROR;
+		}
+
+		return res;
 	}
-	
-#if FATFS_USE_SDIO == 1
-	return TM_FATFS_SD_SDIO_disk_write((uint8_t *)buff, sector, count);
-#else
-	return TM_FATFS_SD_disk_write(buff, sector, count);
-#endif
+	return RES_PARERR;
 }
 #endif
 
@@ -117,6 +269,18 @@ DRESULT disk_write (
 /* Miscellaneous Functions                                               */
 /*-----------------------------------------------------------------------*/
 
+DWORD get_fattime (void)
+{
+	return	((2006UL-1980) << 25)	      // Year = 2006
+			| (2UL << 21)	      // Month = Feb
+			| (9UL << 16)	      // Day = 9
+			| (22U << 11)	      // Hour = 22
+			| (30U << 5)	      // Min = 30
+			| (0U >> 1)	      // Sec = 0
+			;
+}
+
+
 #if _USE_IOCTL
 DRESULT disk_ioctl (
 	BYTE pdrv,		/* Physical drive nmuber (0..) */
@@ -124,26 +288,55 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	if (pdrv) {
-		return RES_PARERR;					/* Check parameter */
+	DRESULT res;
+	int result;
+
+	switch (pdrv) {
+	case ATA :
+		// pre-process here
+
+		result = ATA_disk_ioctl(cmd, buff);
+
+		// post-process here
+		if(result==0) {
+		  res=RES_OK;
+		}
+		else {
+		  res=RES_ERROR;
+		}
+
+		return res;
+
+	case MMC :
+		// pre-process here
+
+		result = MMC_disk_ioctl(cmd, buff);
+
+		// post-process here
+		if(result==0) {
+		  res=RES_OK;
+		}
+		else {
+		  res=RES_ERROR;
+		}
+
+		return res;
+
+	case USB :
+		// pre-process here
+
+		result = USB_disk_ioctl(cmd, buff);
+
+		// post-process here
+		if(result==0) {
+		  res=RES_OK;
+		}
+		else {
+		  res=RES_ERROR;
+		}
+
+		return res;
 	}
-#if FATFS_USE_SDIO == 1
-	return TM_FATFS_SD_SDIO_disk_ioctl(cmd, buff);
-#else
-	return TM_FATFS_SD_disk_ioctl(cmd, buff);
-#endif
+	return RES_PARERR;
 }
 #endif
-
-#if FATFS_CUSTOM_FATTIME == 0
-DWORD get_fattime (void) {
-	/* Returns current time packed into a DWORD variable */
-	return	  ((DWORD)(2013 - 1980) << 25)	/* Year 2013 */
-			| ((DWORD)7 << 21)				/* Month 7 */
-			| ((DWORD)28 << 16)				/* Mday 28 */
-			| ((DWORD)0 << 11)				/* Hour 0 */
-			| ((DWORD)0 << 5)				/* Min 0 */
-			| ((DWORD)0 >> 1);				/* Sec 0 */
-}
-#endif
-

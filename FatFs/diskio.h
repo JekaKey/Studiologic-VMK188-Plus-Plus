@@ -1,16 +1,19 @@
-/*-----------------------------------------------------------------------/
-/  Low level disk interface modlue include file   (C)ChaN, 2013          /
+/*-----------------------------------------------------------------------
+/  Low level disk interface modlue include file   (C)ChaN, 2013
 /-----------------------------------------------------------------------*/
 
 #ifndef _DISKIO_DEFINED
 #define _DISKIO_DEFINED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define _USE_WRITE	1	/* 1: Enable disk_write function */
 #define _USE_IOCTL	1	/* 1: Enable disk_ioctl fucntion */
 
 #include "integer.h"
-#include "defines.h"
-//#include "tm_stm32f4_usart.h"
+
 
 /* Status of Disk Functions */
 typedef BYTE	DSTATUS;
@@ -25,31 +28,19 @@ typedef enum {
 } DRESULT;
 
 
-//#define FATFS_DEBUG_SEND_USART(x)	TM_USART_Puts(USART6, x); TM_USART_Puts(USART6, "\n");
-#define FATFS_DEBUG_SEND_USART(x)
-
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
 
 
 DSTATUS disk_initialize (BYTE pdrv);
 DSTATUS disk_status (BYTE pdrv);
-DRESULT disk_read (BYTE pdrv, BYTE* buff, DWORD sector, UINT count);
-DRESULT disk_write (BYTE pdrv, const BYTE* buff, DWORD sector, UINT count);
+DRESULT disk_read (BYTE pdrv, BYTE*buff, DWORD sector, BYTE count);
+DRESULT disk_write (BYTE pdrv, const BYTE* buff, DWORD sector, BYTE count);
+DWORD get_fattime (void);
 DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 
 
-//By default SDIO is used
-#ifndef FATFS_USE_SDIO
-#define FATFS_USE_SDIO			1
-#endif
-
-#ifndef TM_FATFS_CUSTOM_FATTIME
-#define TM_FATFS_CUSTOM_FATTIME	0
-#endif
-
 /* Disk Status Bits (DSTATUS) */
-
 #define STA_NOINIT		0x01	/* Drive not initialized */
 #define STA_NODISK		0x02	/* No medium in the drive */
 #define STA_PROTECT		0x04	/* Write protected */
@@ -82,11 +73,17 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 #define ATA_GET_MODEL		21	/* Get model name */
 #define ATA_GET_SN			22	/* Get serial number */
 
+
 /* MMC card type flags (MMC_GET_TYPE) */
 #define CT_MMC		0x01		/* MMC ver 3 */
 #define CT_SD1		0x02		/* SD ver 1 */
 #define CT_SD2		0x04		/* SD ver 2 */
 #define CT_SDC		(CT_SD1|CT_SD2)	/* SD */
 #define CT_BLOCK	0x08		/* Block addressing */
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

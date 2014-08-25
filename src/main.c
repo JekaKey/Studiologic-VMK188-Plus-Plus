@@ -7,6 +7,7 @@
 
 #define MAIN
 
+#include "main.h"
 #include "presets.h"
 #include "fifo.h"
 #include "keyboardscan.h"
@@ -17,11 +18,7 @@
 #include "gpio_config.h"
 #include "usb_midi_io.h"
 #include "menu.h"
-
-#include "defines.h"
-//#include "tm_stm32f4_delay.h"
-//#include "tm_stm32f4_disco.h"
-#include "tm_stm32f4_fatfs.h"
+#include "stm32_ub_fatfs.h"
 
 
 #include "leds.h"
@@ -67,12 +64,6 @@ void firstInit() {
 
 	hd44780_write_string("     VMK188++");
 
-	//TODO: move to gpio init module
-	//First port init, all for high
-//	GPIOB->ODR |= 0xFC07; // B0-B2, B10-B15
-//	GPIOC->ODR |= 0x38; // C3-C5
-//	GPIOD->ODR |= 0x300; // D8-D9
-//	GPIOE->ODR |= 0xFF80; // E7-E15
 
 //	Start key scan timer
 	TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
@@ -87,52 +78,38 @@ int main(void) {
 
 
 	firstInit();
-    delay(500);
-//	LED_light(LED2 | LED3);
+    FIL myFile;   // Filehandler
+
 
 /*test SD*/
+    // Init vom FATFS-System
+    UB_Fatfs_Init();
+  	 LED_light(4) ;
 
-    //Fatfs object
-    FATFS FatFs;
-    //File object
-    FIL fil;
-    //Free and total space
-    uint32_t total, free;
+    // Check ob Medium eingelegt ist
+    if(UB_Fatfs_CheckMedia(MMC_0)==FATFS_OK) {
+   	 LED_light(1) ;
 
-    //Initialize system
- //   SystemInit();
-    //Initialize delays
- //   TM_DELAY_Init();
+  	// Media mounten
+      if(UB_Fatfs_Mount(MMC_0)==FATFS_OK) {
+    	 LED_light(2) ;
+        // File zum schreiben im root neu anlegen
+        if(UB_Fatfs_OpenFile(&myFile, "0:/vmk188pp.txt", F_WR_CLEAR)==FATFS_OK) {
+       	 LED_light(7) ;
 
-    //Mount drive
-    if (f_mount(&FatFs, "", 1) == FR_OK) {
-        //Mounted OK, turn on RED LED
-//    	LED_light(1);
-
-        //Try to open file
-        if (f_open(&fil, "first_file.txt", FA_OPEN_ALWAYS | FA_READ | FA_WRITE) == FR_OK) {
-            //File opened, turn off RED and turn on GREEN led
-//        	LED_light(2);
-
-            //If we put more than 0 characters (everything OK)
-            if (f_puts("First string in my file\n", &fil) > 0) {
-//            	LED_light(3);
-                if (TM_FATFS_DriveSize(&total, &free) == FR_OK) {
-//                    LED_light(4);
-
-                    //Data for drive size are valid
-                }
-
-                //Turn on both leds
- //               LED_light(7);
-            }
-            //Close file, don't forget this!
-            f_close(&fil);
+      	// ein paar Textzeilen in das File schreiben
+          UB_Fatfs_WriteString(&myFile,"Test1");
+          UB_Fatfs_WriteString(&myFile,"test2");
+          UB_Fatfs_WriteString(&myFile,"test3");
+          // File schliessen
+          UB_Fatfs_CloseFile(&myFile);
         }
-
-        //Unmount drive, don't forget this!
-        f_mount(0, "", 1);
+        // Media unmounten
+     	  UB_Fatfs_UnMount(MMC_0);
+      }
     }
+
+
 
 	//Main loop
 	while (1) {

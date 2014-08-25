@@ -1144,10 +1144,10 @@ SD_Error SD_EnableWideBusOperation (uint32_t WideMode)
                         errorstatus = SD_UNSUPPORTED_FEATURE;
                         return (errorstatus);
                 }
-                else if (SDIO_BusWide_4b == WideMode) {
+                else if (WideMode == SDIO_BusWide_4b) {
                         errorstatus = SDEnWideBus (ENABLE);
 
-                        if (SD_OK == errorstatus) {
+                        if (errorstatus == SD_OK) {
                                 /*!< Configure the SDIO peripheral */
                                 SDIO_InitStructure.SDIO_ClockDiv = SDIO_TRANSFER_CLK_DIV;
                                 SDIO_InitStructure.SDIO_ClockEdge = SDIO_ClockEdge_Rising;
@@ -2954,7 +2954,7 @@ void SD_LowLevel_Init (void)
 		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
 #endif
 
-        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_25MHz;
         GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
         GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
         GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;

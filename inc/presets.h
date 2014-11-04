@@ -1,0 +1,157 @@
+#ifndef PRESETS__H
+#define PRESETS__H
+
+#include "stm32f4xx.h"
+#include "controls.h"
+#include "velocity.h"
+
+#define DEFAULT_CALIBR_NAME  "default.cal"
+#define DEFAULT_PRESET_NAME  "default.pst"
+#define DEFAULT_CURVE_NAME "default.crv"
+#define SETTING_NAME "start.cfg"
+
+#define CALIBR_DIR_NAME  "CALIBRATION"
+#define PRESET_DIR_NAME  "PRESET"
+#define CURVE_DIR_NAME "CURVE"
+
+#define JSON_TAB 2 //size of tabulation in generated JSON files
+
+#define TOKENS_NUM 700 //Max number of tokens for JSMN parser
+#define JSON_BUFF_SIZE 12000 //Size of JSON buffer in bytes
+
+
+#define MAX_ATTR_SIZE 24 //Size of strings for json attributes
+
+
+/***The following defines contains names of attributes in JSON files***/
+#define ATTR_SET_PRESET "preset"
+#define ATTR_SET_CALIBR "calibration"
+
+#define ATTR_CAL_SLIDERS "sliders"
+#define ATTR_CAL_S_MIN "min"
+#define ATTR_CAL_S_MAX "max"
+#define ATTR_CAL_S_DELTA "delta"
+
+#define ATTR_CURVE_XW1 "xw1"
+#define ATTR_CURVE_YW1 "yw1"
+#define ATTR_CURVE_XW2 "xw2"
+#define ATTR_CURVE_YW2 "yw2"
+#define ATTR_CURVE_XW3 "xw3"
+#define ATTR_CURVE_YW3 "yw3"
+#define ATTR_CURVE_XB1 "xb1"
+#define ATTR_CURVE_YB1 "yb1"
+#define ATTR_CURVE_XB2 "xb2"
+#define ATTR_CURVE_YB2 "yb2"
+#define ATTR_CURVE_XB3 "xb3"
+#define ATTR_CURVE_YB3 "yb3"
+
+
+#define ATTR_CHANNEL "channel"
+#define ATTR_SPLIT "split"
+#define ATTR_SPLIT_CHANNEL "channel"
+#define ATTR_SPLIT_KEY "key"
+#define ATTR_CURVE "curve"
+#define ATTR_HIRES "hires"
+#define ATTR_ANALOGMIDI "analogmidi"
+
+#define ATTR_SLIDERS "sliders"
+#define ATTR_S1 "slider1"
+#define ATTR_S2 "slider2"
+#define ATTR_S3 "slider3"
+#define ATTR_S4 "slider4"
+#define ATTR_S5 "slider5"
+#define ATTR_S6 "slider6"
+#define ATTR_S7 "slider7"
+#define ATTR_S8 "slider8"
+#define ATTR_S9 "slider9"
+#define ATTR_R1 "rotor1"
+#define ATTR_R2 "rotor2"
+#define ATTR_R3 "rotor3"
+#define ATTR_R4 "rotor4"
+#define ATTR_R5 "rotor5"
+#define ATTR_R6 "rotor6"
+#define ATTR_R7 "rotor7"
+#define ATTR_R8 "rotor8"
+#define ATTR_AT "aftertouch"
+#define ATTR_PI "pitch"
+#define ATTR_MO "modulation"
+#define ATTR_P1 "pedal1"
+#define ATTR_P2 "pedal2"
+#define ATTR_P3 "pedal3"
+#define ATTR_EY "empty"
+
+#define ATTR_S_ACTIVE "active"
+#define ATTR_S_REVERSE "reverse"
+#define ATTR_S_CHANNEL "channel"
+#define ATTR_S_EVENT "event"
+#define ATTR_S_MIN "min"
+#define ATTR_S_MAX "max"
+
+#define ATTR_BUTTONS "buttons"
+#define ATTR_B1 "button1"
+#define ATTR_B2 "button2"
+#define ATTR_B3 "button3"
+#define ATTR_B4 "button4"
+#define ATTR_B5 "button5"
+#define ATTR_B6 "button6"
+#define ATTR_B7 "button7"
+#define ATTR_B8 "button8"
+#define ATTR_BLF "buttonleft"
+#define ATTR_BRT "buttonright"
+#define ATTR_BRC "buttonrecord"
+#define ATTR_BST "buttonstop"
+#define ATTR_BPL "buttonplay"
+
+#define ATTR_B_ACTIVE "active"
+#define ATTR_B_TYPE "type"
+#define ATTR_B_CHANNEL "channel"
+#define ATTR_B_TOGGLE "toggle"
+#define ATTR_B_EVENT "event"
+#define ATTR_B_ON "on"
+#define ATTR_B_OFF "off"
+/*********************************/
+
+typedef enum  {FIO_OK, FIO_SD_ERROR, FIO_FILE_NOT_FOUND,FIO_FILE_CREATE_ERROR,FIO_GETFREE_ERR,FIO_MOUNT_ERR,FIO_WRITE_ERROR,FIO_READ_ERROR,
+	FIO_JSON_FORMAT_ERR, FIO_JSON_DATA_ERR} FIO_status;
+ //To keep information about Sliders calibration and so on
+
+
+typedef struct {//Keeps names of current presets and calibrations.
+	char preset_name[16];
+	char calibration_name[16];
+} currentStateType;
+
+typedef struct{
+	uint8_t Id; //
+	Calibration_slider_type calibr[SLIDERS_AMOUNT];
+}calibrationType;
+
+typedef struct {
+	uint8_t MidiChannel; //0-16
+	uint8_t SplitKey;//0 - NoSplit, 1-87 - Split
+	uint8_t SplitChannel; //0-16, MIDI Channel for a left part of a split keyboard
+	uint8_t HighResEnable; //bool
+	uint8_t AnalogMidiEnable; //bool
+	curve_points_type Curve;//curve nodes for B&W keys
+	char CurveFileName[16];//name of curve file
+	Slider_type sliders[SLIDERS_AMOUNT];
+	Button_type buttons[BUTTONS_AMOUNT];
+} presetType;
+
+
+FIO_status start_load_setting(void);
+FIO_status start_load_calibration(calibrationType* cal);
+FIO_status start_load_preset(presetType* preset, calibrationType* cal);
+void set_defaults_all(presetType* preset, calibrationType* cal);
+FIO_status start_load_all(presetType* preset, calibrationType* cal);
+
+FIO_status currentState_load(void);
+FIO_status currentState_save(void);
+
+FIO_status calibration_load(char* name, calibrationType* cal );
+FIO_status calibration_save(const char* path, calibrationType* cal);
+FIO_status preset_load(char* name, presetType* preset);
+FIO_status preset_save(const char* name, presetType* preset );
+FIO_status preset_save_current(void);
+
+#endif //PRESETS__H

@@ -451,7 +451,7 @@ SD_Error SD_Init (void)
                 logf ("SD_GetCardInfo OK\r\n");
 		        logf("Card_info: \r\nCapacity: %u\r\n",SDCardInfo.CardCapacity);
 		        logf("Block size: %u\r\n", SDCardInfo.CardBlockSize);
-		        logf("RCA: %u\n\r",SDCardInfo.RCA);
+		        logf("RCA: %u\r\n",SDCardInfo.RCA);
 		        logf("Card type: %u\r\n", SDCardInfo.CardType);
                 errorstatus = SD_SelectDeselect ((uint32_t) (SDCardInfo.RCA << 16));
         }
@@ -549,7 +549,6 @@ SD_Error SD_PowerON (void)
         __IO SD_Error errorstatus = SD_OK;
         uint32_t response = 0, count = 0, validvoltage = 0;
         uint32_t SDType = SD_STD_CAPACITY;
-
         /*!< Power ON Sequence -----------------------------------------------------*/
         /*!< Configure the SDIO peripheral */
         /*!< SDIO_CK = SDIOCLK / (SDIO_INIT_CLK_DIV + 2) */

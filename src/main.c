@@ -86,6 +86,7 @@ int main(void) {
     LED_light(2);
 	set_defaults_all(&Preset, &Calibration);
     LED_light(4);
+    delay(250);
 	start_load_all(&Preset, &Calibration);
     LED_light(6);
 

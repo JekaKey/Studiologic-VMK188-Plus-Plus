@@ -291,7 +291,6 @@ static json_attr_t curve_attr[] ={
 /*Modify some structures fields and assign addresses of variables to structures fields*/
 /************************Not good looking :-( *************************/
 static void init_json_preset_attr(presetType *preset) {
-	int i,j;
 	preset_attr[0].addr.uint8 = &(preset->MidiChannel);
 	preset_attr[2].addr.uint8 = &(preset->HighResEnable);
 	preset_attr[3].addr.uint8 = &(preset->AnalogMidiEnable);
@@ -302,7 +301,7 @@ static void init_json_preset_attr(presetType *preset) {
 
 	sliders_attr[SLIDERS_AMOUNT].attribute[0] =0;
 	/*Assign sliders addresses and attributes*/
-	for (i = 0; i < SLIDERS_AMOUNT; i++) {
+	for (int i = 0; i < SLIDERS_AMOUNT; i++) {
 		strcpy(sliders_attr[i].attribute, slider_names[i]);
 		sliders_attr[i].type = t_object;
 		sliders_attr[i].addr.object = sliders_param_attr[i];
@@ -318,14 +317,14 @@ static void init_json_preset_attr(presetType *preset) {
 		sliders_param_attr[i][4].addr.uint8 = &(preset->sliders[i].min_out_value);
 		strcpy(sliders_param_attr[i][5].attribute, ATTR_S_MAX);
 		sliders_param_attr[i][5].addr.uint8 = &(preset->sliders[i].max_out_value);
-		for (j = 0; j < 6; j++) {
+		for (int j = 0; j < 6; j++) {
 			sliders_param_attr[i][j].type = t_uint8;
 		}
 		sliders_param_attr[i][6].attribute[0]=0;
 	}
 	sliders_attr[SLIDERS_AMOUNT].attribute[0]=0;
 	/*Assign buttons addresses and attributes*/
-	for (i = 0; i < BUTTONS_AMOUNT; i++) {
+	for (int i = 0; i < BUTTONS_AMOUNT; i++) {
 		strcpy(buttons_attr[i].attribute, button_names[i]);
 		buttons_attr[i].type = t_object;
 		buttons_attr[i].addr.object = buttons_param_attr[i];
@@ -343,7 +342,7 @@ static void init_json_preset_attr(presetType *preset) {
 		buttons_param_attr[i][5].addr.uint8 = &(preset->buttons[i].on);
 		strcpy(buttons_param_attr[i][6].attribute, ATTR_B_OFF);
 		buttons_param_attr[i][6].addr.uint8 = &(preset->buttons[i].off);
-		for (j = 0; j < 7; j++) {
+		for (int j = 0; j < 7; j++) {
 			buttons_param_attr[i][j].type = t_uint8;
 		}
 		buttons_param_attr[i][7].attribute[0]=0;
@@ -352,8 +351,7 @@ static void init_json_preset_attr(presetType *preset) {
 }
 	/*Assign calibration addresses and attributes*/
 static void init_json_calibr_attr(calibrationType *cal) {
-	int i,j;
-	for (i = 0; i < SLIDERS_AMOUNT; i++){
+	for (int i = 0; i < SLIDERS_AMOUNT; i++){
 		strcpy(calibr_sliders_attr[i].attribute, slider_names[i]);
 		calibr_sliders_attr[i].type = t_object;
 		calibr_sliders_attr[i].addr.object = calibr_sliders_param_attr[i];
@@ -363,7 +361,7 @@ static void init_json_calibr_attr(calibrationType *cal) {
 		sliders_param_attr[i][1].addr.uint16 = &(cal->calibr[i].max_in_value);
 		strcpy(calibr_sliders_param_attr[i][2].attribute, ATTR_CAL_S_DELTA);
 		sliders_param_attr[i][2].addr.uint16 = &(cal->calibr[i].delta);
-		for (j = 0; j < 3; j++) {
+		for (int j = 0; j < 3; j++) {
 			calibr_sliders_param_attr[i][j].type = t_uint16;
 		}
 		calibr_sliders_param_attr[i][3].attribute[0]=0;
@@ -391,17 +389,18 @@ static void init_json_curve_attr(presetType *preset) {
 /*Load setting file start.cfg with current calibration file name and preset file name*/
 
 
-jsmn_parser parser;
 
 
 FIO_status load_JSON(char* path, char *js_buff,  jsmntok_t *tokens, json_attr_t *json_attr){
 	FIL fff; // File handler
-//	jsmn_parser parser;
+	jsmn_parser parser;
 	UINT size;
+	PRINTF("Load_JSON : start, path:%s\n\r",path);
 	SDFS_status_type res = SDFS_open(&fff, path, F_RD);
 	if (res != SDFS_OK)  //Calibration not file exist
 		return FIO_FILE_NOT_FOUND;
 	FRESULT f_res=f_read(&fff, js_buff, JSON_BUFF_SIZE, &size);
+	PRINTF("Load_JSON : read result: %d\n\r",f_res);
 	if (f_res!=FR_OK)
 			return FIO_READ_ERROR;
 	js_buff[size] = 0;
@@ -439,7 +438,7 @@ FIO_status start_load_setting(void){
 
 FIO_status calibration_load(char* path, calibrationType* cal ){
     	init_json_calibr_attr(cal);
-    	FIO_status status=load_JSON(path, js_buff, tokens, calibr_attr);
+     	FIO_status status=load_JSON(path, js_buff, tokens, calibr_attr);
         return status;
 }
 
@@ -489,7 +488,7 @@ FIO_status start_load_calibration(calibrationType* cal){
 	file_list_type fl;
 	SDFS_status_type res;
 	FIO_status fiores;
-	char path[128] = "0:/" CALIBR_DIR_NAME "/";
+	static char path[128] = "0:/" CALIBR_DIR_NAME "/";
 
 	if (Current_state.calibration_name[0]) { //name is not empty string
 		strcat(path, Current_state.calibration_name);
@@ -534,12 +533,12 @@ FIO_status start_load_curve(presetType* preset) {
 	file_list_type fl;
 	SDFS_status_type res;
 	FIO_status fiores;
-	char path[64] = "0:/" CURVE_DIR_NAME "/";
+	static char path[128] = "0:/" CURVE_DIR_NAME "/";
 	if (preset->CurveFileName[0]) { //name is not empty string
 		strcat(path, preset->CurveFileName); //add file name to path
 		fiores = curve_load(path, preset); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
-			PRINTF("Curve was loaded successfully\n\r");
+//			PRINTF("Curve was loaded successfully\n\r");
 			calculate_velocity_formula(&preset->Curve);
 			return FIO_OK; //all is done
 		} else {
@@ -579,7 +578,7 @@ FIO_status start_load_preset(presetType* preset, calibrationType* cal){
 	file_list_type fl;
 	SDFS_status_type res;
 	FIO_status fiores;
-	char path[64]="0:/" PRESET_DIR_NAME "/";
+	static char path[128]="0:/" PRESET_DIR_NAME "/";
 
 	if (Current_state.preset_name[0]) { //name is not empty string
 		strcat(path,Current_state.preset_name);//add file name to path
@@ -639,26 +638,20 @@ FIO_status start_load_all(presetType* preset, calibrationType* cal){
 		PRINTF("MOUNT ERROR\r\n");
 		return FIO_SD_ERROR;
 	}
-	PRINTF("Presets start_load_all started\n\r");
 
 	if (start_load_setting() == FIO_SD_ERROR) {
-		PRINTF("Presets start_load_all: Current setting not loaded\n\r");
 		return FIO_SD_ERROR;
 	}
 	if (start_load_calibration(cal) == FIO_SD_ERROR) {
-		PRINTF("Presets start_load_all: calibration not loaded\n\r");
 		return FIO_SD_ERROR;
 	}
 	if (start_load_preset(preset, cal) == FIO_SD_ERROR) {
-		PRINTF("Presets start_load_all: calibration not loaded\r\n");
 		return FIO_SD_ERROR;
 	}
 	if (start_load_curve(preset) == FIO_SD_ERROR) {
-		PRINTF("Presets start_load_all: curve not loaded\r\n");
 		return FIO_SD_ERROR;
 	}
 	if (currentState_save() != FIO_OK) {
-		PRINTF("Presets start_load_all: current state not saved\n\r");
 		return FIO_SD_ERROR;
 	}
 	return FIO_OK;

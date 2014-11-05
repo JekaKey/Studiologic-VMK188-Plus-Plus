@@ -29,7 +29,7 @@ parse_result_t tokens_parse(const char * buff, const jsmntok_t* tok,
 		return parse_not_object_err; //Start token must be object
 	}
 	uint16_t size = tok[token_number].size/2;
-	PRINTF("Token size :%d \n\r",size);
+//	PRINTF("Token size :%d \n\r",size);
 
 	token_number++;
 	for (int i = 0; i < size; i ++) {
@@ -38,12 +38,12 @@ parse_result_t tokens_parse(const char * buff, const jsmntok_t* tok,
 		int len = tok[token_number].end - tok[token_number].start;
 		memcpy(st, &buff[tok[token_number].start], len); //copy attribute name from buff
 		st[len] = '\0'; //string ends with zero
-		PRINTF("Token_parse: Token number: %d,  current token:  %s \n\r",token_number, st);
+//		PRINTF("Token_parse: Token number: %d,  current token:  %s \n\r",token_number, st);
 		j = 0;
 		while (json_attr[j].attribute[0]) {
 //			PRINTF("Token parse: j=%d, Attr: %s \r\n",j, json_attr[j].attribute);
 			if (strcmp(json_attr[j].attribute, st) == 0) { //Attribute found
-				PRINTF("Attribute found :%s j= %d \n\r",st,j);
+//				PRINTF("Attribute found :%s j= %d \n\r",st,j);
 				found = 1;
 				break;
 			}

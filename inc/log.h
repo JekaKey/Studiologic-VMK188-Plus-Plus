@@ -5,6 +5,7 @@
 
 //#define DEBUG_SD
 //#define DEBUG
+//#define DEBUG_MENU
 
 #ifdef DEBUG_SD
 #define logf(...) printf (__VA_ARGS__);
@@ -18,6 +19,14 @@
 #define PRINTF(...) printf (__VA_ARGS__);
 #else
 #define PRINTF(...)
+#endif
+
+
+
+#ifdef DEBUG_MENU
+#define LOG(...) printf (__VA_ARGS__);
+#else
+#define LOG(...)
 #endif
 
 

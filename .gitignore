@@ -49,3 +49,5 @@ Fatarminator.uvopt
 *.cogui
 .DS_Store
 #Build files
+debag
+log

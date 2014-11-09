@@ -1,3 +1,5 @@
+#include "presets.h"
+
 typedef struct PROGMEM{
 	void       *Next;
 	void       *Previous;
@@ -24,35 +26,21 @@ typedef struct PROGMEM{
 #define SELECT	    (&selectedMenuItem->Select)
 
 
-#define BUTTON_PAGEUP 0
-#define BUTTON_PAGEDOWN 2
-#define BUTTON_PANIC 4
-#define BUTTON_EDIT 6
-#define BUTTON_CHANNEL 1
-#define BUTTON_BANK 3
-#define BUTTON_PROGRAM 5
-#define BUTTON_STORAGE 7
-#define BUTTON_ENTER 10
+typedef enum {STATE_presets_list, STATE_menu, STATE_preset_edit_name, STATE_calibration_edit, STATE_curve_edit} interface_state_t;
 
-#define BUTTON_LEFT 11
-#define BUTTON_RIGHT 12
-#define BUTTON_RECORD 13
-#define BUTTON_PLAY 14
-#define BUTTON_STOP 15
-
-#define BUTTON_B1 16
-#define BUTTON_B2 17
-#define BUTTON_B3 18
-#define BUTTON_B4 19
-#define BUTTON_B5 20
-#define BUTTON_B6 21
-#define BUTTON_B7 22
-#define BUTTON_B8 23
-#define ENCODER_LEFT 25
-#define ENCODER_RIGHT 26
+typedef struct {
+	char text[16];
+	enum {start, edit, } state;
+	uint8_t pos;
+	uint8_t line;
+}text_object_t;
 
 void btoa(uint8_t value, char* buffer);
-void interface_init (void);
+
+void text_object_init(text_object_t *object, const char *st, const uint8_t line);
+void text_object_edit(text_object_t *object, char *st);
+
+void interface_init(const presetType *pr, char * name);
 void checkControl_events(void);
 uint8_t checkButtons_events(void);
-
+void head_buttons_handler(void);

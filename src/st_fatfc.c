@@ -131,7 +131,6 @@ SDFS_status_type SDFS_scandir(char* path, file_list_type* fl) {
 	DIR dir;
 	WORD n = 0;
 
-//	char lfn[_MAX_LFN];
 	fno.lfname = lfn;
 	fno.lfsize = _MAX_LFN - 1;
 

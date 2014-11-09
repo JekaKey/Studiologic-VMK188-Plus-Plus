@@ -1,3 +1,5 @@
+#ifndef  SD_FATFS
+#define SD_FATFS
 #include "sdio_high_level.h"
 #include "ff.h"
 
@@ -29,6 +31,7 @@ typedef enum {
 
 typedef struct {
 	WORD num;
+	WORD pos;
 	char names[FILE_LIST_SIZE][_MAX_LFN];
 }file_list_type;
 
@@ -39,3 +42,5 @@ SDFS_status_type SDFS_close(FIL* fp);
 SDFS_status_type SDFS_writeString(FIL* fp, char* text);
 SDFS_status_type SDFS_readString(FIL* fp, char* text, uint32_t len);
 SDFS_status_type SDFS_scandir(char* path, file_list_type* fl);
+
+#endif //SD_FATFS

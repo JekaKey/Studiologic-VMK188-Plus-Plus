@@ -436,24 +436,34 @@ FIO_status start_load_setting(void){
 /*3 functions loading parameters from json files to structure object*/
 /*If some parameters do not exist in JSON they will not change*/
 
-FIO_status calibration_load(char* path, calibrationType* cal ){
+FIO_status calibration_load(char* name, calibrationType* cal ){
+	    char path[64] = "0:/" CALIBR_DIR_NAME "/";
+    	strcat(path, name);
     	init_json_calibr_attr(cal);
      	FIO_status status=load_JSON(path, js_buff, tokens, calibr_attr);
         return status;
 }
 
-FIO_status curve_load(char* path, presetType* pr) {
+FIO_status curve_load(char* name, presetType* pr) {
+	char path[64] = "0:/" CURVE_DIR_NAME "/";
+	strcat(path, name); //add file name to path
+	LOG("Load curve: %s\n\r",path);
 	init_json_curve_attr(pr);
 	FIO_status status=load_JSON(path, js_buff, tokens, curve_attr);
     return status;
 }
 
 
-FIO_status preset_load(char* path, presetType* pr) {
+FIO_status preset_load(char* name, presetType* pr) {
+	char path[64]="0:/" PRESET_DIR_NAME "/";
+	strcat(path,name);//add file name to path
+	LOG("Load preset: %s\n\r",path);
 	init_json_preset_attr(pr);
 	FIO_status status=load_JSON(path, js_buff, tokens, preset_attr);
     return status;
 }
+
+
 
 static void preset_set_defaults(presetType* pr){
 	pr->MidiChannel=0;
@@ -461,6 +471,7 @@ static void preset_set_defaults(presetType* pr){
 	pr->SplitKey=0;
 	pr->SplitChannel=0;
 	pr->AnalogMidiEnable=0;
+	strcpy(pr->CurveFileName, DEFAULT_CURVE_NAME);
 }
 
 /*Default curve reproduces old VMK188+ behavior*/
@@ -480,21 +491,16 @@ static void curve_set_defaults(presetType* pr){
 	calculate_velocity_formula(&pr->Curve);
 }
 
-
-
-
+file_list_type presets_list, calibrations_list, curves_list;
 
 FIO_status start_load_calibration(calibrationType* cal){
-	file_list_type fl;
 	SDFS_status_type res;
 	FIO_status fiores;
-	static char path[128] = "0:/" CALIBR_DIR_NAME "/";
-
 	if (Current_state.calibration_name[0]) { //name is not empty string
-		strcat(path, Current_state.calibration_name);
-		fiores = calibration_load(path, cal); //Load calibration from file.
+		fiores = calibration_load(Current_state.calibration_name, cal); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
 			PRINTF("Calibration was loaded successfully\n\r");
+			res = SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list);
 			return FIO_OK; //all is done
 		} else {
 			if (fiores == FIO_SD_ERROR) {
@@ -504,15 +510,15 @@ FIO_status start_load_calibration(calibrationType* cal){
 	}
 
 	/*Otherwise  we look for first any calibration file*/
-	res = SDFS_scandir("0:/" CALIBR_DIR_NAME, &fl);
+	res = SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list);
 	if (res != SDFS_OK) { //Calibration directory is  not found
 		f_mkdir("0:/" CALIBR_DIR_NAME);
-		fl.num = 0;
+		calibrations_list.num = 0;
 	}
-	if (fl.num != 0) { // Some calibration file exists
-		strcpy(Current_state.calibration_name, fl.names[0]); //Current calibration is a first file in a calibration directory
-		strcat(path, Current_state.calibration_name);
-		fiores = calibration_load(path, cal); //Load calibration from file.
+	if (calibrations_list.num != 0) { // Some calibration file exists
+
+		strcpy(Current_state.calibration_name, calibrations_list.names[0]); //Current calibration is a first file in a calibration directory
+		fiores = calibration_load(Current_state.calibration_name, cal); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
 			return FIO_OK; //all is done
 		} else {
@@ -520,8 +526,7 @@ FIO_status start_load_calibration(calibrationType* cal){
 		}
 	} else { //Directory is empty, so save default calibration file
 		strcpy(Current_state.calibration_name, DEFAULT_CALIBR_NAME);
-		strcat(path, Current_state.calibration_name);
-		if (calibration_save(path, cal) != FIO_OK) {
+		if (calibration_save(Current_state.calibration_name, cal) != FIO_OK) {
 			PRINTF("Calibration save ERROR\n\r");
 			return FIO_SD_ERROR;
 		}
@@ -530,16 +535,14 @@ FIO_status start_load_calibration(calibrationType* cal){
 }
 
 FIO_status start_load_curve(presetType* preset) {
-	file_list_type fl;
 	SDFS_status_type res;
 	FIO_status fiores;
-	static char path[128] = "0:/" CURVE_DIR_NAME "/";
 	if (preset->CurveFileName[0]) { //name is not empty string
-		strcat(path, preset->CurveFileName); //add file name to path
-		fiores = curve_load(path, preset); //Load calibration from file.
+		fiores = curve_load(preset->CurveFileName, preset); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
 //			PRINTF("Curve was loaded successfully\n\r");
 			calculate_velocity_formula(&preset->Curve);
+			res = SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list); //load file list for future usage
 			return FIO_OK; //all is done
 		} else {
 			if (fiores == FIO_SD_ERROR) {
@@ -548,15 +551,14 @@ FIO_status start_load_curve(presetType* preset) {
 		}
 	}
 	/*Otherwise  we look for first any preset file*/
-	res = SDFS_scandir("0:/" CURVE_DIR_NAME, &fl);
+	res = SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list);
 	if (res != SDFS_OK) { //Preset directory is  not found
 		f_mkdir("0:/" CURVE_DIR_NAME);
-		fl.num = 0;
+		curves_list.num = 0;
 	}
-	if (fl.num != 0) { // Some curve file exists
-		strcpy(preset->CurveFileName, fl.names[0]); //Current curve is a first file in a preset directory
-		strcat(path, preset->CurveFileName);
-		fiores = curve_load(path, preset); //Load curve from file.
+	if (curves_list.num != 0) { // Some curve file exists
+		strcpy(preset->CurveFileName, curves_list.names[0]); //Current curve is a first file in a preset directory
+		fiores = curve_load(preset->CurveFileName, preset); //Load curve from file.
 		calculate_velocity_formula(&preset->Curve); //calculate parameters for velocity formula
 		if (fiores == FIO_OK) { //loading was successful
 			return FIO_OK; //all is done
@@ -565,8 +567,7 @@ FIO_status start_load_curve(presetType* preset) {
 		}
 	} else { //Directory is empty
 		strcpy(preset->CurveFileName, DEFAULT_CURVE_NAME);
-		strcat(path, preset->CurveFileName);
-		if (curve_save(path, &preset->Curve) != FIO_OK) {
+		if (curve_save(preset->CurveFileName, &preset->Curve) != FIO_OK) {
 			return FIO_SD_ERROR;
 		}
 		return FIO_OK;
@@ -574,17 +575,16 @@ FIO_status start_load_curve(presetType* preset) {
     return FIO_OK;
 }
 
+
 FIO_status start_load_preset(presetType* preset, calibrationType* cal){
-	file_list_type fl;
 	SDFS_status_type res;
 	FIO_status fiores;
-	static char path[128]="0:/" PRESET_DIR_NAME "/";
 
 	if (Current_state.preset_name[0]) { //name is not empty string
-		strcat(path,Current_state.preset_name);//add file name to path
-		fiores = preset_load(path, preset); //Load calibration from file.
+		fiores = preset_load(Current_state.preset_name, preset); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
-			PRINTF("Preset was loaded successfully\n\r");
+			LOG("Preset was loaded successfully\n\rPreset.CurveFileName:%s\n\r",Preset.CurveFileName);
+			res = SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
 			return FIO_OK; //all is done
 		} else {
 			if (fiores == FIO_SD_ERROR) {
@@ -593,15 +593,14 @@ FIO_status start_load_preset(presetType* preset, calibrationType* cal){
 		}
 	}
 	/*Otherwise  we look for first any preset file*/
-	res = SDFS_scandir("0:/" PRESET_DIR_NAME, &fl);
+	res = SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
 	if (res != SDFS_OK) { //Preset directory is  not found
 		f_mkdir("0:/" PRESET_DIR_NAME);
-		fl.num = 0;
+		presets_list.num = 0;
 	}
-	if (fl.num != 0) { // Some preset file exists
-		strcpy(Current_state.preset_name, fl.names[0]); //Current preset is a first file in a preset directory
-		strcat(path, Current_state.preset_name);
-		fiores = preset_load(path, preset); //Load calibration from file.
+	if (presets_list.num != 0) { // Some preset file exists
+		strcpy(Current_state.preset_name, presets_list.names[0]); //Current preset is a first file in a preset directory
+		fiores = preset_load(Current_state.preset_name, preset); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
 			return FIO_OK; //all is done
 		} else {
@@ -609,9 +608,8 @@ FIO_status start_load_preset(presetType* preset, calibrationType* cal){
 		}
 	} else { //Directory is empty
 		strcpy(Current_state.preset_name, DEFAULT_PRESET_NAME);
-		strcat(path, Current_state.preset_name);
-		if (preset_save(path, preset) != FIO_OK) {
-			PRINTF("Presets start_load_preset: preset no saved");
+		if (preset_save(Current_state.preset_name, preset) != FIO_OK) {
+			PRINTF("Presets start_load_preset: preset no saved\n\r");
 			return FIO_SD_ERROR;
 		}
 		return FIO_OK;

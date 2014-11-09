@@ -29,9 +29,10 @@ uint8_t MidiChannel = 0;
 
 
 
-word vel_test = 0;
+
 void checkNoteArray(presetType* preset) {
 	word vel;
+	uint8_t channel;
 	if (FIFO_COUNT(notes) != 0) {
 
 		curNote = FIFO_FRONT(notes);
@@ -39,16 +40,23 @@ void checkNoteArray(presetType* preset) {
 
 		FIFO_POP(durations);
 		FIFO_POP(notes);
-
+		if ((preset->SplitKey) && ((curNote & 0x7F) < preset->SplitKey)) {
+			channel = preset->SplitChannel;
+		} else {
+			channel = preset->MidiChannel;
+		}
+		curNote+=21;
 		if ((curNote & 0x80) == 0) {
 			vel = getVelocity_on(duration, note_color(curNote));
 			if (preset->HighResEnable) {
 				/*Send High Res Preffix*/
-				sendControlChange(0x58, (byte) (vel & 0x7F), preset->MidiChannel); //to midi
+				sendControlChange(0x58, (byte) (vel & 0x7F), channel); //to midi
 			}
-			sendNoteOn(curNote, vel, preset->MidiChannel); //to midi
+			sendNoteOn(curNote, vel, channel); //to midi
 		} else {
-			sendNoteOff(curNote & 0x7F, getVelocity_off(duration, note_color(curNote)), preset->MidiChannel); //to midi
+			sendNoteOff(curNote & 0x7F,
+					getVelocity_off(duration, note_color(curNote)),
+					channel); //to midi
 		}
 
 	}
@@ -57,7 +65,7 @@ void checkNoteArray(presetType* preset) {
 
 
 /*The array of structures for all 11 key blocks GPIO pins*/
-gpio_pins_type gpio_pins[11] = { { GPIOC, GPIO_Pin_5, GPIOC, GPIO_Pin_4 }, { GPIOB, GPIO_Pin_1, GPIOB, GPIO_Pin_0 }, { GPIOE, GPIO_Pin_8, GPIOB, GPIO_Pin_2 }, { GPIOE, GPIO_Pin_10, GPIOE, GPIO_Pin_9 }, { GPIOE, GPIO_Pin_12, GPIOE, GPIO_Pin_11 }, { GPIOE, GPIO_Pin_14, GPIOE, GPIO_Pin_13 }, { GPIOB, GPIO_Pin_10, GPIOE, GPIO_Pin_15 }, { GPIOB, GPIO_Pin_12, GPIOB, GPIO_Pin_11 }, { GPIOB, GPIO_Pin_14, GPIOB, GPIO_Pin_13 }, { GPIOD, GPIO_Pin_9, GPIOB, GPIO_Pin_15 }, { GPIOD, GPIO_Pin_8, GPIOD,
+static gpio_pins_type gpio_pins[11] = { { GPIOC, GPIO_Pin_5, GPIOC, GPIO_Pin_4 }, { GPIOB, GPIO_Pin_1, GPIOB, GPIO_Pin_0 }, { GPIOE, GPIO_Pin_8, GPIOB, GPIO_Pin_2 }, { GPIOE, GPIO_Pin_10, GPIOE, GPIO_Pin_9 }, { GPIOE, GPIO_Pin_12, GPIOE, GPIO_Pin_11 }, { GPIOE, GPIO_Pin_14, GPIOE, GPIO_Pin_13 }, { GPIOB, GPIO_Pin_10, GPIOE, GPIO_Pin_15 }, { GPIOB, GPIO_Pin_12, GPIOB, GPIO_Pin_11 }, { GPIOB, GPIO_Pin_14, GPIOB, GPIO_Pin_13 }, { GPIOD, GPIO_Pin_9, GPIOB, GPIO_Pin_15 }, { GPIOD, GPIO_Pin_8, GPIOD,
 		GPIO_Pin_10 } };
 
 /*Delay should be more long for full cycles code. The reason is unrecognized....*/
@@ -107,7 +115,7 @@ void readKeyState(void) {
 					if (d2 & k[i]) { // Key 0 in current chunk second sensor
 						if (lastState_key[j]) {
 						} else {
-							FIFO_PUSH(notes, j+21);
+							FIFO_PUSH(notes, j);
 							FIFO_PUSH(durations, duration_note[j]);
 							lastState_key[j] = 0x1;
 							duration_note[j] = 0x0;
@@ -119,7 +127,7 @@ void readKeyState(void) {
 
 				} else {
 					if (lastState_key[j]) {
-						FIFO_PUSH(notes, j+149);
+						FIFO_PUSH(notes, j+0x80);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x0;
 						duration_note[j] = 0x0;
@@ -135,7 +143,7 @@ void readKeyState(void) {
 				for (i = 0; i <= 7; i++) {
 					j = i + chunk8;
 					if (lastState_key[j]) {
-						FIFO_PUSH(notes, j+149);
+						FIFO_PUSH(notes, j+0x80);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x0;
 					}

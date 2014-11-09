@@ -19,7 +19,7 @@ const char button_names[][MAX_ATTR_SIZE] = { ATTR_BLF, ATTR_BRT, ATTR_BRC, ATTR_
 		ATTR_B8 };
 
 
-FIFO16(128) control_events;
+FIFO8(128) control_events;
 FIFO16(128) sliders_events;
 
 void ADC_init_all(void) {
@@ -383,6 +383,7 @@ void buttons_set_defaults(Button_type* but) {
 //	uint8_t off;
 //} Button_type;
 
+button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
 
 static uint16_t tick_counter = 0; //Counter of timer ticks
 static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
@@ -396,17 +397,19 @@ static uint16_t ADC2_min = 0xFFFF;
 static uint16_t ADC2_max = 0;
 static uint16_t ADC3_min = 0xFFFF;
 static uint16_t ADC3_max = 0;
-uint16_t ADC_old_values[24] = { 0 };
-uint8_t sliders_old_values[24] = { 0 };
-button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
+static uint16_t ADC_old_values[24] = { 0 };
+static uint8_t sliders_old_values[24] = { 0 };
 static uint8_t buttons_chunk = 0;
 static uint8_t buttons_state[24] = { 0 };
 static uint8_t buttons; //result of IDR reading
 static uint8_t button_counter = 0; //Number of a button in chunk
 static uint8_t encoder_state = 3;
 static uint8_t encoder_zero = 0;
-extern uint8_t hd44780_active;
-uint8_t buttons_active = 0;
+
+uint8_t buttons_active = 0; //This flag prevents activity of buttons and  hd44780 in the same time
+
+extern uint8_t hd44780_active; //This flag prevents activity of buttons and  hd44780 in the same time
+
 
 static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders) {
 	int midi_value = (uint8_t)(sliders[num].a * value + sliders[num].b);
@@ -455,6 +458,7 @@ void buttons_delay(void) {
 	__NOP();
 }
 
+/****Simple median filter*****/
 uint16_t median(uint16_t* a) {
 	if (a[0] < a[1]) {
 		if (a[1] < a[2]) {
@@ -647,13 +651,13 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 			if (buttons & k[button_counter]) {
 				if (buttons_state[button_number] == 0) {
 					buttons_state[button_number] = 1;
-					FIFO_PUSH(control_events, (uint16_t)(button_number));
+					FIFO_PUSH(control_events, button_number);
 					//send pressed
 				}
 			} else {
 				if (buttons_state[button_number] != 0) {
 					buttons_state[button_number] = 0;
-					FIFO_PUSH(control_events, 0xFF00|(uint16_t)(button_number));
+					FIFO_PUSH(control_events, 0x80|button_number);
 					//send depressed
 				}
 			}
@@ -686,15 +690,15 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 					break;
 				} else if (IDR_tmp == 3) { // This means the encoder is in unstable average position because it is turned.
 					if (encoder_zero) {
-						if (encoder_state == 1) {//Direction depends previos state
+						if (encoder_state == 1) {//Direction depends previous state
 							encoder_state = 3;
-							FIFO_PUSH(control_events, 0x02FF);
+							FIFO_PUSH(control_events, ENCODER_LEFT);
 							controls_read_status = read_data;
 							encoder_zero = 0;
 							break;
 						} else if (encoder_state == 2) {
 							encoder_state = 3;
-							FIFO_PUSH(control_events, 0x01FF);
+							FIFO_PUSH(control_events, ENCODER_RIGHT);
 							controls_read_status = read_data;
 							encoder_zero = 0;
 							break;

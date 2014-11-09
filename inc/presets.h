@@ -5,13 +5,16 @@
 #include "controls.h"
 #include "velocity.h"
 
-#define DEFAULT_CALIBR_NAME  "default.cal"
-#define DEFAULT_PRESET_NAME  "default.pst"
-#define DEFAULT_CURVE_NAME "default.crv"
+#define CALIBR_EXT ".cal"
+#define PRESET_EXT ".pst"
+#define CURVE_EXT ".crv"
+#define DEFAULT_CALIBR_NAME  "default" CALIBR_EXT
+#define DEFAULT_PRESET_NAME  "default" PRESET_EXT
+#define DEFAULT_CURVE_NAME "default" CURVE_EXT
 #define SETTING_NAME "start.cfg"
 
-#define CALIBR_DIR_NAME  "CALIBRATION"
-#define PRESET_DIR_NAME  "PRESET"
+#define CALIBR_DIR_NAME "CALIBRATION"
+#define PRESET_DIR_NAME "PRESET"
 #define CURVE_DIR_NAME "CURVE"
 
 #define JSON_TAB 2 //size of tabulation in generated JSON files
@@ -127,9 +130,9 @@ typedef struct{
 }calibrationType;
 
 typedef struct {
-	uint8_t MidiChannel; //0-16
+	uint8_t MidiChannel; //0-15
 	uint8_t SplitKey;//0 - NoSplit, 1-87 - Split
-	uint8_t SplitChannel; //0-16, MIDI Channel for a left part of a split keyboard
+	uint8_t SplitChannel; //0-15, MIDI Channel for a left part of a split keyboard
 	uint8_t HighResEnable; //bool
 	uint8_t AnalogMidiEnable; //bool
 	curve_points_type Curve;//curve nodes for B&W keys
@@ -151,6 +154,7 @@ FIO_status currentState_save(void);
 FIO_status calibration_load(char* name, calibrationType* cal );
 FIO_status calibration_save(const char* path, calibrationType* cal);
 FIO_status preset_load(char* name, presetType* preset);
+FIO_status curve_load(char* path, presetType* pr);
 FIO_status preset_save(const char* name, presetType* preset );
 FIO_status preset_save_current(void);
 

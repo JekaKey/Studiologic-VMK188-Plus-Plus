@@ -88,6 +88,7 @@ int main(void) {
     LED_light(4);
     delay(250);
 	start_load_all(&Preset, &Calibration);
+	interface_init(&Preset, Current_state.preset_name);
     LED_light(6);
 
     Timer_init();
@@ -102,7 +103,7 @@ int main(void) {
 		receiveMidiData();
 		sendMidiData();
 		checkSliders_events(Preset.sliders);
-		checkControl_events();
+		head_buttons_handler();
 
 	}
 }

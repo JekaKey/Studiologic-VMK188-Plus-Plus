@@ -247,7 +247,10 @@ void hd44780_rewrite_string( char *s ){
 
 void hd44780_message(char *s){
 	hd44780_clear();
-	hd44780_goto(1,1);
-	hd44780_write_string(s);
+	hd44780_rewrite_string(s);
 }
 
+void hd44780_message_center(char *s, uint8_t line){
+	hd44780_goto(line,(16-strlen(s))/2+1);
+	hd44780_write_string(s);
+}

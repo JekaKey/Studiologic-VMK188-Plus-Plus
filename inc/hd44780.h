@@ -128,6 +128,6 @@ void hd44780_rewrite_string( char *s );
 void delay( uint32_t c );
 void delayms( uint32_t c );
 void hd44780_message(char *s);
-
+void hd44780_message_center(char *s, uint8_t line);
 
 #endif /* !_HD44780_H_ */

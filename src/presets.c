@@ -429,7 +429,8 @@ FIO_status start_load_setting(void){
 	} else { 		//Current state file not exist
 		Current_state.calibration_name[0] = 0;
 		Current_state.preset_name[0] = 0;
-		return FIO_FILE_NOT_FOUND;
+		PRINTF("Presets start_load_setting: Current state not loaded\n\r");
+		return FIO_READ_ERROR;
 	}
 }
 

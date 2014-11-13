@@ -30,6 +30,7 @@ typedef enum {
 }FMODE_t;
 
 typedef struct {
+	WORD active;
 	WORD num;
 	WORD pos;
 	char names[FILE_LIST_SIZE][_MAX_LFN];

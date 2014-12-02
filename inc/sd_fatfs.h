@@ -30,9 +30,9 @@ typedef enum {
 }FMODE_t;
 
 typedef struct {
-	WORD active;
-	WORD num;
-	WORD pos;
+	WORD active; //Position of an active item
+	WORD num; //Number of items in a file list
+	WORD pos;  //Current position in a list
 	char names[FILE_LIST_SIZE][_MAX_LFN];
 }file_list_type;
 

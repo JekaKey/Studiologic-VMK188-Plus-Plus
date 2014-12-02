@@ -52,7 +52,7 @@ void GPIO_init() {
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-	/*Configure GPIO pin leds on the board*/
+	/*Configure GPIO pin debug LEDs on the board*/
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
@@ -97,8 +97,8 @@ void GPIO_init() {
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-	/*Configure GPIO pin PB8 - PB9 - Display RS & Enable*/
-	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_9 ;
+	/*Configure GPIO pin PB8 - PB9 - Display RS & Enable, PB7 - control LEDs enable pin*/
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_7 |GPIO_Pin_8 | GPIO_Pin_9 ;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;

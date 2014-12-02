@@ -154,6 +154,23 @@ FIO_status calibration_save(const char* path, calibrationType* cal){
 
 }
 
+FIO_status preset_rename(file_list_type *pr_list, char *new_name){
+	char name[24];
+	char path_old[64] = "0:/" PRESET_DIR_NAME "/";
+	char path_new[64] = "0:/" PRESET_DIR_NAME "/";
+	strcpy(name,new_name);
+	strcat(name, PRESET_EXT); //add file name to path
+	strcat(path_old, pr_list->names[pr_list->pos]); //add file name to path;
+	strcat(path_new, name); //add file name to path;
+	FRESULT res = f_rename(path_old, path_new);
+	if (res == FR_OK) {
+		strcpy(pr_list->names[pr_list->pos], name);
+		return FIO_OK;
+	} else {
+		return FIO_RENAME_ERROR;
+	}
+}
+
 FIO_status preset_save(const char* path, presetType* pr){
 	FIL fff; // File handler
 	int i;
@@ -401,17 +418,23 @@ FIO_status load_JSON(char* path, char *js_buff,  jsmntok_t *tokens, json_attr_t 
 		return FIO_FILE_NOT_FOUND;
 	FRESULT f_res=f_read(&fff, js_buff, JSON_BUFF_SIZE, &size);
 	PRINTF("Load_JSON : read result: %d\n\r",f_res);
-	if (f_res!=FR_OK)
+	if (f_res!=FR_OK){
+		    SDFS_close(&fff);
 			return FIO_READ_ERROR;
+	}
 	js_buff[size] = 0;
 	jsmn_init(&parser);
 	jsmnerr_t result = jsmn_parse(&parser, js_buff, size, tokens, TOKENS_NUM);
     if (result<0){
+	    SDFS_close(&fff);
     	return FIO_JSON_FORMAT_ERR;
     }
     parse_result_t parse_result = tokens_parse(js_buff, tokens, json_attr, 0);
-	if (parse_result != parse_ok)
+	if (parse_result != parse_ok){
+	    SDFS_close(&fff);
 		return FIO_JSON_DATA_ERR;
+	}
+	SDFS_close(&fff);
     return FIO_OK;
 }
 

@@ -1,4 +1,6 @@
 #include "hd44780.h"
+#include "leds.h"
+
 
 volatile uint8_t hd44780_active=0;
 extern uint8_t buttons_active;
@@ -90,6 +92,7 @@ void hd44780_write(uint8_t data) {
 	}
 
 	hd44780_active=1;
+	controlLEDs_enable(0);
 
 	/* set the data bits */
 	if (data & 0x01) {
@@ -140,35 +143,40 @@ void hd44780_write(uint8_t data) {
 	/* reset the ce line */hd44780_EN_Off();
 	hd44780_init_end_delay();
 	hd44780_active=0;
+	controlLEDs_enable(1);
 
 }
 #endif /* HD44780_CONF_BUS == HD44780_FUNC_BUS_8BIT */
 
-void hd44780_wr_cmd(uint8_t cmd) {
+void hd44780_wr_cmd(const uint8_t cmd) {
 	while (buttons_active){
 
 	}
 
 	hd44780_active=1;
+	controlLEDs_enable(0);
 
 	hd44780_RS_Off();
 	hd44780_write(cmd);
 
 	hd44780_active=0;
+	controlLEDs_enable(1);
 
 }
 
-void hd44780_wr_data(uint8_t data) {
+void hd44780_wr_data(const uint8_t data) {
 	while (buttons_active){
 
 	}
 
 	hd44780_active=1;
+	controlLEDs_enable(0);
 
 	hd44780_RS_On();
 	hd44780_write(data);
 
 	hd44780_active=0;
+	controlLEDs_enable(1);
 
 }
 
@@ -179,6 +187,7 @@ void hd44780_init(void) {
 	}
 
 	hd44780_active=1;
+	controlLEDs_enable(0);
 
 	/* clear control bits */
 	hd44780_EN_Off();
@@ -215,11 +224,12 @@ void hd44780_init(void) {
 	hd44780_ddram_addr(0);
 
 	hd44780_active=0;
+	controlLEDs_enable(1);
 
 
 }
 
-void hd44780_write_string(char *s) {
+void hd44780_write_string(const char *s) {
 	uint32_t i;
 	for (i = 0; s[i] != '\0'; ++i) {
 		hd44780_write_char( s[i]);
@@ -236,8 +246,10 @@ void hd44780_goto(uint8_t line, uint8_t position) {
 
 	}
 	hd44780_active=1;
+	controlLEDs_enable(0);
 	hd44780_ddram_addr((0x40 * (line - 1)) + (position - 1));
 	hd44780_active=0;
+	controlLEDs_enable(1);
 }
 
 void hd44780_rewrite_string( char *s ){

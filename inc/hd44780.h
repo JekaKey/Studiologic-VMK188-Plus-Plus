@@ -121,7 +121,7 @@
 void hd44780_wr_cmd( uint8_t );
 void hd44780_wr_data( uint8_t );
 void hd44780_init( void );
-void hd44780_write_string( char *s );
+void hd44780_write_string( const char *s );
 void hd44780_write_line( uint8_t line, char *msg );
 void hd44780_goto( uint8_t line, uint8_t position);
 void hd44780_rewrite_string( char *s );

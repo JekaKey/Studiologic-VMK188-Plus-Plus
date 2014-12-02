@@ -8,6 +8,7 @@
 #include "usb_midi_io.h"
 #include "fifo.h"
 #include "hd44780.h"
+#include "leds.h"
 
 /*Array of slider names by slider number with fixed values, should be in flash memory*/
 const char slider_names[][MAX_ATTR_SIZE] = { ATTR_R2, ATTR_S8, ATTR_P2, ATTR_R3, ATTR_S2,
@@ -638,6 +639,7 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 				button_ports[buttons_chunk].port->BSRRL = button_ports[buttons_chunk].pin;
 				GPIOE->MODER |= 0x00005555; //PE0-7 Will be Output
 				GPIOE->ODR |= 0x00FF; //High level on PD0-7;
+				controlLEDs_switch();
 				controls_read_status = check_button;
 				buttons_active = 0;
 				break;

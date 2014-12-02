@@ -23,8 +23,41 @@ void LED_light(uint8_t pattern){
 	}
 }
 
+static uint8_t controlLED2_state=0;
+static uint8_t controlLED1_state=0;
 
-void string2usb (char * s){
 
-	usb_midi_DataTx((uint8_t *)s, strlen(s));
+
+void controlLEDs_enable(uint8_t enable){
+	if (enable && (controlLED1_state||controlLED2_state)) {
+		GPIO_SetBits(GPIOB, GPIO_Pin_7); // LEDs base to the VCC potential;
+	} else {
+		GPIO_ResetBits(GPIOB, GPIO_Pin_7); // LEDs base to the ground potential;
+	}
+}
+
+
+
+void controlLEDs_switch (void){
+	if (controlLED1_state) {
+		GPIO_SetBits(GPIOE, GPIO_Pin_0);
+	}else{
+		GPIO_ResetBits(GPIOE, GPIO_Pin_0);
+	}
+	if (controlLED2_state) {
+		GPIO_SetBits(GPIOE, GPIO_Pin_1);
+	}else{
+		GPIO_ResetBits(GPIOE, GPIO_Pin_1);
+	}
+}
+
+
+void controlLED1on(uint8_t on){
+	controlLED1_state=on;
+	controlLEDs_enable(controlLED1_state || controlLED2_state);
+}
+
+void controlLED2on(uint8_t on){
+	controlLED2_state=on;
+	controlLEDs_enable(controlLED1_state || controlLED2_state);
 }

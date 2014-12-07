@@ -29,7 +29,9 @@ uint8_t menuChange(menuItem_type* NewMenu) {
 }
 
 static void menu_preset_copy(void);
-static void menu_preset_delete(void);
+static void menu_preset_copy_yes(void);
+//static void menu_preset_delete(void);
+static void menu_preset_delete_yes(void);
 static void menu_preset_rename(void);
 static void menu_preset_rename_yes(void);
 static void menu_back_to_preset(void);
@@ -105,7 +107,7 @@ static int note_name (uint8_t note_num, char *name) {
 	return l;
 }
 
-static string_cut_spaces(char * st) {
+static void string_cut_spaces(char * st) {
 	size_t len;
 	for (len = strlen(st) - 1; len >= 0; len--) {
 		if (st[len] != ' ')
@@ -114,12 +116,30 @@ static string_cut_spaces(char * st) {
 	st[len + 1] = 0;
 }
 
+/*Find position number of file in directory */
+int file_list_find(file_list_type *fl, const char *name){
+	int len=strlen(name);
+	for(int i=0; i< fl->num; i++){
+		if (!memcmp(name, fl->names[i], len)) {
+			fl->pos=i;
+			return i;
+		}
+	}
+	return -1;
+}
 
-//                     NEXT,        PREVIOUS       PARENT,      CHILD,  POS,   VERTICAL, COMMAND_ENTER,         COMMAND_EDIT
-MAKE_MENU(menu0_item1, menu0_item2, NULL_ENTRY,  NULL_ENTRY, NULL_ENTRY, 0,    1,         NULL,                menu_back_to_preset,  "","Edit preset");
-MAKE_MENU(menu0_item2, menu0_item3, menu0_item1, NULL_ENTRY, NULL_ENTRY, 0,    1,         NULL,                menu_back_to_preset,  "","Copy preset");
-MAKE_MENU(menu0_item3, menu0_item4, menu0_item2, NULL_ENTRY, NULL_ENTRY, 0,    1,         &menu_preset_rename, menu_back_to_preset,  "","Rename preset");
-MAKE_MENU(menu0_item4, NULL_ENTRY,  menu0_item3, NULL_ENTRY, NULL_ENTRY, 0,    1,         NULL,                menu_back_to_preset,  "","Delete preset");
+
+
+//                     NEXT,        PREVIOUS       PARENT,      CHILD,      POS,   VERTICAL, COMMAND_ENTER,         COMMAND_EDIT
+MAKE_MENU(menu0_item1, menu0_item2, NULL_ENTRY,  NULL_ENTRY, NULL_ENTRY,     0,    1,         NULL,                menu_back_to_preset,  "","Edit preset");
+MAKE_MENU(menu0_item2, menu0_item3, menu0_item1, NULL_ENTRY, NULL_ENTRY,     0,    1,         menu_preset_copy,    menu_back_to_preset,  "","Copy preset");
+MAKE_MENU(menu0_item3, menu0_item4, menu0_item2, NULL_ENTRY, NULL_ENTRY,     0,    1,         menu_preset_rename,  menu_back_to_preset,  "","Rename preset");
+MAKE_MENU(menu0_item4, NULL_ENTRY,  menu0_item3, NULL_ENTRY, menuYN3_item2,  1,    1,         NULL,                menu_back_to_preset,  "","Delete preset");
+
+//                     NEXT,        PREVIOUS       PARENT,      CHILD,      POS,   VERTICAL, COMMAND_ENTER,         COMMAND_EDIT
+MAKE_MENU(menu01_item1, menu01_item2, NULL_ENTRY,  NULL_ENTRY, NULL_ENTRY,     0,    1,          NULL,                menu_back_to_preset,  "","Edit preset");
+MAKE_MENU(menu01_item2, menu01_item3, menu01_item1, NULL_ENTRY, NULL_ENTRY,     0,    1,         menu_preset_copy,    menu_back_to_preset,  "","Copy preset");
+MAKE_MENU(menu01_item3, NULL_ENTRY,   menu01_item2, NULL_ENTRY, NULL_ENTRY,     0,    1,         menu_preset_rename,  menu_back_to_preset,  "","Rename preset");
 
 
 
@@ -137,6 +157,13 @@ MAKE_MENU(menuYN1_item2, NULL_ENTRY, menuYN1_item1, NULL_ENTRY, NULL_ENTRY,  0, 
 
 MAKE_MENU(menuYN2_item1, menuYN2_item2, NULL_ENTRY, NULL_ENTRY, menu0_item3, 0,  0,       menu_preset_rename_yes,     NULL,          "Save?","Yes");
 MAKE_MENU(menuYN2_item2, NULL_ENTRY, menuYN2_item1, NULL_ENTRY, menu0_item3, 0,  0,       NULL,                       NULL,          "Save?","No");
+
+MAKE_MENU(menuYN3_item1, menuYN3_item2, NULL_ENTRY, NULL_ENTRY, menu0_item4, 0,  0,       menu_preset_delete_yes,     NULL,          "Delete preset?","Yes");
+MAKE_MENU(menuYN3_item2, NULL_ENTRY, menuYN3_item1, NULL_ENTRY, menu0_item4, 1,  0,       NULL,                       NULL,          "Delete preset?","No");
+
+MAKE_MENU(menuYN4_item1, menuYN4_item2, NULL_ENTRY, NULL_ENTRY, menu0_item2, 0,  0,       menu_preset_copy_yes,       NULL,          "Copy preset?","Yes");
+MAKE_MENU(menuYN4_item2, NULL_ENTRY, menuYN4_item1, NULL_ENTRY, menu0_item2, 0,  0,       NULL,                       NULL,          "Copy preset?","No");
+
 
 
 static void showMenu() {
@@ -178,8 +205,10 @@ static void showMenu() {
 }
 
 static void startMenu_preset(void) {
-	selectedMenuItem = (menuItem_type*) &menu0_item1;
-
+	if ((presets_list.pos) == (presets_list.active))
+		selectedMenuItem = (menuItem_type*) &menu01_item1;
+	else
+		selectedMenuItem = (menuItem_type*) &menu0_item1;
 	showMenu();
 }
 
@@ -187,14 +216,17 @@ static void startMenu_preset(void) {
 static void startMenuYN_preset_active(void) {
 	selectedMenuItem = (menuItem_type*) &menuYN1_item1;
 	showMenu();
-	controlLED1on(0);
 }
 
 
 static void startMenuYN_preset_rename(void) {
 	selectedMenuItem = (menuItem_type*) &menuYN2_item1;
 	showMenu();
-	controlLED1on(0);
+}
+
+static void startMenuYN_preset_copy(void) {
+	selectedMenuItem = (menuItem_type*) &menuYN4_item1;
+	showMenu();
 }
 
 
@@ -206,8 +238,12 @@ static void startMenu_setting(void) {
 
 
 static void menu_preset_rename(void){
+	char name[17];
+	strcpy(name,presets_list.names[presets_list.pos]);
+	size_t len=strlen(name);
+	name[len-4]=0; //cut file extension from the name
 	I_state = STATE_text_edit;
-	text_object_init(&Text_Edit_object, "Rename preset:", presets_list.names[presets_list.pos], STATE_presets_list, startMenuYN_preset_rename);
+	text_object_init(&Text_Edit_object, "Rename preset:", name, STATE_presets_list, startMenuYN_preset_rename);
 }
 
 static void menu_preset_rename_yes(void){
@@ -219,12 +255,44 @@ static void menu_preset_rename_yes(void){
 
 
 static void menu_preset_copy(void){
-
+	char name[17];
+	strcpy(name,presets_list.names[presets_list.pos]);
+	size_t len=strlen(name);
+	name[len-4]=0; //cut file extension from the name
+	I_state = STATE_text_edit;
+	text_object_init(&Text_Edit_object, "Copy preset:", name, STATE_presets_list, startMenuYN_preset_copy);
 }
 
-static void menu_preset_delete(void){
-
+static void menu_preset_copy_yes(void){
+	char path[64]= "0:/" PRESET_DIR_NAME "/";
+	char file_name[21];
+	char old_active_preset_name [21];
+	strcpy(old_active_preset_name, presets_list.names[presets_list.active]);
+	strcpy(file_name,Text_Edit_object.text);
+	string_cut_spaces(file_name);
+    strcat(file_name, PRESET_EXT);
+    strcat(path, file_name);
+	preset_save(path, &Preset);
+	SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
+	file_list_find(&presets_list, old_active_preset_name);
+	presets_list.active=presets_list.pos;
+	file_list_find(&presets_list, file_name);
+	menuChange(MENU_CHILD);
+	send_message(MES_REDRAW);
 }
+
+
+static void menu_preset_delete_yes(void){
+	char old_active_preset_name [21];
+	strcpy(old_active_preset_name, presets_list.names[presets_list.active]);
+	preset_delete(&presets_list);
+	SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
+	file_list_find(&presets_list, old_active_preset_name);
+	presets_list.active=presets_list.pos;
+	menuChange(MENU_CHILD);
+	send_message(MES_REDRAW);
+}
+
 
 void menu_button_handler(uint8_t button) {
 	switch (button) {
@@ -332,7 +400,7 @@ void curves_button_handler(uint8_t button) {
 static void text_object_draw(text_edit_object_t *obj){
 	if (!obj->state) {
 		hd44780_clear();
-		hd44780_message_center(obj->name, 1);
+		hd44780_message_center(obj->title, 1);
 		hd44780_goto(2,1);
 		hd44780_write_string(obj->text);
 		hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF);
@@ -341,11 +409,12 @@ static void text_object_draw(text_edit_object_t *obj){
 }
 
 static void text_object_init(text_edit_object_t *obj, const char *st1, const char *st2, i_state_t parent, void (*com)(void)) {
-	int len=strlen(st2)-4;
-	strcpy(obj->name, st1);
+	int len=strlen(st2); //remove file extension
+	strcpy(obj->title, st1);
 	memset(obj->text,' ', 16);
 	memcpy(obj->text, st2, len);
 	obj->text[16]=0;
+	strcpy(obj->old_text,obj->text); //save initial text string
 	obj->pos = 0;
 	obj->state = 0;
 	obj->parent=parent;
@@ -387,11 +456,14 @@ static void text_object_edit(uint8_t button, text_edit_object_t *obj){
 	case BUTTON_ENTER: {
 		break;
 	}
-	case BUTTON_STORAGE:{
-		hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
-		obj->command();
-		I_state=STATE_menu;
-		controlLED1on(1);
+	case BUTTON_STORAGE: {
+		if (strcmp(obj->text, obj->old_text)) { //text changed
+			hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF,
+					HD44780_DISP_BLINK_OFF);
+			obj->command();
+			I_state = STATE_menu;
+			controlLED1on(1);
+		}
 		break;
 	}
 	default: {
@@ -453,8 +525,9 @@ static void presets_button_handler(uint8_t button){
 		presets_list.pos--;
 		if (presets_list.pos == 0xFFFF)
 			presets_list.pos = presets_list.num - 1;
-		FIO_status status=preset_load(presets_list.names[presets_list.pos], &Preset);
-		status=curve_load(Preset.CurveFileName, &Preset);
+		FIO_status status = preset_load(presets_list.names[presets_list.pos],
+				&Preset);
+		status = curve_load(Preset.CurveFileName, &Preset);
 		show_preset(&Preset, &presets_list);
 		break;
 	}
@@ -558,17 +631,6 @@ void head_buttons_handler(void){
 
 
 
-/*Find position number of file in directory */
-int file_list_find(file_list_type *fl, const char *name){
-	int len=strlen(name);
-	for(int i=0; i< fl->num; i++){
-		if (!memcmp(name, fl->names[i], len)) {
-			fl->pos=i;
-			return i;
-		}
-	}
-	return -1;
-}
 
 static void menu_back_to_preset(void){
 	I_state = STATE_presets_list;
@@ -578,7 +640,7 @@ static void menu_back_to_preset(void){
 
 void interface_init(const presetType *pr, char *name) {
 	I_state = STATE_presets_list;
-    file_list_find(&presets_list, name);
-    presets_list.active=presets_list.pos;
-    show_preset(pr, &presets_list);
+	file_list_find(&presets_list, name);
+	presets_list.active = presets_list.pos;
+	show_preset(pr, &presets_list);
 }

@@ -105,6 +105,8 @@ parse_result_t tokens_parse(const char * buff, const jsmntok_t* tok,
 					*(json_attr[j].addr.integer)=(int)l;
 					break;
 				}
+				default:
+					break;
 				}
 			}
 			token_number++;

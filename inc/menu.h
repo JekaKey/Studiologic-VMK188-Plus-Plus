@@ -54,8 +54,9 @@ typedef struct {
 typedef enum {STATE_presets_list, STATE_menu, STATE_preset_edit_name, STATE_calibration_edit, STATE_curve_edit, STATE_text_edit} i_state_t;
 
 typedef struct {
-	char name[17];
+	char title[17];
 	char text[17];
+	char old_text[17];
 	uint8_t state;
 	uint8_t pos;
 	uint8_t line;

@@ -171,6 +171,18 @@ FIO_status preset_rename(file_list_type *pr_list, char *new_name){
 	}
 }
 
+FIO_status preset_delete(file_list_type *pr_list){
+	char path[64] = "0:/" PRESET_DIR_NAME "/";
+	strcat(path, pr_list->names[pr_list->pos]); //path to delete;
+	FRESULT res = f_unlink(path);
+	if (res == FR_OK) {
+		return FIO_OK;
+	} else {
+		return FIO_DELETE_ERROR;
+	}
+}
+
+
 FIO_status preset_save(const char* path, presetType* pr){
 	FIL fff; // File handler
 	int i;

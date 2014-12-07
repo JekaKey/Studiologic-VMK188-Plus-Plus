@@ -116,7 +116,7 @@
 /*********************************/
 
 typedef enum  {FIO_OK, FIO_SD_ERROR, FIO_FILE_NOT_FOUND,FIO_FILE_CREATE_ERROR,FIO_GETFREE_ERR,FIO_MOUNT_ERR,FIO_WRITE_ERROR,FIO_READ_ERROR,
-	FIO_JSON_FORMAT_ERR, FIO_JSON_DATA_ERR, FIO_RENAME_ERROR} FIO_status;
+	FIO_JSON_FORMAT_ERR, FIO_JSON_DATA_ERR, FIO_RENAME_ERROR, FIO_DELETE_ERROR} FIO_status;
  //To keep information about Sliders calibration and so on
 
 
@@ -156,6 +156,7 @@ FIO_status calibration_load(char* name, calibrationType* cal );
 FIO_status calibration_save(const char* path, calibrationType* cal);
 FIO_status preset_load(char* name, presetType* preset);
 FIO_status preset_rename(file_list_type *pr_list, char *new_name);
+FIO_status preset_delete(file_list_type *pr_list);
 FIO_status curve_load(char* path, presetType* pr);
 FIO_status preset_save(const char* name, presetType* preset );
 FIO_status preset_save_current(void);

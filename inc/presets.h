@@ -59,30 +59,30 @@
 #define ATTR_ANALOGMIDI "analogmidi"
 
 #define ATTR_SLIDERS "sliders"
-#define ATTR_S1 "slider1"
-#define ATTR_S2 "slider2"
-#define ATTR_S3 "slider3"
-#define ATTR_S4 "slider4"
-#define ATTR_S5 "slider5"
-#define ATTR_S6 "slider6"
-#define ATTR_S7 "slider7"
-#define ATTR_S8 "slider8"
-#define ATTR_S9 "slider9"
-#define ATTR_R1 "rotor1"
-#define ATTR_R2 "rotor2"
-#define ATTR_R3 "rotor3"
-#define ATTR_R4 "rotor4"
-#define ATTR_R5 "rotor5"
-#define ATTR_R6 "rotor6"
-#define ATTR_R7 "rotor7"
-#define ATTR_R8 "rotor8"
-#define ATTR_AT "aftertouch"
-#define ATTR_PI "pitch"
-#define ATTR_MO "modulation"
-#define ATTR_P1 "pedal1"
-#define ATTR_P2 "pedal2"
-#define ATTR_P3 "pedal3"
-#define ATTR_EY "empty"
+#define ATTR_S1 "Slider 1"
+#define ATTR_S2 "Slider 2"
+#define ATTR_S3 "Slider 3"
+#define ATTR_S4 "Slider 4"
+#define ATTR_S5 "Slider 5"
+#define ATTR_S6 "Slider 6"
+#define ATTR_S7 "Slider 7"
+#define ATTR_S8 "Slider 8"
+#define ATTR_S9 "Slider 9"
+#define ATTR_R1 "Knob 1"
+#define ATTR_R2 "Knob 2"
+#define ATTR_R3 "Knob 3"
+#define ATTR_R4 "Knob 4"
+#define ATTR_R5 "Knob 5"
+#define ATTR_R6 "Knob 6"
+#define ATTR_R7 "Knob 7"
+#define ATTR_R8 "Knob 8"
+#define ATTR_AT "Aftertouch"
+#define ATTR_PI "Pitch"
+#define ATTR_MO "Modulation"
+#define ATTR_P1 "Pedal 1"
+#define ATTR_P2 "Pedal 2"
+#define ATTR_P3 "Pedal 3"
+#define ATTR_EY "Empty"
 
 #define ATTR_S_ACTIVE "active"
 #define ATTR_S_REVERSE "reverse"
@@ -154,6 +154,8 @@ FIO_status currentState_save(void);
 
 FIO_status calibration_load(char* name, calibrationType* cal );
 FIO_status calibration_save(const char* path, calibrationType* cal);
+FIO_status calibration_rename(file_list_type *pr_list, char *new_name);
+FIO_status calibration_delete(file_list_type *pr_list);
 FIO_status preset_load(char* name, presetType* preset);
 FIO_status preset_rename(file_list_type *pr_list, char *new_name);
 FIO_status preset_delete(file_list_type *pr_list);

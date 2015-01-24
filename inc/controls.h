@@ -5,12 +5,14 @@
 #include "timer.h"
 #include "stm32f4xx_gpio.h"
 
-#define SLIDERS_DELTA_S 0x08 //Delta in a level filter algorithm
-#define SLIDERS_DELTA_P 0x10
-#define SLIDERS_DELTA_AT 0x10
+#define SLIDERS_DELTA_S 0x20 //Delta in a level filter algorithm
+#define SLIDERS_DELTA_P 0x30
+#define SLIDERS_DELTA_AT 0x30
+#define SLIDERS_DELTA_SEARCH 0x200
+#define ADC_MAX_VALUE 0x0FFF
 
-#define SLIDERS_MUX_DELAY 80/TIMER_TIMPERIOD //Delay in cycles after multipexors switch
-#define SLIDERS_MEASURE_NUM 20
+#define SLIDERS_MUX_DELAY 80/TIMER_TIMPERIOD //Delay in cycles after multiplexors switch
+#define SLIDERS_MEASURE_NUM 40
 #define SLIDERS_AMOUNT 24  //Number of sliders in the piano
 #define BUTTONS_AMOUNT 13  //Number of user buttons in the piano
 
@@ -52,8 +54,8 @@
 #define SLIDER_R_MIN_OUT 0
 #define SLIDER_R_MAX_OUT 127
 
-#define SLIDER_P_MIN_IN 400
-#define SLIDER_P_MAX_IN 1250
+#define SLIDER_P_MIN_IN 650
+#define SLIDER_P_MAX_IN 3850
 #define SLIDER_P_MIN_OUT 0
 #define SLIDER_P_MAX_OUT 127
 
@@ -91,6 +93,8 @@
 #define BUTTON2_PIN         GPIO_Pin_6
 
 
+#define BUTTON_MAX_STATE 3  //a button shuld be pressed during BUTTON_MAX_STATE cycles to send message
+
 #define BUTTON_PAGEUP 0
 #define BUTTON_PAGEDOWN 2
 #define BUTTON_PANIC 4
@@ -117,7 +121,12 @@
 #define BUTTON_B8 23
 #define ENCODER_LEFT 25
 #define ENCODER_RIGHT 26
+#define MES_SLIDER_SHOW 27
+#define MES_SLIDER_EDGE 28
+#define MES_SLIDER_FOUND 29
 
+
+typedef enum {SLIDERS_WORK=0, SLIDERS_SEARCH,  SLIDERS_FOUND, SLIDERS_CALIBRATE, SLIDERS_EDGE} sliders_state_t;
 
 typedef struct {
 	uint16_t min_in_value;
@@ -152,17 +161,20 @@ typedef struct {
 	uint8_t off;
 } Button_type;
 
-
-/*!!! In all fuctions with pointer argument as Slider_type*  or Calibration_slider_type MUST poit to array of SLIDERS_AMOUNT*/
+void send_message(uint8_t mes);
+uint16_t get_slider_event(void); //get slider event from FIFO, returns 0 if there is no events
+/*!!! In all fuctions with pointer argument as Slider_type*  or Calibration_slider_type MUST point to an array of SLIDERS_AMOUNT*/
 void slider_midi_send(uint16_t value, Slider_type* sliders);
 void ADC_init_all(void);
 void read_controls(Slider_type* sliders, Calibration_slider_type* cal);
+void slider_init_struct(Slider_type* sliders, Calibration_slider_type* sliders_calibr);
+void calculate_sliders_constants(Slider_type* sliders, Calibration_slider_type* sliders_calibr);
 /*Init all calibration parameters with default values.  */
 void sliders_calibr_set_defaults(Calibration_slider_type* sliders_calibr);
 void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders_calibr); //Init all sliders parameters if they are not loaded from preset
 void buttons_set_defaults(Button_type* but);
 void checkSliders_events(Slider_type* sliders);
-
+void start_sliders_calibration(void);
 void buttons_delay(void) __attribute__((optimize(0)));
 
 #endif //CONTROLS__H

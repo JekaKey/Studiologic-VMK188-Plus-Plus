@@ -113,6 +113,35 @@ static FIO_status json_write_number(uint8_t level, const char* name,
 }
 
 
+FIO_status calibration_rename(file_list_type *cal_list, char *new_name){
+	char name[24];
+	char path_old[64] = "0:/" CALIBR_DIR_NAME "/";
+	char path_new[64] = "0:/" CALIBR_DIR_NAME "/";
+	strcpy(name,new_name);
+	strcat(name, CALIBR_EXT); //add file name to path
+	strcat(path_old, cal_list->names[cal_list->pos]); //add file name to path;
+	strcat(path_new, name); //add file name to path;
+	FRESULT res = f_rename(path_old, path_new);
+	if (res == FR_OK) {
+		strcpy(cal_list->names[cal_list->pos], name);
+		return FIO_OK;
+	} else {
+		return FIO_RENAME_ERROR;
+	}
+}
+
+FIO_status calibration_delete(file_list_type *cal_list){
+	char path[64] = "0:/" CALIBR_DIR_NAME "/";
+	strcat(path, cal_list->names[cal_list->pos]); //path to delete;
+	FRESULT res = f_unlink(path);
+	if (res == FR_OK) {
+		return FIO_OK;
+	} else {
+		return FIO_DELETE_ERROR;
+	}
+}
+
+
 FIO_status currentState_save(void){
 	FIL fff; // File handler
 	if (SDFS_open(&fff, "0:/" SETTING_NAME, F_WR_CLEAR) != SDFS_OK){
@@ -129,8 +158,10 @@ FIO_status currentState_save(void){
 FIO_status calibration_save(const char* path, calibrationType* cal){
 	FIL fff; // File handler
 	int i;
+	PRINTF("Calibration save Start");
 	if (SDFS_open(&fff, path, F_WR_CLEAR) != SDFS_OK) {
         LED_light(7);
+    	PRINTF("Calibration save FIO_FILE_CREATE_ERROR");
 		return FIO_FILE_CREATE_ERROR;
 	}
 	json_write_string(0, "{", &fff);
@@ -150,6 +181,7 @@ FIO_status calibration_save(const char* path, calibrationType* cal){
 	json_write_string(1, "}", &fff);
 	json_write_string(0, "}", &fff);
 	SDFS_close(&fff);
+	PRINTF("Calibration save FIO_OK");
 	return FIO_OK;
 
 }
@@ -237,6 +269,8 @@ FIO_status preset_save(const char* path, presetType* pr){
 	return FIO_OK;
 }
 
+
+
 FIO_status curve_save(const char* path, curve_points_type* curve){
 	FIL fff; // File handler
 	if (SDFS_open(&fff, path, F_WR_CLEAR) != SDFS_OK) {
@@ -293,8 +327,8 @@ static json_attr_t preset_attr[16] = {
 
 static json_attr_t calibr_sliders_attr[SLIDERS_AMOUNT+1];
 static json_attr_t calibr_sliders_param_attr[SLIDERS_AMOUNT+1][4];
-static json_attr_t calibr_attr[]={
-		{ATTR_CAL_SLIDERS, t_object, .addr.object=calibr_sliders_attr},
+static json_attr_t calibr_attr[] = {
+		{ATTR_CAL_SLIDERS, t_object, .addr.object = calibr_sliders_attr},
 		{"",},
 };
 
@@ -316,7 +350,7 @@ static json_attr_t curve_attr[] ={
 
 /***END Structures and arrays describing expected JSON attributes, objects and values END***/
 
-/* Functions makes links between JSON structures and variables*/
+/* Functions make links between JSON structures and variables*/
 /*Modify some structures fields and assign addresses of variables to structures fields*/
 /************************Not good looking :-( *************************/
 static void init_json_preset_attr(presetType *preset) {
@@ -385,11 +419,11 @@ static void init_json_calibr_attr(calibrationType *cal) {
 		calibr_sliders_attr[i].type = t_object;
 		calibr_sliders_attr[i].addr.object = calibr_sliders_param_attr[i];
 		strcpy(calibr_sliders_param_attr[i][0].attribute, ATTR_CAL_S_MIN);
-		sliders_param_attr[i][0].addr.uint16 = &(cal->calibr[i].min_in_value);
+		calibr_sliders_param_attr[i][0].addr.uint16 = &(cal->calibr[i].min_in_value);
 		strcpy(calibr_sliders_param_attr[i][1].attribute, ATTR_CAL_S_MAX);
-		sliders_param_attr[i][1].addr.uint16 = &(cal->calibr[i].max_in_value);
+		calibr_sliders_param_attr[i][1].addr.uint16 = &(cal->calibr[i].max_in_value);
 		strcpy(calibr_sliders_param_attr[i][2].attribute, ATTR_CAL_S_DELTA);
-		sliders_param_attr[i][2].addr.uint16 = &(cal->calibr[i].delta);
+		calibr_sliders_param_attr[i][2].addr.uint16 = &(cal->calibr[i].delta);
 		for (int j = 0; j < 3; j++) {
 			calibr_sliders_param_attr[i][j].type = t_uint16;
 		}
@@ -424,12 +458,10 @@ FIO_status load_JSON(char* path, char *js_buff,  jsmntok_t *tokens, json_attr_t 
 	FIL fff; // File handler
 	jsmn_parser parser;
 	UINT size;
-	PRINTF("Load_JSON : start, path:%s\n\r",path);
 	SDFS_status_type res = SDFS_open(&fff, path, F_RD);
 	if (res != SDFS_OK)  //Calibration not file exist
 		return FIO_FILE_NOT_FOUND;
 	FRESULT f_res=f_read(&fff, js_buff, JSON_BUFF_SIZE, &size);
-	PRINTF("Load_JSON : read result: %d\n\r",f_res);
 	if (f_res!=FR_OK){
 		    SDFS_close(&fff);
 			return FIO_READ_ERROR;
@@ -441,6 +473,7 @@ FIO_status load_JSON(char* path, char *js_buff,  jsmntok_t *tokens, json_attr_t 
 	    SDFS_close(&fff);
     	return FIO_JSON_FORMAT_ERR;
     }
+
     parse_result_t parse_result = tokens_parse(js_buff, tokens, json_attr, 0);
 	if (parse_result != parse_ok){
 	    SDFS_close(&fff);
@@ -483,7 +516,6 @@ FIO_status calibration_load(char* name, calibrationType* cal ){
 FIO_status curve_load(char* name, presetType* pr) {
 	char path[64] = "0:/" CURVE_DIR_NAME "/";
 	strcat(path, name); //add file name to path
-	LOG("Load curve: %s\n\r",path);
 	init_json_curve_attr(pr);
 	FIO_status status=load_JSON(path, js_buff, tokens, curve_attr);
     return status;
@@ -493,7 +525,6 @@ FIO_status curve_load(char* name, presetType* pr) {
 FIO_status preset_load(char* name, presetType* pr) {
 	char path[64]="0:/" PRESET_DIR_NAME "/";
 	strcat(path,name);//add file name to path
-	LOG("Load preset: %s\n\r",path);
 	init_json_preset_attr(pr);
 	FIO_status status=load_JSON(path, js_buff, tokens, preset_attr);
     return status;
@@ -532,6 +563,7 @@ file_list_type presets_list, calibrations_list, curves_list;
 FIO_status start_load_calibration(calibrationType* cal){
 	SDFS_status_type res;
 	FIO_status fiores;
+	char path[64];
 	if (Current_state.calibration_name[0]) { //name is not empty string
 		fiores = calibration_load(Current_state.calibration_name, cal); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
@@ -562,7 +594,9 @@ FIO_status start_load_calibration(calibrationType* cal){
 		}
 	} else { //Directory is empty, so save default calibration file
 		strcpy(Current_state.calibration_name, DEFAULT_CALIBR_NAME);
-		if (calibration_save(Current_state.calibration_name, cal) != FIO_OK) {
+		strcpy(path, "0:/" CALIBR_DIR_NAME "/");
+		strcat(path, DEFAULT_CALIBR_NAME);
+		if (calibration_save(path, cal) != FIO_OK) {
 			PRINTF("Calibration save ERROR\n\r");
 			return FIO_SD_ERROR;
 		}
@@ -573,6 +607,7 @@ FIO_status start_load_calibration(calibrationType* cal){
 FIO_status start_load_curve(presetType* preset) {
 	SDFS_status_type res;
 	FIO_status fiores;
+	char path[64];
 	if (preset->CurveFileName[0]) { //name is not empty string
 		fiores = curve_load(preset->CurveFileName, preset); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
@@ -603,7 +638,9 @@ FIO_status start_load_curve(presetType* preset) {
 		}
 	} else { //Directory is empty
 		strcpy(preset->CurveFileName, DEFAULT_CURVE_NAME);
-		if (curve_save(preset->CurveFileName, &preset->Curve) != FIO_OK) {
+		strcpy(path, "0:/" CURVE_DIR_NAME "/");
+		strcat(path, DEFAULT_CURVE_NAME);
+		if (curve_save(path, &preset->Curve) != FIO_OK) {
 			return FIO_SD_ERROR;
 		}
 		return FIO_OK;
@@ -615,11 +652,10 @@ FIO_status start_load_curve(presetType* preset) {
 FIO_status start_load_preset(presetType* preset, calibrationType* cal){
 	SDFS_status_type res;
 	FIO_status fiores;
-
+    char path[64];
 	if (Current_state.preset_name[0]) { //name is not empty string
 		fiores = preset_load(Current_state.preset_name, preset); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
-			LOG("Preset was loaded successfully\n\rPreset.CurveFileName:%s\n\r",Preset.CurveFileName);
 			res = SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
 			return FIO_OK; //all is done
 		} else {
@@ -644,7 +680,9 @@ FIO_status start_load_preset(presetType* preset, calibrationType* cal){
 		}
 	} else { //Directory is empty
 		strcpy(Current_state.preset_name, DEFAULT_PRESET_NAME);
-		if (preset_save(Current_state.preset_name, preset) != FIO_OK) {
+		strcpy(path, "0:/" PRESET_DIR_NAME "/");
+		strcat(path, DEFAULT_PRESET_NAME);
+		if (preset_save(path, preset) != FIO_OK) {
 			PRINTF("Presets start_load_preset: preset no saved\n\r");
 			return FIO_SD_ERROR;
 		}
@@ -672,11 +710,11 @@ FIO_status start_load_all(presetType* preset, calibrationType* cal){
 		PRINTF("MOUNT ERROR\r\n");
 		return FIO_SD_ERROR;
 	}
-
 	if (start_load_setting() == FIO_SD_ERROR) {
 		return FIO_SD_ERROR;
 	}
 	if (start_load_calibration(cal) == FIO_SD_ERROR) {
+		PRINTF("Load calibration ERROR\r\n");
 		return FIO_SD_ERROR;
 	}
 	if (start_load_preset(preset, cal) == FIO_SD_ERROR) {

@@ -45,13 +45,19 @@ typedef struct {
 #define MENU_NEXT       ((menuItem_type*)/*pgm_read_word*/(selectedMenuItem->Next))
 #define MENU_PARENT     ((menuItem_type*)/*pgm_read_word*/(selectedMenuItem->Parent))
 #define MENU_CHILD      ((menuItem_type*)/*pgm_read_word*/(selectedMenuItem->Child))
-//#define SELECT	    (pgm_read_byte(&selectedMenuItem->Select))
 #define MENU_SELECT	    (selectedMenuItem->Select)
 #define MENU_POS        (selectedMenuItem->Pos)
 #define MENU_VERTICAL   (selectedMenuItem->Vertical)
 
 
-typedef enum {STATE_presets_list, STATE_menu, STATE_preset_edit_name, STATE_calibration_edit, STATE_curve_edit, STATE_text_edit} i_state_t;
+typedef enum {STATE_presets_list,
+	          STATE_menu,
+	          STATE_preset_edit_name,
+	          STATE_curve_edit,
+	          STATE_text_edit,
+	          STATE_calibration_start,
+	          STATE_calibration_continue,
+              STATE_calibrations_list} i_state_t;
 
 typedef struct {
 	char title[17];
@@ -67,7 +73,8 @@ typedef struct {
 void btoa(uint8_t value, char* buffer);
 
 
-void interface_init(const presetType *pr, char *name);
+void interface_init(char *name);
+void calibration_init(char *name);
 void checkControl_events(void);
 uint8_t checkButtons_events(void);
 void head_buttons_handler(void);

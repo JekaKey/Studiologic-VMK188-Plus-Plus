@@ -90,14 +90,14 @@ void readKeyState(void) {
 
 	for (chunk = 0; chunk <= 10; chunk++) {
 		gpio_pins[chunk].first->BSRRH = gpio_pins[chunk].first_num; //Pin to zero
-		chunk8 = chunk * 8;
+		chunk8 = chunk << 3;
 		key_delay();
 		d1 = ~GPIOA->IDR; //Read port state first contact
 		gpio_pins[chunk].first->BSRRL = gpio_pins[chunk].first_num; //Pin to 1
 
-		GPIOA->MODER |= 0x00005555; //PA0-7 Will be Output
+		GPIOA->MODER |= 0x00005555; //PA0-7 Switch to Output
 		GPIOA->ODR = 0x00FF; //High level on PA0-7;
-		GPIOA->MODER &= 0xFFFF0000; //PA0-7 Will be Input
+		GPIOA->MODER &= 0xFFFF0000; //PA0-7 Switch to Input
 
 		if (d1) {//One or more keys in the chunk is pressed
 			gpio_pins[chunk].second->BSRRH = gpio_pins[chunk].second_num;
@@ -105,9 +105,9 @@ void readKeyState(void) {
 			d2 = ~GPIOA->IDR; //Read port state second contact
 			gpio_pins[chunk].second->BSRRL = gpio_pins[chunk].second_num;
 
-			GPIOA->MODER |= 0x00005555; //PA0-7 Will be Output
+			GPIOA->MODER |= 0x00005555; //PA0-7 Switch to Output
 			GPIOA->ODR = 0x00FF; //High level on PA0-7;
-			GPIOA->MODER &= 0xFFFF0000; //PA0-7 Will be Input
+			GPIOA->MODER &= 0xFFFF0000; //PA0-7 Switch to Input
 
 			for (i = 0; i <= 7; i++) {
 				j = i + chunk8;

@@ -123,6 +123,7 @@ void TIM4_IRQHandler() {
 
 		readKeyState();
 		read_controls(Preset.sliders, Calibration.calibr);
+		read_buttons_state();
 	}
 
 }

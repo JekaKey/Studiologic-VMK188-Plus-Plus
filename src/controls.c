@@ -10,6 +10,7 @@
 #include "hd44780.h"
 #include "leds.h"
 #include "log.h"
+#include "filter.h"
 
 /*Array of slider names by slider number with fixed values, should be in flash memory*/
 const char slider_names[][MAX_ATTR_SIZE] = { ATTR_R2, ATTR_S8, ATTR_P2, ATTR_R3, ATTR_S2,
@@ -63,13 +64,10 @@ void ADC_init_all(void) {
 	ADC_Cmd(ADC1, ENABLE);
 	ADC_Cmd(ADC2, ENABLE);
 	ADC_Cmd(ADC3, ENABLE);
-
+	median_filter_init();
 }
 
 
-static enum controls_read_status_type {
-	next_mux, wait_mux, read_data, check_value, read_buttons, check_button, next_buttons_chunk, read_encoders
-} controls_read_status = read_data;
 
 void slider_init_struct(Slider_type* sliders, Calibration_slider_type* sliders_calibr) {
 	if (sliders->reverse) {
@@ -391,9 +389,7 @@ button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PO
 
 static uint16_t tick_counter = 0; //Counter of timer ticks
 static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
-static uint32_t ADC_sum[3] = {0}; //SUM of ADC1,2,3 measuring
-static uint16_t ADC_min[3] = {ADC_MAX_VALUE}; //Minimum ADC result in measuring set
-static uint16_t ADC_max[3] = {0}; //Maxmum ADC result in measuring set
+static uint16_t ADC_res[8][3] = {{0}}; //Result of ADC1,2,3 measuring after first 3x median filter.
 static uint16_t ADC_old_values[24] = { 0 };
 static uint8_t sliders_old_values[24] = { 0 };
 static uint8_t buttons_chunk = 0;
@@ -462,34 +458,6 @@ void buttons_delay(void) {
 	__NOP();
 }
 
-/****Simple median filter*****/
-uint16_t median(uint16_t* a) {
-	if (a[0] < a[1]) {
-		if (a[1] < a[2]) {
-			return a[1];
-		} else {
-			if (a[0] < a[2]) {
-				return a[0];
-			} else {
-				return a[2];
-			}
-		}
-	} else {
-		if (a[1] > a[2]) {
-			return a[1];
-		} else {
-			if (a[0] > a[2]) {
-				return a[2];
-			} else {
-				return a[0];
-			}
-		}
-
-	}
-
-}
-
-
 
 static uint16_t read_ADC(uint32_t adc){
 	ADC_SoftwareStartConv((ADC_TypeDef*) (adc));
@@ -500,100 +468,75 @@ static uint16_t read_ADC(uint32_t adc){
 }
 
 
+static enum controls_read_status_type {
+	next_mux, wait_mux, read_data, check_value
+} controls_read_status = read_data;
+
+extern filter_storage_t filter_storage[NUMBER_OF_BUFFERS];
+
+
 
 void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	uint16_t ADC_value;
 	uint16_t ADC_change;
 	uint8_t slider_number;
-	uint16_t ODR_tmp, IDR_tmp, tmp;
-	static uint8_t button_number; //Number of current button;
-	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
+	uint16_t ODR_tmp;
+	uint16_t tmp;
 	uint16_t adc_arr[3][3];
 	uint16_t adc_med;
 	switch (controls_read_status) {
-
 	case read_data:
 		for (uint8_t i = 0; i < 3; i++) { //read all ADC1, ADC2, ADC3 3 times each and add to sum. Parallel search min & max values for each ADC to remove them from sum in future
-			for (uint8_t j = 0; j < 3; j++) {//Same for ADC1, ADC2, ADC3
+			for (uint8_t j = 0; j < 3; j++) { //Same for ADC1, ADC2, ADC3
 				uint32_t adc = ADC1_BASE + j * 0x100; //change ADC base address to ADC2_BASE, ADC3_BASE
 				adc_arr[j][i] = read_ADC(adc);
 			}
 		}
 		for (uint8_t j = 0; j < 3; j++) {
-			adc_med = median(adc_arr[j]); //apply median filter to all  ADC values
-			ADC_sum[j] += adc_med;//Calculate sum of values
-			if (adc_med > ADC_max[j]) {
-				ADC_max[j] = adc_med;
-			}
-			if (adc_med < ADC_min[j]) {
-				ADC_min[j] = adc_med;
-			}
-		}
-		tick_counter++;
-		if (tick_counter >= SLIDERS_MEASURE_NUM) {
-			tick_counter = 0;
-			controls_read_status = check_value;
+			adc_med = median(adc_arr[j]); //apply simple median filter to all  ADC values
+			ADC_res[mux_pin][j] = adc_med; //Calculate sum of values
 		}
 
+		controls_read_status = check_value;
 		break;
-	case check_value: //Calculate ADC results after many measurements.
-		switch (sliders_state) {// SLIDERS_WORK is for ordinary work, other values are for calibration only
-		case SLIDERS_WORK:
-			for (uint8_t i = 0; i < 3; i++) { //Same for ADC1, ADC2, ADC3
-				slider_number = mux_pin * 3 + i;
-				ADC_value = (ADC_sum[i] - ADC_min[i] - ADC_max[i]) / (SLIDERS_MEASURE_NUM - 2); //Remove min & max values and calculate an average value per SLIDERS_MEASURE_NUM-2 measurements
+	case check_value:
+		//Calculate ADC results after measurement.
+		for (uint8_t i = 0; i < 3; i++) { //Same for ADC1, ADC2, ADC3
+			slider_number = mux_pin * 3 + i;
+			ADC_value = median_filter(ADC_res[mux_pin][i],&filter_storage[slider_number]); //big median filter
+			switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
+			case SLIDERS_WORK:
 				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value; //Calculate change comparing with old value.
 				if (ADC_change > cal[slider_number].delta) { //Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
-					if (sliders[slider_number].active)//only active sliders work send fifo
-        				    slider_FIFO_send(slider_number, ADC_value, sliders);
+					if (sliders[slider_number].active) //only active sliders work send fifo
+						slider_FIFO_send(slider_number, ADC_value, sliders);
 				}
-				ADC_sum[i] = 0;
-				ADC_min[i] = ADC_MAX_VALUE;
-				ADC_max[i] = 0;
-			}
-			break;
-		case SLIDERS_SEARCH:
-			for (uint8_t i = 0; i < 3; i++) { //Same for ADC1, ADC2, ADC3
-				slider_number = mux_pin * 3 + i;
-				ADC_value = (ADC_sum[i] - ADC_min[i] - ADC_max[i])
-						/ (SLIDERS_MEASURE_NUM - 2); //Remove min & max values and calculate an average value per SLIDERS_MEASURE_NUM-2 measurements
-				ADC_change =
-						(ADC_value > ADC_old_values[slider_number]) ?
-								ADC_value - ADC_old_values[slider_number] :
-								ADC_old_values[slider_number] - ADC_value; //Calculate change comparing with old value.
+				break;
+			case SLIDERS_SEARCH:
+				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value; //Calculate change comparing with old value.
 				if (ADC_change > SLIDERS_DELTA_SEARCH) { //Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
-					slider_calibrate_number=slider_number;
+					slider_calibrate_number = slider_number;
 					sliders_state = SLIDERS_FOUND;
 					send_message(MES_SLIDER_SHOW);
 				}
-				ADC_sum[i] = 0;
-				ADC_min[i] = ADC_MAX_VALUE;
-				ADC_max[i] = 0;
-			}
-			break;//
-		case SLIDERS_CALIBRATE:
-			for (uint8_t i = 0; i < 3; i++) { //Same for ADC1, ADC2, ADC3
-				slider_number = mux_pin * 3 + i;
-				if (slider_number==slider_calibrate_number){
-					ADC_value = (ADC_sum[i] - ADC_min[i] - ADC_max[i])
-							/ (SLIDERS_MEASURE_NUM - 2); //Remove min & max values and calculate an average value per SLIDERS_MEASURE_NUM-2 measurements
+				break;
+			case SLIDERS_CALIBRATE:
+				if (slider_number == slider_calibrate_number) {
 					sliders_state = SLIDERS_EDGE;
 					slider_calibrate_store = ADC_value;
 					send_message(MES_SLIDER_EDGE);
 				}
-				ADC_sum[i] = 0;
-				ADC_min[i] = ADC_MAX_VALUE;
-				ADC_max[i] = 0;
+				break;
+			default:
+				break;
 			}
-			break;
-		default:
-			break;
 		}
 		controls_read_status = next_mux;
 		break;
-	case next_mux: //Switch multiplexors to next state
+	case next_mux:
+		//Switch multiplexors to next state
 		mux_pin++;
 		if (mux_pin > 7) {
 			mux_pin = 0;
@@ -603,13 +546,27 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 		GPIOB->ODR = tmp;
 		controls_read_status = wait_mux;
 		break;
-	case wait_mux: //Waiting several ticks after multiplexors switch
+	case wait_mux:
+		//Waiting several ticks after multiplexors switch
 		tick_counter++;
 		if (tick_counter >= SLIDERS_MUX_DELAY) {
 			tick_counter = 0;
-			controls_read_status = read_buttons;
+			controls_read_status = read_data;
 		}
 		break;
+	}
+}
+
+static enum buttons_read_status_type {
+	read_buttons, check_button, next_buttons_chunk, read_encoders
+} buttons_read_status = read_buttons;
+
+void read_buttons_state(void) {
+	static uint8_t button_number; //Number of current button;
+	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
+	uint16_t IDR_tmp;
+
+	switch (buttons_read_status) {
 	case read_buttons:
 		if (!hd44780_active) { //If display is writing we do not read buttons to avoid pins conflict.
 			buttons_active = 1; //Set to prevent display usage in this moment. The display should wait buttons_active = 0;
@@ -624,22 +581,23 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 			GPIOE->MODER |= 0x00005555; //PE0-7 Will be Output
 			GPIOE->ODR |= 0x00FF; //High level on PD0-7;
 			controlLEDs_switch();
-			controls_read_status = check_button;
+			buttons_read_status = check_button;
 			buttons_active = 0;
 			break;
 		} else {
-			controls_read_status = read_encoders;
+			buttons_read_status = read_encoders;
 			break;
 		}
 	case check_button:
 		button_number = buttons_chunk * 8 + button_counter;
 
 		if (buttons & k[button_counter]) {
-			if (buttons_state[button_number]<BUTTON_MAX_STATE){
-			   buttons_state[button_number]++;
-		        	if (buttons_state[button_number] >= BUTTON_MAX_STATE) {
-		        		FIFO_PUSH(control_events, button_number); //send pressed
-		        	}
+			if (buttons_state[button_number] < BUTTON_MAX_STATE) {
+				buttons_state[button_number]++;
+				if (buttons_state[button_number] >= BUTTON_MAX_STATE) {
+					FIFO_PUSH(control_events, button_number);
+					//send pressed
+				}
 			}
 		} else {
 			if (buttons_state[button_number] == BUTTON_MAX_STATE) {
@@ -651,16 +609,16 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 		button_counter++;
 		if (button_counter > 7) {
 			button_counter = 0;
-			controls_read_status = next_buttons_chunk;
+			buttons_read_status = next_buttons_chunk;
 		}
 		break;
 	case next_buttons_chunk:
 		buttons_chunk++;
 		if (buttons_chunk > 2) {
 			buttons_chunk = 0;
-			controls_read_status = read_encoders;
+			buttons_read_status = read_encoders;
 		} else {
-			controls_read_status = read_buttons;
+			buttons_read_status = read_buttons;
 		}
 		break;
 	case read_encoders:
@@ -669,49 +627,50 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 				(ENCODER1_PORT->IDR & ENCODER1_PIN)
 						| (ENCODER2_PORT->IDR & ENCODER2_PIN));
 		if (IDR_tmp == encoder_state) { //State is not changed
-			controls_read_status = read_data;
+			buttons_read_status = read_buttons;
 			break;
 		} else {
 			if (IDR_tmp == 0) {
 				encoder_zero = 1;
 				encoder_state = 0;
-				controls_read_status = read_data;
+				buttons_read_status = read_buttons;
 				break;
 			} else if (IDR_tmp == 3) { // This means the encoder is in unstable average position because it is turned.
 				if (encoder_zero) {
 					if (encoder_state == 1) { //Direction depends previous state
 						encoder_state = 3;
 						FIFO_PUSH(control_events, ENCODER_LEFT);
-						controls_read_status = read_data;
+						buttons_read_status = read_buttons;
 						encoder_zero = 0;
 						break;
 					} else if (encoder_state == 2) {
 						encoder_state = 3;
 						FIFO_PUSH(control_events, ENCODER_RIGHT);
-						controls_read_status = read_data;
+						buttons_read_status = read_buttons;
 						encoder_zero = 0;
 						break;
 					}
 				} else {
 					encoder_state = IDR_tmp;
-					controls_read_status = read_data;
+					buttons_read_status = read_buttons;
 					break;
 				}
 			} else {
 				encoder_state = IDR_tmp;
-				controls_read_status = read_data;
+				buttons_read_status = read_buttons;
 				break;
 			}
 		}
 	}
+
 }
 
-uint16_t get_slider_event(void){
+uint16_t get_slider_event(void) {
 	if (FIFO_COUNT(sliders_events) != 0) {
 		uint16_t event = FIFO_FRONT(sliders_events);
 		FIFO_POP(sliders_events);
 		return event;
-	}else{
+	} else {
 		return 0;
 	}
 }

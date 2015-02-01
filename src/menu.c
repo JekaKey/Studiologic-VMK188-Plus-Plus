@@ -755,7 +755,7 @@ static void start_calibration_handler(uint8_t event){
 		break;
 	case MES_SLIDER_EDGE:
 		LOG("start_calibration_handler, MES_SLIDER_EDGE: %d\r\n",event);
-		slider_edge1 = slider_calibrate_store; //save first age;
+		slider_edge1 = slider_calibrate_store; //save first edge;
 		I_state = STATE_calibration_continue;
 		send_message(MES_SLIDER_SHOW);
 		break;
@@ -780,7 +780,7 @@ static void continue_calibration_handler(uint8_t event){
 		calibration_message_draw(slider_names[slider_calibrate_number],"Set Max & Ent");
 		break;
 	case MES_SLIDER_EDGE:
-		slider_edge2 = slider_calibrate_store; //save first age;
+		slider_edge2 = slider_calibrate_store; //save second edge;
 		if (slider_edge1<slider_edge2){
 			Calibration.calibr[slider_calibrate_number].min_in_value=slider_edge1;
 			Calibration.calibr[slider_calibrate_number].max_in_value=slider_edge2;
@@ -825,9 +825,6 @@ static void calibrations_button_handler(uint8_t button){
 		status = calibration_load(calibrations_list.names[calibrations_list.pos], &Calibration);
 		show_calibration(&Calibration, &calibrations_list);
 		calculate_sliders_constants(Preset.sliders, Calibration.calibr);
-		LOG("Status: %d\n\r",status);
-		for (int i=0; i<24; i++)
-			LOG("%s, %s, Min: %d, Max: %d\r\n", calibrations_list.names[calibrations_list.pos], slider_names[i], Calibration.calibr[i].min_in_value, Calibration.calibr[i].max_in_value);
 		break;
 	case ENCODER_RIGHT:
 	case BUTTON_PAGEDOWN:
@@ -837,9 +834,6 @@ static void calibrations_button_handler(uint8_t button){
 		status=calibration_load(calibrations_list.names[calibrations_list.pos], &Calibration);
 		show_calibration(&Calibration, &calibrations_list);
 		calculate_sliders_constants(Preset.sliders, Calibration.calibr);
-		LOG("Status: %d\n\r",status);
-		for (int i=0; i<24; i++)
-	    	LOG("%s, %s, Min: %d, Max: %d\r\n", calibrations_list.names[calibrations_list.pos], slider_names[i], Calibration.calibr[i].min_in_value, Calibration.calibr[i].max_in_value);
 		break;
 	case BUTTON_STORAGE:
 		startMenuYN_calibration_active();

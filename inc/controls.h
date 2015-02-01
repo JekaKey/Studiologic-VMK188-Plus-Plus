@@ -4,17 +4,19 @@
 #include "stm32f4xx.h"
 #include "timer.h"
 #include "stm32f4xx_gpio.h"
+#include "filter.h"
 
-#define SLIDERS_DELTA_S 0x20 //Delta in a level filter algorithm
-#define SLIDERS_DELTA_P 0x30
-#define SLIDERS_DELTA_AT 0x30
+#define SLIDERS_DELTA_S 0x6 //Delta in a level filter algorithm
+#define SLIDERS_DELTA_P 0x8
+#define SLIDERS_DELTA_AT 0x10
 #define SLIDERS_DELTA_SEARCH 0x200
 #define ADC_MAX_VALUE 0x0FFF
 
 #define SLIDERS_MUX_DELAY 80/TIMER_TIMPERIOD //Delay in cycles after multiplexors switch
-#define SLIDERS_MEASURE_NUM 40
+#define SLIDERS_MEASURE_NUM 20
 #define SLIDERS_AMOUNT 24  //Number of sliders in the piano
 #define BUTTONS_AMOUNT 13  //Number of user buttons in the piano
+#define CALIBRATE_COUNTER_MAX 3*MEDIAN_FILTER_SIZE
 
 #define SLIDER_S1 14
 #define SLIDER_S2 4
@@ -167,6 +169,7 @@ uint16_t get_slider_event(void); //get slider event from FIFO, returns 0 if ther
 void slider_midi_send(uint16_t value, Slider_type* sliders);
 void ADC_init_all(void);
 void read_controls(Slider_type* sliders, Calibration_slider_type* cal);
+void read_buttons_state(void);
 void slider_init_struct(Slider_type* sliders, Calibration_slider_type* sliders_calibr);
 void calculate_sliders_constants(Slider_type* sliders, Calibration_slider_type* sliders_calibr);
 /*Init all calibration parameters with default values.  */

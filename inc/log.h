@@ -5,7 +5,7 @@
 
 //#define DEBUG_SD
 //#define DEBUG
-#define DEBUG_MENU
+//#define DEBUG_MENU
 
 #ifdef DEBUG_SD
 #define logf(...) printf (__VA_ARGS__);

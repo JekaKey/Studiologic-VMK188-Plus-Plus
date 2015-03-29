@@ -140,6 +140,7 @@ typedef struct {
 	char CurveFileName[16];//name of curve file
 	Slider_type sliders[SLIDERS_AMOUNT];
 	Button_type buttons[BUTTONS_AMOUNT];
+	uint8_t Changed;
 } presetType;
 
 

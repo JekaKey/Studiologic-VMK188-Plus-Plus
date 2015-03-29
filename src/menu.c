@@ -38,6 +38,8 @@ static void menu_preset_copy_yes(void);
 static void menu_preset_delete_yes(void);
 static void menu_preset_rename(void);
 static void menu_preset_rename_yes(void);
+static void menu_preset_save_yes(void);
+static void menu_preset_edit(void);//edit key pressed
 static void menu_back_to_preset(void);
 static void preset_name_current_state(void); //save new active preset
 static void text_object_init(text_edit_object_t *obj, const char *st1, const char *st2, i_state_t parent,  void (*com)(void));
@@ -52,6 +54,14 @@ static void menu_calibration_rename_yes(void);
 static void menu_back_to_calibration(void);//Return to calibrations list
 static void calibration_list_start(void);
 
+static void menu_show_param(menuItem_type * menu);
+
+static void menu_show_splitkey(menuItem_type * menu);
+
+
+
+
+
 /**********************************************/
 
 void btoa(const uint8_t value, char* buffer) {
@@ -65,6 +75,36 @@ void btoa_mem(const uint8_t value, char* buffer) {
 	buffer += 2;
 	*--buffer = value % 10 + 48;
 	*--buffer = value / 10 + 48;
+}
+
+void uint16toa(uint16_t n, char *s) {
+	char c;
+	uint16_t i = 0;
+	uint16_t j;
+	do {
+		s[i++] = n % 10 + '0';
+	} while ((n /= 10) > 0);
+	s[i] = '\0';
+	for (i = 0, j = strlen(s) - 1; i < j; i++, j--) {
+		c = s[i];
+		s[i] = s[j];
+		s[j] = c;
+	}
+}
+
+void uint8toa(uint8_t n, char *s) {
+	char c;
+	uint16_t i = 0;
+	uint16_t j;
+	do {
+		s[i++] = n % 10 + '0';
+	} while ((n /= 10) > 0);
+	s[i] = '\0';
+	for (i = 0, j = strlen(s) - 1; i < j; i++, j--) {
+		c = s[i];
+		s[i] = s[j];
+		s[j] = c;
+	}
 }
 
 
@@ -99,6 +139,8 @@ static char rotate_char(const char ch, int8_t direction, uint8_t space_enable){
 	}
 }
 
+
+
 /***************************************************************************/
 /*Function for the testing of buttons, encoders, and the display*/
 
@@ -106,7 +148,7 @@ const char note_names[12][3]={"A","A#","B","C","C#","D","D#","E","F","F#","G","G
 
 static int note_name (uint8_t note_num, char *name) {
 	if (!note_num) {
-		name[0]=0;
+		strcpy(name, "No");
 		return 0;
 	}
 	note_num--;
@@ -141,65 +183,68 @@ int file_list_find(file_list_type *fl, const char *name){
 
 
 
-//                     NEXT,        PREVIOUS       PARENT,      CHILD,      POS,   VERTICAL, COMMAND_ENTER,         COMMAND_EDIT
-MAKE_MENU(menu0_item1, menu0_item2, NULL_ENTRY,  NULL_ENTRY, menu_preset1,   0,    1,         NULL,                menu_back_to_preset,  "","Edit preset");
-MAKE_MENU(menu0_item2, menu0_item3, menu0_item1, NULL_ENTRY, NULL_ENTRY,     0,    1,         menu_preset_copy,    menu_back_to_preset,  "","Copy preset");
-MAKE_MENU(menu0_item3, menu0_item4, menu0_item2, NULL_ENTRY, NULL_ENTRY,     0,    1,         menu_preset_rename,  menu_back_to_preset,  "","Rename preset");
-MAKE_MENU(menu0_item4, NULL_ENTRY,  menu0_item3, NULL_ENTRY, menuYN3_item2,  1,    1,         NULL,                menu_back_to_preset,  "","Delete preset");
+//                     NEXT,        PREVIOUS       PARENT,      CHILD,      POS,   VERTICAL, Value, t_Value, Min, Max, COMMAND_ENTER,         COMMAND_EDIT        COMMAND_SHOW
+MAKE_MENU(menu0_item1, menu0_item2, NULL_ENTRY, NULL_ENTRY, menu_preset1,   0,    1,        NULL,  t_uint8,  0,   0,     NULL,               menu_back_to_preset,    NULL,      "","Edit preset");
+MAKE_MENU(menu0_item2, menu0_item3, menu0_item1, NULL_ENTRY, NULL_ENTRY,     0,    1,        NULL,  t_uint8,  0,   0,     menu_preset_copy,    menu_back_to_preset,    NULL,      "","Copy preset");
+MAKE_MENU(menu0_item3, menu0_item4, menu0_item2, NULL_ENTRY, NULL_ENTRY,     0,    1,        NULL,  t_uint8,  0,   0,     menu_preset_rename,  menu_back_to_preset,    NULL,      "","Rename preset");
+MAKE_MENU(menu0_item4, NULL_ENTRY,  menu0_item3, NULL_ENTRY, menuYN3_item2,  1,    1,        NULL,  t_uint8,  0,   0,     NULL,                menu_back_to_preset,    NULL,      "","Delete preset");
 
 
 
 
-//                     NEXT,        PREVIOUS      PARENT,       CHILD,   POS, VERTICAL,  COMMAND_ENTER,            COMMAND_EDIT
-MAKE_MENU(menu1_item1, menu1_item2, NULL_ENTRY,  NULL_ENTRY, NULL_ENTRY, 0,   1,          NULL,                     menu_back_to_preset,    "","Curves");
-MAKE_MENU(menu1_item2, NULL_ENTRY,  menu1_item1, NULL_ENTRY, menu2_item1, 0,   1,         calibration_list_start,   menu_back_to_preset,    "","Calibration");
+//                     NEXT,        PREVIOUS       PARENT,      CHILD,      POS,   VERTICAL, Value, t_Value, Min, Max, COMMAND_ENTER,         COMMAND_EDIT        COMMAND_SHOW
+MAKE_MENU(menu1_item1, menu1_item2, NULL_ENTRY,  NULL_ENTRY, NULL_ENTRY,     0,     1,        NULL,  t_uint8,  0,   0,     NULL,                     menu_back_to_preset,      NULL,      "","Curves");
+MAKE_MENU(menu1_item2, NULL_ENTRY,  menu1_item1, NULL_ENTRY, menu2_item1,    0,     1,        NULL,  t_uint8,  0,   0,     calibration_list_start,   menu_back_to_preset,      NULL,      "","Calibration");
 
 
-MAKE_MENU(menu2_item1, menu2_item2,  NULL_ENTRY,  NULL_ENTRY, NULL_ENTRY,    0,   1,         menu_edit_calibration,   menu_back_to_calibration,    "","Calibrate");
-MAKE_MENU(menu2_item2, menu2_item3,  menu2_item1, NULL_ENTRY, menuYN9_item1, 0,   1,         NULL,                    menu_back_to_calibration,    "","Save");
-MAKE_MENU(menu2_item3, menu2_item4,  menu2_item2, NULL_ENTRY, NULL_ENTRY,    0,   1,         menu_calibration_copy,   menu_back_to_calibration,    "","Copy");
-MAKE_MENU(menu2_item4, menu2_item5,  menu2_item3, NULL_ENTRY, NULL_ENTRY,    0,   1,         menu_calibration_rename, menu_back_to_calibration,    "","Rename");
-MAKE_MENU(menu2_item5, NULL_ENTRY,   menu2_item4, NULL_ENTRY, menuYN7_item2, 0,   1,         NULL,                    menu_back_to_calibration,    "","Delete");
+MAKE_MENU(menu2_item1, menu2_item2,  NULL_ENTRY,  NULL_ENTRY, NULL_ENTRY,    0,   1,         NULL,  t_uint8,  0,   0,     menu_edit_calibration,   menu_back_to_calibration,      NULL,      "","Calibrate");
+MAKE_MENU(menu2_item2, menu2_item3,  menu2_item1, NULL_ENTRY, menuYN9_item1, 0,   1,         NULL,  t_uint8,  0,   0,     NULL,                    menu_back_to_calibration,      NULL,      "","Save");
+MAKE_MENU(menu2_item3, menu2_item4,  menu2_item2, NULL_ENTRY, NULL_ENTRY,    0,   1,         NULL,  t_uint8,  0,   0,     menu_calibration_copy,   menu_back_to_calibration,      NULL,      "","Copy");
+MAKE_MENU(menu2_item4, menu2_item5,  menu2_item3, NULL_ENTRY, NULL_ENTRY,    0,   1,         NULL,  t_uint8,  0,   0,     menu_calibration_rename, menu_back_to_calibration,      NULL,      "","Rename");
+MAKE_MENU(menu2_item5, NULL_ENTRY,   menu2_item4, NULL_ENTRY, menuYN7_item2, 0,   1,         NULL,  t_uint8,  0,   0,     NULL,                    menu_back_to_calibration,      NULL,      "","Delete");
 
 
-//                       NEXT,        PREVIOUS     PARENT,      CHILD,       POS,VERTICAL,COMMAND_ENTER,                   COMMAND_EDIT
-MAKE_MENU(menuYN1_item1, menuYN1_item2, NULL_ENTRY, NULL_ENTRY, NULL_ENTRY,  0,  0,       preset_name_current_state,         NULL,          "Set active?","Yes");
-MAKE_MENU(menuYN1_item2, NULL_ENTRY, menuYN1_item1, NULL_ENTRY, NULL_ENTRY,  0,  0,       menu_back_to_preset,               NULL,          "Set active?","No");
+//                     NEXT,        PREVIOUS       PARENT,      CHILD,      POS,   VERTICAL, Value, t_Value, Min, Max, COMMAND_ENTER,         COMMAND_EDIT        COMMAND_SHOW
+MAKE_MENU(menuYN1_item1, menuYN1_item2, NULL_ENTRY, NULL_ENTRY, NULL_ENTRY,  0,  0,       NULL,  t_uint8,  0,   0,     preset_name_current_state,         NULL,            NULL,      "Set active?","Yes");
+MAKE_MENU(menuYN1_item2, NULL_ENTRY, menuYN1_item1, NULL_ENTRY, NULL_ENTRY,  0,  0,       NULL,  t_uint8,  0,   0,     menu_back_to_preset,               NULL,            NULL,      "Set active?","No");
 
-MAKE_MENU(menuYN2_item1, menuYN2_item2, NULL_ENTRY, NULL_ENTRY, menu0_item3, 0,  0,       menu_preset_rename_yes,            NULL,          "Save preset?","Yes");
-MAKE_MENU(menuYN2_item2, NULL_ENTRY, menuYN2_item1, NULL_ENTRY, menu0_item3, 0,  0,       NULL,                              NULL,          "Save preset?","No");
+MAKE_MENU(menuYN2_item1, menuYN2_item2, NULL_ENTRY, NULL_ENTRY, menu0_item3, 0,  0,       NULL,  t_uint8,  0,   0,     menu_preset_rename_yes,            NULL,            NULL,      "Save preset?","Yes");
+MAKE_MENU(menuYN2_item2, NULL_ENTRY, menuYN2_item1, NULL_ENTRY, menu0_item3, 0,  0,       NULL,  t_uint8,  0,   0,     NULL,                              NULL,            NULL,      "Save preset?","No");
 
-MAKE_MENU(menuYN3_item1, menuYN3_item2, NULL_ENTRY, NULL_ENTRY, menu0_item4, 0,  0,       menu_preset_delete_yes,            NULL,          "Delete preset?","Yes");
-MAKE_MENU(menuYN3_item2, NULL_ENTRY, menuYN3_item1, NULL_ENTRY, menu0_item4, 1,  0,       NULL,                              NULL,          "Delete preset?","No");
+MAKE_MENU(menuYN3_item1, menuYN3_item2, NULL_ENTRY, NULL_ENTRY, menu0_item4, 0,  0,       NULL,  t_uint8,  0,   0,     menu_preset_delete_yes,            NULL,            NULL,      "Delete preset?","Yes");
+MAKE_MENU(menuYN3_item2, NULL_ENTRY, menuYN3_item1, NULL_ENTRY, menu0_item4, 1,  0,       NULL,  t_uint8,  0,   0,     NULL,                              NULL,            NULL,      "Delete preset?","No");
 
-MAKE_MENU(menuYN4_item1, menuYN4_item2, NULL_ENTRY, NULL_ENTRY, menu0_item2, 0,  0,       menu_preset_copy_yes,              NULL,          "Copy preset?","Yes");
-MAKE_MENU(menuYN4_item2, NULL_ENTRY, menuYN4_item1, NULL_ENTRY, menu0_item2, 0,  0,       NULL,                              NULL,          "Copy preset?","No");
+MAKE_MENU(menuYN4_item1, menuYN4_item2, NULL_ENTRY, NULL_ENTRY, menu0_item2, 0,  0,       NULL,  t_uint8,  0,   0,     menu_preset_copy_yes,              NULL,            NULL,      "Copy preset?","Yes");
+MAKE_MENU(menuYN4_item2, NULL_ENTRY, menuYN4_item1, NULL_ENTRY, menu0_item2, 0,  0,       NULL,  t_uint8,  0,   0,     NULL,                              NULL,            NULL,      "Copy preset?","No");
 
-MAKE_MENU(menuYN5_item1, menuYN5_item2, NULL_ENTRY, NULL_ENTRY, NULL_ENTRY,  0,  0,       calibration_name_current_state,    NULL,          "Set active?","Yes");
-MAKE_MENU(menuYN5_item2, NULL_ENTRY, menuYN5_item1, NULL_ENTRY, NULL_ENTRY,  0,  0,       NULL,                              NULL,          "Set active?","No");
+MAKE_MENU(menuYN5_item1, menuYN5_item2, NULL_ENTRY, NULL_ENTRY, NULL_ENTRY,  0,  0,       NULL,  t_uint8,  0,   0,     calibration_name_current_state,    NULL,            NULL,      "Set active?","Yes");
+MAKE_MENU(menuYN5_item2, NULL_ENTRY, menuYN5_item1, NULL_ENTRY, NULL_ENTRY,  0,  0,       NULL,  t_uint8,  0,   0,     NULL,                              NULL,            NULL,      "Set active?","No");
 
-MAKE_MENU(menuYN6_item1, menuYN6_item2, NULL_ENTRY, NULL_ENTRY, menu2_item4, 0,  0,       menu_calibration_rename_yes,       NULL,          "Save?","Yes");
-MAKE_MENU(menuYN6_item2, NULL_ENTRY, menuYN6_item1, NULL_ENTRY, menu2_item4, 0,  0,       NULL,                              NULL,          "Save?","No");
+MAKE_MENU(menuYN6_item1, menuYN6_item2, NULL_ENTRY, NULL_ENTRY, menu2_item4, 0,  0,       NULL,  t_uint8,  0,   0,     menu_calibration_rename_yes,       NULL,            NULL,      "Save?","Yes");
+MAKE_MENU(menuYN6_item2, NULL_ENTRY, menuYN6_item1, NULL_ENTRY, menu2_item4, 0,  0,       NULL,  t_uint8,  0,   0,     NULL,                              NULL,            NULL,      "Save?","No");
 
-MAKE_MENU(menuYN7_item1, menuYN7_item2, NULL_ENTRY, NULL_ENTRY, menu2_item5, 0,  0,       menu_calibration_delete_yes,       NULL,          "Delete?","Yes");
-MAKE_MENU(menuYN7_item2, NULL_ENTRY, menuYN7_item1, NULL_ENTRY, menu2_item5, 1,  0,       NULL,                              NULL,          "Delete?","No");
+MAKE_MENU(menuYN7_item1, menuYN7_item2, NULL_ENTRY, NULL_ENTRY, menu2_item5, 0,  0,       NULL,  t_uint8,  0,   0,     menu_calibration_delete_yes,       NULL,            NULL,      "Delete?","Yes");
+MAKE_MENU(menuYN7_item2, NULL_ENTRY, menuYN7_item1, NULL_ENTRY, menu2_item5, 1,  0,       NULL,  t_uint8,  0,   0,     NULL,                              NULL,            NULL,      "Delete?","No");
 
-MAKE_MENU(menuYN8_item1, menuYN8_item2, NULL_ENTRY, NULL_ENTRY, menu2_item3, 0,  0,       menu_calibration_copy_yes,         NULL,          "Copy?","Yes");
-MAKE_MENU(menuYN8_item2, NULL_ENTRY, menuYN8_item1, NULL_ENTRY, menu2_item3, 0,  0,       NULL,                              NULL,          "Copy?","No");
+MAKE_MENU(menuYN8_item1, menuYN8_item2, NULL_ENTRY, NULL_ENTRY, menu2_item3, 0,  0,       NULL,  t_uint8,  0,   0,     menu_calibration_copy_yes,         NULL,            NULL,      "Copy?","Yes");
+MAKE_MENU(menuYN8_item2, NULL_ENTRY, menuYN8_item1, NULL_ENTRY, menu2_item3, 0,  0,       NULL,  t_uint8,  0,   0,     NULL,                              NULL,            NULL,      "Copy?","No");
 
-MAKE_MENU(menuYN9_item1, menuYN9_item2, NULL_ENTRY, NULL_ENTRY, menu2_item2, 0,  0,       menu_calibration_save_yes,         NULL,          "Save?","Yes");
-MAKE_MENU(menuYN9_item2, NULL_ENTRY, menuYN9_item1, NULL_ENTRY, menu2_item2, 1,  0,       NULL,                              NULL,          "Save?","No");
+MAKE_MENU(menuYN9_item1, menuYN9_item2, NULL_ENTRY, NULL_ENTRY, menu2_item2, 0,  0,       NULL,  t_uint8,  0,   0,     menu_calibration_save_yes,         NULL,            NULL,      "Save?","Yes");
+MAKE_MENU(menuYN9_item2, NULL_ENTRY, menuYN9_item1, NULL_ENTRY, menu2_item2, 1,  0,       NULL,  t_uint8,  0,   0,     NULL,                              NULL,            NULL,      "Save?","No");
+
+MAKE_MENU(menuYN10_item1, menuYN10_item2, NULL_ENTRY, NULL_ENTRY, menu0_item1, 0,  0,       NULL,  t_uint8,  0,   0,   menu_preset_save_yes,              NULL,            NULL,      "Save changes?","Yes");
+MAKE_MENU(menuYN10_item2, NULL_ENTRY, menuYN10_item1, NULL_ENTRY, menu0_item1, 1,  0,       NULL,  t_uint8,  0,   0,   NULL,                              NULL,            NULL,      "Save changes?","No");
 
 
-//                      NEXT,          PREVIOUS      PARENT,       CHILD,   POS, VERTICAL,  COMMAND_ENTER,          COMMAND_EDIT
-MAKE_MENU(menu_preset1, menu_preset2, NULL_ENTRY,    menu0_item1, NULL_ENTRY, 0,   1,         NULL,                   NULL,        "","  Channel: ");
-MAKE_MENU(menu_preset2, menu_preset3, menu_preset1,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                   NULL,        "","Split Key: ");
-MAKE_MENU(menu_preset3, menu_preset4, menu_preset2,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                   NULL,        "","Split Chl: ");
-MAKE_MENU(menu_preset4, menu_preset5, menu_preset3,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                   NULL,        ""," High Res: ");
-MAKE_MENU(menu_preset5, menu_preset6, menu_preset4,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                   NULL,        "","Midi Port: ");
-MAKE_MENU(menu_preset6, menu_preset7, menu_preset5,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                   NULL,        "","    Curve  ");
-MAKE_MENU(menu_preset7, menu_preset8, menu_preset6,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                   NULL,        "","  Sliders ");
-MAKE_MENU(menu_preset8, NULL_ENTRY  , menu_preset7,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                   NULL,        "","  Buttons ");
+//                     NEXT,        PREVIOUS       PARENT,      CHILD,      POS,   VERTICAL, Value,                     t_Value, Min, Max, COMMAND_ENTER,         COMMAND_EDIT        COMMAND_SHOW
+MAKE_MENU(menu_preset1, menu_preset2, NULL_ENTRY,    menu0_item1, NULL_ENTRY, 0,   1,         &Preset.MidiChannel,      t_uint8,  1,   16,     NULL,              menu_preset_edit,         menu_show_param,      "","  Channel: ");
+MAKE_MENU(menu_preset2, menu_preset3, menu_preset1,  menu0_item1, NULL_ENTRY, 0,   1,         &Preset.SplitKey,         t_uint8,  0,   40,     NULL,              menu_preset_edit,         menu_show_splitkey,      "","Split Key: ");
+MAKE_MENU(menu_preset3, menu_preset4, menu_preset2,  menu0_item1, NULL_ENTRY, 0,   1,         &Preset.SplitChannel,     t_uint8,  1,   16,     NULL,              menu_preset_edit,         menu_show_param,      "","Split Chl: ");
+MAKE_MENU(menu_preset4, menu_preset5, menu_preset3,  menu0_item1, NULL_ENTRY, 0,   1,         &Preset.HighResEnable,    t_bool,   0,   1,     NULL,               menu_preset_edit,         menu_show_param,      ""," High Res: ");
+MAKE_MENU(menu_preset5, menu_preset6, menu_preset4,  menu0_item1, NULL_ENTRY, 0,   1,         &Preset.AnalogMidiEnable, t_bool,   0,   1,     NULL,               menu_preset_edit,         menu_show_param,      "","Midi Port: ");
+MAKE_MENU(menu_preset6, menu_preset7, menu_preset5,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                     t_uint8,  0,   0,     NULL,               menu_preset_edit,                  NULL,      "","    Curve  ");
+MAKE_MENU(menu_preset7, menu_preset8, menu_preset6,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                     t_uint8,  0,   0,     NULL,               menu_preset_edit,                  NULL,      "","  Sliders ");
+MAKE_MENU(menu_preset8, NULL_ENTRY  , menu_preset7,  menu0_item1, NULL_ENTRY, 0,   1,         NULL,                     t_uint8,  0,   0,     NULL,               menu_preset_edit,                  NULL,      "","  Buttons ");
 
 
 
@@ -210,15 +255,27 @@ static void showMenu() {
 		if (MENU_POS) {
 			hd44780_goto(1, MENU_TEXT_POS);
 			hd44780_write_string(MENU_PREVIOUS->Text);
+			hd44780_goto(1, MENU_VALUE_POS);
+			if (MENU_PREVIOUS->Command_Show)
+				MENU_PREVIOUS->Command_Show(MENU_PREVIOUS);
 			hd44780_goto(2, MENU_TEXT_POS);
 			hd44780_write_string(selectedMenuItem->Text);
+			hd44780_goto(2, MENU_VALUE_POS);
+			if (selectedMenuItem->Command_Show)
+				selectedMenuItem->Command_Show(selectedMenuItem);
 			hd44780_goto(2, MENU_CURSOR_POS);
 			hd44780_write_char(MENU_CURSOR_CHAR);
 		} else {
 			hd44780_goto(1, MENU_TEXT_POS);
 			hd44780_write_string(selectedMenuItem->Text);
+			hd44780_goto(1, MENU_VALUE_POS);
+			if (selectedMenuItem->Command_Show)
+				selectedMenuItem->Command_Show(selectedMenuItem);
 			hd44780_goto(2, MENU_TEXT_POS);
 			hd44780_write_string(MENU_NEXT->Text);
+			hd44780_goto(2, MENU_VALUE_POS);
+			if (MENU_NEXT->Command_Show)
+				MENU_NEXT->Command_Show(MENU_NEXT);
 			hd44780_goto(1, MENU_CURSOR_POS);
 			hd44780_write_char(MENU_CURSOR_CHAR);
 		}
@@ -241,6 +298,47 @@ static void showMenu() {
 		}
 	}
 }
+
+
+
+
+static void menu_show_param(menuItem_type * menu) {
+	char s[5];
+	uint8_t *b;
+	uint16_t *w;
+	switch (menu->tValue) {
+	case t_uint8:
+		b = (uint8_t*) (menu->Value);
+		uint8toa(*b, s);
+		hd44780_write_string(s);
+		break;
+	case t_uint16:
+		w = (uint16_t*) (menu->Value);
+		uint16toa(*w, s);
+		hd44780_write_string(s);
+		break;
+	case t_bool:
+		b = (uint8_t*) (menu->Value);
+		if (*b)
+			hd44780_write_string("On");
+		else
+			hd44780_write_string("Off");
+		break;
+	}
+}
+
+
+static void menu_show_splitkey(menuItem_type * menu){
+	char s[5];
+	uint8_t *b;
+	b = (uint8_t*) (menu->Value);
+	note_name (*b, s);
+	hd44780_write_string(s);
+}
+
+
+
+
 
 static void startMenu_preset(void) {
 	if ((presets_list.pos) == (presets_list.active)){
@@ -335,7 +433,7 @@ static void menu_preset_copy_yes(void){
     strcat(file_name, PRESET_EXT);
     strcat(path, file_name);
 	preset_save(path, &Preset);
-	SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
+	SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);//update Presets list
 	file_list_find(&presets_list, old_active_preset_name);
 	presets_list.active=presets_list.pos;
 	file_list_find(&presets_list, file_name);
@@ -343,6 +441,25 @@ static void menu_preset_copy_yes(void){
 	send_message(MES_REDRAW);
 }
 
+
+static void menu_preset_save_yes(void){
+	char path[64]= "0:/" PRESET_DIR_NAME "/";
+    strcat(path, presets_list.names[presets_list.pos]);
+	preset_save(path, &Preset);
+	Preset.Changed=0;
+	menuChange(MENU_CHILD);
+	send_message(MES_REDRAW);
+}
+
+static void menu_preset_edit(void){
+	if (Preset.Changed){
+		selectedMenuItem = (menuItem_type*) &menuYN10_item1;
+		showMenu();
+	}else{
+		selectedMenuItem = (menuItem_type*) &menu0_item1;
+		showMenu();
+	}
+}
 
 static void menu_preset_delete_yes(void){
 	char old_active_preset_name [21];
@@ -449,32 +566,60 @@ static void startMenu_calibration(void) {
 
 
 
+static void change_value(int8_t changer) {
+	int8_t value = *(selectedMenuItem->Value);
+	value += changer;
+	if (value < selectedMenuItem->Min)
+		value = selectedMenuItem->Min;
+	if (value > selectedMenuItem->Max)
+		value = selectedMenuItem->Max;
+	*(selectedMenuItem->Value)=value;
+	Preset.Changed=1;
+}
+
 
 void menu_button_handler(uint8_t button) {
 	switch (button) {
-	case MES_REDRAW:{
+	case MES_REDRAW:
 		showMenu();
 		break;
-	}
-	case ENCODER_LEFT: {
-
-	}
-	case BUTTON_PAGEUP: {
-		menuChange(MENU_PREVIOUS);
-		MENU_POS=0;
-		showMenu();
+	case ENCODER_LEFT1:
+		change_value(-1);
+    	showMenu();
 		break;
-	}
-	case ENCODER_RIGHT: {
-
-	}
-	case BUTTON_PAGEDOWN: {
-		menuChange(MENU_NEXT);
-		MENU_POS=1;
-		showMenu();
+	case ENCODER_LEFT2:
+		change_value(-5);
+    	showMenu();
 		break;
-	}
-	case BUTTON_ENTER: {
+	case ENCODER_LEFT3:
+		change_value(-10);
+    	showMenu();
+		break;
+	case BUTTON_PAGEUP:
+		if (menuChange(MENU_PREVIOUS)){
+    		MENU_POS=0;
+	    	showMenu();
+		}
+	break;
+	case ENCODER_RIGHT1:
+		change_value(1);
+    	showMenu();
+		break;
+	case ENCODER_RIGHT2:
+		change_value(5);
+    	showMenu();
+		break;
+	case ENCODER_RIGHT3:
+		change_value(10);
+    	showMenu();
+		break;
+	case BUTTON_PAGEDOWN:
+		if  (menuChange(MENU_NEXT)){
+	    	MENU_POS=1;
+    		showMenu();
+		}
+		break;
+	case BUTTON_ENTER:
 		if (selectedMenuItem->Command_Enter){
 	        selectedMenuItem->Command_Enter();
             break;
@@ -483,12 +628,9 @@ void menu_button_handler(uint8_t button) {
 			send_message(MES_REDRAW);
 			break;
 		}
-
-	}
-	case BUTTON_STORAGE: {
+	case BUTTON_STORAGE:
 		break;
-	}
-	case BUTTON_EDIT: {
+	case BUTTON_EDIT:
 		if (selectedMenuItem->Command_Edit){
 	        selectedMenuItem->Command_Edit();
             break;
@@ -497,7 +639,6 @@ void menu_button_handler(uint8_t button) {
 			send_message(MES_REDRAW);
 			break;
 		}
-	}
 	default:
 		break;
 	}
@@ -536,10 +677,14 @@ void curves_button_handler(uint8_t button) {
 		case BUTTON_PROGRAM: {
 
 		}
-		case ENCODER_LEFT: {
+		case ENCODER_LEFT1:
+		case ENCODER_LEFT2:
+		case ENCODER_LEFT3: {
 
 		}
-		case ENCODER_RIGHT: {
+		case ENCODER_RIGHT1:
+		case ENCODER_RIGHT2:
+		case ENCODER_RIGHT3: {
 
 		}
 	}
@@ -591,9 +736,64 @@ static void text_object_edit(uint8_t button, text_edit_object_t *obj){
 		hd44780_goto(2, obj->pos+1);
 		break;
 	}
-	case ENCODER_LEFT: {
+	case ENCODER_LEFT3:
+	case ENCODER_LEFT2:
+	case ENCODER_LEFT1: {
 		pos=obj->pos;
 		obj->text[pos]=rotate_char(obj->text[pos],-1,pos);
+		hd44780_write_char(obj->text[pos]);
+		hd44780_goto(2, pos+1);
+		break;
+	}
+	case ENCODER_RIGHT3:
+	case ENCODER_RIGHT2:
+	case ENCODER_RIGHT1: {
+		pos=obj->pos;
+		obj->text[pos]=rotate_char(obj->text[pos],1,pos);
+		hd44780_write_char(obj->text[pos]);
+		hd44780_goto(2, pos+1);
+		break;
+	}
+	case BUTTON_ENTER: {
+		break;
+	}
+	case BUTTON_STORAGE: {
+		if (strcmp(obj->text, obj->old_text)) { //text changed
+			hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF,
+					HD44780_DISP_BLINK_OFF);
+			obj->command();
+			I_state = STATE_menu;
+			controlLED1on(1);
+		}
+		break;
+	}
+	default: {
+	    break;
+	}
+	}
+
+}
+
+/*
+static void number_object_edit(uint8_t button, number_edit_object_t *obj){
+	uint8_t pos;
+	uint8_t y = obj->line;
+	switch (button) {
+	case BUTTON_PAGEUP: {
+		(obj->pos)++;
+		if (obj->pos>=size) obj->pos=0;
+		hd44780_goto(y, obj->left + obj->pos+1);
+		break;
+	}
+	case BUTTON_PAGEDOWN: {
+		(obj->pos)--;
+		if (obj->pos==0xFF) obj->pos=obj->size-1;
+		hd44780_goto(y, obj->left + obj->pos+1);
+		break;
+	}
+	case ENCODER_LEFT: {
+		pos=obj->pos;
+		obj->text[pos]=rotate_digit(obj->text[pos],-1,pos);
 		hd44780_write_char(obj->text[pos]);
 		hd44780_goto(2, pos+1);
 		break;
@@ -625,8 +825,7 @@ static void text_object_edit(uint8_t button, text_edit_object_t *obj){
 
 }
 
-
-
+*/
 
 
 
@@ -642,11 +841,11 @@ static void show_preset (const presetType *pr, file_list_type *pr_list){
 	hd44780_write_string(line);
 	memset(line,' ',16);
 	memcpy(line,"Ch:",3);
-    btoa_mem(pr->MidiChannel+1,line+3);
+    btoa_mem(pr->MidiChannel,line+3);
     if (pr->SplitKey){
 	    len=note_name(pr->SplitKey,line+6)+6;
 	    memcpy(line+len," Ch:",4 );
-	    btoa_mem(pr->SplitChannel+1,line +len+4);
+	    btoa_mem(pr->SplitChannel,line +len+4);
     }
 	hd44780_goto(2,1);
 	hd44780_write_string(line);
@@ -671,7 +870,9 @@ static void presets_button_handler(uint8_t button){
 		show_preset(&Preset, &presets_list);
 		controlLED1on(0);
 		break;
-	case ENCODER_LEFT:
+	case ENCODER_LEFT1:
+	case ENCODER_LEFT2:
+	case ENCODER_LEFT3:
 	case BUTTON_PAGEUP:
 		presets_list.pos--;
 		if (presets_list.pos == 0xFFFF)
@@ -680,12 +881,14 @@ static void presets_button_handler(uint8_t button){
 		status = curve_load(Preset.CurveFileName, &Preset);
 		show_preset(&Preset, &presets_list);
 		break;
-	case ENCODER_RIGHT:
+	case ENCODER_RIGHT3:
+	case ENCODER_RIGHT2:
+	case ENCODER_RIGHT1:
 	case BUTTON_PAGEDOWN:
 		presets_list.pos++;
 		if (presets_list.pos >= presets_list.num)
 			presets_list.pos = 0;
-		FIO_status status=preset_load(presets_list.names[presets_list.pos], &Preset);
+		FIO_status status = preset_load(presets_list.names[presets_list.pos], &Preset);
 		status=curve_load(Preset.CurveFileName, &Preset);
 		show_preset(&Preset, &presets_list);
 		break;
@@ -816,7 +1019,9 @@ static void calibrations_button_handler(uint8_t button){
 		show_calibration(&Calibration, &calibrations_list);
 		controlLED1on(0);
 		break;
-	case ENCODER_LEFT:
+	case ENCODER_LEFT1:
+	case ENCODER_LEFT2:
+	case ENCODER_LEFT3:
 	case BUTTON_PAGEUP:
 		calibrations_list.pos--;
 		if (calibrations_list.pos == 0xFFFF)
@@ -826,7 +1031,9 @@ static void calibrations_button_handler(uint8_t button){
 		show_calibration(&Calibration, &calibrations_list);
 		calculate_sliders_constants(Preset.sliders, Calibration.calibr);
 		break;
-	case ENCODER_RIGHT:
+	case ENCODER_RIGHT1:
+	case ENCODER_RIGHT2:
+	case ENCODER_RIGHT3:
 	case BUTTON_PAGEDOWN:
 		calibrations_list.pos++;
 		if (calibrations_list.pos >= calibrations_list.num)

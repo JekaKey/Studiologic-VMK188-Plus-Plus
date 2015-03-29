@@ -266,6 +266,7 @@ FIO_status preset_save(const char* path, presetType* pr){
 	json_write_string(1, "}", &fff);
 	json_write_string(0, "}", &fff);
 	SDFS_close(&fff);
+	pr->Changed=0;
 	return FIO_OK;
 }
 

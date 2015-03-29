@@ -41,10 +41,12 @@ void checkNoteArray(presetType* preset) {
 		FIFO_POP(durations);
 		FIFO_POP(notes);
 		if ((preset->SplitKey) && ((curNote & 0x7F) < preset->SplitKey)) {
-			channel = preset->SplitChannel;
+			channel = preset->SplitChannel-1;
 		} else {
-			channel = preset->MidiChannel;
+			channel = preset->MidiChannel-1;
 		}
+		if (channel>15)
+			channel=0;
 		curNote+=21;
 		if ((curNote & 0x80) == 0) {
 			vel = getVelocity_on(duration, note_color(curNote));

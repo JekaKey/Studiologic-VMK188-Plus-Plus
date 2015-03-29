@@ -18,6 +18,10 @@
 #define BUTTONS_AMOUNT 13  //Number of user buttons in the piano
 #define CALIBRATE_COUNTER_MAX 3*MEDIAN_FILTER_SIZE
 
+#define ENCODER_SPEED1 2000//number of timer ticks to estimate en encoder speed, low speed
+#define ENCODER_SPEED2 500 //average speed
+#define ENCODER_SPEED3 100 //fast speed
+
 #define SLIDER_S1 14
 #define SLIDER_S2 4
 #define SLIDER_S3 10
@@ -121,14 +125,30 @@
 #define BUTTON_B6 21
 #define BUTTON_B7 22
 #define BUTTON_B8 23
-#define ENCODER_LEFT 25
-#define ENCODER_RIGHT 26
-#define MES_SLIDER_SHOW 27
-#define MES_SLIDER_EDGE 28
-#define MES_SLIDER_FOUND 29
+
+#define ENCODER_LEFT1 25
+#define ENCODER_RIGHT1 26
+#define ENCODER_LEFT2 27
+#define ENCODER_RIGHT2 28
+#define ENCODER_LEFT3 29
+#define ENCODER_RIGHT3 30
+
+#define MES_SLIDER_SHOW 31
+#define MES_SLIDER_EDGE 32
+#define MES_SLIDER_FOUND 33
+
+
+/*the events to send to controls FIFO*/
+#define MES_REDRAW 40
+#define MES_YES 41
+
+
+/*************************************/
 
 
 typedef enum {SLIDERS_WORK=0, SLIDERS_SEARCH,  SLIDERS_FOUND, SLIDERS_CALIBRATE, SLIDERS_EDGE} sliders_state_t;
+
+typedef enum {ENCODER_SLOW, ENCODER_AVERAGE, ENCODER_FAST} encoder_speed_t;
 
 typedef struct {
 	uint16_t min_in_value;

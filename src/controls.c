@@ -561,10 +561,29 @@ static enum buttons_read_status_type {
 	read_buttons, check_button, next_buttons_chunk, read_encoders
 } buttons_read_status = read_buttons;
 
+
+static uint16_t encoder_speed_counter=0;
+
+static void encoder_speed_tick(void){
+	if (encoder_speed_counter < 0xFFFF )
+	 encoder_speed_counter++;
+}
+
+
+static encoder_speed_t encoder_speed_measure(void){
+	if (encoder_speed_counter>ENCODER_SPEED1)
+			return ENCODER_SLOW;
+	if (encoder_speed_counter>ENCODER_SPEED2)
+			return ENCODER_AVERAGE;
+	return ENCODER_FAST;
+}
+
 void read_buttons_state(void) {
 	static uint8_t button_number; //Number of current button;
 	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
 	uint16_t IDR_tmp;
+
+	encoder_speed_tick();
 
 	switch (buttons_read_status) {
 	case read_buttons:
@@ -639,17 +658,38 @@ void read_buttons_state(void) {
 				if (encoder_zero) {
 					if (encoder_state == 1) { //Direction depends previous state
 						encoder_state = 3;
-						FIFO_PUSH(control_events, ENCODER_LEFT);
+						switch (encoder_speed_measure()){
+						case ENCODER_SLOW:
+						   FIFO_PUSH(control_events, ENCODER_LEFT1);
+						   break;
+						case ENCODER_AVERAGE:
+						   FIFO_PUSH(control_events, ENCODER_LEFT2);
+						   break;
+						case ENCODER_FAST:
+						   FIFO_PUSH(control_events, ENCODER_LEFT3);
+						   break;
+						}
 						buttons_read_status = read_buttons;
 						encoder_zero = 0;
 						break;
 					} else if (encoder_state == 2) {
 						encoder_state = 3;
-						FIFO_PUSH(control_events, ENCODER_RIGHT);
+						switch (encoder_speed_measure()){
+						case ENCODER_SLOW:
+						   FIFO_PUSH(control_events, ENCODER_RIGHT1);
+						   break;
+						case ENCODER_AVERAGE:
+						   FIFO_PUSH(control_events, ENCODER_RIGHT2);
+						   break;
+						case ENCODER_FAST:
+						   FIFO_PUSH(control_events, ENCODER_RIGHT3);
+						   break;
+						}
 						buttons_read_status = read_buttons;
 						encoder_zero = 0;
 						break;
 					}
+					encoder_speed_counter = 0;
 				} else {
 					encoder_state = IDR_tmp;
 					buttons_read_status = read_buttons;

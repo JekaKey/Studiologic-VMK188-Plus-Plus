@@ -30,8 +30,6 @@ extern currentStateType Current_state;
 extern calibrationType Calibration;
 
 
-uint16_t i;
-
 void delay(volatile uint32_t c) {
 	while (--c) {
 		__NOP();

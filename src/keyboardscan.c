@@ -24,9 +24,6 @@ static uint16_t lastState_key[88] = { 0 };
 static uint8_t curNote;
 static uint16_t duration;
 
-uint8_t UseHighRes = 1;
-uint8_t MidiChannel = 0;
-
 
 
 

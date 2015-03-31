@@ -20,8 +20,8 @@
 
 #define JSON_TAB 2 //size of tabulation in generated JSON files
 
-#define TOKENS_NUM 700 //Max number of tokens for JSMN parser
-#define JSON_BUFF_SIZE 12000 //Size of JSON buffer in bytes
+#define TOKENS_NUM 600 //Max number of tokens for JSMN parser
+#define JSON_BUFF_SIZE 10000 //Size of JSON buffer in bytes
 
 
 #define MAX_ATTR_SIZE 24 //Size of strings for json attributes

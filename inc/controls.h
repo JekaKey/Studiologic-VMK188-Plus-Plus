@@ -136,6 +136,7 @@
 #define MES_SLIDER_SHOW 31
 #define MES_SLIDER_EDGE 32
 #define MES_SLIDER_FOUND 33
+#define MES_SLIDER_MENU_FOUND 34
 
 
 /*the events to send to controls FIFO*/
@@ -146,7 +147,7 @@
 /*************************************/
 
 
-typedef enum {SLIDERS_WORK=0, SLIDERS_SEARCH,  SLIDERS_FOUND, SLIDERS_CALIBRATE, SLIDERS_EDGE} sliders_state_t;
+typedef enum {SLIDERS_WORK=0, SLIDERS_SEARCH,  SLIDERS_FOUND, SLIDERS_CALIBRATE, SLIDERS_EDGE, SLIDERS_MENU_SEARCH} sliders_state_t;
 
 typedef enum {ENCODER_SLOW, ENCODER_AVERAGE, ENCODER_FAST} encoder_speed_t;
 
@@ -164,8 +165,8 @@ typedef struct {
 	uint8_t value;
 	uint8_t min_out_value;
 	uint8_t max_out_value;
-	double a; // a & b are the parameters in slider formula y=a*x+b;
-	double b;
+//	double a; // a & b are the parameters in slider formula y=a*x+b;
+//	double b;
 } Slider_type;
 
 typedef struct {

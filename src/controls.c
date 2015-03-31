@@ -69,16 +69,6 @@ void ADC_init_all(void) {
 
 
 
-void slider_init_struct(Slider_type* sliders, Calibration_slider_type* sliders_calibr) {
-	if (sliders->reverse) {
-		sliders->a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) ((int) (sliders_calibr->min_in_value) - (int) (sliders_calibr->max_in_value));
-		sliders->b = (double) (sliders->min_out_value) - (double) (sliders_calibr->max_in_value) * sliders->a;
-	} else {
-		sliders->a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (sliders_calibr->max_in_value - sliders_calibr->min_in_value);
-		sliders->b = (double) (sliders->min_out_value) - (double) (sliders_calibr->min_in_value) * sliders->a;
-	}
-}
-
 /*
  Set default values in an array of calibration structures.
  */
@@ -181,11 +171,6 @@ void sliders_calibr_set_defaults(Calibration_slider_type* sliders_calibr) {
 	sliders_calibr[SLIDER_AT].delta = SLIDERS_DELTA_AT;
 }
 
-void calculate_sliders_constants(Slider_type* sliders, Calibration_slider_type* sliders_calibr) {
-	for (int i = 0; i < SLIDERS_AMOUNT; i++) //Calculate factors for all sliders
-		slider_init_struct(&sliders[i], &sliders_calibr[i]);
-}
-
 
 /*
  Set default values in an array of sliders with address "sliders" using an array of calibrations
@@ -195,42 +180,42 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_EMPTY].active = 0;    //One slider is absent physically
 	sliders[SLIDER_EMPTY].reverse = 0;
-	sliders[SLIDER_EMPTY].channel = 0;
+	sliders[SLIDER_EMPTY].channel = 1;
 	sliders[SLIDER_EMPTY].event = 7;
 	sliders[SLIDER_EMPTY].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_EMPTY].max_out_value = SLIDER_S_MAX_OUT;
 
 	sliders[SLIDER_S1].active = 1;
 	sliders[SLIDER_S1].reverse = 0;
-	sliders[SLIDER_S1].channel = 0;
+	sliders[SLIDER_S1].channel = 1;
 	sliders[SLIDER_S1].event = 7;
 	sliders[SLIDER_S1].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_S1].max_out_value = SLIDER_S_MAX_OUT;
 
 	sliders[SLIDER_S2].active = 0;
 	sliders[SLIDER_S2].reverse = 0;
-	sliders[SLIDER_S2].channel = 0;
+	sliders[SLIDER_S2].channel = 1;
 	sliders[SLIDER_S2].event = 22;
 	sliders[SLIDER_S2].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_S2].max_out_value = SLIDER_S_MAX_OUT;
 
 	sliders[SLIDER_S3].active = 0;
 	sliders[SLIDER_S3].reverse = 0;
-	sliders[SLIDER_S3].channel = 0;
+	sliders[SLIDER_S3].channel = 1;
 	sliders[SLIDER_S3].event = 23;
 	sliders[SLIDER_S3].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_S3].max_out_value = SLIDER_S_MAX_OUT;
 
 	sliders[SLIDER_S4].active = 0;
 	sliders[SLIDER_S4].reverse = 0;
-	sliders[SLIDER_S4].channel = 0;
+	sliders[SLIDER_S4].channel = 1;
 	sliders[SLIDER_S4].event = 24;
 	sliders[SLIDER_S4].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_S4].max_out_value = SLIDER_S_MAX_OUT;
 
 	sliders[SLIDER_S5].active = 0;
 	sliders[SLIDER_S5].reverse = 0;
-	sliders[SLIDER_S5].channel = 0;
+	sliders[SLIDER_S5].channel = 1;
 	sliders[SLIDER_S5].event = 25;
 	sliders[SLIDER_S5].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_S5].max_out_value = SLIDER_S_MAX_OUT;
@@ -244,7 +229,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_S7].active = 0;
 	sliders[SLIDER_S7].reverse = 0;
-	sliders[SLIDER_S7].channel = 0;
+	sliders[SLIDER_S7].channel = 1;
 	sliders[SLIDER_S7].event = 27;
 	sliders[SLIDER_S7].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_S7].max_out_value = SLIDER_S_MAX_OUT;
@@ -258,7 +243,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_S9].active = 0;
 	sliders[SLIDER_S9].reverse = 0;
-	sliders[SLIDER_S9].channel = 0;
+	sliders[SLIDER_S9].channel = 1;
 	sliders[SLIDER_S9].event = 29;
 	sliders[SLIDER_S9].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_S9].max_out_value = SLIDER_S_MAX_OUT;
@@ -272,7 +257,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_R2].active = 0;
 	sliders[SLIDER_R2].reverse = 0;
-	sliders[SLIDER_R2].channel = 0;
+	sliders[SLIDER_R2].channel = 1;
 	sliders[SLIDER_R2].event = 72;
 	sliders[SLIDER_R2].min_out_value = SLIDER_R_MIN_OUT;
 	sliders[SLIDER_R2].max_out_value = SLIDER_R_MAX_OUT;
@@ -286,82 +271,80 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_R4].active = 0;
 	sliders[SLIDER_R4].reverse = 0;
-	sliders[SLIDER_R4].channel = 0;
+	sliders[SLIDER_R4].channel = 1;
 	sliders[SLIDER_R4].event = 74;
 	sliders[SLIDER_R4].min_out_value = SLIDER_R_MIN_OUT;
 	sliders[SLIDER_R4].max_out_value = SLIDER_R_MAX_OUT;
 
 	sliders[SLIDER_R5].active = 0;
 	sliders[SLIDER_R5].reverse = 0;
-	sliders[SLIDER_R5].channel = 0;
+	sliders[SLIDER_R5].channel = 1;
 	sliders[SLIDER_R5].event = 75;
 	sliders[SLIDER_R5].min_out_value = SLIDER_R_MIN_OUT;
 	sliders[SLIDER_R5].max_out_value = SLIDER_R_MAX_OUT;
 
 	sliders[SLIDER_R6].active = 0;
 	sliders[SLIDER_R6].reverse = 0;
-	sliders[SLIDER_R6].channel = 0;
+	sliders[SLIDER_R6].channel = 1;
 	sliders[SLIDER_R6].event = 76;
 	sliders[SLIDER_R6].min_out_value = SLIDER_R_MIN_OUT;
 	sliders[SLIDER_R6].max_out_value = SLIDER_R_MAX_OUT;
 
 	sliders[SLIDER_R7].active = 0;
 	sliders[SLIDER_R7].reverse = 0;
-	sliders[SLIDER_R7].channel = 0;
+	sliders[SLIDER_R7].channel = 1;
 	sliders[SLIDER_R7].event = 77;
 	sliders[SLIDER_R7].min_out_value = SLIDER_R_MIN_OUT;
 	sliders[SLIDER_R7].max_out_value = SLIDER_R_MAX_OUT;
 
 	sliders[SLIDER_R8].active = 0;
 	sliders[SLIDER_R8].reverse = 0;
-	sliders[SLIDER_R8].channel = 0;
+	sliders[SLIDER_R8].channel = 1;
 	sliders[SLIDER_R8].event = 78;
 	sliders[SLIDER_R8].min_out_value = SLIDER_R_MIN_OUT;
 	sliders[SLIDER_R8].max_out_value = SLIDER_R_MAX_OUT;
 
 	sliders[SLIDER_P1].active = 0;
 	sliders[SLIDER_P1].reverse = 0;
-	sliders[SLIDER_P1].channel = 0;
+	sliders[SLIDER_P1].channel = 1;
 	sliders[SLIDER_P1].event = 65;
 	sliders[SLIDER_P1].min_out_value = SLIDER_P_MIN_OUT;
 	sliders[SLIDER_P1].max_out_value = SLIDER_P_MAX_OUT;
 
 	sliders[SLIDER_P2].active = 1;
 	sliders[SLIDER_P2].reverse = 1;
-	sliders[SLIDER_P2].channel = 0;
+	sliders[SLIDER_P2].channel = 1;
 	sliders[SLIDER_P2].event = 64;
 	sliders[SLIDER_P2].min_out_value = SLIDER_P_MIN_OUT;
 	sliders[SLIDER_P2].max_out_value = SLIDER_P_MAX_OUT;
 
 	sliders[SLIDER_P3].active = 0;
 	sliders[SLIDER_P3].reverse = 0;
-	sliders[SLIDER_P3].channel = 0;
+	sliders[SLIDER_P3].channel = 1;
 	sliders[SLIDER_P3].event = 66;
 	sliders[SLIDER_P3].min_out_value = SLIDER_P_MIN_OUT;
 	sliders[SLIDER_P3].max_out_value = SLIDER_P_MAX_OUT;
 
 	sliders[SLIDER_PITCH].active = 0;
 	sliders[SLIDER_PITCH].reverse = 0;
-	sliders[SLIDER_PITCH].channel = 0;
+	sliders[SLIDER_PITCH].channel = 1;
 	sliders[SLIDER_PITCH].event = 66;
 	sliders[SLIDER_PITCH].min_out_value = SLIDER_PITCH_MIN_OUT;
 	sliders[SLIDER_PITCH].max_out_value = SLIDER_PITCH_MAX_OUT;
 
 	sliders[SLIDER_MOD].active = 0;
 	sliders[SLIDER_MOD].reverse = 0;
-	sliders[SLIDER_MOD].channel = 0;
+	sliders[SLIDER_MOD].channel = 1;
 	sliders[SLIDER_MOD].event = 1;
 	sliders[SLIDER_MOD].min_out_value = SLIDER_MOD_MIN_OUT;
 	sliders[SLIDER_MOD].max_out_value = SLIDER_MOD_MAX_OUT;
 
 	sliders[SLIDER_AT].active = 1;
 	sliders[SLIDER_AT].reverse = 0;
-	sliders[SLIDER_AT].channel = 0;
+	sliders[SLIDER_AT].channel = 1;
 	sliders[SLIDER_AT].event = 66;
 	sliders[SLIDER_AT].min_out_value = SLIDER_AT_MIN_OUT;
 	sliders[SLIDER_AT].max_out_value = SLIDER_AT_MAX_OUT;
-
-	calculate_sliders_constants(sliders, sliders_calibr);
 
 }
 
@@ -407,8 +390,16 @@ uint8_t buttons_active = 0; //This flag prevents activity of buttons and  hd4478
 extern uint8_t hd44780_active; //This flag prevents activity of buttons and  hd44780 in the same time
 
 
-static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders) {
-	int midi_value = (int)(sliders[num].a * value + sliders[num].b);
+static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, Calibration_slider_type* sliders_calibr) {
+	double a,b;
+	if (sliders->reverse) {
+		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) ((int) (sliders_calibr->min_in_value) - (int) (sliders_calibr->max_in_value));
+		b = (double) (sliders->min_out_value) - (double) (sliders_calibr->max_in_value) * a;
+	} else {
+		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (sliders_calibr->max_in_value - sliders_calibr->min_in_value);
+		b = (double) (sliders->min_out_value) - (double) (sliders_calibr->min_in_value) * a;
+	}
+	int midi_value = (int)(a * value + b);
 	if (midi_value > 127) {
 		midi_value = 127;
 	}
@@ -425,20 +416,21 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders) 
 void slider_midi_send(uint16_t value, Slider_type* sliders) {
 		uint8_t num = (uint8_t)(value & 0x00FF);
 		uint8_t midi_value = (uint8_t)(value >> 8);
+		uint8_t channel = sliders[num].channel-1; //Real channels are 0-15
+		if (channel>15)
+			 channel=0;
 		switch (num) {
 		case SLIDER_PITCH:
-			sendPitchBend((uint8_t)(midi_value), sliders[num].channel);
+			sendPitchBend((uint8_t)(midi_value), channel);
 			break;
 		case SLIDER_AT:
-			sendAfterTouch((uint8_t)(midi_value), sliders[num].channel);
+			sendAfterTouch((uint8_t)(midi_value), channel);
 			break;
 		case SLIDER_MOD:
-			sendControlChange(sliders[num].event, (uint8_t)(midi_value),
-					sliders[num].channel);
+			sendControlChange(sliders[num].event, (uint8_t)(midi_value), channel);
 			break;
 		default:
-			sendControlChange(sliders[num].event, (uint8_t)(midi_value),
-					sliders[num].channel);
+			sendControlChange(sliders[num].event, (uint8_t)(midi_value), channel);
 			break;
 		}
 }
@@ -510,7 +502,7 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 				if (ADC_change > cal[slider_number].delta) { //Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
 					if (sliders[slider_number].active) //only active sliders work send fifo
-						slider_FIFO_send(slider_number, ADC_value, sliders);
+						slider_FIFO_send(slider_number, ADC_value, &sliders[slider_number], &cal[slider_number]);
 				}
 				break;
 			case SLIDERS_SEARCH:
@@ -520,6 +512,14 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 					slider_calibrate_number = slider_number;
 					sliders_state = SLIDERS_FOUND;
 					send_message(MES_SLIDER_SHOW);
+				}
+				break;
+			case SLIDERS_MENU_SEARCH:
+				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value; //Calculate change comparing with old value.
+				if (ADC_change > SLIDERS_DELTA_SEARCH) { //Change a result only if difference exceeds SLIDERS_DELTA.
+					ADC_old_values[slider_number] = ADC_value;
+					slider_calibrate_number = slider_number;
+					send_message(MES_SLIDER_MENU_FOUND);
 				}
 				break;
 			case SLIDERS_CALIBRATE:

@@ -84,7 +84,7 @@ int main(void) {
     LED_light(2);
 	set_defaults_all(&Preset, &Calibration);
     LED_light(4);
-    delay(250);
+    delayms(2000);
 	start_load_all(&Preset, &Calibration);
 	interface_init(Current_state.preset_name);
 	calibration_init(Current_state.calibration_name);

@@ -534,10 +534,10 @@ FIO_status preset_load(char* name, presetType* pr) {
 
 
 static void preset_set_defaults(presetType* pr){
-	pr->MidiChannel=0;
+	pr->MidiChannel=1;
 	pr->HighResEnable=0;
 	pr->SplitKey=0;
-	pr->SplitChannel=0;
+	pr->SplitChannel=1;
 	pr->AnalogMidiEnable=0;
 	strcpy(pr->CurveFileName, DEFAULT_CURVE_NAME);
 }

@@ -535,6 +535,7 @@ static void menu_edit_calibration(void){
 	calibration_message_draw("Move control","to calibrate");
 	I_state = STATE_calibration_start;
 	sliders_state = SLIDERS_SEARCH;
+	controlLED1on(1);
 }
 
 
@@ -615,12 +616,14 @@ static void startMenu_calibration(void) {
 
 static void menu_preset_sl_enter(void) {
 	sliders_state = SLIDERS_MENU_SEARCH;
+    controlLED1on(1);
 	menuChange(MENU_CHILD);
 	send_message(MES_REDRAW);
 }
 
 static void menu_preset_sl_edit(void) {
 	sliders_state = SLIDERS_WORK;
+    controlLED1on(0);
 	menuChange(MENU_PARENT);
 	send_message(MES_REDRAW);
 }
@@ -628,6 +631,7 @@ static void menu_preset_sl_edit(void) {
 
 static void menu_slider_edit(void){
 	sliders_state = SLIDERS_MENU_SEARCH;
+    controlLED1on(1);
 	menuChange(MENU_PARENT);
 	send_message(MES_REDRAW);
 
@@ -650,20 +654,23 @@ static void menu_slider_enter(void) {
 	menu_sl_max.Parent = selectedMenuItem;
 	menu_sl_max.Value = &Preset.sliders[selectedMenuItem->Min].max_out_value;
 	sliders_state = SLIDERS_WORK;
+    controlLED1on(0);
 	menuChange(&menu_sl_active);
 	send_message(MES_REDRAW);
 }
 
 
-static void change_value(int8_t changer) {
-	int8_t value = *(selectedMenuItem->Value);
+static void change_value(int16_t changer) {
+	int16_t value = (int16_t)(*(selectedMenuItem->Value));
+	int16_t min = (int16_t)(selectedMenuItem->Min);
+	int16_t max = (int16_t)(selectedMenuItem->Max);
 	value += changer;
-	if (value < selectedMenuItem->Min)
-		value = selectedMenuItem->Min;
-	if (value > selectedMenuItem->Max)
-		value = selectedMenuItem->Max;
-	*(selectedMenuItem->Value)=value;
-	Preset.Changed=1;
+	if (value < min)
+		value = min;
+	if (value > max)
+		value = max;
+	*(selectedMenuItem->Value) = (uint8_t) value;
+	Preset.Changed = 1;
 }
 
 
@@ -866,7 +873,6 @@ static void text_object_edit(uint8_t button, text_edit_object_t *obj){
 					HD44780_DISP_BLINK_OFF);
 			obj->command();
 			I_state = STATE_menu;
-			controlLED1on(1);
 		}
 		break;
 	}
@@ -917,7 +923,6 @@ static void presets_button_handler(uint8_t button){
 	switch (button) {
 	case MES_REDRAW:
 		show_preset(&Preset, &presets_list);
-		controlLED1on(0);
 		break;
 	case ENCODER_LEFT1:
 	case ENCODER_LEFT2:
@@ -944,7 +949,6 @@ static void presets_button_handler(uint8_t button){
 	case BUTTON_STORAGE:
 		startMenuYN_preset_active();
 		I_state=STATE_menu;
-		controlLED1on(1);
 		break;
 	case BUTTON_ENTER:
 		startMenu_preset();
@@ -1004,6 +1008,7 @@ static void start_calibration_handler(uint8_t event){
 	case MES_SLIDER_SHOW:
 		LOG("start_calibration_handler, MES_SLIDER_SHOW: %d\r\n",event);
 		calibration_message_draw(slider_names[slider_calibrate_number], "Set Min & Ent");
+        controlLED1on(1);
 		break;
 	case MES_SLIDER_EDGE:
 		LOG("start_calibration_handler, MES_SLIDER_EDGE: %d\r\n",event);
@@ -1017,6 +1022,7 @@ static void start_calibration_handler(uint8_t event){
 		break;
 	case BUTTON_EDIT:
 		sliders_state = SLIDERS_WORK;
+        controlLED1on(0);
 		I_state = STATE_menu;
 		send_message(MES_REDRAW);
 		break;
@@ -1042,17 +1048,21 @@ static void continue_calibration_handler(uint8_t event){
 		}
 		LOG("Min value: %d, max value: %d \n\r,", Calibration.calibr[slider_calibrate_number].min_in_value, Calibration.calibr[slider_calibrate_number].max_in_value);
 		sliders_state = SLIDERS_WORK;
+        controlLED1on(0);
 		I_state = STATE_menu;
 		send_message(MES_REDRAW);
 		break;
 	case BUTTON_EDIT:
 		sliders_state = SLIDERS_WORK;
+        controlLED1on(0);
 		I_state=STATE_menu;
 		send_message(MES_REDRAW);
 		break;
 	case BUTTON_ENTER:
-		if (sliders_state == SLIDERS_EDGE)
+		if (sliders_state == SLIDERS_EDGE){
      		sliders_state = SLIDERS_CALIBRATE;
+    	    controlLED1on(1);
+		}
 		break;
 	default:
 		break;
@@ -1065,7 +1075,6 @@ static void calibrations_button_handler(uint8_t button){
 	switch (button) {
 	case MES_REDRAW:
 		show_calibration(&Calibration, &calibrations_list);
-		controlLED1on(0);
 		break;
 	case ENCODER_LEFT1:
 	case ENCODER_LEFT2:
@@ -1091,7 +1100,6 @@ static void calibrations_button_handler(uint8_t button){
 	case BUTTON_STORAGE:
 		startMenuYN_calibration_active();
 		I_state=STATE_menu;
-		controlLED1on(1);
 		break;
 	case BUTTON_ENTER:
 		startMenu_calibration();

@@ -106,7 +106,8 @@
 #define hd44780_init_delay()            delayms( 16 )
 #define hd44780_init_delay2()           delayms( 5 )
 #define hd44780_init_delay3()           delayms( 1 )
-#define hd44780_init_end_delay()        delayms( 2 )
+//#define hd44780_init_end_delay()        delayms( 1 )
+#define hd44780_init_end_delay()        delay( 6000 )
 
 #define hd44780_clear()                           hd44780_wr_cmd( HD44780_CMD_CLEAR )
 #define hd44780_home()                            hd44780_wr_cmd( HD44780_CMD_RETURN_HOME )
@@ -129,5 +130,6 @@ void delay( uint32_t c );
 void delayms( uint32_t c );
 void hd44780_message(const char *s);
 void hd44780_message_center(const char *s, uint8_t line);
+void hd44780_load_symbol(uint8_t addr, const uint8_t * data);
 
 #endif /* !_HD44780_H_ */

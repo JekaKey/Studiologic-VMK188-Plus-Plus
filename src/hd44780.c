@@ -3,11 +3,30 @@
 #include "leds.h"
 
 
+const uint8_t symbol_menu_pointer[]={0b00001000,
+                                     0b00001100,
+                                     0b00011110,
+                                     0b00011111,
+                                     0b00011110,
+                                     0b00001100,
+                                     0b00001000,
+                                     0b00000000};
+
+const uint8_t symbol_check[]=       {0b00000000,
+                                     0b00001110,
+                                     0b00000011,
+                                     0b00000011,
+                                     0b00011000,
+                                     0b00011000,
+                                     0b00001110,
+                                     0b00000000};
+
+
+
 volatile uint8_t hd44780_active=0;
 extern uint8_t buttons_active;
 
 void hd44780_wr_hi_nibble(uint8_t data) {
-
 	if (data & 0x10) {
 		GPIO_SetBits(HD44780_DATAPORT, HD44780_DATABIT4);
 	} else {
@@ -35,8 +54,6 @@ void hd44780_wr_hi_nibble(uint8_t data) {
 
 	/* reset the EN signal */
 	hd44780_EN_Off();
-
-
 }
 
 #if HD44780_CONF_BUS == HD44780_FUNC_BUS_4BIT
@@ -89,9 +106,7 @@ void hd44780_write( uint8_t data ) {
 /* 8bit bus version */
 void hd44780_write(uint8_t data) {
 	while (buttons_active){
-
 	}
-
 	hd44780_active=1;
 	controlLEDs_enable(0);
 
@@ -150,35 +165,14 @@ void hd44780_write(uint8_t data) {
 #endif /* HD44780_CONF_BUS == HD44780_FUNC_BUS_8BIT */
 
 void hd44780_wr_cmd(const uint8_t cmd) {
-	while (buttons_active){
-
-	}
-
-	hd44780_active=1;
-	controlLEDs_enable(0);
-
 	hd44780_RS_Off();
 	hd44780_write(cmd);
-
-	hd44780_active=0;
-	controlLEDs_enable(1);
-
 }
 
 void hd44780_wr_data(const uint8_t data) {
-	while (buttons_active){
-
-	}
-
-	hd44780_active=1;
-	controlLEDs_enable(0);
 
 	hd44780_RS_On();
 	hd44780_write(data);
-
-	hd44780_active=0;
-	controlLEDs_enable(1);
-
 }
 
 void hd44780_init(void) {
@@ -221,14 +215,16 @@ void hd44780_init(void) {
 	/* addr increment, shift cursor */
 	hd44780_entry( HD44780_ENTRY_SHIFT_CURS, HD44780_ENTRY_ADDR_INC);
 
+	hd44780_load_symbol(0x0, symbol_menu_pointer);
+	hd44780_load_symbol(0x8, symbol_check);
+
 	/*cursor to zero position*/
 	hd44780_ddram_addr(0);
 
 	hd44780_active=0;
 	controlLEDs_enable(1);
-
-
 }
+
 
 void hd44780_write_string(const char *s) {
 	uint32_t i;
@@ -267,3 +263,12 @@ void hd44780_message_center(const char *s, uint8_t line){
 	hd44780_goto(line,(16-strlen(s))/2+1);
 	hd44780_write_string(s);
 }
+
+void hd44780_load_symbol(uint8_t addr, const uint8_t * data){
+//	hd44780_wr_cmd((addr<<3)+0b10000000);
+	hd44780_cgram_addr(addr);
+	for (uint8_t i=0; i<=7; i++)
+		hd44780_wr_data(data[i]);
+//	hd44780_ddram_addr(0);
+}
+

@@ -8,7 +8,8 @@
 #define MENU_TEXT_POS 3
 #define MENU_VALUE_POS 13
 #define MENU_CURSOR_POS 1
-#define MENU_CURSOR_CHAR '*'
+#define MENU_CURSOR_CHAR 0x0
+#define MENU_CHECK_CHAR 0x1
 #define MENU_YES_POS 4
 #define MENU_NO_POS 11
 

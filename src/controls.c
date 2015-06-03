@@ -571,10 +571,15 @@ static void encoder_speed_tick(void){
 
 
 static encoder_speed_t encoder_speed_measure(void){
-	if (encoder_speed_counter>ENCODER_SPEED1)
-			return ENCODER_SLOW;
-	if (encoder_speed_counter>ENCODER_SPEED2)
+	if (encoder_speed_counter>ENCODER_SPEED1){
+		encoder_speed_counter=0;
+		return ENCODER_SLOW;
+	}
+	if (encoder_speed_counter>ENCODER_SPEED2){
+    		encoder_speed_counter=0;
 			return ENCODER_AVERAGE;
+	}
+	encoder_speed_counter=0;
 	return ENCODER_FAST;
 }
 

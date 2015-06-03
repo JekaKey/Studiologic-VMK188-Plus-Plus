@@ -18,9 +18,9 @@
 #define BUTTONS_AMOUNT 13  //Number of user buttons in the piano
 #define CALIBRATE_COUNTER_MAX 3*MEDIAN_FILTER_SIZE
 
-#define ENCODER_SPEED1 2000//number of timer ticks to estimate en encoder speed, low speed
-#define ENCODER_SPEED2 500 //average speed
-#define ENCODER_SPEED3 100 //fast speed
+#define ENCODER_SPEED1 4000//number of timer ticks to estimate en encoder speed, low speed
+#define ENCODER_SPEED2 1000 //average speed
+#define ENCODER_SPEED3 200 //fast speed
 
 #define SLIDER_S1 14
 #define SLIDER_S2 4

@@ -137,7 +137,6 @@ typedef struct {
 	uint8_t HighResEnable; //bool
 	uint8_t AnalogMidiEnable; //bool
 	curve_points_type Curve;//curve nodes for B&W keys
-	char CurveFileName[16];//name of curve file
 	Slider_type sliders[SLIDERS_AMOUNT];
 	Button_type buttons[BUTTONS_AMOUNT];
 	uint8_t Changed;
@@ -157,11 +156,16 @@ FIO_status calibration_load(char* name, calibrationType* cal );
 FIO_status calibration_save(const char* path, calibrationType* cal);
 FIO_status calibration_rename(file_list_type *pr_list, char *new_name);
 FIO_status calibration_delete(file_list_type *pr_list);
+
 FIO_status preset_load(char* name, presetType* preset);
 FIO_status preset_rename(file_list_type *pr_list, char *new_name);
 FIO_status preset_delete(file_list_type *pr_list);
-FIO_status curve_load(char* path, presetType* pr);
 FIO_status preset_save(const char* name, presetType* preset );
 FIO_status preset_save_current(void);
+
+FIO_status curve_load(char* name, curve_points_type  *curve);
+FIO_status curve_delete(file_list_type *cur_list);
+FIO_status curve_rename(file_list_type *cur_list, char *new_name);
+FIO_status curve_save(const char* path, curve_points_type* curve);
 
 #endif //PRESETS__H

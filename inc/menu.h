@@ -13,7 +13,11 @@
 #define MENU_YES_POS 4
 #define MENU_NO_POS 11
 
+
+
+
 typedef enum {t_uint8, t_uint16, t_bool} value_t;
+
 
 
 typedef struct {
@@ -64,11 +68,22 @@ typedef enum {STATE_presets_list,
 	          STATE_menu,
 	          STATE_preset_edit_name,
 	          STATE_curve_edit,
+	          STATE_preset_curve_edit,
 	          STATE_text_edit,
 	          STATE_number_edit,
 	          STATE_calibration_start,
 	          STATE_calibration_continue,
-              STATE_calibrations_list} i_state_t;
+              STATE_calibrations_list,
+              STATE_curve_list,
+              STATE_preset_curve_list} i_state_t;
+
+
+typedef struct {
+      	uint8_t x;
+       	uint8_t y;
+       	uint8_t n;//maximum number of characters
+}xy_t; //Coordinates pair
+
 
 typedef struct {
 	char title[17];
@@ -97,6 +112,24 @@ typedef struct {
 	void (*command)(void);
 }number_edit_object_t;
 
+typedef struct {
+	uint32_t * value;
+    uint32_t min;
+    uint32_t max;
+}curve_edit_item_t;
+
+typedef struct {
+	i_state_t parent;
+	int8_t pos;
+	curve_points_type * Curve;
+	curve_edit_item_t item[6];
+}curve_edit_object_t;
+
+typedef struct {
+	uint8_t x;
+	uint8_t y;
+	uint8_t on;
+}menu_cursor_object_t;
 
 void btoa(uint8_t value, char* buffer);
 

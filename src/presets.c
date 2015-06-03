@@ -14,6 +14,7 @@
 presetType Preset;
 currentStateType Current_state={{0},{0}};
 calibrationType Calibration;
+curve_points_type Curve;
 
 /*jsmn global variables*/
 jsmntok_t tokens[TOKENS_NUM];
@@ -230,7 +231,21 @@ FIO_status preset_save(const char* path, presetType* pr){
 	json_write_string(1, "},", &fff);
 	json_write_number(1, ATTR_HIRES, pr->HighResEnable, 1, &fff);
 	json_write_number(1, ATTR_ANALOGMIDI, pr->AnalogMidiEnable, 1, &fff);
-	json_write_value(1, ATTR_CURVE,pr->CurveFileName,1,&fff);
+//	json_write_value(1, ATTR_CURVE,pr->CurveFileName,1,&fff);
+	json_write_string(1, "\"" ATTR_CURVE "\":{", &fff);
+	json_write_number(2, ATTR_CURVE_XW1, pr->Curve.xw1, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YW1, pr->Curve.yw1, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XW2, pr->Curve.xw2, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YW2, pr->Curve.yw2, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XW3, pr->Curve.xw3, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YW3, pr->Curve.yw3, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XB1, pr->Curve.xb1, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YB1, pr->Curve.yb1, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XB2, pr->Curve.xb2, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YB2, pr->Curve.yb2, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XB3, pr->Curve.xb3, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YB3, pr->Curve.yb3, 0, &fff);
+	json_write_string(1, "},", &fff);
 	json_write_string(1, "\"" ATTR_SLIDERS "\":{", &fff);
 	for (i = 0; i < SLIDERS_AMOUNT; i++) {
 		json_write_object(2, slider_names[i],  &fff);
@@ -296,6 +311,35 @@ FIO_status curve_save(const char* path, curve_points_type* curve){
 	return FIO_OK;
 }
 
+FIO_status curve_delete(file_list_type *cur_list){
+	char path[64] = "0:/" CURVE_DIR_NAME "/";
+	strcat(path, cur_list->names[cur_list->pos]); //path to delete;
+	FRESULT res = f_unlink(path);
+	if (res == FR_OK) {
+		return FIO_OK;
+	} else {
+		return FIO_DELETE_ERROR;
+	}
+}
+
+FIO_status curve_rename(file_list_type *cur_list, char *new_name){
+	char name[24];
+	char path_old[64] = "0:/" CURVE_DIR_NAME "/";
+	char path_new[64] = "0:/" CURVE_DIR_NAME "/";
+	strcpy(name,new_name);
+	strcat(name, CURVE_EXT); //add file name to path
+	strcat(path_old, cur_list->names[cur_list->pos]); //add file name to path;
+	strcat(path_new, name); //add file name to path;
+	FRESULT res = f_rename(path_old, path_new);
+	if (res == FR_OK) {
+		strcpy(cur_list->names[cur_list->pos], name);
+		return FIO_OK;
+	} else {
+		return FIO_RENAME_ERROR;
+	}
+}
+
+
 /***Structures and arrays describing expected JSON attributes, objects and values***/
 
 static json_attr_t setting_attr[] = {
@@ -315,12 +359,30 @@ static json_attr_t buttons_param_attr[BUTTONS_AMOUNT+1][8];
 static json_attr_t sliders_attr[SLIDERS_AMOUNT+1];
 static json_attr_t buttons_attr[BUTTONS_AMOUNT+1];
 
+
+static json_attr_t preset_curve_attr[] ={
+		{ATTR_CURVE_XW1, t_uint32, },
+		{ATTR_CURVE_YW1, t_uint32, },
+		{ATTR_CURVE_XW2, t_uint32, },
+		{ATTR_CURVE_YW2, t_uint32, },
+		{ATTR_CURVE_XW3, t_uint32, },
+		{ATTR_CURVE_YW3, t_uint32, },
+		{ATTR_CURVE_XB1, t_uint32, },
+		{ATTR_CURVE_YB1, t_uint32, },
+		{ATTR_CURVE_XB2, t_uint32, },
+		{ATTR_CURVE_YB2, t_uint32, },
+		{ATTR_CURVE_XB3, t_uint32, },
+		{ATTR_CURVE_YB3, t_uint32, },
+		{"",},
+};
+
+
 static json_attr_t preset_attr[16] = {
 		{ATTR_CHANNEL, t_uint8,},
 		{ATTR_SPLIT,t_object, .addr.object = split_attr},
 		{ATTR_HIRES, t_uint8,},
 		{ATTR_ANALOGMIDI, t_uint8,},
-		{ATTR_CURVE, t_string,},
+		{ATTR_CURVE, t_object,.addr.object=preset_curve_attr},
 		{ATTR_SLIDERS, t_object,.addr.object=sliders_attr},
 		{ATTR_BUTTONS, t_object,.addr.object=buttons_attr},
 		{"",},
@@ -358,7 +420,7 @@ static void init_json_preset_attr(presetType *preset) {
 	preset_attr[0].addr.uint8 = &(preset->MidiChannel);
 	preset_attr[2].addr.uint8 = &(preset->HighResEnable);
 	preset_attr[3].addr.uint8 = &(preset->AnalogMidiEnable);
-	preset_attr[4].addr.string = preset->CurveFileName;
+//	preset_attr[4].addr.string = preset->CurveFileName;
 
 	split_attr[0].addr.uint8 = &(preset->SplitKey);
 	split_attr[1].addr.uint8 = &(preset->SplitChannel);
@@ -412,6 +474,18 @@ static void init_json_preset_attr(presetType *preset) {
 		buttons_param_attr[i][7].attribute[0]=0;
 	}
 	buttons_attr[BUTTONS_AMOUNT].attribute[0]=0;
+	preset_curve_attr[0].addr.uint32=&(preset->Curve.xw1);
+	preset_curve_attr[1].addr.uint32=&(preset->Curve.yw1);
+	preset_curve_attr[2].addr.uint32=&(preset->Curve.xw2);
+	preset_curve_attr[3].addr.uint32=&(preset->Curve.yw2);
+	preset_curve_attr[4].addr.uint32=&(preset->Curve.xw3);
+	preset_curve_attr[5].addr.uint32=&(preset->Curve.yw3);
+	preset_curve_attr[6].addr.uint32=&(preset->Curve.xb1);
+	preset_curve_attr[7].addr.uint32=&(preset->Curve.yb1);
+	preset_curve_attr[8].addr.uint32=&(preset->Curve.xb2);
+	preset_curve_attr[9].addr.uint32=&(preset->Curve.yb2);
+	preset_curve_attr[10].addr.uint32=&(preset->Curve.xb3);
+	preset_curve_attr[11].addr.uint32=&(preset->Curve.yb3);
 }
 	/*Assign calibration addresses and attributes*/
 static void init_json_calibr_attr(calibrationType *cal) {
@@ -433,19 +507,19 @@ static void init_json_calibr_attr(calibrationType *cal) {
 	calibr_sliders_attr[SLIDERS_AMOUNT].attribute[0]=0;
 }
 	/*Assign curve addresses*/
-static void init_json_curve_attr(presetType *preset) {
-	curve_attr[0].addr.uint32=&(preset->Curve.xw1);
-	curve_attr[1].addr.uint32=&(preset->Curve.yw1);
-	curve_attr[2].addr.uint32=&(preset->Curve.xw2);
-	curve_attr[3].addr.uint32=&(preset->Curve.yw2);
-	curve_attr[4].addr.uint32=&(preset->Curve.xw3);
-	curve_attr[5].addr.uint32=&(preset->Curve.yw3);
-	curve_attr[6].addr.uint32=&(preset->Curve.xb1);
-	curve_attr[7].addr.uint32=&(preset->Curve.yb1);
-	curve_attr[8].addr.uint32=&(preset->Curve.xb2);
-	curve_attr[9].addr.uint32=&(preset->Curve.yb2);
-	curve_attr[10].addr.uint32=&(preset->Curve.xb3);
-	curve_attr[11].addr.uint32=&(preset->Curve.yb3);
+static void init_json_curve_attr(curve_points_type * curve) {
+	curve_attr[0].addr.uint32=&(curve->xw1);
+	curve_attr[1].addr.uint32=&(curve->yw1);
+	curve_attr[2].addr.uint32=&(curve->xw2);
+	curve_attr[3].addr.uint32=&(curve->yw2);
+	curve_attr[4].addr.uint32=&(curve->xw3);
+	curve_attr[5].addr.uint32=&(curve->yw3);
+	curve_attr[6].addr.uint32=&(curve->xb1);
+	curve_attr[7].addr.uint32=&(curve->yb1);
+	curve_attr[8].addr.uint32=&(curve->xb2);
+	curve_attr[9].addr.uint32=&(curve->yb2);
+	curve_attr[10].addr.uint32=&(curve->xb3);
+	curve_attr[11].addr.uint32=&(curve->yb3);
 }
 
 /*******************************************************/
@@ -514,10 +588,10 @@ FIO_status calibration_load(char* name, calibrationType* cal ){
         return status;
 }
 
-FIO_status curve_load(char* name, presetType* pr) {
+FIO_status curve_load(char* name, curve_points_type  *curve) {
 	char path[64] = "0:/" CURVE_DIR_NAME "/";
 	strcat(path, name); //add file name to path
-	init_json_curve_attr(pr);
+	init_json_curve_attr(curve);
 	FIO_status status=load_JSON(path, js_buff, tokens, curve_attr);
     return status;
 }
@@ -528,6 +602,7 @@ FIO_status preset_load(char* name, presetType* pr) {
 	strcat(path,name);//add file name to path
 	init_json_preset_attr(pr);
 	FIO_status status=load_JSON(path, js_buff, tokens, preset_attr);
+	calculate_velocity_formula(&pr->Curve);
     return status;
 }
 
@@ -539,25 +614,26 @@ static void preset_set_defaults(presetType* pr){
 	pr->SplitKey=0;
 	pr->SplitChannel=1;
 	pr->AnalogMidiEnable=0;
-	strcpy(pr->CurveFileName, DEFAULT_CURVE_NAME);
+//	strcpy(pr->CurveFileName, DEFAULT_CURVE_NAME);
 }
 
-/*Default curve reproduces old VMK188+ behavior*/
 static void curve_set_defaults(presetType* pr){
 	pr->Curve.xw1=3600;
-	pr->Curve.yw1=125*0x80;
-	pr->Curve.xw2=20000;
-	pr->Curve.yw2=31*0x80;
+	pr->Curve.yw1=127*0x80;
+	pr->Curve.xw2=13800;
+	pr->Curve.yw2=50*0x80;
 	pr->Curve.xw3=101400;
 	pr->Curve.yw3=1*0x80;
-	pr->Curve.xb1=3000;
-	pr->Curve.yb1=118*0x80;
-	pr->Curve.xb2=20600;
-	pr->Curve.yb2=20*0x80;
+	pr->Curve.xb1=2800;
+	pr->Curve.yb1=127*0x80;
+	pr->Curve.xb2=10000;
+	pr->Curve.yb2=50*0x80;
 	pr->Curve.xb3=75000;
 	pr->Curve.yb3=1*0x80;
 	calculate_velocity_formula(&pr->Curve);
 }
+
+
 
 file_list_type presets_list, calibrations_list, curves_list;
 
@@ -605,47 +681,44 @@ FIO_status start_load_calibration(calibrationType* cal){
 	}
 }
 
-FIO_status start_load_curve(presetType* preset) {
+FIO_status start_load_curve_list(void) {
 	SDFS_status_type res;
-	FIO_status fiores;
-	char path[64];
-	if (preset->CurveFileName[0]) { //name is not empty string
-		fiores = curve_load(preset->CurveFileName, preset); //Load calibration from file.
-		if (fiores == FIO_OK) { //loading was successful
-//			PRINTF("Curve was loaded successfully\n\r");
-			calculate_velocity_formula(&preset->Curve);
-			res = SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list); //load file list for future usage
-			return FIO_OK; //all is done
-		} else {
-			if (fiores == FIO_SD_ERROR) {
-				return FIO_SD_ERROR;
-			}
-		}
-	}
-	/*Otherwise  we look for first any preset file*/
+//	FIO_status fiores;
+//	char path[64];
+//	if (filename[0]!=0) { //name is not empty string
+//		fiores = curve_load(filename, curve); //Load calibration from file.
+//		if (fiores == FIO_OK) { //loading was successful
+//			calculate_velocity_formula(curve);
+//			res = SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list); //load file list for future usage
+//			return FIO_OK; //all is done
+//		} else {
+//			if (fiores == FIO_SD_ERROR) {
+//				return FIO_SD_ERROR;
+//			}
+//		}
+//	}
 	res = SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list);
 	if (res != SDFS_OK) { //Preset directory is  not found
 		f_mkdir("0:/" CURVE_DIR_NAME);
 		curves_list.num = 0;
 	}
-	if (curves_list.num != 0) { // Some curve file exists
-		strcpy(preset->CurveFileName, curves_list.names[0]); //Current curve is a first file in a preset directory
-		fiores = curve_load(preset->CurveFileName, preset); //Load curve from file.
-		calculate_velocity_formula(&preset->Curve); //calculate parameters for velocity formula
-		if (fiores == FIO_OK) { //loading was successful
-			return FIO_OK; //all is done
-		} else {
-			return fiores;
-		}
-	} else { //Directory is empty
-		strcpy(preset->CurveFileName, DEFAULT_CURVE_NAME);
-		strcpy(path, "0:/" CURVE_DIR_NAME "/");
-		strcat(path, DEFAULT_CURVE_NAME);
-		if (curve_save(path, &preset->Curve) != FIO_OK) {
-			return FIO_SD_ERROR;
-		}
-		return FIO_OK;
-	}
+//	if (curves_list.num != 0) { // Some curve file exists
+//		strcpy(filename, curves_list.names[0]); //Current curve is a first file in a preset directory
+//		fiores = curve_load(filename, curve); //Load curve from file.
+//		if (fiores == FIO_OK) { //loading was successful
+//			return FIO_OK; //all is done
+//		} else {
+//			return fiores;
+//		}
+//	} else { //Directory is empty
+//		strcpy(filename, DEFAULT_CURVE_NAME);
+//		strcpy(path, "0:/" CURVE_DIR_NAME "/");
+//		strcat(path, DEFAULT_CURVE_NAME);
+//		if (curve_save(path, curve) != FIO_OK) {
+//			return FIO_SD_ERROR;
+//		}
+//		return FIO_OK;
+//	}
     return FIO_OK;
 }
 
@@ -703,10 +776,10 @@ void set_defaults_all(presetType* preset, calibrationType* cal){
 	/*Init structures for JSON files description*/
 	init_json_calibr_attr(cal);
 	init_json_preset_attr(preset);
-	init_json_curve_attr(preset);
+	init_json_curve_attr(&(preset->Curve));
 }
-
 FIO_status start_load_all(presetType* preset, calibrationType* cal){
+
 	if (SDFS_mount() != SDFS_OK) {
 		PRINTF("MOUNT ERROR\r\n");
 		return FIO_SD_ERROR;
@@ -721,7 +794,7 @@ FIO_status start_load_all(presetType* preset, calibrationType* cal){
 	if (start_load_preset(preset, cal) == FIO_SD_ERROR) {
 		return FIO_SD_ERROR;
 	}
-	if (start_load_curve(preset) == FIO_SD_ERROR) {
+	if (start_load_curve_list() == FIO_SD_ERROR) {
 		return FIO_SD_ERROR;
 	}
 	if (currentState_save() != FIO_OK) {

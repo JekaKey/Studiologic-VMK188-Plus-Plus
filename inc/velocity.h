@@ -17,13 +17,29 @@
 
 /* The structure describes 3 velocity curve defenition node points separately 
 for white and black keys. 
-The curve ia a hyperbola with the formula: Y=A/(x+B)+C, where 
+The curve is a hyperbola with the formula: Y=A/(x+B)+C, where
 x - time period between two sensors of a key (in microseconds)
 y - velocity value 0.0..127.0
 For white and black keys formula constants A,B,C are different because there is a 
 difference in their mechanical behaviour.
 */
 
+/*Definitions of the  values bounding the range where X-values can be changed*/
+#define CURVE_X_FACTOR 100
+#define MIN_XW1 10 * CURVE_X_FACTOR
+#define MAX_XW1 60 * CURVE_X_FACTOR
+#define MIN_XW2 90 * CURVE_X_FACTOR
+#define MAX_XW2 200 * CURVE_X_FACTOR
+#define MIN_XW3 700 * CURVE_X_FACTOR
+#define MAX_XW3 1400 * CURVE_X_FACTOR
+#define MIN_XB1 10 * CURVE_X_FACTOR
+#define MAX_XB1 60 * CURVE_X_FACTOR
+#define MIN_XB2 90 * CURVE_X_FACTOR
+#define MAX_XB2 200 * CURVE_X_FACTOR
+#define MIN_XB3 700 * CURVE_X_FACTOR
+#define MAX_XB3 1400 * CURVE_X_FACTOR
+
+/**********************************************/
 typedef struct {
 	uint32_t xw1;
 	uint32_t yw1;

@@ -41,7 +41,7 @@
 *.uvopt
 *.cogui
 *.elf
-*.bin
+debug.bin
 *.xml
 *.hex
 Fatarminator.uvopt

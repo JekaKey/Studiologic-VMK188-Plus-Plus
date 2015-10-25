@@ -117,11 +117,12 @@ void TIM4_IRQHandler() {
 
 		//TODO: Rewrite this w/o SPL
 		//Clear interrupt bit
-		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
+//		readKeyChunk();
 		readKeyState();
 		read_controls(Preset.sliders, Calibration.calibr);
 		read_buttons_state();
+		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 	}
 
 }

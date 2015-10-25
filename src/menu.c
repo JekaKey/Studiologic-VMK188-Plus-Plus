@@ -299,11 +299,11 @@ MAKE_MENU(menuYN10_item2, NULL_ENTRY, menuYN10_item1, NULL_ENTRY, menu0_item1, 0
 MAKE_MENU(menuYN11_item1, menuYN11_item2, NULL_ENTRY, NULL_ENTRY, menu3_item2, 0,  0,       NULL,  t_uint8,  0,   0,   menu_curve_save_yes,               NULL,            NULL,      "Save curve?","Yes");
 MAKE_MENU(menuYN11_item2, NULL_ENTRY, menuYN11_item1, NULL_ENTRY, menu3_item2, 0,  0,       NULL,  t_uint8,  0,   0,   NULL,                              NULL,            NULL,      "Save curve?","No");
 
-MAKE_MENU(menuYN12_item1, menuYN12_item2, NULL_ENTRY, NULL_ENTRY, menu3_item5, 0,  0,       NULL,  t_uint8,  0,   0,   menu_curve_copy_yes,               NULL,            NULL,      "Copy curve?","Yes");
-MAKE_MENU(menuYN12_item2, NULL_ENTRY, menuYN12_item1, NULL_ENTRY, menu3_item5, 0,  0,       NULL,  t_uint8,  0,   0,   NULL,                              NULL,            NULL,      "Copy curve?","No");
+MAKE_MENU(menuYN12_item1, menuYN12_item2, NULL_ENTRY, NULL_ENTRY, menu3_item3, 0,  0,       NULL,  t_uint8,  0,   0,   menu_curve_copy_yes,               NULL,            NULL,      "Copy curve?","Yes");
+MAKE_MENU(menuYN12_item2, NULL_ENTRY, menuYN12_item1, NULL_ENTRY, menu3_item3, 0,  0,       NULL,  t_uint8,  0,   0,   NULL,                              NULL,            NULL,      "Copy curve?","No");
 
-MAKE_MENU(menuYN13_item1, menuYN13_item2, NULL_ENTRY, NULL_ENTRY, menu3_item2, 0,  0,       NULL,  t_uint8,  0,   0,   menu_curve_rename_yes,             NULL,            NULL,      "Rename curve?","Yes");
-MAKE_MENU(menuYN13_item2, NULL_ENTRY, menuYN13_item1, NULL_ENTRY, menu3_item2, 0,  0,       NULL,  t_uint8,  0,   0,   NULL,                              NULL,            NULL,      "Rename curve?","No");
+MAKE_MENU(menuYN13_item1, menuYN13_item2, NULL_ENTRY, NULL_ENTRY, menu3_item4, 0,  0,       NULL,  t_uint8,  0,   0,   menu_curve_rename_yes,             NULL,            NULL,      "Rename curve?","Yes");
+MAKE_MENU(menuYN13_item2, NULL_ENTRY, menuYN13_item1, NULL_ENTRY, menu3_item4, 0,  0,       NULL,  t_uint8,  0,   0,   NULL,                              NULL,            NULL,      "Rename curve?","No");
 
 MAKE_MENU(menuYN14_item1, menuYN14_item2, NULL_ENTRY, NULL_ENTRY, menu3_item5, 0,  0,       NULL,  t_uint8,  0,   0,   menu_curve_delete_yes,             NULL,            NULL,      "Delete curve?","Yes");
 MAKE_MENU(menuYN14_item2, NULL_ENTRY, menuYN14_item1, NULL_ENTRY, menu3_item5, 1,  0,       NULL,  t_uint8,  0,   0,   NULL,                              NULL,            NULL,      "Delete curve?","No");
@@ -811,6 +811,7 @@ static void menu_curve_copy(void){
 	name[len-4]=0; //cut file extension from the name
 	I_state = STATE_text_edit;
 	text_object_init(&Text_Edit_object, "Copy curve:", name, STATE_curve_list, startMenuYN_curve_copy);
+//	send_message(MES_REDRAW);
 }
 
 //Õ¿ƒŒ «¿√–”«»“‹ ◊“Œ —Œ’–¿Õﬂ“‹
@@ -1614,6 +1615,7 @@ void head_buttons_handler(void){
 
 
 static void menu_back_to_preset(void){
+	calculate_velocity_formula(&Preset.Curve);//Use curve from preset
 	I_state = STATE_presets_list;
     preset_show(&Preset, &presets_list);
 }

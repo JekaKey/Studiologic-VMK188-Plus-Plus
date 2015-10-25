@@ -1,12 +1,6 @@
 #define STM32F40XX
-
-
-/*Different variants of the code for best speed search*/
-
-//#define NOCYCLES // The code doesn't use any cycles
-//#define SEMICYCLES // Cycle (8) is  only inside each keyboard block
-#define FULLCYCLES_STRUCT //Double cycle (11)*(8) GPIO pins are addressing via big structure.
-//#define FULLCYCLES_CASE  //Double cycle (11)*(8) GPIO pins are addressing in "switch" operator.
+#define VMK188
+//#define VMK176
 
 #include "stm32f4xx.h"
 #include "stm32f4xx_gpio.h"
@@ -15,7 +9,16 @@
 #include "midi.h"
 #include "presets.h"
 
-#if defined FULLCYCLES_STRUCT
+#ifdef VMK188
+#define NUMBER_OF_CHUNKS 10
+#define NOTE_SHIFT 21
+#endif
+
+#ifdef VMK176
+#define NUMBER_OF_CHUNKS 9
+#define NOTE_SHIFT 28
+#endif
+
 
 /*The structure describes GPIO pins for one keyboard 8-keys block*/
 typedef struct {
@@ -24,8 +27,13 @@ typedef struct {
 	GPIO_TypeDef * second;
 	uint16_t second_num;
 } gpio_pins_type;
-#endif
 
+typedef struct {
+	GPIO_TypeDef * gpio;
+	uint16_t num;
+} gpioPins_t;
+
+void readKeyChunk();
 void readKeyState(void); //Read state of all 88 keys and send info to FIFO
 void checkNoteArray(presetType* preset);
 void delay(volatile uint32_t c);

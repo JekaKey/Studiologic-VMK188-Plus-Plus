@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Project version="2G - 1.7.5" name="Studiologic_vmk188_plus_plus">
+<Project version="2G - 2.0.3" name="Studiologic_vmk188_plus_plus">
   <Target name="Debug" isCurrent="1">
-    <Device manufacturerId="9" manufacturerName="ST" chipId="344" chipName="STM32F407VG" boardId="" boardName=""/>
+    <Device manufacturerId="9" manufacturerName="ST" chipId="261" chipName="STM32F407VG" boardId="" boardName="" boardUrl="" coreId="" coreName=""/>
     <BuildOption>
       <Compile>
         <Option name="OptimizationLevel" value="3"/>
         <Option name="UseFPU" value="0"/>
         <Option name="UserEditCompiler" value="-std=c99"/>
         <Option name="FPU" value="2"/>
+        <Option name="DEBUG" value="2"/>
+        <Option name="WARNING" value="1"/>
         <Includepaths>
           <Includepath path="."/>
         </Includepaths>
@@ -24,7 +26,7 @@
         <Option name="UseMemoryLayout" value="1"/>
         <Option name="LTO" value="0"/>
         <Option name="IsNewStartupCode" value="1"/>
-        <Option name="Library" value="Retarget"/>
+        <Option name="Library" value="Not use C Library"/>
         <Option name="UserEditLinker" value="--entry=main; -Map=output.map; "/>
         <LinkedLibraries/>
         <MemoryAreas debugInFlashNotRAM="1">
@@ -33,7 +35,7 @@
           <Memory name="IROM2" type="ReadOnly" size="" startValue=""/>
           <Memory name="IRAM2" type="ReadWrite" size="0x00010000" startValue="0x10000000"/>
         </MemoryAreas>
-        <LocateLinkFile path="c:/coocox/coide/configuration/programdata/studiologic_vmk188_plus_plus/arm-gcc-link.ld" type="0"/>
+        <LocateLinkFile path="c:/users/uxus2/appdata/roaming/coocox/coide/configuration/programdata/studiologic_vmk188_plus_plus/arm-gcc-link.ld" type="0"/>
       </Link>
       <Output>
         <Option name="OutputFileType" value="0"/>
@@ -64,11 +66,12 @@
       <Option name="org.coocox.codebugger.gdbjtag.core.autoDownload" value="1"/>
       <Option name="org.coocox.codebugger.gdbjtag.core.verify" value="1"/>
       <Option name="org.coocox.codebugger.gdbjtag.core.downloadFuction" value="Erase Effected"/>
-      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="STM32F4xx_1024.elf"/>
+      <Option name="org.coocox.codebugger.gdbjtag.core.defaultAlgorithm" value="C:\Users\Uxus2\AppData\Roaming\CooCox\CoIDE\config\flash\CooCox-Flash\CoIDE_STM32F4xx_1024K\STM32F4xx_1024.elf"/>
     </DebugOption>
     <ExcludeFile/>
   </Target>
   <Components path="./"/>
+  <LocalComponents/>
   <Files>
     <File name="STM32_SPL/src/stm32f4xx_tim.c" path="../STM32F4xx_SPL/src/stm32f4xx_tim.c" type="1"/>
     <File name="STM32_USB_Device_Library/Core/src" path="" type="2"/>
@@ -93,8 +96,8 @@
     <File name="fatfs/inc/sdio_high_level.h" path="../fatfs_lib/include/sdio_high_level.h" type="1"/>
     <File name="json/src" path="" type="2"/>
     <File name="src/velocity.c" path="../src/velocity.c" type="1"/>
-    <File name="STM32_SPL/inc/stm32f4xx_fsmc.h" path="../STM32F4xx_SPL/inc/stm32f4xx_fsmc.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_dcmi.h" path="../STM32F4xx_SPL/inc/stm32f4xx_dcmi.h" type="1"/>
+    <File name="STM32_SPL/inc/stm32f4xx_fsmc.h" path="../STM32F4xx_SPL/inc/stm32f4xx_fsmc.h" type="1"/>
     <File name="fatfs/inc/ffconf.h" path="../fatfs_lib/include/ffconf.h" type="1"/>
     <File name="src/hd44780.c" path="../src/hd44780.c" type="1"/>
     <File name="fatfs/src/ff.c" path="../fatfs_lib/source/ff.c" type="1"/>
@@ -165,8 +168,8 @@
     <File name="STM32_SPL/inc/stm32f4xx_can.h" path="../STM32F4xx_SPL/inc/stm32f4xx_can.h" type="1"/>
     <File name="inc/controls.h" path="../inc/controls.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/src/usb_midi_io.c" path="../STM32_USB_Device_Library/Class/Midi/src/usb_midi_io.c" type="1"/>
-    <File name="inc/presets.h" path="../inc/presets.h" type="1"/>
     <File name="inc/menu.h" path="../inc/menu.h" type="1"/>
+    <File name="inc/presets.h" path="../inc/presets.h" type="1"/>
     <File name="STM32_USB_Device_Library" path="" type="2"/>
     <File name="STM32_SPL/src/stm32f4xx_iwdg.c" path="../STM32F4xx_SPL/src/stm32f4xx_iwdg.c" type="1"/>
     <File name="STM32_USB_Device_Library/Core/src/usbd_ioreq.c" path="../STM32_USB_Device_Library/Core/src/usbd_ioreq.c" type="1"/>
@@ -243,4 +246,5 @@
     <File name="STM32_USB_OTG_Driver/inc/usb_bsp.h" path="../STM32_USB_OTG_Driver/inc/usb_bsp.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_spi.h" path="../STM32F4xx_SPL/inc/stm32f4xx_spi.h" type="1"/>
   </Files>
+  <Bookmarks/>
 </Project>

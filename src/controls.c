@@ -36,7 +36,7 @@ void ADC_init_all(void) {
 	ADC_CommonInitTypeDef ADC_CommonInitStructure;
 	/* ADC Common configuration *************************************************/
 	ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
-	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
+	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div6;
 	ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
 	ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
 	ADC_CommonInit(&ADC_CommonInitStructure);
@@ -56,9 +56,9 @@ void ADC_init_all(void) {
 	ADC_Init(ADC2, &ADC_InitStructure);
 	ADC_Init(ADC3, &ADC_InitStructure);
 
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_144Cycles);
-	ADC_RegularChannelConfig(ADC2, ADC_Channel_11, 1, ADC_SampleTime_144Cycles);
-	ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 1, ADC_SampleTime_144Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_3Cycles);
+	ADC_RegularChannelConfig(ADC2, ADC_Channel_11, 1, ADC_SampleTime_3Cycles);
+	ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 1, ADC_SampleTime_3Cycles);
 
 	/* Enable ADC1 to ADC3*/
 	ADC_Cmd(ADC1, ENABLE);
@@ -348,6 +348,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 }
 
+static uint8_t buttons_state[24] = { 0 };
 void buttons_set_defaults(Button_type* but) {
 	for (int i = 0; i < BUTTONS_AMOUNT; i++) {
 		but[i].type = 0;
@@ -376,7 +377,6 @@ static uint16_t ADC_res[8][3] = {{0}}; //Result of ADC1,2,3 measuring after firs
 static uint16_t ADC_old_values[24] = { 0 };
 static uint8_t sliders_old_values[24] = { 0 };
 static uint8_t buttons_chunk = 0;
-static uint8_t buttons_state[24] = { 0 };
 static uint8_t buttons; //result of IDR reading
 static uint8_t button_counter = 0; //Number of a button in chunk
 static uint8_t encoder_state = 3;

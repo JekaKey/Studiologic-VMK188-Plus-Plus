@@ -131,6 +131,12 @@ typedef struct {
 	uint8_t on;
 }menu_cursor_object_t;
 
+
+typedef struct {
+   uint8_t on;
+   uint8_t pressed;
+}button_object_t;
+
 void btoa(uint8_t value, char* buffer);
 
 

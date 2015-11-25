@@ -61,10 +61,11 @@ static void firstInit(void) {
 	delayms(400);
 	hd44780_init();
 	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
-
+#ifdef VMK188
 	hd44780_write_string("     VMK188++");
-	PRINTF("\n\rVMK188++ started\n\r\n\r");
-
+#else
+	hd44780_write_string("     VMK176++");
+#endif
 }
 
 

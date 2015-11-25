@@ -20,6 +20,8 @@ extern USBD_DEVICE midi_Descriptor;
 #define USBD_LANGID_STRING            0x409
 #define USBD_MANUFACTURER_STRING      "Studiologic"
 
+#ifdef VMK188
+
 #define USBD_PRODUCT_HS_STRING        "VMK188++"
 #define USBD_SERIALNUMBER_HS_STRING   "00000000011B"
 
@@ -32,8 +34,21 @@ extern USBD_DEVICE midi_Descriptor;
 #define USBD_CONFIGURATION_FS_STRING  "VMK188++ Config FS"
 #define USBD_INTERFACE_FS_STRING      "VMK188++ Interface FS"
 
+#else
 
+#define USBD_PRODUCT_HS_STRING        "VMK176++"
+#define USBD_SERIALNUMBER_HS_STRING   "00000000011B"
 
+#define USBD_PRODUCT_FS_STRING        "VMK176++"
+#define USBD_SERIALNUMBER_FS_STRING   "00000000011C"
+
+#define USBD_CONFIGURATION_HS_STRING  "VMK176++ Config HS"
+#define USBD_INTERFACE_HS_STRING      "VMK176++ Interface HS"
+
+#define USBD_CONFIGURATION_FS_STRING  "VMK176++ Config FS"
+#define USBD_INTERFACE_FS_STRING      "VMK176++ Interface FS"
+
+#endif
 
 extern  uint8_t USBD_DeviceDesc  [USB_SIZ_DEVICE_DESC];
 extern  uint8_t USBD_StrDesc[USB_MAX_STR_DESC_SIZ];

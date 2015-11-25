@@ -478,7 +478,7 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	uint16_t adc_med;
 	switch (controls_read_status) {
 	case read_data:
-		for (uint8_t i = 0; i < 3; i++) { //read all ADC1, ADC2, ADC3 3 times each and add to sum. Parallel search min & max values for each ADC to remove them from sum in future
+		for (uint8_t i = 0; i < 3; i++) { //read all ADC1, ADC2, ADC3 3 times each and add to sum. Search min & max values for each ADC to remove them from sum in future
 			for (uint8_t j = 0; j < 3; j++) { //Same for ADC1, ADC2, ADC3
 				uint32_t adc = ADC1_BASE + j * 0x100; //change ADC base address to ADC2_BASE, ADC3_BASE
 				adc_arr[j][i] = read_ADC(adc);
@@ -612,21 +612,45 @@ void read_buttons_state(void) {
 			buttons_read_status = read_encoders;
 			break;
 		}
+//	case check_button:
+//		button_number = buttons_chunk * 8 + button_counter;
+//
+//		if (buttons & k[button_counter]) {
+//			if (buttons_state[button_number] < BUTTON_MAX_STATE) {
+//				buttons_state[button_number]++;
+//				if (buttons_state[button_number] >= BUTTON_MAX_STATE) {
+//					FIFO_PUSH(control_events, button_number);
+//					//send pressed
+//				}
+//			}
+//		} else {
+//			if (buttons_state[button_number] == BUTTON_MAX_STATE) {
+//				buttons_state[button_number] = 0;
+//				FIFO_PUSH(control_events, 0x80|button_number);
+//				//send depressed
+//			}
+//		}
+//		button_counter++;
+//		if (button_counter > 7) {
+//			button_counter = 0;
+//			buttons_read_status = next_buttons_chunk;
+//		}
+//		break;
 	case check_button:
 		button_number = buttons_chunk * 8 + button_counter;
 
 		if (buttons & k[button_counter]) {
 			if (buttons_state[button_number] < BUTTON_MAX_STATE) {
 				buttons_state[button_number]++;
-				if (buttons_state[button_number] >= BUTTON_MAX_STATE) {
+				if (buttons_state[button_number] >= BUTTON_MAX_STATE)
 					FIFO_PUSH(control_events, button_number);
 					//send pressed
-				}
 			}
 		} else {
 			if (buttons_state[button_number] == BUTTON_MAX_STATE) {
-				buttons_state[button_number] = 0;
-				FIFO_PUSH(control_events, 0x80|button_number);
+				buttons_state[button_number]--;
+				if (buttons_state[button_number] <=0)
+					FIFO_PUSH(control_events, 0x80|button_number);
 				//send depressed
 			}
 		}

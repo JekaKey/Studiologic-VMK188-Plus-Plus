@@ -99,7 +99,8 @@
 #define BUTTON2_PIN         GPIO_Pin_6
 
 
-#define BUTTON_MAX_STATE 3  //a button shuld be pressed during BUTTON_MAX_STATE cycles to send message
+#define BUTTON_MAX_STATE 3  //a button should be pressed during BUTTON_MAX_STATE cycles to send message
+#define BUTTON_LEVEL 5
 
 #define BUTTON_PAGEUP 0
 #define BUTTON_PAGEDOWN 2

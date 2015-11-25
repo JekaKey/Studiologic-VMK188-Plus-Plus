@@ -1,6 +1,4 @@
 #define STM32F40XX
-#define VMK188
-//#define VMK176
 
 #include "stm32f4xx.h"
 #include "stm32f4xx_gpio.h"

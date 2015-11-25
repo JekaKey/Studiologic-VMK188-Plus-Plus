@@ -18,6 +18,7 @@
           <Define name="STM32F4XX"/>
           <Define name="__FPU_USED"/>
           <Define name="USE_STDPERIPH_DRIVER"/>
+          <Define name="VMK188"/>
         </DefinedSymbols>
       </Compile>
       <Link useDefault="0">
@@ -40,7 +41,7 @@
       <Output>
         <Option name="OutputFileType" value="0"/>
         <Option name="Path" value="debug/"/>
-        <Option name="Name" value="Debug"/>
+        <Option name="Name" value="debug"/>
         <Option name="HEX" value="1"/>
         <Option name="BIN" value="1"/>
       </Output>
@@ -121,9 +122,9 @@
     <File name="STM32_USB_Device_Library/Class midi/inc/usb_conf.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usb_conf.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_can.c" path="../STM32F4xx_SPL/src/stm32f4xx_can.c" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_dma.c" path="../STM32F4xx_SPL/src/stm32f4xx_dma.c" type="1"/>
-    <File name="inc/timer.h" path="../inc/timer.h" type="1"/>
     <File name="src/controls.c" path="../src/controls.c" type="1"/>
     <File name="STM32_USB_OTG_Driver/src/usb_core.c" path="../STM32_USB_OTG_Driver/src/usb_core.c" type="1"/>
+    <File name="inc/timer.h" path="../inc/timer.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_pwr.h" path="../STM32F4xx_SPL/inc/stm32f4xx_pwr.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_gpio.h" path="../STM32F4xx_SPL/inc/stm32f4xx_gpio.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/src" path="" type="2"/>
@@ -216,11 +217,11 @@
     <File name="CMSIS/arm_common_tables.h" path="../CMSIS/Include/arm_common_tables.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_fsmc.c" path="../STM32F4xx_SPL/src/stm32f4xx_fsmc.c" type="1"/>
     <File name="fatfs/src/sdio_low_level.c" path="../fatfs_lib/source/sdio_low_level.c" type="1"/>
-    <File name="CMSIS/core_cm3.h" path="../CMSIS/Include/core_cm3.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_exti.c" path="../STM32F4xx_SPL/src/stm32f4xx_exti.c" type="1"/>
+    <File name="STM32_SPL/inc/stm32f4xx_flash.h" path="../STM32F4xx_SPL/inc/stm32f4xx_flash.h" type="1"/>
     <File name="json" path="" type="2"/>
     <File name="STM32_SPL/inc" path="" type="2"/>
-    <File name="STM32_SPL/inc/stm32f4xx_flash.h" path="../STM32F4xx_SPL/inc/stm32f4xx_flash.h" type="1"/>
+    <File name="CMSIS/core_cm3.h" path="../CMSIS/Include/core_cm3.h" type="1"/>
     <File name="inc/main.h" path="../inc/main.h" type="1"/>
     <File name="STM32_USB_Device_Library/Core" path="" type="2"/>
     <File name="STM32_SPL/src/stm32f4xx_cryp_aes.c" path="../STM32F4xx_SPL/src/stm32f4xx_cryp_aes.c" type="1"/>
@@ -232,9 +233,9 @@
     <File name="STM32_SPL/inc/stm32f4xx_cryp.h" path="../STM32F4xx_SPL/inc/stm32f4xx_cryp.h" type="1"/>
     <File name="STM32_USB_Device_Library/Class midi/inc/usbd_midi_desc.h" path="../STM32_USB_Device_Library/Class/Midi/inc/usbd_midi_desc.h" type="1"/>
     <File name="inc/hd44780.h" path="../inc/hd44780.h" type="1"/>
-    <File name="STM32_SPL/inc/stm32f4xx_tim.h" path="../STM32F4xx_SPL/inc/stm32f4xx_tim.h" type="1"/>
     <File name="json/inc/json_parse.h" path="../json/json_parse.h" type="1"/>
     <File name="STM32_SPL/src/stm32f4xx_gpio.c" path="../STM32F4xx_SPL/src/stm32f4xx_gpio.c" type="1"/>
+    <File name="STM32_SPL/inc/stm32f4xx_tim.h" path="../STM32F4xx_SPL/inc/stm32f4xx_tim.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_rcc.h" path="../STM32F4xx_SPL/inc/stm32f4xx_rcc.h" type="1"/>
     <File name="CMSIS/core_sc300.h" path="../CMSIS/Include/core_sc300.h" type="1"/>
     <File name="STM32_SPL/inc/stm32f4xx_sdio.h" path="../STM32F4xx_SPL/inc/stm32f4xx_sdio.h" type="1"/>

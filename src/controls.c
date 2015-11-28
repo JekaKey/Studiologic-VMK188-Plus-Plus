@@ -404,11 +404,24 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 		b = (double) (sliders->min_out_value) - (double) (sliders_calibr->min_in_value) * a;
 	}
 	int midi_value = (int)(a * value + b);
-	if (midi_value > 127) {
-		midi_value = 127;
-	}
-	if (midi_value < 0) {
-		midi_value = 0;
+
+	//TODO: add binary mode to preset
+	if (num == SLIDER_P3) {
+		double middle = (double)(sliders->max_out_value + sliders->min_out_value) / 2;
+		middle = (middle - (int) middle) > 0   ?  (int) (middle + 1)   :  (int) middle;
+		if (midi_value < middle) {
+			midi_value = sliders->min_out_value;
+		} else {
+			midi_value = sliders->max_out_value;
+		}
+	} else {
+		if (midi_value > sliders->max_out_value) {
+			midi_value = sliders->max_out_value;
+		}
+
+		if (midi_value < sliders->min_out_value) {
+			midi_value = sliders->min_out_value;
+		}
 	}
 	uint8_t midi_value8=(uint8_t)(midi_value);
 	if (midi_value8 != sliders_old_values[num]) {

@@ -348,7 +348,11 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 }
 
-static uint8_t buttons_state[24] = { 0 };
+static struct{
+	uint8_t value;
+	uint8_t pressed;
+} buttons_state[24] = { 0 };
+
 void buttons_set_defaults(Button_type* but) {
 	for (int i = 0; i < BUTTONS_AMOUNT; i++) {
 		but[i].type = 0;
@@ -640,18 +644,24 @@ void read_buttons_state(void) {
 		button_number = buttons_chunk * 8 + button_counter;
 
 		if (buttons & k[button_counter]) {
-			if (buttons_state[button_number] < BUTTON_MAX_STATE) {
-				buttons_state[button_number]++;
-				if (buttons_state[button_number] >= BUTTON_MAX_STATE)
-					FIFO_PUSH(control_events, button_number);
+			if (buttons_state[button_number].value < BUTTON_MAX_STATE) {
+				buttons_state[button_number].value++;
+				if (buttons_state[button_number].value >= BUTTON_MAX_STATE)
+					if (!buttons_state[button_number].pressed){
+					    FIFO_PUSH(control_events, button_number);
+				    	buttons_state[button_number].pressed=1;
 					//send pressed
+					}
 			}
 		} else {
-			if (buttons_state[button_number] == BUTTON_MAX_STATE) {
-				buttons_state[button_number]--;
-				if (buttons_state[button_number] <=0)
-					FIFO_PUSH(control_events, 0x80|button_number);
-				//send depressed
+			if (buttons_state[button_number].value >0) {
+				buttons_state[button_number].value--;
+				if (buttons_state[button_number].value <=0)
+					if (buttons_state[button_number].pressed){
+					    FIFO_PUSH(control_events, 0x80|button_number);
+				    	buttons_state[button_number].pressed=0;
+				    //send depressed
+					}
 			}
 		}
 		button_counter++;

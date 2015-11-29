@@ -113,7 +113,7 @@
 #define ATTR_B_EVENT "event"
 #define ATTR_B_ON "on"
 #define ATTR_B_OFF "off"
-/*********************************/
+/********************************/
 
 typedef enum  {FIO_OK, FIO_SD_ERROR, FIO_FILE_NOT_FOUND,FIO_FILE_CREATE_ERROR,FIO_GETFREE_ERR,FIO_MOUNT_ERR,FIO_WRITE_ERROR,FIO_READ_ERROR,
 	FIO_JSON_FORMAT_ERR, FIO_JSON_DATA_ERR, FIO_RENAME_ERROR, FIO_DELETE_ERROR} FIO_status;

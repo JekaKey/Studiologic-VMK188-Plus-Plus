@@ -657,22 +657,20 @@ void read_buttons_state(void) {
 		button_number = buttons_chunk * 8 + button_counter;
 
 		if (buttons & k[button_counter]) {
-			if (!buttons_state[button_number].pressed) {
+			if (buttons_state[button_number].value < BUTTON_MAX_STATE) {
 				buttons_state[button_number].value++;
-				if (buttons_state[button_number].value >= BUTTON_MAX_STATE) {
-					FIFO_PUSH(control_events, button_number);
-				    buttons_state[button_number].pressed = 1;
-					//send pressed
-				}
+			} else if (!buttons_state[button_number].pressed) {
+				FIFO_PUSH(control_events, button_number);
+				buttons_state[button_number].pressed = 1;
+				//send pressed
 			}
 		} else {
-			if (buttons_state[button_number].pressed) {
+			if (buttons_state[button_number].value > 0) {
 				buttons_state[button_number].value--;
-				if (buttons_state[button_number].value <= 0) {
-					FIFO_PUSH(control_events, 0x80|button_number);
-					buttons_state[button_number].pressed = 0;
-					//send depressed
-				}
+			} else if (buttons_state[button_number].pressed) {
+				FIFO_PUSH(control_events, 0x80|button_number);
+				buttons_state[button_number].pressed = 0;
+				//send depressed
 			}
 		}
 		button_counter++;

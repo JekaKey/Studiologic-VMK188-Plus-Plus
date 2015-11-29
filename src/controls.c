@@ -812,7 +812,8 @@ uint16_t get_slider_event(void) {
 	if (FIFO_COUNT(sliders_events) != 0) {
 		uint16_t event = FIFO_FRONT(sliders_events);
 		FIFO_POP(sliders_events);
-		return event;
+		//event maybe = 0, so this is for correct sending
+		return event + 1;
 	} else {
 		return 0;
 	}
@@ -823,7 +824,7 @@ uint16_t get_pitch_event(void) {
 	if (FIFO_COUNT(pitch_events) != 0) {
 		uint16_t event = FIFO_FRONT(pitch_events);
 		FIFO_POP(pitch_events);
-		return event;
+		return event + 1;
 	} else {
 		return 0;
 	}
@@ -833,15 +834,12 @@ uint16_t get_pitch_event(void) {
 void checkSliders_events(Slider_type* sliders) {
 	uint16_t event = get_slider_event();
 	if (event) {
-    	slider_midi_send(event, sliders);
+    	slider_midi_send(event - 1, sliders);
 	}
 
 	event = get_pitch_event();
 	if (event) {
-		pitch_midi_send(event, sliders[SLIDER_PITCH].channel);
+		pitch_midi_send(event - 1, sliders[SLIDER_PITCH].channel);
 	}
-
 }
-
-
 

@@ -68,7 +68,7 @@
 #define SLIDER_PITCH_MIN_IN 500
 #define SLIDER_PITCH_MAX_IN 2000
 #define SLIDER_PITCH_MIN_OUT 0
-#define SLIDER_PITCH_MAX_OUT 127
+#define SLIDER_PITCH_MAX_OUT 16383
 
 #define SLIDER_MOD_MIN_IN 500
 #define SLIDER_MOD_MAX_IN 2000
@@ -164,8 +164,8 @@ typedef struct {
 	uint8_t channel;
 	uint8_t event;
 	uint8_t value;
-	uint8_t min_out_value;
-	uint8_t max_out_value;
+	uint16_t min_out_value;
+	uint16_t max_out_value;
 //	double a; // a & b are the parameters in slider formula y=a*x+b;
 //	double b;
 } Slider_type;
@@ -187,8 +187,10 @@ typedef struct {
 
 void send_message(uint8_t mes);
 uint16_t get_slider_event(void); //get slider event from FIFO, returns 0 if there is no events
+uint16_t get_pitch_event(void);
 /*!!! In all fuctions with pointer argument as Slider_type*  or Calibration_slider_type MUST point to an array of SLIDERS_AMOUNT*/
 void slider_midi_send(uint16_t value, Slider_type* sliders);
+void pitch_midi_send(uint16_t value, uint8_t channel);
 void ADC_init_all(void);
 void read_controls(Slider_type* sliders, Calibration_slider_type* cal);
 void read_buttons_state(void);

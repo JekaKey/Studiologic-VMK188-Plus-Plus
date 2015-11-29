@@ -49,7 +49,7 @@ void sendNoteOff(byte NoteNumber, word Velocity, byte Channel);
 
 void sendProgramChange(byte ProgramNumber, byte Channel);
 void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel);
-void sendPitchBend(byte Value, byte Channel);
+void sendPitchBend(uint16_t Value, byte Channel);
 void sendPolyPressure(byte NoteNumber, byte Pressure, byte Channel);
 void sendAfterTouch(byte Pressure, byte Channel);
 

@@ -1,3 +1,4 @@
+#include <string.h>
 #include "presets.h"
 #include "usb_midi_io.h"
 #include "sysex_events.h"
@@ -48,16 +49,35 @@ void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel) {
 	FIFO_PUSH(midiMessagesArray, ControlValue);
 }
 
-void sendPitchBend(byte Value, byte Channel) {
+void sendPitchBend(uint16_t Value, byte Channel) {
+	byte ValueL = Value & 0x7F;
+	byte ValueM = Value >> 7;
+
+/*	char temp[16];
+	uint8toa(ValueM, temp);
+
+	hd44780_goto(1, 1);
+	hd44780_write_string("       ");
+	hd44780_goto(1, 1);
+	hd44780_write_string(temp);
+
+	uint8toa(ValueL, temp);
+
+	hd44780_goto(2, 1);
+	hd44780_write_string("       ");
+	hd44780_goto(2, 1);
+	hd44780_write_string(temp);
+*/
+
 	message_buff[0] = 0x0E; //USB-MIDI Pitch prefix
 	message_buff[1] = PitchBend ^ Channel;
-	message_buff[2] = 0;
-	message_buff[3] = Value;
+	message_buff[2] = ValueL;
+	message_buff[3] = ValueM;
 	usb_midi_DataTx(message_buff, 4);
 
 	FIFO_PUSH(midiMessagesArray, PitchBend ^ Channel);
-	FIFO_PUSH(midiMessagesArray, 0);
-	FIFO_PUSH(midiMessagesArray, Value);
+	FIFO_PUSH(midiMessagesArray, ValueL);
+	FIFO_PUSH(midiMessagesArray, ValueM);
 }
 
 void sendAfterTouch(byte Preasure, byte Channel) {

@@ -440,9 +440,9 @@ static void init_json_preset_attr(presetType *preset) {
 		strcpy(sliders_param_attr[i][3].attribute, ATTR_S_EVENT);
 		sliders_param_attr[i][3].addr.uint8 = &(preset->sliders[i].event);
 		strcpy(sliders_param_attr[i][4].attribute, ATTR_S_MIN);
-		sliders_param_attr[i][4].addr.uint8 = &(preset->sliders[i].min_out_value);
+		sliders_param_attr[i][4].addr.uint16 = &(preset->sliders[i].min_out_value);
 		strcpy(sliders_param_attr[i][5].attribute, ATTR_S_MAX);
-		sliders_param_attr[i][5].addr.uint8 = &(preset->sliders[i].max_out_value);
+		sliders_param_attr[i][5].addr.uint16 = &(preset->sliders[i].max_out_value);
 		for (int j = 0; j < 6; j++) {
 			sliders_param_attr[i][j].type = t_uint8;
 		}

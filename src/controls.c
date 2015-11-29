@@ -24,6 +24,7 @@ const char button_names[][MAX_ATTR_SIZE] = { ATTR_BLF, ATTR_BRT, ATTR_BRC, ATTR_
 
 FIFO8(128) control_events;
 FIFO16(128) sliders_events;
+FIFO16(128) pitch_events;
 sliders_state_t sliders_state;
 
 void send_message(uint8_t mes){
@@ -380,6 +381,7 @@ static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
 static uint16_t ADC_res[8][3] = {{0}}; //Result of ADC1,2,3 measuring after first 3x median filter.
 static uint16_t ADC_old_values[24] = { 0 };
 static uint8_t sliders_old_values[24] = { 0 };
+static uint16_t pitch_old_value = 8192;
 static uint8_t buttons_chunk = 0;
 static uint8_t buttons; //result of IDR reading
 static uint8_t button_counter = 0; //Number of a button in chunk
@@ -396,16 +398,41 @@ extern uint8_t hd44780_active; //This flag prevents activity of buttons and  hd4
 
 static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, Calibration_slider_type* sliders_calibr) {
 	double a,b;
-	if (sliders->reverse) {
-		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) ((int) (sliders_calibr->min_in_value) - (int) (sliders_calibr->max_in_value));
-		b = (double) (sliders->min_out_value) - (double) (sliders_calibr->max_in_value) * a;
+	int midi_value;
+
+	//pitch band has a dead zone and 14-bit precision
+	if (num == SLIDER_PITCH) {
+		//TODO: setup dead zone in preset
+		double dead = 0.25 * (double)(sliders_calibr->max_in_value - sliders_calibr->min_in_value);
+		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (sliders_calibr->max_in_value - sliders_calibr->min_in_value - dead);
+
+		double middle_in = (double)(sliders_calibr->max_in_value + sliders_calibr->min_in_value) / 2;
+		double middle_out = (double)(sliders->max_out_value + sliders->min_out_value) / 2;
+
+		//alpha is the point when the dead zone begin
+		double alpha = middle_in - dead/2;
+
+		//function is piecewise linear
+		if (value < alpha) {
+			midi_value = (int)(a * value - sliders_calibr->min_in_value * a + sliders->min_out_value);
+		} else if (value < alpha + dead) {
+			midi_value = (middle_out - (int) middle_out) > 0   ?  (int) (middle_out + 1)   :  (int) middle_out;
+		} else {
+			midi_value = (int)(a * value - (alpha + dead) * a + middle_out);
+		}
 	} else {
 		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (sliders_calibr->max_in_value - sliders_calibr->min_in_value);
-		b = (double) (sliders->min_out_value) - (double) (sliders_calibr->min_in_value) * a;
+		if (sliders->reverse) {
+			a = -a;
+			b = (double) (sliders->max_out_value) - (double) (sliders_calibr->min_in_value) * a;
+		} else {
+			b = (double) (sliders->min_out_value) - (double) (sliders_calibr->min_in_value) * a;
+		}
+		midi_value = (int)(a * value + b);
 	}
-	int midi_value = (int)(a * value + b);
 
-	//TODO: add binary mode to preset
+	//3rd pedal in binary mode
+	//TODO: setup binary mode in preset
 	if (num == SLIDER_P3) {
 		double middle = (double)(sliders->max_out_value + sliders->min_out_value) / 2;
 		middle = (middle - (int) middle) > 0   ?  (int) (middle + 1)   :  (int) middle;
@@ -423,10 +450,19 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 			midi_value = sliders->min_out_value;
 		}
 	}
-	uint8_t midi_value8=(uint8_t)(midi_value);
-	if (midi_value8 != sliders_old_values[num]) {
-		FIFO_PUSH(sliders_events, (((uint16_t)(midi_value8))<<8)+num);
-		sliders_old_values[num] = midi_value8;
+
+	if (num == SLIDER_PITCH) {
+		uint16_t midi_value16 = (uint16_t)(midi_value);
+		if (midi_value16 != pitch_old_value) {
+			FIFO_PUSH(pitch_events, midi_value16);
+			pitch_old_value = midi_value16;
+		}
+	} else {
+		uint8_t midi_value8=(uint8_t)(midi_value);
+		if (midi_value8 != sliders_old_values[num]) {
+			FIFO_PUSH(sliders_events, (((uint16_t)(midi_value8))<<8)+num);
+			sliders_old_values[num] = midi_value8;
+		}
 	}
 }
 
@@ -438,7 +474,6 @@ void slider_midi_send(uint16_t value, Slider_type* sliders) {
 			 channel=0;
 		switch (num) {
 		case SLIDER_PITCH:
-			sendPitchBend((uint8_t)(midi_value), channel);
 			break;
 		case SLIDER_AT:
 			sendAfterTouch((uint8_t)(midi_value), channel);
@@ -450,6 +485,14 @@ void slider_midi_send(uint16_t value, Slider_type* sliders) {
 			sendControlChange(sliders[num].event, (uint8_t)(midi_value), channel);
 			break;
 		}
+}
+
+void pitch_midi_send(uint16_t value, uint8_t channel) {
+	channel = channel - 1; //Real channels are 0-15
+	if (channel > 15)
+		 channel = 0;
+
+	sendPitchBend(value, channel);
 }
 
 
@@ -521,6 +564,15 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 					ADC_old_values[slider_number] = ADC_value;
 					if (sliders[slider_number].active) //only active sliders work send fifo
 						slider_FIFO_send(slider_number, ADC_value, &sliders[slider_number], &cal[slider_number]);
+
+				/*	char temp[10];
+					uint16toa(ADC_value, temp);
+
+					hd44780_goto(2, 8);
+					hd44780_write_string("       ");
+					hd44780_goto(2, 8);
+					hd44780_write_string(temp);
+					*/
 				}
 				break;
 			case SLIDERS_SEARCH:
@@ -767,7 +819,15 @@ uint16_t get_slider_event(void) {
 }
 
 
-
+uint16_t get_pitch_event(void) {
+	if (FIFO_COUNT(pitch_events) != 0) {
+		uint16_t event = FIFO_FRONT(pitch_events);
+		FIFO_POP(pitch_events);
+		return event;
+	} else {
+		return 0;
+	}
+}
 
 /*Check Sliders events according to the sliders_state*/
 void checkSliders_events(Slider_type* sliders) {
@@ -775,6 +835,12 @@ void checkSliders_events(Slider_type* sliders) {
 	if (event) {
     	slider_midi_send(event, sliders);
 	}
+
+	event = get_pitch_event();
+	if (event) {
+		pitch_midi_send(event, sliders[SLIDER_PITCH].channel);
+	}
+
 }
 
 

@@ -523,7 +523,8 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 				}
 				break;
 			case SLIDERS_SEARCH:
-				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value; //Calculate change comparing with old value.
+				//Calculate change comparing with old value.
+				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value;
 				if (ADC_change > SLIDERS_DELTA_SEARCH) { //Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
 					slider_calibrate_number = slider_number;
@@ -532,7 +533,8 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 				}
 				break;
 			case SLIDERS_MENU_SEARCH:
-				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value; //Calculate change comparing with old value.
+				//Calculate change comparing with old value.
+				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value;
 				if (ADC_change > SLIDERS_DELTA_SEARCH) { //Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
 					slider_calibrate_number = slider_number;

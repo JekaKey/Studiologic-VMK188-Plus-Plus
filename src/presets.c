@@ -2,6 +2,7 @@
 #include "jsmn.h"
 #include "json_parse.h"
 #include "presets.h"
+#include "keyboardscan.h"
 #include "sd_fatfs.h"
 
 /*to remove*/
@@ -22,6 +23,8 @@ char js_buff[JSON_BUFF_SIZE];
 
 extern char slider_names[][MAX_ATTR_SIZE];
 extern char button_names[][MAX_ATTR_SIZE];
+
+extern int8_t octave_shift;
 
 /***********************/
 
@@ -603,7 +606,8 @@ FIO_status preset_load(char* name, presetType* pr) {
 	init_json_preset_attr(pr);
 	FIO_status status=load_JSON(path, js_buff, tokens, preset_attr);
 	calculate_velocity_formula(&pr->Curve);
-    return status;
+	octave_shift = 0;
+	return status;
 }
 
 

@@ -8,6 +8,7 @@
 #include "log.h"
 #include "leds.h"
 #include "velocity.h"
+#include "keyboardscan.h"
 
 const xy_t curve_xy[6]={{3,1,2},{7,1,3},{12,1,4},{3,2,2},{7,2,3},{12,2,4}};
 
@@ -30,6 +31,8 @@ extern currentStateType Current_state;
 extern sliders_state_t sliders_state;
 extern calibrationType Calibration;
 extern curve_points_type Curve;
+
+extern int8_t octave_shift; //from keyboardscan.c
 
 static curve_edit_object_t Curve_Edit_object[6]={STATE_menu, 0, &Curve, //Initialization of bounds for white and black curves points
 		{{NULL, MIN_XW1, MAX_XW1},
@@ -1114,7 +1117,10 @@ static void text_object_edit(uint8_t button, text_edit_object_t *obj){
 
 }
 
-
+static void octave_shift_show(void) {
+	hd44780_goto(1, 16);
+	hd44780_write_string(octave_shift > 0   ?   "+"   :   octave_shift < 0 ? "-" : " ");
+}
 
 static void preset_show (const presetType *pr, file_list_type *pr_list){
 	char line[17];
@@ -1139,7 +1145,9 @@ static void preset_show (const presetType *pr, file_list_type *pr_list){
 		hd44780_goto(2,16);
 		hd44780_write_char(MENU_CHECK_CHAR);
 	}
+	octave_shift_show();
 }
+
 
 static void preset_name_current_state(void){
 	strcpy(Current_state.preset_name, presets_list.names[presets_list.pos]);
@@ -1185,6 +1193,24 @@ static void presets_button_handler(uint8_t button){
 	case BUTTON_EDIT:
 		startMenu_setting();
 		I_state=STATE_menu;
+		break;
+	case BUTTON_LEFT:
+#ifdef VMK188
+		if (octave_shift > -1)
+#else
+		if (octave_shift > -2)
+#endif
+			octave_shift--;
+		octave_shift_show();
+		break;
+	case BUTTON_RIGHT:
+#ifdef VMK188
+		if (octave_shift < 1)
+#else
+		if (octave_shift < 2)
+#endif
+			octave_shift++;
+		octave_shift_show();
 		break;
 	default:
 		break;
@@ -1598,7 +1624,7 @@ void head_buttons_handler(void){
 	}
 	event = FIFO_FRONT(control_events);
 	FIFO_POP(control_events);
-	if (((event & 0x7F) < 11)||(event>24)){
+	if (((event & 0x7F) < 13)||(event>24)){
 		if (!(event & 0x80)){
 		   control_buttons_handler(event);
 		}

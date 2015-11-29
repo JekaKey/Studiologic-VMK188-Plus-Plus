@@ -402,17 +402,17 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 
 	//pitch band has a dead zone and 14-bit precision
 	if (num == SLIDER_PITCH) {
-		//TODO: setup dead zone in preset
+		//TODO: setting the dead zone in the preset
 		double dead = 0.25 * (double)(sliders_calibr->max_in_value - sliders_calibr->min_in_value);
 		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (sliders_calibr->max_in_value - sliders_calibr->min_in_value - dead);
 
 		double middle_in = (double)(sliders_calibr->max_in_value + sliders_calibr->min_in_value) / 2;
 		double middle_out = (double)(sliders->max_out_value + sliders->min_out_value) / 2;
 
-		//alpha is the point when the dead zone begin
+		//alpha is the point when the dead zone begins
 		double alpha = middle_in - dead/2;
 
-		//function is piecewise linear
+		//the in-out function is piecewise linear
 		if (value < alpha) {
 			midi_value = (int)(a * value - sliders_calibr->min_in_value * a + sliders->min_out_value);
 		} else if (value < alpha + dead) {
@@ -431,8 +431,8 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 		midi_value = (int)(a * value + b);
 	}
 
-	//3rd pedal in binary mode
-	//TODO: setup binary mode in preset
+	//the 3rd pedal in a binary mode
+	//TODO: setting the binary mode in the preset
 	if (num == SLIDER_P3) {
 		double middle = (double)(sliders->max_out_value + sliders->min_out_value) / 2;
 		middle = (middle - (int) middle) > 0   ?  (int) (middle + 1)   :  (int) middle;

@@ -354,7 +354,7 @@ MAKE_MENU(menu_at,			NULL_ENTRY,		menu_mod,		menu_preset7,	NULL_ENTRY,		0,		1,		
 /*The following list of menu items can be switched to any slider*/
 MAKE_MENU(menu_sl_active,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	"  Active:"		);
 MAKE_MENU(menu_sl_reverse,	menu_sl_channel,menu_sl_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Reverse:"		);
-MAKE_MENU(menu_sl_channel,	menu_sl_event,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		16,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Channel:"		);
+MAKE_MENU(menu_sl_channel,	menu_sl_event,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Channel:"		);
 MAKE_MENU(menu_sl_event,	menu_sl_value,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Event:"		);
 MAKE_MENU(menu_sl_value,	menu_sl_min,	menu_sl_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Value:"		);
 MAKE_MENU(menu_sl_min,		menu_sl_max,	menu_sl_value,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Min:"		);
@@ -1566,11 +1566,10 @@ static void curves_editor_button_handler(uint8_t button){
 
 static void control_buttons_handler(uint8_t event) {
 	if (event == BUTTON_PANIC) {
-		sendControlChange(120, 0, Preset.MidiChannel);
-		if (Preset.MidiChannel != Preset.SplitChannel) {
-			sendControlChange(120, 0, Preset.SplitChannel);
-		}
+		for (int i = 0; i < 16; i++)
+			sendControlChange(120, 0, i);
 	}
+
 	switch (I_state) {
 	case STATE_presets_list:
 		presets_button_handler(event);

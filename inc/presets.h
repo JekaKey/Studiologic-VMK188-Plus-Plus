@@ -131,9 +131,9 @@ typedef struct{
 }calibrationType;
 
 typedef struct {
-	uint8_t MidiChannel; //0-15
+	uint8_t MidiChannel; //1-16
 	uint8_t SplitKey;//0 - NoSplit, 1-87 - Split
-	uint8_t SplitChannel; //0-15, MIDI Channel for a left part of a split keyboard
+	uint8_t SplitChannel; //1-16, MIDI Channel for a left part of a split keyboard
 	uint8_t HighResEnable; //bool
 	uint8_t AnalogMidiEnable; //bool
 	curve_points_type Curve;//curve nodes for B&W keys

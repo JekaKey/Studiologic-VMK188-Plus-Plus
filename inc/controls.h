@@ -15,7 +15,7 @@
 #define SLIDERS_MUX_DELAY 80/TIMER_TIMPERIOD //Delay in cycles after multiplexors switch
 #define SLIDERS_MEASURE_NUM 20
 #define SLIDERS_AMOUNT 24  //Number of sliders in the piano
-#define BUTTONS_AMOUNT 13  //Number of user buttons in the piano
+#define BUTTONS_AMOUNT 8  //Number of user buttons in the piano
 #define CALIBRATE_COUNTER_MAX 3*MEDIAN_FILTER_SIZE
 
 #define ENCODER_SPEED1 4000//number of timer ticks to estimate en encoder speed, low speed
@@ -191,6 +191,7 @@ uint16_t get_pitch_event(void);
 /*!!! In all fuctions with pointer argument as Slider_type*  or Calibration_slider_type MUST point to an array of SLIDERS_AMOUNT*/
 void slider_midi_send(uint16_t value, Slider_type* sliders);
 void pitch_midi_send(uint16_t value, uint8_t channel);
+void button_midi_send(uint16_t value, Button_type* buttons);
 void ADC_init_all(void);
 void read_controls(Slider_type* sliders, Calibration_slider_type* cal);
 void read_buttons_state(void);
@@ -201,6 +202,7 @@ void sliders_calibr_set_defaults(Calibration_slider_type* sliders_calibr);
 void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders_calibr); //Init all sliders parameters if they are not loaded from preset
 void buttons_set_defaults(Button_type* but);
 void checkSliders_events(Slider_type* sliders);
+void checkButtons_events(Button_type* buttons);
 void start_sliders_calibration(void);
 void buttons_delay(void) __attribute__((optimize(0)));
 

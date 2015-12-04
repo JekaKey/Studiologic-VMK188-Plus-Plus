@@ -379,26 +379,28 @@ MAKE_MENU(menu_sl_max,		NULL_ENTRY,		menu_sl_min,	NULL_ENTRY,		NULL_ENTRY,		0,		
 
 
 MAKE_MENU(menu_button1,		menu_button2,	NULL_ENTRY,		menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 1 "	);
-MAKE_MENU(menu_button2,		menu_button3,	menu_button1,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 2 "	);
-MAKE_MENU(menu_button3,		menu_button4,	menu_button2,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 3 "	);
-MAKE_MENU(menu_button4,		menu_button5,	menu_button3,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 4 "	);
-MAKE_MENU(menu_button5,		menu_button6,	menu_button4,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 5 "	);
-MAKE_MENU(menu_button6,		menu_button7,	menu_button5,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 6 "	);
-MAKE_MENU(menu_button7,		menu_button8,	menu_button6,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 7 "	);
-MAKE_MENU(menu_button8,		menu_button_l,	menu_button7,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 8 "	);
+MAKE_MENU(menu_button2,		menu_button3,	menu_button1,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 2 "	);
+MAKE_MENU(menu_button3,		menu_button4,	menu_button2,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	2,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 3 "	);
+MAKE_MENU(menu_button4,		menu_button5,	menu_button3,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	3,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 4 "	);
+MAKE_MENU(menu_button5,		menu_button6,	menu_button4,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	4,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 5 "	);
+MAKE_MENU(menu_button6,		menu_button7,	menu_button5,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	5,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 6 "	);
+MAKE_MENU(menu_button7,		menu_button8,	menu_button6,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	6,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 7 "	);
+MAKE_MENU(menu_button8,		NULL_ENTRY,		menu_button7,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	7,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 8 "	);
+/*
 MAKE_MENU(menu_button_l,	menu_button_r,	menu_button8,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Left "		);
 MAKE_MENU(menu_button_r,	menu_button_rec,menu_button_l,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Right "		);
 MAKE_MENU(menu_button_rec,	menu_button_p,	menu_button_r,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Record "		);
 MAKE_MENU(menu_button_p,	menu_button_s,	menu_button_rec,menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Play "		);
 MAKE_MENU(menu_button_s,	NULL_ENTRY,		menu_button_p,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Stop "		);
+*/
 
 MAKE_MENU(menu_bt_active,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "  Active:"		);
 MAKE_MENU(menu_bt_type,		menu_bt_channel,menu_bt_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "Type:"			);
-MAKE_MENU(menu_bt_channel,	menu_bt_toggle,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "  Channel:"	);
+MAKE_MENU(menu_bt_channel,	menu_bt_toggle,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_button_edit,		menu_show_param,	"", "  Channel:"	);
 MAKE_MENU(menu_bt_toggle,	menu_bt_event,	menu_bt_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "  Toggle:"		);
-MAKE_MENU(menu_bt_event,	menu_bt_on,		menu_bt_toggle,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "  Event:"		);
-MAKE_MENU(menu_bt_on,		menu_bt_off,	menu_bt_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "   On vakue:"	);
-MAKE_MENU(menu_bt_off,		NULL_ENTRY,		menu_bt_on,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", " Off value:"	);
+MAKE_MENU(menu_bt_event,	menu_bt_on,		menu_bt_toggle,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "  Event:"		);
+MAKE_MENU(menu_bt_on,		menu_bt_off,	menu_bt_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "  On value:"	);
+MAKE_MENU(menu_bt_off,		NULL_ENTRY,		menu_bt_on,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "Off value:"	);
 
 
 static void show_menu_value(void){
@@ -945,22 +947,42 @@ static void menu_slider_enter(void) {
 }
 
 
-static void menu_preset_bt_enter(void){
+static void menu_preset_bt_enter(void) {
 	menuChange(MENU_CHILD);
 	send_message(MES_REDRAW);
 }
-static void menu_button_enter(void){
-//	menuChange(MENU_PARENT);
-//	send_message(MES_REDRAW);
-}
-static void menu_preset_bt_edit(void){
+
+static void menu_preset_bt_edit(void) {
 	menuChange(MENU_PARENT);
 	send_message(MES_REDRAW);
 }
 
-static void menu_button_edit(void){
-
+static void menu_button_edit(void) {
+	menuChange(MENU_PARENT);
+	send_message(MES_REDRAW);
 }
+
+static void menu_button_enter(void) {
+	menu_bt_active.Parent = selectedMenuItem;
+	menu_bt_active.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].active);
+	menu_bt_type.Parent = selectedMenuItem;
+	menu_bt_type.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].type);
+	menu_bt_channel.Parent = selectedMenuItem;
+	menu_bt_channel.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].channel);
+	menu_bt_toggle.Parent = selectedMenuItem;
+	menu_bt_toggle.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].toggle);
+	menu_bt_event.Parent = selectedMenuItem;
+	menu_bt_event.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].event);
+	menu_bt_on.Parent = selectedMenuItem;
+	menu_bt_on.Value = (int8_t*)(&(Preset.buttons[selectedMenuItem->Min].on));
+	menu_bt_off.Parent = selectedMenuItem;
+	menu_bt_off.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].off);
+
+	menuChange(&menu_bt_active);
+	send_message(MES_REDRAW);
+}
+
+
 
 static void change_value(int16_t changer) {
 	int16_t value = (int16_t)(*(selectedMenuItem->Value));
@@ -1589,7 +1611,7 @@ static void curves_editor_button_handler(uint8_t button){
  * the interface status it calls button_handlers
  */
 
-static void control_buttons_handler(uint8_t event) {
+void control_buttons_handler(uint8_t event) {
 	if (event == BUTTON_PANIC) {
 		for (int i = 0; i < 16; i++)
 			sendControlChange(120, 0, i);
@@ -1631,34 +1653,6 @@ static void control_buttons_handler(uint8_t event) {
 		break;
 	}
 }
-
-
-
-static void midi_buttons_handler(uint8_t event)
-{
-
-}
-
-
-
-void head_buttons_handler(void){
-	uint8_t event;
-	if (FIFO_COUNT(control_events) == 0) {
-		return; //No events
-	}
-	event = FIFO_FRONT(control_events);
-	FIFO_POP(control_events);
-	if (((event & 0x7F) < 13)||(event>24)){
-		if (!(event & 0x80)){
-		   control_buttons_handler(event);
-		}
-	} else {
-        midi_buttons_handler(event);
-	}
-}
-
-
-
 
 static void menu_back_to_preset(void){
 	calculate_velocity_formula(&Preset.Curve);//Use curve from preset

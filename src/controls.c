@@ -5,6 +5,7 @@
 #include "presets.h"
 #include "controls.h"
 #include "midi.h"
+#include "menu.h"
 #include "usb_midi_io.h"
 #include "fifo.h"
 #include "hd44780.h"
@@ -17,8 +18,7 @@ const char slider_names[][MAX_ATTR_SIZE] = { ATTR_R2, ATTR_S8, ATTR_P2, ATTR_R3,
 		ATTR_P1, ATTR_R4, ATTR_S6, ATTR_EY, ATTR_R1, ATTR_S3, ATTR_P3, ATTR_R8,
 		ATTR_S7, ATTR_S1, ATTR_R5, ATTR_S5, ATTR_AT, ATTR_R7, ATTR_S9, ATTR_MO,
 		ATTR_R6, ATTR_S4, ATTR_PI };
-const char button_names[][MAX_ATTR_SIZE] = { ATTR_BLF, ATTR_BRT, ATTR_BRC, ATTR_BPL,
-		ATTR_BST, ATTR_B1, ATTR_B2, ATTR_B3, ATTR_B4, ATTR_B5, ATTR_B6, ATTR_B7,
+const char button_names[][MAX_ATTR_SIZE] = { ATTR_B1, ATTR_B2, ATTR_B3, ATTR_B4, ATTR_B5, ATTR_B6, ATTR_B7,
 		ATTR_B8 };
 
 
@@ -364,15 +364,8 @@ void buttons_set_defaults(Button_type* but) {
 		but[i].off = 0;
 		but[i].on = 127;
 		but[i].channel = 0;
-	}
-	but[0].event = 47;
-	but[1].event = 48;
-	but[2].event = 44;
-	but[3].event = 45;
-	but[4].event = 46;
-	for (int i=5; i<BUTTONS_AMOUNT; i++){
-		but[i].event=11+i;
-		but[i].active=1;
+
+		but[i].event = 85 + i;
 	}
 }
 
@@ -503,6 +496,25 @@ void pitch_midi_send(uint16_t value, uint8_t channel) {
 	sendPitchBend(value, channel);
 }
 
+void button_midi_send(uint16_t value, Button_type* buttons) {
+	uint8_t is_pressed = (value & 0x80) ? 0 : 1;
+
+	uint8_t num = is_pressed ? value : (value & 0x7F);
+	num -= BUTTON_B1;
+
+	if (!buttons[num].active)
+		return;
+
+	uint8_t channel = buttons[num].channel ? buttons[num].channel : Preset.MidiChannel;
+	if (channel)
+		channel--; //Real channels are 0-15
+	if (channel > 15)
+		channel = 0;
+
+	if (is_pressed) {
+		sendControlChange(buttons[num].event, buttons[num].on, channel);
+	}
+}
 
 void buttons_delay(void) {
 	__NOP();
@@ -848,6 +860,21 @@ void checkSliders_events(Slider_type* sliders) {
 	event = get_pitch_event();
 	if (event) {
 		pitch_midi_send(event - 1, sliders[SLIDER_PITCH].channel);
+	}
+}
+
+void checkButtons_events(Button_type* buttons) {
+	uint8_t event;
+	if (FIFO_COUNT(control_events) == 0)
+		return; //No events
+
+	event = FIFO_FRONT(control_events);
+	FIFO_POP(control_events);
+	if ((event & 0x7F) < 13 || event > 24) {
+		if (!(event & 0x80))
+		   control_buttons_handler(event);
+	} else if (event > 15) {
+		button_midi_send(event, buttons);
 	}
 }
 

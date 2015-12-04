@@ -102,8 +102,9 @@ int main(void) {
 		//Send/receive midi data
 		receiveMidiData();
 		sendMidiData();
+		//TODO: why presets in arguments?
 		checkSliders_events(Preset.sliders);
-		head_buttons_handler();
+		checkButtons_events(Preset.buttons);
 
 	}
 }

@@ -143,5 +143,4 @@ void btoa(uint8_t value, char* buffer);
 void interface_init(char *name);
 void calibration_init(char *name);
 void checkControl_events(void);
-uint8_t checkButtons_events(void);
-void head_buttons_handler(void);
+void control_buttons_handler(uint8_t event);

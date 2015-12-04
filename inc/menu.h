@@ -16,7 +16,7 @@
 
 
 
-typedef enum {t_uint8, t_uint16, t_bool} value_t;
+typedef enum {t_uint8, t_uint16, t_integer, t_bool} value_t;
 
 
 

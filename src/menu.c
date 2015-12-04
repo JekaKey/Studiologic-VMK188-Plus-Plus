@@ -32,8 +32,6 @@ extern sliders_state_t sliders_state;
 extern calibrationType Calibration;
 extern curve_points_type Curve;
 
-extern int8_t octave_shift; //from keyboardscan.c
-
 static curve_edit_object_t Curve_Edit_object[6]={STATE_menu, 0, &Curve, //Initialization of bounds for white and black curves points
 		{{NULL, MIN_XW1, MAX_XW1},
 		{NULL, MIN_XW2, MAX_XW2},
@@ -155,6 +153,22 @@ void uint8toa(uint8_t n, char *s) {
 		c = s[i];
 		s[i] = s[j];
 		s[j] = c;
+	}
+}
+
+void int8toa(int8_t n, char *s) {
+	char temp[5];
+
+	if (n == 0) {
+		strcpy(s, " 0");
+	} else if (n > 0) {
+		strcpy(s, "+");
+		uint8toa((uint8_t) n, temp);
+		strcat(s, temp);
+	} else {
+		strcpy(s, "-");
+		uint8toa((uint8_t) -n, temp);
+		strcat(s, temp);
 	}
 }
 
@@ -319,11 +333,13 @@ MAKE_MENU(menuYN16_item2,	NULL_ENTRY,		menuYN16_item1,	NULL_ENTRY,		menu4_item3,
 MAKE_MENU(menu_preset1,		menu_preset2,	NULL_ENTRY,		menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.MidiChannel,		t_uint8,	1,		16,		NULL,					menu_preset_edit,		menu_show_param,	"",	"  Channel: "	);
 MAKE_MENU(menu_preset2,		menu_preset3,	menu_preset1,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.SplitKey,			t_uint8,	0,		40,		NULL,					menu_preset_edit,		menu_show_splitkey,	"",	"Split Key: "	);
 MAKE_MENU(menu_preset3,		menu_preset4,	menu_preset2,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.SplitChannel,		t_uint8,	1,		16,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Split Chl: "	);
-MAKE_MENU(menu_preset4,		menu_preset5,	menu_preset3,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.HighResEnable,		t_bool,		0,		1,		NULL,					menu_preset_edit,		menu_show_param,	"",	" High Res: "	);
-MAKE_MENU(menu_preset5,		menu_preset6,	menu_preset4,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Midi Port: "	);
-MAKE_MENU(menu_preset6,		menu_preset7,	menu_preset5,	menu0_item1,	menu4_item1, 	0,		1,			NULL,						t_uint8,	0,		0,		NULL,					menu_preset_edit,		NULL,				"",	"    Curve  "	);
-MAKE_MENU(menu_preset7,		menu_preset8,	menu_preset6,	menu0_item1,	menu_slider1,	0,		1,			NULL,						t_uint8,	0,		0,		menu_preset_sl_enter,	menu_preset_edit,		NULL,				"",	"  Sliders "	);
-MAKE_MENU(menu_preset8,		NULL_ENTRY,		menu_preset7,	menu0_item1,	menu_button1,	0,		1,			NULL,						t_uint8,	0,		0,		menu_preset_bt_enter,	menu_preset_edit,		NULL,				"",	"  Buttons "	);
+MAKE_MENU(menu_preset4,		menu_preset5,	menu_preset3,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.Transpose,			t_integer,	-11,	11,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Transpose: "	);
+MAKE_MENU(menu_preset5,		menu_preset6,	menu_preset4,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.OctaveShift,		t_integer,	-3,		3,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Oct Shift: "	);
+MAKE_MENU(menu_preset6,		menu_preset7,	menu_preset5,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.HighResEnable,		t_bool,		0,		1,		NULL,					menu_preset_edit,		menu_show_param,	"",	" High Res: "	);
+MAKE_MENU(menu_preset7,		menu_preset8,	menu_preset6,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Midi Port: "	);
+MAKE_MENU(menu_preset8,		menu_preset9,	menu_preset7,	menu0_item1,	menu4_item1, 	0,		1,			NULL,						t_uint8,	0,		0,		NULL,					menu_preset_edit,		NULL,				"",	"    Curve  "	);
+MAKE_MENU(menu_preset9,		menu_preset10,	menu_preset8,	menu0_item1,	menu_slider1,	0,		1,			NULL,						t_uint8,	0,		0,		menu_preset_sl_enter,	menu_preset_edit,		NULL,				"",	"  Sliders "	);
+MAKE_MENU(menu_preset10,	NULL_ENTRY,		menu_preset9,	menu0_item1,	menu_button1,	0,		1,			NULL,						t_uint8,	0,		0,		menu_preset_bt_enter,	menu_preset_edit,		NULL,				"",	"  Buttons "	);
 
 /*For sliders menu items "Min" parameter is used for slider number keeping*/
 MAKE_MENU(menu_slider1,		menu_slider2,	NULL_ENTRY,		menu_preset7,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	14,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 1 "	);
@@ -466,6 +482,7 @@ static void menu_show_param(menuItem_type * menu) {
 	char s[5];
 	uint8_t *b;
 	uint16_t *w;
+	int8_t *i;
 	switch (menu->tValue) {
 	case t_uint8:
 		b = (uint8_t*) (menu->Value);
@@ -475,6 +492,11 @@ static void menu_show_param(menuItem_type * menu) {
 	case t_uint16:
 		w = (uint16_t*) (menu->Value);
 		uint16toa(*w, s);
+		hd44780_write_string(s);
+		break;
+	case t_integer:
+		i = (int8_t*) (menu->Value);
+		int8toa(*i, s);
 		hd44780_write_string(s);
 		break;
 	case t_bool:
@@ -1118,8 +1140,18 @@ static void text_object_edit(uint8_t button, text_edit_object_t *obj){
 }
 
 static void octave_shift_show(void) {
-	hd44780_goto(1, 16);
-	hd44780_write_string(octave_shift > 0   ?   "+"   :   octave_shift < 0 ? "-" : " ");
+	char temp[4];
+	int delta = Preset.OctaveShift * 12 + Preset.Transpose;
+	if (delta != 0) {
+		int8toa(delta, temp);
+		if (delta < 10)
+			strcat(temp, " ");
+	} else {
+		strcpy(temp, "   ");
+	}
+
+	hd44780_goto(2, 14);
+	hd44780_write_string(temp);
 }
 
 static void preset_show (const presetType *pr, file_list_type *pr_list){
@@ -1128,6 +1160,7 @@ static void preset_show (const presetType *pr, file_list_type *pr_list){
 	memset(line,' ',16);
 	line[16]=0;
 	int len = strlen(pr_list->names[pr_list->pos]);
+	//TODO: why -4? and if len > 20, a problem may be appear!
 	memcpy(line,pr_list->names[pr_list->pos], len-4);
 	hd44780_goto(1,1);
 	hd44780_write_string(line);
@@ -1136,13 +1169,13 @@ static void preset_show (const presetType *pr, file_list_type *pr_list){
     btoa_mem(pr->MidiChannel,line+3);
     if (pr->SplitKey){
 	    len=note_name(pr->SplitKey,line+6)+6;
-	    memcpy(line+len," Ch:",4 );
-	    btoa_mem(pr->SplitChannel,line +len+4);
+	    memcpy(line+len,":",1 );
+	    btoa_mem(pr->SplitChannel,line +len+1);
     }
 	hd44780_goto(2,1);
 	hd44780_write_string(line);
 	if (pr_list->pos==pr_list->active){
-		hd44780_goto(2,16);
+		hd44780_goto(1,16);
 		hd44780_write_char(MENU_CHECK_CHAR);
 	}
 	octave_shift_show();
@@ -1195,21 +1228,13 @@ static void presets_button_handler(uint8_t button){
 		I_state=STATE_menu;
 		break;
 	case BUTTON_LEFT:
-#ifdef VMK188
-		if (octave_shift > -1)
-#else
-		if (octave_shift > -2)
-#endif
-			octave_shift--;
+		if (Preset.OctaveShift > -3)
+			Preset.OctaveShift--;
 		octave_shift_show();
 		break;
 	case BUTTON_RIGHT:
-#ifdef VMK188
-		if (octave_shift < 1)
-#else
-		if (octave_shift < 2)
-#endif
-			octave_shift++;
+		if (Preset.OctaveShift < 3)
+			Preset.OctaveShift++;
 		octave_shift_show();
 		break;
 	default:

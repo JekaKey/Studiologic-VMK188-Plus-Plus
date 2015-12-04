@@ -24,8 +24,6 @@ char js_buff[JSON_BUFF_SIZE];
 extern char slider_names[][MAX_ATTR_SIZE];
 extern char button_names[][MAX_ATTR_SIZE];
 
-extern int8_t octave_shift;
-
 /***********************/
 
 static FIO_status json_write_string(uint8_t level, const char* st, FIL* fff) { //use to write brackets into json
@@ -234,6 +232,8 @@ FIO_status preset_save(const char* path, presetType* pr){
 	json_write_string(1, "},", &fff);
 	json_write_number(1, ATTR_HIRES, pr->HighResEnable, 1, &fff);
 	json_write_number(1, ATTR_ANALOGMIDI, pr->AnalogMidiEnable, 1, &fff);
+	json_write_number(1, ATTR_TRANSPOSE, pr->Transpose, 1, &fff);
+	json_write_number(1, ATTR_OCTAVE, pr->OctaveShift, 1, &fff);
 //	json_write_value(1, ATTR_CURVE,pr->CurveFileName,1,&fff);
 	json_write_string(1, "\"" ATTR_CURVE "\":{", &fff);
 	json_write_number(2, ATTR_CURVE_XW1, pr->Curve.xw1, 1, &fff);
@@ -385,6 +385,8 @@ static json_attr_t preset_attr[16] = {
 		{ATTR_SPLIT,t_object, .addr.object = split_attr},
 		{ATTR_HIRES, t_uint8,},
 		{ATTR_ANALOGMIDI, t_uint8,},
+		{ATTR_TRANSPOSE, t_integer,},
+		{ATTR_OCTAVE, t_integer,},
 		{ATTR_CURVE, t_object,.addr.object=preset_curve_attr},
 		{ATTR_SLIDERS, t_object,.addr.object=sliders_attr},
 		{ATTR_BUTTONS, t_object,.addr.object=buttons_attr},
@@ -423,6 +425,8 @@ static void init_json_preset_attr(presetType *preset) {
 	preset_attr[0].addr.uint8 = &(preset->MidiChannel);
 	preset_attr[2].addr.uint8 = &(preset->HighResEnable);
 	preset_attr[3].addr.uint8 = &(preset->AnalogMidiEnable);
+	preset_attr[4].addr.integer = &(preset->Transpose);
+	preset_attr[5].addr.integer = &(preset->OctaveShift);
 //	preset_attr[4].addr.string = preset->CurveFileName;
 
 	split_attr[0].addr.uint8 = &(preset->SplitKey);
@@ -606,7 +610,6 @@ FIO_status preset_load(char* name, presetType* pr) {
 	init_json_preset_attr(pr);
 	FIO_status status=load_JSON(path, js_buff, tokens, preset_attr);
 	calculate_velocity_formula(&pr->Curve);
-	octave_shift = 0;
 	return status;
 }
 
@@ -618,6 +621,8 @@ static void preset_set_defaults(presetType* pr){
 	pr->SplitKey=0;
 	pr->SplitChannel=1;
 	pr->AnalogMidiEnable=0;
+	pr->Transpose=0;
+	pr->OctaveShift=0;
 //	strcpy(pr->CurveFileName, DEFAULT_CURVE_NAME);
 }
 

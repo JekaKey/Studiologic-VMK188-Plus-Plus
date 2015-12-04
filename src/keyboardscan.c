@@ -11,8 +11,6 @@ FIFO8(8) notes; //Array for current note
 FIFO16(8) durations; //Array for duration for current note
 
 
-int8_t octave_shift = 0;
-
 static uint8_t lastState[11] = { 0 };
 
 
@@ -67,8 +65,15 @@ void checkNoteArray(presetType* preset) {
 		if (channel>15)
 			channel=0;
 
-		curNote+=NOTE_SHIFT;
-		curNote+=octave_shift * 12;
+		int delta = NOTE_SHIFT;
+		delta += preset->OctaveShift * 12;
+		delta += preset->Transpose;
+
+		int tempNote = (curNote & 0x7F) + delta;
+		if (tempNote < 0 || tempNote > 127)
+			return;
+
+		curNote += delta;
 
 		if ((curNote & 0x80) == 0) {
 			vel = getVelocity_on(duration, note_color(curNote));

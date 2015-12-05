@@ -704,30 +704,6 @@ void read_buttons_state(void) {
 			buttons_read_status = read_encoders;
 			break;
 		}
-//	case check_button:
-//		button_number = buttons_chunk * 8 + button_counter;
-//
-//		if (buttons & k[button_counter]) {
-//			if (buttons_state[button_number] < BUTTON_MAX_STATE) {
-//				buttons_state[button_number]++;
-//				if (buttons_state[button_number] >= BUTTON_MAX_STATE) {
-//					FIFO_PUSH(control_events, button_number);
-//					//send pressed
-//				}
-//			}
-//		} else {
-//			if (buttons_state[button_number] == BUTTON_MAX_STATE) {
-//				buttons_state[button_number] = 0;
-//				FIFO_PUSH(control_events, 0x80|button_number);
-//				//send depressed
-//			}
-//		}
-//		button_counter++;
-//		if (button_counter > 7) {
-//			button_counter = 0;
-//			buttons_read_status = next_buttons_chunk;
-//		}
-//		break;
 	case check_button:
 		button_number = buttons_chunk * 8 + button_counter;
 

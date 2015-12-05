@@ -28,7 +28,7 @@ extern char button_names[][MAX_ATTR_SIZE];
 
 static FIO_status json_write_string(uint8_t level, const char* st, FIL* fff) { //use to write brackets into json
 	char sss[20] = { 0 };
-	memset(sss, ' ', level * JSON_TAB);
+	memset(sss, '\t', level * JSON_TAB);
 	strcat(sss, st);
 	strcat(sss, "\r\n");
 	if (f_puts(sss, fff) == FR_OK) {
@@ -41,10 +41,10 @@ static FIO_status json_write_string(uint8_t level, const char* st, FIL* fff) { /
 static FIO_status json_write_value(uint8_t level, const char* name,
 		const char* value, uint8_t colon, FIL* fff) {
 	char sss[64] = { 0 };
-	memset(sss, ' ', level * JSON_TAB);
+	memset(sss, '\t', level * JSON_TAB);
 	strcat(sss, "\"");
 	strcat(sss, name);
-	strcat(sss, "\": \"");
+	strcat(sss, "\":\"");
 	strcat(sss, value);
 	if (colon != 0) {
 		strcat(sss, "\",\r\n");
@@ -60,10 +60,10 @@ static FIO_status json_write_value(uint8_t level, const char* name,
 
 static FIO_status json_write_object(uint8_t level, const char* name, FIL* fff) {
 	char sss[64] = { 0 };
-	memset(sss, ' ', level * JSON_TAB);
+	memset(sss, '\t', level * JSON_TAB);
 	strcat(sss, "\"");
 	strcat(sss, name);
-	strcat(sss, "\": {\r\n");
+	strcat(sss, "\":{\r\n");
 	if (f_puts(sss, fff) == FR_OK) {
 		return FIO_OK;
 	} else {
@@ -93,13 +93,13 @@ char* itoa(int i, char* b){
 
 
 static FIO_status json_write_number(uint8_t level, const char* name,
-		int number, uint8_t colon, FIL* fff) {
+		int number, uint8_t colon, FIL* fff) { //write some json parameter with numeric int value
 	char sss[64]={0};
 	char lll[16];
-	memset(sss, ' ', level * JSON_TAB);
+	memset(sss, '\t', level * JSON_TAB);
 	strcat(sss, "\"");
 	strcat(sss, name);
-	strcat(sss,"\": ");
+	strcat(sss,"\":");
 	itoa(number,lll);
 	strcat(sss,lll);
 	if (colon) {
@@ -234,7 +234,6 @@ FIO_status preset_save(const char* path, presetType* pr){
 	json_write_number(1, ATTR_ANALOGMIDI, pr->AnalogMidiEnable, 1, &fff);
 	json_write_number(1, ATTR_TRANSPOSE, pr->Transpose, 1, &fff);
 	json_write_number(1, ATTR_OCTAVE, pr->OctaveShift, 1, &fff);
-//	json_write_value(1, ATTR_CURVE,pr->CurveFileName,1,&fff);
 	json_write_string(1, "\"" ATTR_CURVE "\":{", &fff);
 	json_write_number(2, ATTR_CURVE_XW1, pr->Curve.xw1, 1, &fff);
 	json_write_number(2, ATTR_CURVE_YW1, pr->Curve.yw1, 1, &fff);

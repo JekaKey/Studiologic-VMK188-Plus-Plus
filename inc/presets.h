@@ -18,10 +18,10 @@
 #define PRESET_DIR_NAME "PRESET"
 #define CURVE_DIR_NAME "CURVE"
 
-#define JSON_TAB 2 //size of tabulation in generated JSON files
+#define JSON_TAB 1 //size of tabulation in generated JSON files
 
 #define TOKENS_NUM 600 //Max number of tokens for JSMN parser
-#define JSON_BUFF_SIZE 10000 //Size of JSON buffer in bytes
+#define JSON_BUFF_SIZE 6000 //Size of JSON buffer in bytes
 
 
 #define MAX_ATTR_SIZE 24 //Size of strings for json attributes

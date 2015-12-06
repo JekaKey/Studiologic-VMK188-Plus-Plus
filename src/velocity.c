@@ -3,8 +3,6 @@
 #include "presets.h"
 #include "keyboardscan.h"
 
-int test = 1;
-
 /*Velocity curve formulas parameters for white & black keys*/
 static double Aw, Bw, Cw, Ab, Bb, Cb;
 

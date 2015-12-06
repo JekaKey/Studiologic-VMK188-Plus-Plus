@@ -369,7 +369,7 @@ void buttons_set_defaults(Button_type* but) {
 	}
 }
 
-button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
+const button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
 
 static uint16_t tick_counter = 0; //Counter of timer ticks
 static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
@@ -675,13 +675,12 @@ static encoder_speed_t encoder_speed_measure(void){
 	return ENCODER_FAST;
 }
 
+
 void read_buttons_state(void) {
 	static uint8_t button_number; //Number of current button;
-	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
 	uint16_t IDR_tmp;
-
+	const static uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
 	encoder_speed_tick();
-
 	switch (buttons_read_status) {
 	case read_buttons:
 		if (!hd44780_active) { //If display is writing we do not read buttons to avoid pins conflict.

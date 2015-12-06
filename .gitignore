@@ -44,6 +44,7 @@
 debug.bin
 *.xml
 *.hex
+*.coproj
 Fatarminator.uvopt
 *.comarker
 *.cogui

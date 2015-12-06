@@ -21,8 +21,8 @@ curve_points_type Curve;
 jsmntok_t tokens[TOKENS_NUM];
 char js_buff[JSON_BUFF_SIZE];
 
-extern char slider_names[][MAX_ATTR_SIZE];
-extern char button_names[][MAX_ATTR_SIZE];
+extern const char slider_names[][MAX_ATTR_SIZE];
+extern const char button_names[][MAX_ATTR_SIZE];
 
 /***********************/
 
@@ -39,7 +39,7 @@ static FIO_status json_write_string(uint8_t level, const char* st, FIL* fff) { /
 }
 
 static FIO_status json_write_value(uint8_t level, const char* name,
-		const char* value, uint8_t colon, FIL* fff) {
+	                  const char* value, uint8_t colon, FIL* fff) {
 	char sss[64] = { 0 };
 	memset(sss, '\t', level * JSON_TAB);
 	strcat(sss, "\"");
@@ -116,7 +116,7 @@ static FIO_status json_write_number(uint8_t level, const char* name,
 
 
 FIO_status calibration_rename(file_list_type *cal_list, char *new_name){
-	char name[24];
+	char name[MAX_FNAME];
 	char path_old[64] = "0:/" CALIBR_DIR_NAME "/";
 	char path_new[64] = "0:/" CALIBR_DIR_NAME "/";
 	strcpy(name,new_name);
@@ -189,7 +189,7 @@ FIO_status calibration_save(const char* path, calibrationType* cal){
 }
 
 FIO_status preset_rename(file_list_type *pr_list, char *new_name){
-	char name[24];
+	char name[MAX_FNAME];
 	char path_old[64] = "0:/" PRESET_DIR_NAME "/";
 	char path_new[64] = "0:/" PRESET_DIR_NAME "/";
 	strcpy(name,new_name);
@@ -325,7 +325,7 @@ FIO_status curve_delete(file_list_type *cur_list){
 }
 
 FIO_status curve_rename(file_list_type *cur_list, char *new_name){
-	char name[24];
+	char name[MAX_FNAME];
 	char path_old[64] = "0:/" CURVE_DIR_NAME "/";
 	char path_new[64] = "0:/" CURVE_DIR_NAME "/";
 	strcpy(name,new_name);
@@ -571,14 +571,11 @@ FIO_status currentState_load(void) {
 
 
 FIO_status start_load_setting(void){
-	PRINTF("Presets start_load_setting SDFS_mount finished Ok: \n\r");
 	if (currentState_load() == FIO_OK) { //Current state loaded
-		PRINTF("Presets start_load_setting: Current state is loaded\n\r");
 		return FIO_OK;
 	} else { 		//Current state file not exist
 		Current_state.calibration_name[0] = 0;
 		Current_state.preset_name[0] = 0;
-		PRINTF("Presets start_load_setting: Current state not loaded\n\r");
 		return FIO_READ_ERROR;
 	}
 }

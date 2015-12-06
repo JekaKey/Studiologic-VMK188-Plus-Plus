@@ -3,7 +3,10 @@
 #include "sdio_high_level.h"
 #include "ff.h"
 
-#define FILE_LIST_SIZE 64 //Max number of characters in Long File name.
+#define FILE_LIST_SIZE 128 //Max number files in dir
+#define MAX_PATH 64//Max path length
+#define MAX_FNAME _MAX_LFN //Max file name with ext
+#define FEXT_SIZE 4//File extension size
 
 typedef enum {
 	SDFS_OK,
@@ -33,7 +36,7 @@ typedef struct {
 	WORD active; //Position of an active item
 	WORD num; //Number of items in a file list
 	WORD pos;  //Current position in a list
-	char names[FILE_LIST_SIZE][_MAX_LFN];
+	char names[FILE_LIST_SIZE][MAX_FNAME];
 }file_list_type;
 
 SDFS_status_type SDFS_init(void);

@@ -397,6 +397,9 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 
 	//pitch band has a dead zone and 14-bit precision
 	if (num == SLIDER_PITCH) {
+		//pitch potentiometer is inverted
+		value = sliders_calibr->max_in_value - value + sliders_calibr->min_in_value;
+
 		//TODO: setting the dead zone in the preset
 		double dead = 0.25 * (double)(sliders_calibr->max_in_value - sliders_calibr->min_in_value);
 		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (sliders_calibr->max_in_value - sliders_calibr->min_in_value - dead);

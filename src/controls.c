@@ -26,6 +26,7 @@ FIFO8(128) control_events;
 FIFO16(128) sliders_events;
 FIFO16(128) pitch_events;
 sliders_state_t sliders_state;
+uint8_t buttons_control_state = 0;
 
 extern presetType Preset;
 
@@ -514,8 +515,25 @@ void button_midi_send(uint16_t value, Button_type* buttons) {
 	if (channel > 15)
 		channel = 0;
 
-	if (is_pressed) {
+	//buttons_state storage states of button in binary mode: 01001001
+	//button num is order number, button state is 0 or 1
+	//to check state, you need to raise 2 to the "num" power
+	if (buttons[num].type == BTN_TYPE_SWITCH) {
+		uint8_t pos = 1;
+		for (int i = 1; i <= num; i++)
+			pos *= 2;
+
+		if (buttons_control_state & pos) {
+			sendControlChange(buttons[num].event, buttons[num].off, channel);
+			buttons_control_state -= pos;
+		} else {
+			sendControlChange(buttons[num].event, buttons[num].on, channel);
+			buttons_control_state += pos;
+		}
+	} else if (is_pressed) {
 		sendControlChange(buttons[num].event, buttons[num].on, channel);
+	} else if (buttons[num].type == BTN_TYPE_PUSH) {
+		sendControlChange(buttons[num].event, buttons[num].off, channel);
 	}
 }
 

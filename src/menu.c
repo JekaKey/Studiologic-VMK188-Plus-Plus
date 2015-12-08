@@ -371,7 +371,7 @@ MAKE_MENU(menu_at,			NULL_ENTRY,		menu_mod,		menu_preset7,	NULL_ENTRY,		0,		1,		
 MAKE_MENU(menu_sl_active,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	"  Active:"		);
 MAKE_MENU(menu_sl_reverse,	menu_sl_channel,menu_sl_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Reverse:"		);
 MAKE_MENU(menu_sl_channel,	menu_sl_event,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Channel:"		);
-MAKE_MENU(menu_sl_event,	menu_sl_value,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Event:"		);
+MAKE_MENU(menu_sl_event,	menu_sl_value,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Event:"		);
 MAKE_MENU(menu_sl_value,	menu_sl_min,	menu_sl_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Value:"		);
 MAKE_MENU(menu_sl_min,		menu_sl_max,	menu_sl_value,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Min:"		);
 MAKE_MENU(menu_sl_max,		NULL_ENTRY,		menu_sl_min,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Max:"		);
@@ -395,7 +395,7 @@ MAKE_MENU(menu_button_s,	NULL_ENTRY,		menu_button_p,	menu_preset8,	NULL_ENTRY,		
 */
 
 MAKE_MENU(menu_bt_active,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "  Active:"		);
-MAKE_MENU(menu_bt_type,		menu_bt_channel,menu_bt_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "Type:"			);
+MAKE_MENU(menu_bt_type,		menu_bt_channel,menu_bt_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		2,		NULL,					menu_button_edit,		menu_show_param,	"", "Type:"			);
 MAKE_MENU(menu_bt_channel,	menu_bt_toggle,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_button_edit,		menu_show_param,	"", "  Channel:"	);
 MAKE_MENU(menu_bt_toggle,	menu_bt_event,	menu_bt_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "  Toggle:"		);
 MAKE_MENU(menu_bt_event,	menu_bt_on,		menu_bt_toggle,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "  Event:"		);

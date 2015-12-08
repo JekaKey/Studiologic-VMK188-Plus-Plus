@@ -866,10 +866,13 @@ void checkButtons_events(Button_type* buttons) {
 
 	event = FIFO_FRONT(control_events);
 	FIFO_POP(control_events);
-	if ((event & 0x7F) < 13 || event > 24) {
+
+	uint8_t btn_num = event & 0x7F;
+
+	if (btn_num <= BUTTON_RIGHT || btn_num >= ENCODER_LEFT1) {
 		if (!(event & 0x80))
 		   control_buttons_handler(event);
-	} else if (event > 15) {
+	} else if (btn_num >= BUTTON_B1) {
 		button_midi_send(event, buttons);
 	}
 }

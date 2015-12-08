@@ -371,9 +371,8 @@ MAKE_MENU(menu_at,			NULL_ENTRY,		menu_mod,		menu_preset7,	NULL_ENTRY,		0,		1,		
 MAKE_MENU(menu_sl_active,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	"  Active:"		);
 MAKE_MENU(menu_sl_reverse,	menu_sl_channel,menu_sl_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Reverse:"		);
 MAKE_MENU(menu_sl_channel,	menu_sl_event,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Channel:"		);
-MAKE_MENU(menu_sl_event,	menu_sl_value,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Event:"		);
-MAKE_MENU(menu_sl_value,	menu_sl_min,	menu_sl_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Value:"		);
-MAKE_MENU(menu_sl_min,		menu_sl_max,	menu_sl_value,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Min:"		);
+MAKE_MENU(menu_sl_event,	menu_sl_min,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Event:"		);
+MAKE_MENU(menu_sl_min,		menu_sl_max,	menu_sl_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Min:"		);
 MAKE_MENU(menu_sl_max,		NULL_ENTRY,		menu_sl_min,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Max:"		);
 /********/
 
@@ -396,9 +395,8 @@ MAKE_MENU(menu_button_s,	NULL_ENTRY,		menu_button_p,	menu_preset8,	NULL_ENTRY,		
 
 MAKE_MENU(menu_bt_active,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "  Active:"		);
 MAKE_MENU(menu_bt_type,		menu_bt_channel,menu_bt_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		2,		NULL,					menu_button_edit,		menu_show_param,	"", "Type:"			);
-MAKE_MENU(menu_bt_channel,	menu_bt_toggle,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_button_edit,		menu_show_param,	"", "  Channel:"	);
-MAKE_MENU(menu_bt_toggle,	menu_bt_event,	menu_bt_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "  Toggle:"		);
-MAKE_MENU(menu_bt_event,	menu_bt_on,		menu_bt_toggle,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "  Event:"		);
+MAKE_MENU(menu_bt_channel,	menu_bt_event,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_button_edit,		menu_show_param,	"", "  Channel:"	);
+MAKE_MENU(menu_bt_event,	menu_bt_on,		menu_bt_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "  Event:"		);
 MAKE_MENU(menu_bt_on,		menu_bt_off,	menu_bt_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "  On value:"	);
 MAKE_MENU(menu_bt_off,		NULL_ENTRY,		menu_bt_on,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "Off value:"	);
 
@@ -601,7 +599,7 @@ static void startMenuYN_curve_export(void){
 
 
 static void menu_preset_rename(void){
-	char name[MAX_FNAME-4];
+	char name[MAX_FNAME - FEXT_SIZE];
 	strcpy(name,presets_list.names[presets_list.pos]);
 	size_t len=strlen(name);
 	name[len-4]=0; //cut file extension from the name
@@ -618,7 +616,7 @@ static void menu_preset_rename_yes(void){
 
 
 static void menu_preset_copy(void){
-	char name[MAX_FNAME-4];
+	char name[MAX_FNAME - FEXT_SIZE];
 	strcpy(name,presets_list.names[presets_list.pos]);
 	size_t len=strlen(name);
 	name[len-4]=0; //cut file extension from the name
@@ -936,8 +934,6 @@ static void menu_slider_enter(void) {
 	menu_sl_channel.Value = (int8_t*)(&Preset.sliders[selectedMenuItem->Min].channel);
 	menu_sl_event.Parent = selectedMenuItem;
 	menu_sl_event.Value = (int8_t*)(&Preset.sliders[selectedMenuItem->Min].event);
-	menu_sl_value.Parent = selectedMenuItem;
-	menu_sl_value.Value = (int8_t*)(&Preset.sliders[selectedMenuItem->Min].value);
 	menu_sl_min.Parent = selectedMenuItem;
 	menu_sl_min.Value = (int8_t*)(&(Preset.sliders[selectedMenuItem->Min].min_out_value));
 	menu_sl_max.Parent = selectedMenuItem;
@@ -971,8 +967,6 @@ static void menu_button_enter(void) {
 	menu_bt_type.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].type);
 	menu_bt_channel.Parent = selectedMenuItem;
 	menu_bt_channel.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].channel);
-	menu_bt_toggle.Parent = selectedMenuItem;
-	menu_bt_toggle.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].toggle);
 	menu_bt_event.Parent = selectedMenuItem;
 	menu_bt_event.Value = (int8_t*)(&Preset.buttons[selectedMenuItem->Min].event);
 	menu_bt_on.Parent = selectedMenuItem;
@@ -1179,29 +1173,36 @@ static void octave_shift_show(void) {
 }
 
 static void preset_show (const presetType *pr, file_list_type *pr_list){
+	hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
+
 	char line[MAX_FNAME];
-    hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
 	memset(line,' ',HD44780_DISP_LENGTH);
 	line[HD44780_DISP_LENGTH]=0;
+
 	int len = strlen(pr_list->names[pr_list->pos]);
-	//TODO: why -4? and if len > 20, a problem may be appear!
-	memcpy(line,pr_list->names[pr_list->pos], len-4);
+	memcpy(line,pr_list->names[pr_list->pos], len - FEXT_SIZE);
+
 	hd44780_goto(1,1);
 	hd44780_write_string(line);
+
 	memset(line,' ',HD44780_DISP_LENGTH);
 	memcpy(line,"Ch:",3);
     btoa_mem(pr->MidiChannel,line+3);
+
     if (pr->SplitKey){
 	    len=note_name(pr->SplitKey,line+6)+6;
 	    memcpy(line+len,":",1 );
 	    btoa_mem(pr->SplitChannel,line +len+1);
     }
-	hd44780_goto(2,1);
+
+    hd44780_goto(2,1);
 	hd44780_write_string(line);
+
 	if (pr_list->pos==pr_list->active){
 		hd44780_goto(1,16);
 		hd44780_write_char(MENU_CHECK_CHAR);
 	}
+
 	octave_shift_show();
 }
 

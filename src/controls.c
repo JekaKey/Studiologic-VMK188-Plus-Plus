@@ -21,6 +21,8 @@ const char slider_names[][MAX_ATTR_SIZE] = { ATTR_R2, ATTR_S8, ATTR_P2, ATTR_R3,
 const char button_names[][MAX_ATTR_SIZE] = { ATTR_B1, ATTR_B2, ATTR_B3, ATTR_B4, ATTR_B5, ATTR_B6, ATTR_B7,
 		ATTR_B8 };
 
+const uint8_t button_positions[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
+
 
 FIFO8(128) control_events;
 FIFO16(128) sliders_events;
@@ -359,8 +361,7 @@ static struct{
 
 void buttons_set_defaults(Button_type* but) {
 	for (int i = 0; i < BUTTONS_AMOUNT; i++) {
-		but[i].type = 0;
-		but[i].toggle = 0;
+		but[i].type = BTN_TYPE_SIMPLE;
 		but[i].active = 0;
 		but[i].off = 0;
 		but[i].on = 127;
@@ -517,21 +518,18 @@ void button_midi_send(uint16_t value, Button_type* buttons) {
 
 	//buttons_state storage states of button in binary mode: 01001001
 	//button num is order number, button state is 0 or 1
-	//to check state, you need to raise 2 to the "num" power
-	if (buttons[num].type == BTN_TYPE_SWITCH) {
-		uint8_t pos = 1;
-		for (int i = 1; i <= num; i++)
-			pos *= 2;
-
-		if (buttons_control_state & pos) {
-			sendControlChange(buttons[num].event, buttons[num].off, channel);
-			buttons_control_state -= pos;
+	if (is_pressed) {
+		if (buttons[num].type == BTN_TYPE_SWITCH) {
+			if (buttons_control_state & button_positions[num]) {
+				sendControlChange(buttons[num].event, buttons[num].off, channel);
+				buttons_control_state -= button_positions[num];
+			} else {
+				sendControlChange(buttons[num].event, buttons[num].on, channel);
+				buttons_control_state += button_positions[num];
+			}
 		} else {
 			sendControlChange(buttons[num].event, buttons[num].on, channel);
-			buttons_control_state += pos;
 		}
-	} else if (is_pressed) {
-		sendControlChange(buttons[num].event, buttons[num].on, channel);
 	} else if (buttons[num].type == BTN_TYPE_PUSH) {
 		sendControlChange(buttons[num].event, buttons[num].off, channel);
 	}
@@ -700,7 +698,6 @@ static encoder_speed_t encoder_speed_measure(void){
 void read_buttons_state(void) {
 	static uint8_t button_number; //Number of current button;
 	uint16_t IDR_tmp;
-	const static uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
 	encoder_speed_tick();
 	switch (buttons_read_status) {
 	case read_buttons:
@@ -727,7 +724,7 @@ void read_buttons_state(void) {
 	case check_button:
 		button_number = buttons_chunk * 8 + button_counter;
 
-		if (buttons & k[button_counter]) {
+		if (buttons & button_positions[button_counter]) {
 			if (buttons_state[button_number].value < BUTTON_MAX_STATE) {
 				buttons_state[button_number].value++;
 			} else if (!buttons_state[button_number].pressed) {

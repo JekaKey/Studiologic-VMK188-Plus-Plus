@@ -16,7 +16,7 @@
 
 
 
-typedef enum {t_uint8, t_uint16, t_integer, t_bool} value_t;
+typedef enum {t_uint8, t_uint16, t_int8, t_bool} value_t;
 
 
 
@@ -25,9 +25,9 @@ typedef struct {
 	void       *Previous;
 	void       *Parent;
 	void       *Child;
-	uint8_t     Pos;
+	uint8_t    Pos;
 	uint8_t    Vertical;
-	int8_t       *Value;
+	int8_t     *Value;
 	value_t    tValue;
 	uint16_t   Min;
 	uint16_t   Max;
@@ -40,11 +40,12 @@ typedef struct {
 
 
 #define MAKE_MENU(Name, Next, Previous, Parent, Child, Pos, Vertical, Value, tValue, Min, Max, Command_Enter, Command_Edit, Command_Show, Title, Text) \
-	extern menuItem_type  Next;     \
-	extern menuItem_type  Previous; \
-	extern menuItem_type  Parent;   \
-	extern menuItem_type  Child;  \
+	extern  menuItem_type  Next;     \
+	extern  menuItem_type  Previous; \
+	extern  menuItem_type  Parent;   \
+	extern  menuItem_type  Child;  \
 	menuItem_type Name = {(void*)&Next, (void*)&Previous, (void*)&Parent, (void*)&Child, (uint8_t)Pos, (uint8_t)Vertical, (void*)Value, (value_t)tValue, (uint16_t)Min, (uint16_t)Max, (void*) Command_Enter, (void*) Command_Edit, (void*) Command_Show, {Title},{ Text }}
+
 
 
 

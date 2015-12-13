@@ -43,7 +43,7 @@ DRESULT disk_read (
 #if	_READONLY == 0
 DRESULT disk_write (
     BYTE pdrv,            /* Physical drive nmuber (0..) */
-    const BYTE *buff,    /* Data to be written */
+    BYTE *buff,    /* Data to be written */
     DWORD sector,        /* Sector address (LBA) */
     UINT count            /* Number of sectors to write (1..128) */
 );

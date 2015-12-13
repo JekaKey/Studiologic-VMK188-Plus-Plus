@@ -79,8 +79,8 @@ parse_result_t tokens_parse(const char * buff, const jsmntok_t* tok,
 				case t_uint32:
 					*(json_attr[j].addr.uint32) = (uint32_t)l;
 					break;
-				case t_integer:
-					*(json_attr[j].addr.integer) = (int)l;
+				case t_int8:
+					*(json_attr[j].addr.int8) = (int8_t)l;
 					break;
 				default:
 					break;

@@ -168,11 +168,8 @@ typedef struct {
 	uint8_t reverse;
 	uint8_t channel;
 	uint8_t event;
-	uint8_t value;
 	uint16_t min_out_value;
 	uint16_t max_out_value;
-//	double a; // a & b are the parameters in slider formula y=a*x+b;
-//	double b;
 } Slider_type;
 
 typedef struct {
@@ -182,9 +179,8 @@ typedef struct {
 
 typedef struct {
 	uint8_t active;
-	uint8_t type; //0-CC, 1 -NOTE, 2 MMS
+	uint8_t type;
 	uint8_t channel;// MIDI channel
-	uint8_t toggle; //0-momentary, !=0 toggle (work only for ÑÑ)
 	uint8_t event;
 	uint8_t on;
 	uint8_t off;

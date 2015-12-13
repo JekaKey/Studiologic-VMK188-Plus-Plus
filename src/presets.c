@@ -13,7 +13,7 @@
 
 
 presetType Preset;
-currentStateType Current_state={{0},{0}};
+currentStateType Current_state={"",""};
 calibrationType Calibration;
 curve_points_type Curve;
 
@@ -270,7 +270,6 @@ FIO_status preset_save(const char* path, presetType* pr){
 		json_write_number(3, ATTR_B_ACTIVE, pr->buttons[i].active, 1, &fff);
 		json_write_number(3, ATTR_B_TYPE, pr->buttons[i].type, 1, &fff);
 		json_write_number(3, ATTR_B_CHANNEL, pr->buttons[i].channel, 1, &fff);
-		json_write_number(3, ATTR_B_TOGGLE, pr->buttons[i].toggle, 1, &fff);
 		json_write_number(3, ATTR_B_EVENT, pr->buttons[i].event, 1, &fff);
 		json_write_number(3, ATTR_B_ON, pr->buttons[i].on, 1, &fff);
 		json_write_number(3, ATTR_B_OFF, pr->buttons[i].off, 0, &fff);
@@ -384,8 +383,8 @@ static json_attr_t preset_attr[16] = {
 		{ATTR_SPLIT,t_object, .addr.object = split_attr},
 		{ATTR_HIRES, t_uint8,},
 		{ATTR_ANALOGMIDI, t_uint8,},
-		{ATTR_TRANSPOSE, t_integer,},
-		{ATTR_OCTAVE, t_integer,},
+		{ATTR_TRANSPOSE, t_int8,},
+		{ATTR_OCTAVE, t_int8,},
 		{ATTR_CURVE, t_object,.addr.object=preset_curve_attr},
 		{ATTR_SLIDERS, t_object,.addr.object=sliders_attr},
 		{ATTR_BUTTONS, t_object,.addr.object=buttons_attr},
@@ -424,9 +423,8 @@ static void init_json_preset_attr(presetType *preset) {
 	preset_attr[0].addr.uint8 = &(preset->MidiChannel);
 	preset_attr[2].addr.uint8 = &(preset->HighResEnable);
 	preset_attr[3].addr.uint8 = &(preset->AnalogMidiEnable);
-	preset_attr[4].addr.integer = &(preset->Transpose);
-	preset_attr[5].addr.integer = &(preset->OctaveShift);
-//	preset_attr[4].addr.string = preset->CurveFileName;
+	preset_attr[4].addr.int8 = &(preset->Transpose);
+	preset_attr[5].addr.int8 = &(preset->OctaveShift);
 
 	split_attr[0].addr.uint8 = &(preset->SplitKey);
 	split_attr[1].addr.uint8 = &(preset->SplitChannel);
@@ -466,8 +464,6 @@ static void init_json_preset_attr(presetType *preset) {
 		buttons_param_attr[i][1].addr.uint8 = &(preset->buttons[i].type);
 		strcpy(buttons_param_attr[i][2].attribute, ATTR_B_CHANNEL);
 		buttons_param_attr[i][2].addr.uint8 = &(preset->buttons[i].channel);
-		strcpy(buttons_param_attr[i][3].attribute, ATTR_B_TOGGLE);
-		buttons_param_attr[i][3].addr.uint8 = &(preset->buttons[i].toggle);
 		strcpy(buttons_param_attr[i][4].attribute, ATTR_B_EVENT);
 		buttons_param_attr[i][4].addr.uint8 = &(preset->buttons[i].event);
 		strcpy(buttons_param_attr[i][5].attribute, ATTR_B_ON);

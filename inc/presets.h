@@ -111,7 +111,6 @@
 #define ATTR_B_ACTIVE "active"
 #define ATTR_B_TYPE "type"
 #define ATTR_B_CHANNEL "channel"
-#define ATTR_B_TOGGLE "toggle"
 #define ATTR_B_EVENT "event"
 #define ATTR_B_ON "on"
 #define ATTR_B_OFF "off"
@@ -123,8 +122,8 @@ typedef enum  {FIO_OK, FIO_SD_ERROR, FIO_FILE_NOT_FOUND,FIO_FILE_CREATE_ERROR,FI
 
 
 typedef struct {//Keeps names of current presets and calibrations.
-	char preset_name[16];
-	char calibration_name[16];
+	char preset_name[MAX_FNAME-FEXT_SIZE];
+	char calibration_name[MAX_FNAME-FEXT_SIZE];
 } currentStateType;
 
 typedef struct{

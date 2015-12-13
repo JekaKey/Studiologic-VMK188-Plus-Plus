@@ -30,6 +30,7 @@ FIFO16(128) pitch_events;
 sliders_state_t sliders_state;
 uint8_t buttons_control_state = 0;
 
+
 extern presetType Preset;
 
 void send_message(uint8_t mes){
@@ -357,7 +358,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 static struct{
 	uint8_t value;
 	uint8_t pressed;
-} buttons_state[24] = { 0 };
+} buttons_state[24] = {{0}};
 
 void buttons_set_defaults(Button_type* but) {
 	for (int i = 0; i < BUTTONS_AMOUNT; i++) {
@@ -376,14 +377,20 @@ const button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTT
 static uint16_t tick_counter = 0; //Counter of timer ticks
 static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
 static uint16_t ADC_res[8][3] = {{0}}; //Result of ADC1,2,3 measuring after first 3x median filter.
-static uint16_t ADC_old_values[24] = { 0 };
-static uint8_t sliders_old_values[24] = { 0 };
+static uint16_t ADC_old_values[SLIDERS_AMOUNT] = { 0 };
+static uint8_t sliders_old_values[SLIDERS_AMOUNT] = { 0 };
 static uint16_t pitch_old_value = 8192;
 static uint8_t buttons_chunk = 0;
 static uint8_t buttons; //result of IDR reading
 static uint8_t button_counter = 0; //Number of a button in chunk
 static uint8_t encoder_state = 3;
 static uint8_t encoder_zero = 0;
+
+/*Variables to calculate advanced delta*
+static uint16_t delta_sum[SLIDERS_AMOUNT]={0};
+static uint16_t delta_average[SLIDERS_AMOUNT]={0};
+static uint8_t delta_counter =0;
+********/
 
 
 uint8_t slider_calibrate_number = 0; // Slider chosen for calibrate procedure;
@@ -566,10 +573,19 @@ static enum controls_read_status_type {
 extern filter_storage_t filter_storage[NUMBER_OF_BUFFERS];
 
 
+static uint8_t check_delta(uint16_t * ADC_value, uint8_t n, uint16_t delta){
+	//Calculate change comparing with old value.
+	uint16_t value = *ADC_value;
+	uint16_t ADC_change = (value > ADC_old_values[n]) ? value - ADC_old_values[n] : ADC_old_values[n] - value;
+	if (ADC_change > delta)  //Change a result only if difference exceeds SLIDERS_DELTA.
+		return 1;
+	else
+		return 0;
+}
+
 
 void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	uint16_t ADC_value;
-	uint16_t ADC_change;
 	uint8_t slider_number;
 	uint16_t ODR_tmp;
 	uint16_t tmp;
@@ -598,26 +614,15 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 			switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
 			case SLIDERS_WORK:
 				//Calculate change comparing with old value.
-				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value;
-				if (ADC_change > cal[slider_number].delta) { //Change a result only if difference exceeds SLIDERS_DELTA.
+				if (check_delta(&ADC_value, slider_number, cal->delta)) { //Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
 					if (sliders[slider_number].active) //only active sliders work send fifo
 						slider_FIFO_send(slider_number, ADC_value, &sliders[slider_number], &cal[slider_number]);
-
-				/*	char temp[10];
-					uint16toa(ADC_value, temp);
-
-					hd44780_goto(2, 8);
-					hd44780_write_string("       ");
-					hd44780_goto(2, 8);
-					hd44780_write_string(temp);
-					*/
 				}
 				break;
 			case SLIDERS_SEARCH:
 				//Calculate change comparing with old value.
-				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value;
-				if (ADC_change > SLIDERS_DELTA_SEARCH) { //Change a result only if difference exceeds SLIDERS_DELTA.
+				if (check_delta(&ADC_value, slider_number, SLIDERS_DELTA_SEARCH)) { //Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
 					slider_calibrate_number = slider_number;
 					sliders_state = SLIDERS_FOUND;
@@ -626,8 +631,7 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 				break;
 			case SLIDERS_MENU_SEARCH:
 				//Calculate change comparing with old value.
-				ADC_change = (ADC_value > ADC_old_values[slider_number]) ? ADC_value - ADC_old_values[slider_number] : ADC_old_values[slider_number] - ADC_value;
-				if (ADC_change > SLIDERS_DELTA_SEARCH) { //Change a result only if difference exceeds SLIDERS_DELTA.
+				if (check_delta(&ADC_value, slider_number, SLIDERS_DELTA_SEARCH)) { //Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
 					slider_calibrate_number = slider_number;
 					send_message(MES_SLIDER_MENU_FOUND);

@@ -32,13 +32,13 @@ extern sliders_state_t sliders_state;
 extern calibrationType Calibration;
 extern curve_points_type Curve;
 
-static curve_edit_object_t Curve_Edit_object[6]={STATE_menu, 0, &Curve, //Initialization of bounds for white and black curves points
+static curve_edit_object_t Curve_Edit_object[6]={{STATE_menu, 0, &Curve, //Initialization of bounds for white and black curves points
 		{{NULL, MIN_XW1, MAX_XW1},
 		{NULL, MIN_XW2, MAX_XW2},
 		{NULL, MIN_XW3, MAX_XW3},
 		{NULL, MIN_XB1, MAX_XB1},
 		{NULL, MIN_XB2, MAX_XB2},
-		{NULL, MIN_XB3, MAX_XB3}}};
+		{NULL, MIN_XB3, MAX_XB3}}}};
 
 
 uint8_t menuChange(menuItem_type* NewMenu) {
@@ -333,8 +333,8 @@ MAKE_MENU(menuYN16_item2,	NULL_ENTRY,		menuYN16_item1,	NULL_ENTRY,		menu4_item3,
 MAKE_MENU(menu_preset1,		menu_preset2,	NULL_ENTRY,		menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.MidiChannel,		t_uint8,	1,		16,		NULL,					menu_preset_edit,		menu_show_param,	"",	"  Channel: "	);
 MAKE_MENU(menu_preset2,		menu_preset3,	menu_preset1,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.SplitKey,			t_uint8,	0,		40,		NULL,					menu_preset_edit,		menu_show_splitkey,	"",	"Split Key: "	);
 MAKE_MENU(menu_preset3,		menu_preset4,	menu_preset2,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.SplitChannel,		t_uint8,	1,		16,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Split Chl: "	);
-MAKE_MENU(menu_preset4,		menu_preset5,	menu_preset3,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.Transpose,			t_integer,	-11,	11,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Transpose: "	);
-MAKE_MENU(menu_preset5,		menu_preset6,	menu_preset4,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.OctaveShift,		t_integer,	-3,		3,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Oct Shift: "	);
+MAKE_MENU(menu_preset4,		menu_preset5,	menu_preset3,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.Transpose,			t_int8, 	-11,	11,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Transpose: "	);
+MAKE_MENU(menu_preset5,		menu_preset6,	menu_preset4,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.OctaveShift,		t_int8,	    -3,		3,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Oct Shift: "	);
 MAKE_MENU(menu_preset6,		menu_preset7,	menu_preset5,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.HighResEnable,		t_bool,		0,		1,		NULL,					menu_preset_edit,		menu_show_param,	"",	" High Res: "	);
 MAKE_MENU(menu_preset7,		menu_preset8,	menu_preset6,	menu0_item1,	NULL_ENTRY,		0,		1,			&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					menu_preset_edit,		menu_show_param,	"",	"Midi Port: "	);
 MAKE_MENU(menu_preset8,		menu_preset9,	menu_preset7,	menu0_item1,	menu4_item1, 	0,		1,			NULL,						t_uint8,	0,		0,		NULL,					menu_preset_edit,		NULL,				"",	"    Curve  "	);
@@ -377,6 +377,7 @@ MAKE_MENU(menu_sl_max,		NULL_ENTRY,		menu_sl_min,	NULL_ENTRY,		NULL_ENTRY,		0,		
 /********/
 
 
+
 MAKE_MENU(menu_button1,		menu_button2,	NULL_ENTRY,		menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 1 "	);
 MAKE_MENU(menu_button2,		menu_button3,	menu_button1,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 2 "	);
 MAKE_MENU(menu_button3,		menu_button4,	menu_button2,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	2,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 3 "	);
@@ -393,11 +394,11 @@ MAKE_MENU(menu_button_p,	menu_button_s,	menu_button_rec,menu_preset8,	NULL_ENTRY
 MAKE_MENU(menu_button_s,	NULL_ENTRY,		menu_button_p,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Stop "		);
 */
 
-MAKE_MENU(menu_bt_active,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "  Active:"		);
-MAKE_MENU(menu_bt_type,		menu_bt_channel,menu_bt_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		2,		NULL,					menu_button_edit,		menu_show_param,	"", "Type:"			);
+MAKE_MENU(menu_bt_active,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "   Active:"	);
+MAKE_MENU(menu_bt_type,		menu_bt_channel,menu_bt_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		2,		NULL,					menu_button_edit,		menu_show_param,	"", "     Type:"	);
 MAKE_MENU(menu_bt_channel,	menu_bt_event,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_button_edit,		menu_show_param,	"", "  Channel:"	);
-MAKE_MENU(menu_bt_event,	menu_bt_on,		menu_bt_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "  Event:"		);
-MAKE_MENU(menu_bt_on,		menu_bt_off,	menu_bt_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "  On value:"	);
+MAKE_MENU(menu_bt_event,	menu_bt_on,		menu_bt_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "    Event:"	);
+MAKE_MENU(menu_bt_on,		menu_bt_off,	menu_bt_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", " On value:"	);
 MAKE_MENU(menu_bt_off,		NULL_ENTRY,		menu_bt_on,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "Off value:"	);
 
 
@@ -494,7 +495,7 @@ static void menu_show_param(menuItem_type * menu) {
 		uint16toa(*w, s);
 		hd44780_write_string(s);
 		break;
-	case t_integer:
+	case t_int8:
 		i = (int8_t*) (menu->Value);
 		int8toa(*i, s);
 		hd44780_write_string(s);
@@ -926,18 +927,24 @@ static void menu_slider_edit(void){
 
 
 static void menu_slider_enter(void) {
+	uint8_t num=selectedMenuItem->Min;
 	menu_sl_active.Parent = selectedMenuItem;
-	menu_sl_active.Value = (int8_t*)(&Preset.sliders[selectedMenuItem->Min].active);
+	menu_sl_active.Value = (int8_t*)(&Preset.sliders[num].active);
 	menu_sl_reverse.Parent = selectedMenuItem;
-	menu_sl_reverse.Value = (int8_t*)(&Preset.sliders[selectedMenuItem->Min].reverse);
+	menu_sl_reverse.Value = (int8_t*)(&Preset.sliders[num].reverse);
 	menu_sl_channel.Parent = selectedMenuItem;
-	menu_sl_channel.Value = (int8_t*)(&Preset.sliders[selectedMenuItem->Min].channel);
-	menu_sl_event.Parent = selectedMenuItem;
-	menu_sl_event.Value = (int8_t*)(&Preset.sliders[selectedMenuItem->Min].event);
-	menu_sl_min.Parent = selectedMenuItem;
-	menu_sl_min.Value = (int8_t*)(&(Preset.sliders[selectedMenuItem->Min].min_out_value));
-	menu_sl_max.Parent = selectedMenuItem;
-	menu_sl_max.Value = (int8_t*)(&Preset.sliders[selectedMenuItem->Min].max_out_value);
+	menu_sl_channel.Value = (int8_t*)(&Preset.sliders[num].channel);
+	if (num == SLIDER_PITCH) {
+		menu_sl_channel.Next = &NULL_ENTRY;
+	} else {
+		menu_sl_channel.Next = &menu_sl_event;
+		menu_sl_event.Parent = selectedMenuItem;
+		menu_sl_event.Value = (int8_t*) (&Preset.sliders[num].event);
+		menu_sl_min.Parent = selectedMenuItem;
+		menu_sl_min.Value = (int8_t*) (&(Preset.sliders[num].min_out_value));
+		menu_sl_max.Parent = selectedMenuItem;
+		menu_sl_max.Value = (int8_t*) (&Preset.sliders[num].max_out_value);
+	}
 	sliders_state = SLIDERS_WORK;
     controlLED1on(0);
 	menuChange(&menu_sl_active);
@@ -994,7 +1001,7 @@ static void change_value(int16_t changer) {
 }
 
 
-const menuItem_type* menu_addr [] = { &menu_knob2, &menu_slider8, &menu_pedal2, &menu_knob3, &menu_slider2,
+ menuItem_type * const  menu_addr [] = { &menu_knob2, &menu_slider8, &menu_pedal2, &menu_knob3, &menu_slider2,
 		&menu_pedal1, &menu_knob4, &menu_slider6, 0, &menu_knob1, &menu_slider3, &menu_pedal3, &menu_knob8,
 		&menu_slider7, &menu_slider1, &menu_knob5, &menu_slider5, &menu_at, &menu_knob7, &menu_slider9, &menu_mod,
 		&menu_knob6, &menu_slider4, &menu_pitch };

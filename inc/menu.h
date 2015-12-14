@@ -10,10 +10,11 @@
 #define MENU_CURSOR_POS 1
 #define MENU_CURSOR_CHAR 0x0
 #define MENU_CHECK_CHAR 0x1
-#define MENU_YES_POS 4
-#define MENU_NO_POS 11
+#define MENU_YES_POS 14
+#define MENU_NO_POS 1
 
-
+#define MENU_YN_YES "Yes"
+#define MENU_YN_NO 	"No"
 
 
 typedef enum {t_uint8, t_uint16, t_int8, t_bool} value_t;
@@ -39,6 +40,14 @@ typedef struct {
 } menuItem_type;
 
 
+typedef struct {
+	const char  Title[16];
+	void       (*Command_Yes)(void);
+	void       (*Command_No)(void);
+	void       *Previous;
+} menuYNItem_type;
+
+
 #define MAKE_MENU(Name, Next, Previous, Parent, Child, Pos, Vertical, Value, tValue, Min, Max, Command_Enter, Command_Edit, Command_Show, Title, Text) \
 	extern  menuItem_type  Next;     \
 	extern  menuItem_type  Previous; \
@@ -46,7 +55,9 @@ typedef struct {
 	extern  menuItem_type  Child;  \
 	menuItem_type Name = {(void*)&Next, (void*)&Previous, (void*)&Parent, (void*)&Child, (uint8_t)Pos, (uint8_t)Vertical, (void*)Value, (value_t)tValue, (uint16_t)Min, (uint16_t)Max, (void*) Command_Enter, (void*) Command_Edit, (void*) Command_Show, {Title},{ Text }}
 
-
+#define MAKE_MENU_YN(Name, Title, Command_Yes, Command_No, Previous) \
+	extern  menuItem_type  Previous; \
+	menuYNItem_type Name = {{Title}, (void*) Command_Yes, (void*) Command_No, (void*)&Previous}
 
 
 #define NULL_ENTRY Null_Menu
@@ -67,18 +78,20 @@ typedef struct {
 
 
 
-typedef enum {STATE_presets_list,
-	          STATE_menu,
-	          STATE_preset_edit_name,
-	          STATE_curve_edit,
-	          STATE_preset_curve_edit,
-	          STATE_text_edit,
-	          STATE_number_edit,
-	          STATE_calibration_start,
-	          STATE_calibration_continue,
-              STATE_calibrations_list,
-              STATE_curve_list,
-              STATE_preset_curve_list} i_state_t;
+typedef enum {	STATE_presets_list,
+				STATE_menu,
+				STATE_preset_edit_name,
+				STATE_curve_edit,
+				STATE_preset_curve_edit,
+				STATE_text_edit,
+				STATE_number_edit,
+				STATE_calibration_start,
+				STATE_calibration_continue,
+				STATE_calibrations_list,
+				STATE_curve_list,
+				STATE_preset_curve_list,
+				STATE_yn_menu
+			} i_state_t;
 
 
 typedef struct {

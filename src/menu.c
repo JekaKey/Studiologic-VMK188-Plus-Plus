@@ -17,7 +17,7 @@ extern uint16_t slider_calibrate_store;
 extern const char slider_names[][MAX_ATTR_SIZE];//defined in "control.c"
 extern uint8_t slider_calibrate_number;
 
-menuItem_type Null_Menu = { (void*) 0, (void*) 0, (void*) 0, (void*) 0, 0, 0, (int8_t*) 0, 0, 0, 0, (void*)0,(void*)0,(void*)0, {0x00}, { 0x00 } };
+menuItem_type Null_Menu = { (void*) 0, (void*) 0, (void*) 0, (void*) 0, 0, (int8_t*) 0, 0, 0, 0, (void*)0,(void*)0,(void*)0, {0x00}, { 0x00 } };
 
 menuItem_type* selectedMenuItem; // current menu item
 menuYNItem_type* selectedMenuYNItem;
@@ -255,108 +255,109 @@ int file_list_find(file_list_type *fl, const char *name){
 
 
 
-//							NEXT,			PREVIOUS		PARENT,			CHILD,			POS,	VERTICAL,	Value,	t_Value,	Min,	Max,	COMMAND_ENTER,						COMMAND_EDIT			COMMAND_SHOW
-MAKE_MENU(menu0_item1,		menu0_item2,	NULL_ENTRY,		NULL_ENTRY,		menu_pst_gen,	0,		1,			NULL,	t_uint8,	0,		0,		NULL,								menu_back_to_preset,	NULL,	 		"",					"Edit preset"	);
-MAKE_MENU(menu0_item2,		menu0_item3,	menu0_item1,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_preset_copy,					menu_back_to_preset,	NULL,	 		"",					"Copy preset"	);
-MAKE_MENU(menu0_item3,		menu0_item4,	menu0_item2,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_preset_rename,					menu_back_to_preset,	NULL,	 		"",					"Rename preset"	);
-MAKE_MENU(menu0_item4,		NULL_ENTRY,		menu0_item3,	NULL_ENTRY,		NULL_ENTRY,		1,		1,			NULL,	t_uint8,	0,		0,		startMenuYN_preset_delete,			menu_back_to_preset,	NULL,	 		"",					"Delete preset"	);
+//							NEXT,			PREVIOUS		PARENT,			CHILD,			POS,	Value,	t_Value,	Min,	Max,	COMMAND_ENTER,						COMMAND_EDIT			COMMAND_SHOW
+MAKE_MENU(menu0_item1,		menu0_item2,	NULL_ENTRY,		NULL_ENTRY,		menu_pst_gen,	0,		NULL,	t_uint8,	0,		0,		NULL,								menu_back_to_preset,	NULL,	 		"",					"Edit preset"	);
+MAKE_MENU(menu0_item2,		menu0_item3,	menu0_item1,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_preset_copy,					menu_back_to_preset,	NULL,	 		"",					"Copy preset"	);
+MAKE_MENU(menu0_item3,		menu0_item4,	menu0_item2,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_preset_rename,					menu_back_to_preset,	NULL,	 		"",					"Rename preset"	);
+MAKE_MENU(menu0_item4,		NULL_ENTRY,		menu0_item3,	NULL_ENTRY,		NULL_ENTRY,		1,		NULL,	t_uint8,	0,		0,		startMenuYN_preset_delete,			menu_back_to_preset,	NULL,	 		"",					"Delete preset"	);
 
-MAKE_MENU(menu1_item1,		menu1_item2,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		curvelist_start,					menu_back_to_preset,	NULL,			"",					"Curves"		);
-MAKE_MENU(menu1_item2,		NULL_ENTRY,		menu1_item1,	NULL_ENTRY,		menu2_item1,	0,		1,			NULL,	t_uint8,	0,		0,		calibrationlist_start,				menu_back_to_preset,	NULL,			"",					"Calibration"	);
-
-
-MAKE_MENU(menu2_item1,		menu2_item2,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_edit_calibration,				calibrationlist_start,	NULL,			"",					"Calibrate"		);
-MAKE_MENU(menu2_item2,		menu2_item3,	menu2_item1,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		startMenuYN_calibration_save,		calibrationlist_start,	NULL,			"",					"Save calibr."	);
-MAKE_MENU(menu2_item3,		menu2_item4,	menu2_item2,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_calibration_copy,				calibrationlist_start,	NULL,			"",					"Copy calibr."	);
-MAKE_MENU(menu2_item4,		menu2_item5,	menu2_item3,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_calibration_rename,			calibrationlist_start,	NULL,			"",					"Rename calibr.");
-MAKE_MENU(menu2_item5,		NULL_ENTRY,		menu2_item4,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		startMenuYN_calibration_delete,		calibrationlist_start,	NULL,			"",					"Delete calibr.");
-
-MAKE_MENU(menu3_item1,		menu3_item2,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_edit_curve,					curvelist_start,		NULL,			"",					"Edit curve"	);
-MAKE_MENU(menu3_item2,		menu3_item3,	menu3_item1,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		startMenuYN_curve_save,				curvelist_start,		NULL,			"",					"Save curve"	);
-MAKE_MENU(menu3_item3,		menu3_item4,	menu3_item2,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_curve_copy,					curvelist_start,		NULL,			"",					"Copy curve"	);
-MAKE_MENU(menu3_item4,		menu3_item5,	menu3_item3,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_curve_rename,					curvelist_start,		NULL,			"",					"Rename curve"	);
-MAKE_MENU(menu3_item5,		NULL_ENTRY,		menu3_item4,	NULL_ENTRY,		NULL_ENTRY,		1,		1,			NULL,	t_uint8,	0,		0,		startMenuYN_curve_delete,			curvelist_start,		NULL,			"",					"Delete curve"	);
-
-MAKE_MENU(menu4_item1,		menu4_item2,	NULL_ENTRY,		menu_pst_curve,	NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		preset_curvelist_start,				NULL,					NULL,			"",					"Load curve"	);
-MAKE_MENU(menu4_item2,		menu4_item3,	menu4_item1,	menu_pst_curve,	NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_preset_edit_curve,				NULL,					NULL,			"",					"Edit curve"	);
-MAKE_MENU(menu4_item3,		NULL_ENTRY,		menu4_item2,	menu_pst_curve,	NULL_ENTRY,		0,		1,			NULL,	t_uint8,	0,		0,		menu_curve_export,					NULL,					NULL,			"",					"Export curve"	);
+MAKE_MENU(menu1_item1,		menu1_item2,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		curvelist_start,					menu_back_to_preset,	NULL,			"",					"Curves"		);
+MAKE_MENU(menu1_item2,		NULL_ENTRY,		menu1_item1,	NULL_ENTRY,		menu2_item1,	0,		NULL,	t_uint8,	0,		0,		calibrationlist_start,				menu_back_to_preset,	NULL,			"",					"Calibration"	);
 
 
-//							NEXT,			PREVIOUS		PARENT,			CHILD,			POS,	VERTICAL,	Value,						t_Value,	Min,	Max,	COMMAND_ENTER,			COMMAND_EDIT			COMMAND_SHOW
-MAKE_MENU(menu_pst_gen,		menu_pst_split,	NULL_ENTRY,		menu0_item1,	menu_pst_chan,	0,		1,			NULL,						t_uint8,	0,		0,		NULL,					menu_preset_edit,		NULL,				"",	"  General "	);
-MAKE_MENU(menu_pst_split,	menu_pst_curve,	menu_pst_gen,	menu0_item1,	menu_split_key,	0,		1,			NULL,						t_uint8,	0,		0,		NULL,					menu_preset_edit,		NULL,				"",	"    Split "	);
-MAKE_MENU(menu_pst_curve,	menu_pst_slid,	menu_pst_split,	menu0_item1,	menu4_item1, 	0,		1,			NULL,						t_uint8,	0,		0,		NULL,					menu_preset_edit,		NULL,				"",	"    Curve "	);
-MAKE_MENU(menu_pst_slid,	menu_pst_btns,	menu_pst_curve,	menu0_item1,	menu_slider1,	0,		1,			NULL,						t_uint8,	0,		0,		menu_preset_sl_enter,	menu_preset_edit,		NULL,				"",	"  Sliders "	);
-MAKE_MENU(menu_pst_btns,	NULL_ENTRY,		menu_pst_slid,	menu0_item1,	menu_button1,	0,		1,			NULL,						t_uint8,	0,		0,		menu_preset_bt_enter,	menu_preset_edit,		NULL,				"",	"  Buttons "	);
+MAKE_MENU(menu2_item1,		menu2_item2,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_edit_calibration,				calibrationlist_start,	NULL,			"",					"Calibrate"		);
+MAKE_MENU(menu2_item2,		menu2_item3,	menu2_item1,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		startMenuYN_calibration_save,		calibrationlist_start,	NULL,			"",					"Save calibr."	);
+MAKE_MENU(menu2_item3,		menu2_item4,	menu2_item2,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_calibration_copy,				calibrationlist_start,	NULL,			"",					"Copy calibr."	);
+MAKE_MENU(menu2_item4,		menu2_item5,	menu2_item3,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_calibration_rename,			calibrationlist_start,	NULL,			"",					"Rename calibr.");
+MAKE_MENU(menu2_item5,		NULL_ENTRY,		menu2_item4,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		startMenuYN_calibration_delete,		calibrationlist_start,	NULL,			"",					"Delete calibr.");
 
-MAKE_MENU(menu_pst_chan,	menu_pst_transp,NULL_ENTRY,		menu_pst_gen,	NULL_ENTRY,		0,		1,			&Preset.MidiChannel,		t_uint8,	1,		16,		NULL,					NULL,					menu_show_param,	"",	"  Channel: "	);
-MAKE_MENU(menu_pst_transp,	menu_pst_oct,	menu_pst_chan,	menu_pst_gen,	NULL_ENTRY,		0,		1,			&Preset.Transpose,			t_int8, 	-11,	11,		NULL,					NULL,					menu_show_param,	"",	"Transpose: "	);
-MAKE_MENU(menu_pst_oct,		menu_pst_hires,	menu_pst_transp,menu_pst_gen,	NULL_ENTRY,		0,		1,			&Preset.OctaveShift,		t_int8,	    -3,		3,		NULL,					NULL,					menu_show_param,	"",	"Oct Shift: "	);
-MAKE_MENU(menu_pst_hires,	menu_pst_midi,	menu_pst_oct,	menu_pst_gen,	NULL_ENTRY,		0,		1,			&Preset.HighResEnable,		t_bool,		0,		1,		NULL,					NULL,					menu_show_param,	"",	" High Res: "	);
-MAKE_MENU(menu_pst_midi,	NULL_ENTRY,		menu_pst_hires,	menu_pst_gen,	NULL_ENTRY,		0,		1,			&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					NULL,					menu_show_param,	"",	"Midi Port: "	);
+MAKE_MENU(menu3_item1,		menu3_item2,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_edit_curve,					curvelist_start,		NULL,			"",					"Edit curve"	);
+MAKE_MENU(menu3_item2,		menu3_item3,	menu3_item1,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		startMenuYN_curve_save,				curvelist_start,		NULL,			"",					"Save curve"	);
+MAKE_MENU(menu3_item3,		menu3_item4,	menu3_item2,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_curve_copy,					curvelist_start,		NULL,			"",					"Copy curve"	);
+MAKE_MENU(menu3_item4,		menu3_item5,	menu3_item3,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_curve_rename,					curvelist_start,		NULL,			"",					"Rename curve"	);
+MAKE_MENU(menu3_item5,		NULL_ENTRY,		menu3_item4,	NULL_ENTRY,		NULL_ENTRY,		1,		NULL,	t_uint8,	0,		0,		startMenuYN_curve_delete,			curvelist_start,		NULL,			"",					"Delete curve"	);
 
-MAKE_MENU(menu_split_key,	menu_split_chan,NULL_ENTRY,		menu_pst_split,	NULL_ENTRY,		0,		1,			&Preset.SplitKey,			t_uint8,	0,		40,		NULL,					NULL,					menu_show_splitkey,	"",	"Split Key: "	);
-MAKE_MENU(menu_split_chan,	NULL_ENTRY,		menu_split_key,	menu_pst_split,	NULL_ENTRY,		0,		1,			&Preset.SplitChannel,		t_uint8,	1,		16,		NULL,					NULL,					menu_show_param,	"",	"Split Chl: "	);
+MAKE_MENU(menu4_item1,		menu4_item2,	NULL_ENTRY,		menu_pst_curve,	NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		preset_curvelist_start,				NULL,					NULL,			"",					"Load curve"	);
+MAKE_MENU(menu4_item2,		menu4_item3,	menu4_item1,	menu_pst_curve,	NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_preset_edit_curve,				NULL,					NULL,			"",					"Edit curve"	);
+MAKE_MENU(menu4_item3,		NULL_ENTRY,		menu4_item2,	menu_pst_curve,	NULL_ENTRY,		0,		NULL,	t_uint8,	0,		0,		menu_curve_export,					NULL,					NULL,			"",					"Export curve"	);
+
+
+//							NEXT,			PREVIOUS		PARENT,			CHILD,			POS,	Value,						t_Value,	Min,	Max,	COMMAND_ENTER,			COMMAND_EDIT			COMMAND_SHOW
+MAKE_MENU(menu_pst_gen,		menu_pst_split,	NULL_ENTRY,		menu0_item1,	menu_pst_chan,	0,		NULL,						t_uint8,	0,		0,		NULL,					menu_preset_edit,		NULL,				"",	"  General "	);
+MAKE_MENU(menu_pst_split,	menu_pst_curve,	menu_pst_gen,	menu0_item1,	menu_split_key,	0,		NULL,						t_uint8,	0,		0,		NULL,					menu_preset_edit,		NULL,				"",	"    Split "	);
+MAKE_MENU(menu_pst_curve,	menu_pst_slid,	menu_pst_split,	menu0_item1,	menu4_item1, 	0,		NULL,						t_uint8,	0,		0,		NULL,					menu_preset_edit,		NULL,				"",	"    Curve "	);
+MAKE_MENU(menu_pst_slid,	menu_pst_btns,	menu_pst_curve,	menu0_item1,	menu_slider1,	0,		NULL,						t_uint8,	0,		0,		menu_preset_sl_enter,	menu_preset_edit,		NULL,				"",	"  Sliders "	);
+MAKE_MENU(menu_pst_btns,	NULL_ENTRY,		menu_pst_slid,	menu0_item1,	menu_button1,	0,		NULL,						t_uint8,	0,		0,		menu_preset_bt_enter,	menu_preset_edit,		NULL,				"",	"  Buttons "	);
+
+MAKE_MENU(menu_pst_chan,	menu_pst_transp,NULL_ENTRY,		menu_pst_gen,	NULL_ENTRY,		0,		&Preset.MidiChannel,		t_uint8,	1,		16,		NULL,					NULL,					menu_show_param,	"",	"  Channel: "	);
+MAKE_MENU(menu_pst_transp,	menu_pst_oct,	menu_pst_chan,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.Transpose,			t_int8, 	-11,	11,		NULL,					NULL,					menu_show_param,	"",	"Transpose: "	);
+MAKE_MENU(menu_pst_oct,		menu_pst_hires,	menu_pst_transp,menu_pst_gen,	NULL_ENTRY,		0,		&Preset.OctaveShift,		t_int8,	    -3,		3,		NULL,					NULL,					menu_show_param,	"",	"Oct Shift: "	);
+MAKE_MENU(menu_pst_hires,	menu_pst_midi,	menu_pst_oct,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.HighResEnable,		t_bool,		0,		1,		NULL,					NULL,					menu_show_param,	"",	" High Res: "	);
+MAKE_MENU(menu_pst_midi,	NULL_ENTRY,		menu_pst_hires,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					NULL,					menu_show_param,	"",	"Midi Port: "	);
+
+MAKE_MENU(menu_split_key,	menu_split_chan,NULL_ENTRY,		menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitKey,			t_uint8,	0,		40,		NULL,					NULL,					menu_show_splitkey,	"",	"Split Key: "	);
+MAKE_MENU(menu_split_chan,	NULL_ENTRY,		menu_split_key,	menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitChannel,		t_uint8,	1,		16,		NULL,					NULL,					menu_show_param,	"",	"Split Chl: "	);
 
 /*For sliders menu items "Min" parameter is used for slider number keeping*/
-MAKE_MENU(menu_slider1,		menu_slider2,	NULL_ENTRY,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	14,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 1 "	);
-MAKE_MENU(menu_slider2,		menu_slider3,	menu_slider1,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	4,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 2 "	);
-MAKE_MENU(menu_slider3,		menu_slider4,	menu_slider2,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	10,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 3 "	);
-MAKE_MENU(menu_slider4,		menu_slider5,	menu_slider3,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	22,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 4 "	);
-MAKE_MENU(menu_slider5,		menu_slider6,	menu_slider4,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	16,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 5 "	);
-MAKE_MENU(menu_slider6,		menu_slider7,	menu_slider5,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	7,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 6 "	);
-MAKE_MENU(menu_slider7,		menu_slider8,	menu_slider6,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	13,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 7 "	);
-MAKE_MENU(menu_slider8,		menu_slider9,	menu_slider7,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 8 "	);
-MAKE_MENU(menu_slider9,		menu_knob1,		menu_slider8,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	19,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 9 "	);
-MAKE_MENU(menu_knob1,		menu_knob2,		menu_slider9,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	9,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 1 "		);
-MAKE_MENU(menu_knob2,		menu_knob3,		menu_knob1,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 2 "		);
-MAKE_MENU(menu_knob3,		menu_knob4,		menu_knob2,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	3,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 3 "		);
-MAKE_MENU(menu_knob4,		menu_knob5,		menu_knob3,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	6,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 4 "		);
-MAKE_MENU(menu_knob5,		menu_knob6,		menu_knob4,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	15,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 5 "		);
-MAKE_MENU(menu_knob6,		menu_knob7,		menu_knob5,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	21,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 6 "		);
-MAKE_MENU(menu_knob7,		menu_knob8,		menu_knob6,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	18,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 7 "		);
-MAKE_MENU(menu_knob8,		menu_pedal1,	menu_knob7,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	12,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 8 "		);
-MAKE_MENU(menu_pedal1,		menu_pedal2,	menu_knob8,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	5,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Pedal 1 "	);
-MAKE_MENU(menu_pedal2,		menu_pedal3,	menu_pedal1,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	2,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Pedal 2 "	);
-MAKE_MENU(menu_pedal3,		menu_pitch,		menu_pedal2,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	11,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Pedal 3 "	);
-MAKE_MENU(menu_pitch,		menu_mod,		menu_pedal3,	menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	23,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Pitch "		);
-MAKE_MENU(menu_mod,			menu_at,		menu_pitch,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	20,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"Modulation "	);
-MAKE_MENU(menu_at,			NULL_ENTRY,		menu_mod,		menu_pst_slid,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	17,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"AfterTouch"	);
+MAKE_MENU(menu_slider1,		menu_slider2,	NULL_ENTRY,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	14,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 1 "	);
+MAKE_MENU(menu_slider2,		menu_slider3,	menu_slider1,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	4,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 2 "	);
+MAKE_MENU(menu_slider3,		menu_slider4,	menu_slider2,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	10,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 3 "	);
+MAKE_MENU(menu_slider4,		menu_slider5,	menu_slider3,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	22,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 4 "	);
+MAKE_MENU(menu_slider5,		menu_slider6,	menu_slider4,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	16,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 5 "	);
+MAKE_MENU(menu_slider6,		menu_slider7,	menu_slider5,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	7,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 6 "	);
+MAKE_MENU(menu_slider7,		menu_slider8,	menu_slider6,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	13,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 7 "	);
+MAKE_MENU(menu_slider8,		menu_slider9,	menu_slider7,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	1,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 8 "	);
+MAKE_MENU(menu_slider9,		menu_knob1,		menu_slider8,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	19,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 9 "	);
+MAKE_MENU(menu_knob1,		menu_knob2,		menu_slider9,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	9,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 1 "		);
+MAKE_MENU(menu_knob2,		menu_knob3,		menu_knob1,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	0,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 2 "		);
+MAKE_MENU(menu_knob3,		menu_knob4,		menu_knob2,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	3,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 3 "		);
+MAKE_MENU(menu_knob4,		menu_knob5,		menu_knob3,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	6,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 4 "		);
+MAKE_MENU(menu_knob5,		menu_knob6,		menu_knob4,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	15,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 5 "		);
+MAKE_MENU(menu_knob6,		menu_knob7,		menu_knob5,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	21,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 6 "		);
+MAKE_MENU(menu_knob7,		menu_knob8,		menu_knob6,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	18,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 7 "		);
+MAKE_MENU(menu_knob8,		menu_pedal1,	menu_knob7,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	12,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Knob 8 "		);
+MAKE_MENU(menu_pedal1,		menu_pedal2,	menu_knob8,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	5,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Pedal 1 "	);
+MAKE_MENU(menu_pedal2,		menu_pedal3,	menu_pedal1,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	2,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Pedal 2 "	);
+MAKE_MENU(menu_pedal3,		menu_pitch,		menu_pedal2,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	11,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Pedal 3 "	);
+MAKE_MENU(menu_pitch,		menu_mod,		menu_pedal3,	menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	23,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Pitch "		);
+MAKE_MENU(menu_mod,			menu_at,		menu_pitch,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	20,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"Modulation "	);
+MAKE_MENU(menu_at,			NULL_ENTRY,		menu_mod,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	17,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"AfterTouch"	);
 /*************************/
 
 /*The following list of menu items can be switched to any slider*/
-MAKE_MENU(menu_sl_active,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	"  Active:"		);
-MAKE_MENU(menu_sl_reverse,	menu_sl_channel,menu_sl_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Reverse:"		);
-MAKE_MENU(menu_sl_channel,	menu_sl_event,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Channel:"		);
-MAKE_MENU(menu_sl_event,	menu_sl_min,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Event:"		);
-MAKE_MENU(menu_sl_min,		menu_sl_max,	menu_sl_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Min:"		);
-MAKE_MENU(menu_sl_max,		NULL_ENTRY,		menu_sl_min,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Max:"		);
+MAKE_MENU(menu_sl_active,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	"  Active:"		);
+MAKE_MENU(menu_sl_reverse,	menu_sl_channel,menu_sl_active,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Reverse:"		);
+MAKE_MENU(menu_sl_channel,	menu_sl_event,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		16,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Channel:"		);
+MAKE_MENU(menu_sl_event,	menu_sl_min,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	1,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Event:"		);
+MAKE_MENU(menu_sl_min,		menu_sl_max,	menu_sl_event,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Min:"		);
+MAKE_MENU(menu_sl_max,		NULL_ENTRY,		menu_sl_min,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Max:"		);
 /********/
 
 
 
-MAKE_MENU(menu_button1,		menu_button2,	NULL_ENTRY,		menu_pst_btns,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 1 "	);
-MAKE_MENU(menu_button2,		menu_button3,	menu_button1,	menu_pst_btns,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 2 "	);
-MAKE_MENU(menu_button3,		menu_button4,	menu_button2,	menu_pst_btns,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	2,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 3 "	);
-MAKE_MENU(menu_button4,		menu_button5,	menu_button3,	menu_pst_btns,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	3,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 4 "	);
-MAKE_MENU(menu_button5,		menu_button6,	menu_button4,	menu_pst_btns,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	4,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 5 "	);
-MAKE_MENU(menu_button6,		menu_button7,	menu_button5,	menu_pst_btns,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	5,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 6 "	);
-MAKE_MENU(menu_button7,		menu_button8,	menu_button6,	menu_pst_btns,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	6,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 7 "	);
-MAKE_MENU(menu_button8,		NULL_ENTRY,		menu_button7,	menu_pst_btns,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	7,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 8 "	);
+MAKE_MENU(menu_button1,		menu_button2,	NULL_ENTRY,		menu_pst_btns,	NULL_ENTRY,		0,		NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 1 "	);
+MAKE_MENU(menu_button2,		menu_button3,	menu_button1,	menu_pst_btns,	NULL_ENTRY,		0,		NULL,						t_uint8,	1,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 2 "	);
+MAKE_MENU(menu_button3,		menu_button4,	menu_button2,	menu_pst_btns,	NULL_ENTRY,		0,		NULL,						t_uint8,	2,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 3 "	);
+MAKE_MENU(menu_button4,		menu_button5,	menu_button3,	menu_pst_btns,	NULL_ENTRY,		0,		NULL,						t_uint8,	3,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 4 "	);
+MAKE_MENU(menu_button5,		menu_button6,	menu_button4,	menu_pst_btns,	NULL_ENTRY,		0,		NULL,						t_uint8,	4,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 5 "	);
+MAKE_MENU(menu_button6,		menu_button7,	menu_button5,	menu_pst_btns,	NULL_ENTRY,		0,		NULL,						t_uint8,	5,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 6 "	);
+MAKE_MENU(menu_button7,		menu_button8,	menu_button6,	menu_pst_btns,	NULL_ENTRY,		0,		NULL,						t_uint8,	6,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 7 "	);
+MAKE_MENU(menu_button8,		NULL_ENTRY,		menu_button7,	menu_pst_btns,	NULL_ENTRY,		0,		NULL,						t_uint8,	7,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Button 8 "	);
 /*
-MAKE_MENU(menu_button_l,	menu_button_r,	menu_button8,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Left "		);
-MAKE_MENU(menu_button_r,	menu_button_rec,menu_button_l,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Right "		);
-MAKE_MENU(menu_button_rec,	menu_button_p,	menu_button_r,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Record "		);
-MAKE_MENU(menu_button_p,	menu_button_s,	menu_button_rec,menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Play "		);
-MAKE_MENU(menu_button_s,	NULL_ENTRY,		menu_button_p,	menu_preset8,	NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Stop "		);
+MAKE_MENU(menu_button_l,	menu_button_r,	menu_button8,	menu_preset8,	NULL_ENTRY,		0,		NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Left "		);
+MAKE_MENU(menu_button_r,	menu_button_rec,menu_button_l,	menu_preset8,	NULL_ENTRY,		0,		NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Right "		);
+MAKE_MENU(menu_button_rec,	menu_button_p,	menu_button_r,	menu_preset8,	NULL_ENTRY,		0,		NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Record "		);
+MAKE_MENU(menu_button_p,	menu_button_s,	menu_button_rec,menu_preset8,	NULL_ENTRY,		0,		NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Play "		);
+MAKE_MENU(menu_button_s,	NULL_ENTRY,		menu_button_p,	menu_preset8,	NULL_ENTRY,		0,		NULL,						t_uint8,	0,		0,		menu_button_enter,		menu_preset_bt_edit,	NULL,				"",	"  Stop "		);
 */
 
-MAKE_MENU(menu_bt_active,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "   Active:"	);
-MAKE_MENU(menu_bt_type,		menu_bt_channel,menu_bt_active,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		2,		NULL,					menu_button_edit,		menu_show_param,	"", "     Type:"	);
-MAKE_MENU(menu_bt_channel,	menu_bt_event,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		16,		NULL,					menu_button_edit,		menu_show_param,	"", "  Channel:"	);
-MAKE_MENU(menu_bt_event,	menu_bt_on,		menu_bt_channel,NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	1,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "    Event:"	);
-MAKE_MENU(menu_bt_on,		menu_bt_off,	menu_bt_event,	NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", " On value:"	);
-MAKE_MENU(menu_bt_off,		NULL_ENTRY,		menu_bt_on,		NULL_ENTRY,		NULL_ENTRY,		0,		1,			NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "Off value:"	);
+MAKE_MENU(menu_bt_active,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_button_edit,		menu_show_param,	"", "   Active:"	);
+MAKE_MENU(menu_bt_type,		menu_bt_channel,menu_bt_active,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		2,		NULL,					menu_button_edit,		menu_show_param,	"", "     Type:"	);
+MAKE_MENU(menu_bt_channel,	menu_bt_event,	menu_bt_type,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		16,		NULL,					menu_button_edit,		menu_show_param,	"", "  Channel:"	);
+MAKE_MENU(menu_bt_event,	menu_bt_on,		menu_bt_channel,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	1,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "    Event:"	);
+MAKE_MENU(menu_bt_on,		menu_bt_off,	menu_bt_event,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", " On value:"	);
+MAKE_MENU(menu_bt_off,		NULL_ENTRY,		menu_bt_on,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		127,	NULL,					menu_button_edit,		menu_show_param,	"", "Off value:"	);
+
 
 
 

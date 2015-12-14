@@ -42,7 +42,7 @@ typedef struct {
 typedef struct {
 	const char  Title[16];
 	void       (*Command_Yes)(void);
-	void       (*Command_No)(void);
+	uint8_t    Return_after_yes;
 	void       *Previous;
 } menuYNItem_type;
 
@@ -54,9 +54,9 @@ typedef struct {
 	extern  menuItem_type  Child;  \
 	menuItem_type Name = {(void*)&Next, (void*)&Previous, (void*)&Parent, (void*)&Child, (uint8_t)Pos, (void*)Value, (value_t)tValue, (uint16_t)Min, (uint16_t)Max, (void*) Command_Enter, (void*) Command_Edit, (void*) Command_Show, {Title},{ Text }}
 
-#define MAKE_MENU_YN(Name, Title, Command_Yes, Command_No, Previous) \
+#define MAKE_MENU_YN(Name, Title, Command_Yes, Return_after_yes, Previous) \
 	extern  menuItem_type  Previous; \
-	menuYNItem_type Name = {{Title}, (void*) Command_Yes, (void*) Command_No, (void*)&Previous}
+	menuYNItem_type Name = {{Title}, (void*) Command_Yes, (uint8_t) Return_after_yes, (void*)&Previous}
 
 
 #define NULL_ENTRY Null_Menu

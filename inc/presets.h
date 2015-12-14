@@ -114,6 +114,9 @@
 #define ATTR_B_EVENT "event"
 #define ATTR_B_ON "on"
 #define ATTR_B_OFF "off"
+
+#define OCTAVE_SHIFT_MAX 3
+
 /********************************/
 
 typedef enum  {FIO_OK, FIO_SD_ERROR, FIO_FILE_NOT_FOUND,FIO_FILE_CREATE_ERROR,FIO_GETFREE_ERR,FIO_MOUNT_ERR,FIO_WRITE_ERROR,FIO_READ_ERROR,

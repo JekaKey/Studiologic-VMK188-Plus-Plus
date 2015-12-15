@@ -15,6 +15,12 @@
 
 #define OK_SYSEX 0xF704F004;
 
+#define MMC_STOP 0x01
+#define MMC_PLAY 0x02
+#define MMC_FF 0x04
+#define MMC_RW 0x05
+#define MMC_REC 0x06
+
 /*! Type definition for practical use (because "unsigned char" is a bit long to write.. )*/
 typedef uint8_t byte;
 typedef uint16_t word;
@@ -52,6 +58,8 @@ void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel);
 void sendPitchBend(uint16_t Value, byte Channel);
 void sendPolyPressure(byte NoteNumber, byte Pressure, byte Channel);
 void sendAfterTouch(byte Pressure, byte Channel);
+
+void sendMMC(byte Value);
 
 void sendMidiData(void); //Send one midi message per run from buffer array
 void receiveMidiData(void);

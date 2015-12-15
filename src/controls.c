@@ -422,8 +422,23 @@ void pitch_midi_send(uint16_t value, uint8_t channel) {
 
 void button_midi_send(uint16_t value, Button_type* buttons) {
 	uint8_t is_pressed = (value & 0x80) ? 0 : 1;
+	uint8_t num = value & 0x7F;
 
-	uint8_t num = is_pressed ? value : (value & 0x7F);
+	if ((num < BUTTON_B1) && is_pressed) {
+		switch (num) {
+		case BUTTON_STOP:
+			sendMMC(MMC_STOP);
+			break;
+		case BUTTON_PLAY:
+			sendMMC(MMC_PLAY);
+			break;
+		case BUTTON_RECORD:
+			sendMMC(MMC_REC);
+			break;
+		}
+		return;
+	}
+
 	num -= BUTTON_B1;
 
 	if (!buttons[num].active)
@@ -785,7 +800,7 @@ void checkButtons_events(Button_type* buttons) {
 	if (btn_num <= BUTTON_RIGHT || btn_num >= ENCODER_LEFT1) {
 		if (!(event & 0x80))
 		   control_buttons_handler(event);
-	} else if (btn_num >= BUTTON_B1) {
+	} else {
 		button_midi_send(event, buttons);
 	}
 }

@@ -91,6 +91,25 @@ void sendAfterTouch(byte Preasure, byte Channel) {
 	FIFO_PUSH(midiMessagesArray, Preasure);
 }
 
+void sendMMC(byte Value) {
+	uint8_t buff[8];
+	buff[0] = 0x04;
+	buff[1] = 0xF0;
+	buff[2] = 0x7F;
+	buff[3] = 0x7F;
+	buff[4] = 0x07;
+	buff[5] = 0x06;
+	buff[6] = Value;
+	buff[7] = 0xF7;
+
+	usb_midi_DataTx(buff, 8);
+
+	for (uint8_t i = 1; i <= 3; i++)
+		FIFO_PUSH(midiMessagesArray, buff[i]);
+	for (uint8_t i = 5; i <= 7; i++)
+		FIFO_PUSH(midiMessagesArray, buff[i]);
+}
+
 void sendMidiData(void) {
 
 	uint8_t test;

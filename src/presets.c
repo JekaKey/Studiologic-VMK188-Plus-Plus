@@ -254,7 +254,6 @@ FIO_status preset_save(const char* path, presetType* pr){
 
 	json_write_object(1, slider_names[SLIDER_PITCH],  &fff);
 	json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_PITCH].active, 1, &fff);
-	json_write_number(2, ATTR_S_REVERSE, pr->sliders[SLIDER_PITCH].reverse, 1, &fff);
 	json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_PITCH].channel, 0, &fff);
 	json_write_string(1, "},", &fff);
 
@@ -430,7 +429,7 @@ static json_attr_t knobs_attr[KNOBS_N+1];
 static json_attr_t buttons_param_attr[BUTTONS_AMOUNT+1][8];
 static json_attr_t buttons_attr[BUTTONS_AMOUNT+1];
 
-static json_attr_t pitch_param_attr[4];
+static json_attr_t pitch_param_attr[3];
 static json_attr_t pitch_attr;
 
 static json_attr_t mod_param_attr[7];
@@ -519,14 +518,12 @@ static void init_json_preset_attr(presetType *preset) {
 	pitch_attr.addr.object = pitch_param_attr;
 	strcpy(pitch_param_attr[0].attribute, ATTR_S_ACTIVE);
 	pitch_param_attr[0].addr.uint8 = &(preset->sliders[SLIDER_PITCH].active);
-	strcpy(pitch_param_attr[1].attribute, ATTR_S_REVERSE);
-	pitch_param_attr[1].addr.uint8 = &(preset->sliders[SLIDER_PITCH].reverse);
-	strcpy(pitch_param_attr[2].attribute, ATTR_S_CHANNEL);
-	pitch_param_attr[2].addr.uint8 = &(preset->sliders[SLIDER_PITCH].channel);
-	for (int j = 0; j < 3; j++) {
+	strcpy(pitch_param_attr[1].attribute, ATTR_S_CHANNEL);
+	pitch_param_attr[1].addr.uint8 = &(preset->sliders[SLIDER_PITCH].channel);
+	for (int j = 0; j < 2; j++) {
 		pitch_param_attr[j].type = t_uint8;
 	}
-	pitch_param_attr[3].attribute[0] = 0;
+	pitch_param_attr[2].attribute[0] = 0;
 	/*****/
 
 
@@ -844,7 +841,6 @@ FIO_status start_load_calibration(calibrationType* cal){
 	if (Current_state.calibration_name[0]) { //name is not empty string
 		fiores = calibration_load(Current_state.calibration_name, cal); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
-			PRINTF("Calibration was loaded successfully\n\r");
 			res = SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list);
 			return FIO_OK; //all is done
 		} else {
@@ -873,12 +869,16 @@ FIO_status start_load_calibration(calibrationType* cal){
 		strcpy(Current_state.calibration_name, DEFAULT_CALIBR_NAME);
 		strcpy(path, "0:/" CALIBR_DIR_NAME "/");
 		strcat(path, DEFAULT_CALIBR_NAME);
-		if (calibration_save(path, cal) != FIO_OK) {
-			PRINTF("Calibration save ERROR\n\r");
+		if (calibration_save(path, cal) == FIO_OK) {
+			calibrations_list.active = 0; //Position of an active item
+			calibrations_list.num = 1; //Number of items in a file list
+			calibrations_list.pos = 0; //Current position in a list
+			strcpy(calibrations_list.names[0], DEFAULT_CALIBR_NAME);
+		} else{
 			return FIO_SD_ERROR;
 		}
-		return FIO_OK;
 	}
+	return FIO_OK;
 }
 
 FIO_status start_load_curve_list(void) {
@@ -956,11 +956,15 @@ FIO_status start_load_preset(presetType* preset, calibrationType* cal){
 		strcpy(Current_state.preset_name, DEFAULT_PRESET_NAME);
 		strcpy(path, "0:/" PRESET_DIR_NAME "/");
 		strcat(path, DEFAULT_PRESET_NAME);
-		if (preset_save(path, preset) != FIO_OK) {
-			PRINTF("Presets start_load_preset: preset no saved\n\r");
+		fiores = preset_save(path, preset);
+		if (fiores == FIO_OK) {
+			presets_list.active=0; //Position of an active item
+			presets_list.num = 1; //Number of items in a file list
+			presets_list.pos=0;  //Current position in a list
+			strcpy(presets_list.names[0],DEFAULT_PRESET_NAME);
+		}else{
 			return FIO_SD_ERROR;
 		}
-		return FIO_OK;
 	}
     return FIO_OK;
 }
@@ -981,19 +985,18 @@ void set_defaults_all(presetType* preset, calibrationType* cal){
 FIO_status start_load_all(presetType* preset, calibrationType* cal){
 
 	if (SDFS_mount() != SDFS_OK) {
-		PRINTF("MOUNT ERROR\r\n");
 		return FIO_SD_ERROR;
 	}
 	if (start_load_setting() == FIO_SD_ERROR) {
 		return FIO_SD_ERROR;
 	}
 	if (start_load_calibration(cal) == FIO_SD_ERROR) {
-		PRINTF("Load calibration ERROR\r\n");
 		return FIO_SD_ERROR;
 	}
 	if (start_load_preset(preset, cal) == FIO_SD_ERROR) {
 		return FIO_SD_ERROR;
 	}
+
 	if (start_load_curve_list() == FIO_SD_ERROR) {
 		return FIO_SD_ERROR;
 	}

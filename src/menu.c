@@ -1684,6 +1684,8 @@ static void preset_curvelist_start(void){
 void interface_init(char *name) {
 	I_state = STATE_presets_list;
 	file_list_find(&presets_list, name);
+	PRINTF("interface_init: file_list_find OK:  %s\n\r", presets_list.names[0]);
 	presets_list.active = presets_list.pos;
 	preset_show(&Preset, &presets_list);
+	PRINTF("interface_init: preset_show OK\n\r");
 }

@@ -87,8 +87,11 @@ int main(void) {
     LED_light(4);
     delayms(2000);
 	start_load_all(&Preset, &Calibration);
+	PRINTF("start_load_all: Finished OK\n\r");
 	interface_init(Current_state.preset_name);
+	PRINTF("interface_init: Finished OK\n\r");
 	calibration_init(Current_state.calibration_name);
+	PRINTF("calibration_init: Finished OK\n\r");
     LED_light(6);
 
     Timer_init();

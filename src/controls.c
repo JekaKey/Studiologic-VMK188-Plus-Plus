@@ -14,10 +14,14 @@
 #include "filter.h"
 
 /*Array of slider names by slider number with fixed values, should be in flash memory*/
-const char slider_names[][MAX_ATTR_SIZE] = { ATTR_R2, ATTR_S8, ATTR_P2, ATTR_R3, ATTR_S2,
-		ATTR_P1, ATTR_R4, ATTR_S6, ATTR_EY, ATTR_R1, ATTR_S3, ATTR_P3, ATTR_R8,
-		ATTR_S7, ATTR_S1, ATTR_R5, ATTR_S5, ATTR_AT, ATTR_R7, ATTR_S9, ATTR_MO,
-		ATTR_R6, ATTR_S4, ATTR_PI };
+const char slider_names[][MAX_ATTR_SIZE] = { ATTR_R2, ATTR_S8, ATTR_P2, ATTR_R3, ATTR_S2, ATTR_P1, ATTR_R4, ATTR_S6,
+		                                     ATTR_EY, ATTR_R1, ATTR_S3, ATTR_P3, ATTR_R8, ATTR_S7, ATTR_S1, ATTR_R5,
+		                                     ATTR_S5, ATTR_AT, ATTR_R7, ATTR_S9, ATTR_MO, ATTR_R6, ATTR_S4, ATTR_PI };
+                                            // 0        1        2         3        4        5        6       7
+const uint8_t pedalsN[PEDALS_N] = {SLIDER_P1, SLIDER_P2, SLIDER_P3};
+const uint8_t slidersN[SLIDERS_N] = {SLIDER_S1, SLIDER_S2, SLIDER_S3, SLIDER_S4, SLIDER_S5 ,SLIDER_S6, SLIDER_S7, SLIDER_S8, SLIDER_S9};
+const uint8_t knobsN[KNOBS_N] = {SLIDER_R1, SLIDER_R2, SLIDER_R3, SLIDER_R4, SLIDER_R5, SLIDER_R6, SLIDER_R7, SLIDER_R8};
+
 const char button_names[][MAX_ATTR_SIZE] = { ATTR_B1, ATTR_B2, ATTR_B3, ATTR_B4, ATTR_B5, ATTR_B6, ATTR_B7,
 		ATTR_B8 };
 
@@ -185,134 +189,37 @@ void sliders_calibr_set_defaults(Calibration_slider_type* sliders_calibr) {
  */
 void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders_calibr) {
 
+	uint8_t i;
+
 	sliders[SLIDER_EMPTY].active = 0;    //One slider is absent physically
 	sliders[SLIDER_EMPTY].reverse = 0;
+	sliders[SLIDER_EMPTY].binary = 0;
 	sliders[SLIDER_EMPTY].channel = 0;
 	sliders[SLIDER_EMPTY].event = 7;
 	sliders[SLIDER_EMPTY].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_EMPTY].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_S1].active = 1;
-	sliders[SLIDER_S1].reverse = 0;
-	sliders[SLIDER_S1].channel = 0;
-	sliders[SLIDER_S1].event = 11;
-	sliders[SLIDER_S1].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S1].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_S2].active = 0;
-	sliders[SLIDER_S2].reverse = 0;
-	sliders[SLIDER_S2].channel = 0;
-	sliders[SLIDER_S2].event = 22;
-	sliders[SLIDER_S2].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S2].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_S3].active = 0;
-	sliders[SLIDER_S3].reverse = 0;
-	sliders[SLIDER_S3].channel = 0;
-	sliders[SLIDER_S3].event = 23;
-	sliders[SLIDER_S3].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S3].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_S4].active = 0;
-	sliders[SLIDER_S4].reverse = 0;
-	sliders[SLIDER_S4].channel = 0;
-	sliders[SLIDER_S4].event = 24;
-	sliders[SLIDER_S4].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S4].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_S5].active = 0;
-	sliders[SLIDER_S5].reverse = 0;
-	sliders[SLIDER_S5].channel = 0;
-	sliders[SLIDER_S5].event = 25;
-	sliders[SLIDER_S5].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S5].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_S6].active = 0;
-	sliders[SLIDER_S6].reverse = 0;
-	sliders[SLIDER_S6].channel = 0;
-	sliders[SLIDER_S6].event = 26;
-	sliders[SLIDER_S6].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S6].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_S7].active = 0;
-	sliders[SLIDER_S7].reverse = 0;
-	sliders[SLIDER_S7].channel = 0;
-	sliders[SLIDER_S7].event = 27;
-	sliders[SLIDER_S7].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S7].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_S8].active = 0;
-	sliders[SLIDER_S8].reverse = 0;
-	sliders[SLIDER_S8].channel = 0;
-	sliders[SLIDER_S8].event = 28;
-	sliders[SLIDER_S8].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S8].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_S9].active = 0;
-	sliders[SLIDER_S9].reverse = 0;
-	sliders[SLIDER_S9].channel = 0;
-	sliders[SLIDER_S9].event = 29;
-	sliders[SLIDER_S9].min_out_value = SLIDER_S_MIN_OUT;
-	sliders[SLIDER_S9].max_out_value = SLIDER_S_MAX_OUT;
-
-	sliders[SLIDER_R1].active = 0;
-	sliders[SLIDER_R1].reverse = 0;
-	sliders[SLIDER_R1].channel = 0;
-	sliders[SLIDER_R1].event = 71;
-	sliders[SLIDER_R1].min_out_value = SLIDER_R_MIN_OUT;
-	sliders[SLIDER_R1].max_out_value = SLIDER_R_MAX_OUT;
-
-	sliders[SLIDER_R2].active = 0;
-	sliders[SLIDER_R2].reverse = 0;
-	sliders[SLIDER_R2].channel = 0;
-	sliders[SLIDER_R2].event = 72;
-	sliders[SLIDER_R2].min_out_value = SLIDER_R_MIN_OUT;
-	sliders[SLIDER_R2].max_out_value = SLIDER_R_MAX_OUT;
-
-	sliders[SLIDER_R3].active = 0;
-	sliders[SLIDER_R3].reverse = 0;
-	sliders[SLIDER_R3].channel = 0;
-	sliders[SLIDER_R3].event = 73;
-	sliders[SLIDER_R3].min_out_value = SLIDER_R_MIN_OUT;
-	sliders[SLIDER_R3].max_out_value = SLIDER_R_MAX_OUT;
-
-	sliders[SLIDER_R4].active = 0;
-	sliders[SLIDER_R4].reverse = 0;
-	sliders[SLIDER_R4].channel = 0;
-	sliders[SLIDER_R4].event = 74;
-	sliders[SLIDER_R4].min_out_value = SLIDER_R_MIN_OUT;
-	sliders[SLIDER_R4].max_out_value = SLIDER_R_MAX_OUT;
-
-	sliders[SLIDER_R5].active = 0;
-	sliders[SLIDER_R5].reverse = 0;
-	sliders[SLIDER_R5].channel = 0;
-	sliders[SLIDER_R5].event = 75;
-	sliders[SLIDER_R5].min_out_value = SLIDER_R_MIN_OUT;
-	sliders[SLIDER_R5].max_out_value = SLIDER_R_MAX_OUT;
-
-	sliders[SLIDER_R6].active = 0;
-	sliders[SLIDER_R6].reverse = 0;
-	sliders[SLIDER_R6].channel = 0;
-	sliders[SLIDER_R6].event = 76;
-	sliders[SLIDER_R6].min_out_value = SLIDER_R_MIN_OUT;
-	sliders[SLIDER_R6].max_out_value = SLIDER_R_MAX_OUT;
-
-	sliders[SLIDER_R7].active = 0;
-	sliders[SLIDER_R7].reverse = 0;
-	sliders[SLIDER_R7].channel = 0;
-	sliders[SLIDER_R7].event = 77;
-	sliders[SLIDER_R7].min_out_value = SLIDER_R_MIN_OUT;
-	sliders[SLIDER_R7].max_out_value = SLIDER_R_MAX_OUT;
-
-	sliders[SLIDER_R8].active = 0;
-	sliders[SLIDER_R8].reverse = 0;
-	sliders[SLIDER_R8].channel = 0;
-	sliders[SLIDER_R8].event = 78;
-	sliders[SLIDER_R8].min_out_value = SLIDER_R_MIN_OUT;
-	sliders[SLIDER_R8].max_out_value = SLIDER_R_MAX_OUT;
+	for (i = 0; i <= SLIDERS_N; i++) {
+		sliders[slidersN[i]].active = 0;
+		sliders[slidersN[i]].reverse = 0;
+		sliders[slidersN[i]].binary = 0;
+		sliders[slidersN[i]].channel = 0;
+		sliders[slidersN[i]].event = 11+i;
+		sliders[slidersN[i]].min_out_value = SLIDER_S_MIN_OUT;
+		sliders[slidersN[i]].max_out_value = SLIDER_S_MAX_OUT;
+	}
+	for (i = 0; i <= KNOBS_N; i++) {
+		sliders[knobsN[i]].active = 0;
+		sliders[knobsN[i]].reverse = 0;
+		sliders[knobsN[i]].binary = 0;
+		sliders[knobsN[i]].channel = 0;
+		sliders[knobsN[i]].event = 33+i;
+		sliders[knobsN[i]].min_out_value = SLIDER_S_MIN_OUT;
+		sliders[knobsN[i]].max_out_value = SLIDER_S_MAX_OUT;
+	}
 
 	sliders[SLIDER_P1].active = 0;
 	sliders[SLIDER_P1].reverse = 0;
+	sliders[SLIDER_P1].binary = 0;
 	sliders[SLIDER_P1].channel = 0;
 	sliders[SLIDER_P1].event = 65;
 	sliders[SLIDER_P1].min_out_value = SLIDER_P_MIN_OUT;
@@ -320,6 +227,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_P2].active = 1;
 	sliders[SLIDER_P2].reverse = 1;
+	sliders[SLIDER_P2].binary = 0;
 	sliders[SLIDER_P2].channel = 0;
 	sliders[SLIDER_P2].event = 64;
 	sliders[SLIDER_P2].min_out_value = SLIDER_P_MIN_OUT;
@@ -327,6 +235,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_P3].active = 0;
 	sliders[SLIDER_P3].reverse = 0;
+	sliders[SLIDER_P3].binary = 0;
 	sliders[SLIDER_P3].channel = 0;
 	sliders[SLIDER_P3].event = 66;
 	sliders[SLIDER_P3].min_out_value = SLIDER_P_MIN_OUT;
@@ -334,6 +243,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_PITCH].active = 1;
 	sliders[SLIDER_PITCH].reverse = 0;
+	sliders[SLIDER_PITCH].binary = 0;
 	sliders[SLIDER_PITCH].channel = 0;
 	sliders[SLIDER_PITCH].event = 66;
 	sliders[SLIDER_PITCH].min_out_value = SLIDER_PITCH_MIN_OUT;
@@ -341,6 +251,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_MOD].active = 1;
 	sliders[SLIDER_MOD].reverse = 0;
+	sliders[SLIDER_MOD].binary = 0;
 	sliders[SLIDER_MOD].channel = 0;
 	sliders[SLIDER_MOD].event = 1;
 	sliders[SLIDER_MOD].min_out_value = SLIDER_MOD_MIN_OUT;
@@ -348,6 +259,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_AT].active = 1;
 	sliders[SLIDER_AT].reverse = 0;
+	sliders[SLIDER_AT].binary = 0;
 	sliders[SLIDER_AT].channel = 0;
 	sliders[SLIDER_AT].event = 66;
 	sliders[SLIDER_AT].min_out_value = SLIDER_AT_MIN_OUT;

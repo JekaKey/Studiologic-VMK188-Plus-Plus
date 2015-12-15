@@ -49,6 +49,9 @@
 #define SLIDER_P3 11
 #define SLIDER_EMPTY 8
 
+#define KNOBS_N 8
+#define PEDALS_N 3
+#define SLIDERS_N 9
 
 #define SLIDER_S_MIN_IN 0
 #define SLIDER_S_MAX_IN 4050
@@ -167,6 +170,7 @@ typedef struct {
 	uint8_t active;
 	uint8_t reverse;
 	uint8_t channel;
+	uint8_t binary;
 	uint8_t event;
 	uint16_t min_out_value;
 	uint16_t max_out_value;

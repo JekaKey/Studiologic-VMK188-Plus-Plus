@@ -23,6 +23,9 @@ char js_buff[JSON_BUFF_SIZE];
 
 extern const char slider_names[][MAX_ATTR_SIZE];
 extern const char button_names[][MAX_ATTR_SIZE];
+extern const uint8_t pedalsN[PEDALS_N];
+extern const uint8_t slidersN[SLIDERS_N];
+extern const uint8_t knobsN[KNOBS_N];
 
 /***********************/
 
@@ -248,16 +251,75 @@ FIO_status preset_save(const char* path, presetType* pr){
 	json_write_number(2, ATTR_CURVE_XB3, pr->Curve.xb3, 1, &fff);
 	json_write_number(2, ATTR_CURVE_YB3, pr->Curve.yb3, 0, &fff);
 	json_write_string(1, "},", &fff);
+
+	json_write_object(1, slider_names[SLIDER_PITCH],  &fff);
+	json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_PITCH].active, 1, &fff);
+	json_write_number(2, ATTR_S_REVERSE, pr->sliders[SLIDER_PITCH].reverse, 1, &fff);
+	json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_PITCH].channel, 0, &fff);
+	json_write_string(1, "},", &fff);
+
+	json_write_object(1, slider_names[SLIDER_AT],  &fff);
+	json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_AT].active, 1, &fff);
+	json_write_number(2, ATTR_S_REVERSE, pr->sliders[SLIDER_AT].reverse, 1, &fff);
+	json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_AT].channel, 1, &fff);
+	json_write_number(2, ATTR_S_EVENT, pr->sliders[SLIDER_AT].event, 1, &fff);
+	json_write_number(2, ATTR_S_MIN, pr->sliders[SLIDER_AT].min_out_value, 1, &fff);
+	json_write_number(2, ATTR_S_MAX, pr->sliders[SLIDER_AT].max_out_value, 0, &fff);
+	json_write_string(1, "},", &fff);
+
+	json_write_object(1, slider_names[SLIDER_MOD],  &fff);
+	json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_MOD].active, 1, &fff);
+	json_write_number(2, ATTR_S_REVERSE, pr->sliders[SLIDER_MOD].reverse, 1, &fff);
+	json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_MOD].channel, 1, &fff);
+	json_write_number(2, ATTR_S_EVENT, pr->sliders[SLIDER_MOD].event, 1, &fff);
+	json_write_number(2, ATTR_S_MIN, pr->sliders[SLIDER_MOD].min_out_value, 1, &fff);
+	json_write_number(2, ATTR_S_MAX, pr->sliders[SLIDER_MOD].max_out_value, 0, &fff);
+	json_write_string(1, "},", &fff);
+
+
+	json_write_string(1, "\"" ATTR_PEDALS "\":{", &fff);
+	for (i = 0; i < PEDALS_N; i++) {
+		json_write_object(2, slider_names[pedalsN[i]],  &fff);
+		json_write_number(3, ATTR_S_ACTIVE, pr->sliders[pedalsN[i]].active, 1, &fff);
+		json_write_number(3, ATTR_S_REVERSE, pr->sliders[pedalsN[i]].reverse, 1, &fff);
+		json_write_number(3, ATTR_S_BINARY, pr->sliders[pedalsN[i]].binary, 1, &fff);
+		json_write_number(3, ATTR_S_CHANNEL, pr->sliders[pedalsN[i]].channel, 1, &fff);
+		json_write_number(3, ATTR_S_EVENT, pr->sliders[pedalsN[i]].event, 1, &fff);
+		json_write_number(3, ATTR_S_MIN, pr->sliders[pedalsN[i]].min_out_value, 1, &fff);
+		json_write_number(3, ATTR_S_MAX, pr->sliders[pedalsN[i]].max_out_value, 0, &fff);
+		if (i<PEDALS_N-1){
+		   json_write_string(2, "},", &fff);
+		}else{
+		   json_write_string(2, "}", &fff);
+		}
+	}
+	json_write_string(1, "},", &fff);
 	json_write_string(1, "\"" ATTR_SLIDERS "\":{", &fff);
-	for (i = 0; i < SLIDERS_AMOUNT; i++) {
-		json_write_object(2, slider_names[i],  &fff);
-		json_write_number(3, ATTR_S_ACTIVE, pr->sliders[i].active, 1, &fff);
-		json_write_number(3, ATTR_S_REVERSE, pr->sliders[i].reverse, 1, &fff);
-		json_write_number(3, ATTR_S_CHANNEL, pr->sliders[i].channel, 1, &fff);
-		json_write_number(3, ATTR_S_EVENT, pr->sliders[i].event, 1, &fff);
-		json_write_number(3, ATTR_S_MIN, pr->sliders[i].min_out_value, 1, &fff);
-		json_write_number(3, ATTR_S_MAX, pr->sliders[i].max_out_value, 0, &fff);
-		if (i<SLIDERS_AMOUNT-1){
+	for (i = 0; i < SLIDERS_N; i++) {
+		json_write_object(2, slider_names[slidersN[i]],  &fff);
+		json_write_number(3, ATTR_S_ACTIVE, pr->sliders[slidersN[i]].active, 1, &fff);
+		json_write_number(3, ATTR_S_REVERSE, pr->sliders[slidersN[i]].reverse, 1, &fff);
+		json_write_number(3, ATTR_S_CHANNEL, pr->sliders[slidersN[i]].channel, 1, &fff);
+		json_write_number(3, ATTR_S_EVENT, pr->sliders[slidersN[i]].event, 1, &fff);
+		json_write_number(3, ATTR_S_MIN, pr->sliders[slidersN[i]].min_out_value, 1, &fff);
+		json_write_number(3, ATTR_S_MAX, pr->sliders[slidersN[i]].max_out_value, 0, &fff);
+		if (i<SLIDERS_N-1){
+		   json_write_string(2, "},", &fff);
+		}else{
+		   json_write_string(2, "}", &fff);
+		}
+	}
+	json_write_string(1, "},", &fff);
+	json_write_string(1, "\"" ATTR_KNOBS "\":{", &fff);
+	for (i = 0; i < KNOBS_N; i++) {
+		json_write_object(2, slider_names[knobsN[i]],  &fff);
+		json_write_number(3, ATTR_S_ACTIVE, pr->sliders[knobsN[i]].active, 1, &fff);
+		json_write_number(3, ATTR_S_REVERSE, pr->sliders[knobsN[i]].reverse, 1, &fff);
+		json_write_number(3, ATTR_S_CHANNEL, pr->sliders[knobsN[i]].channel, 1, &fff);
+		json_write_number(3, ATTR_S_EVENT, pr->sliders[knobsN[i]].event, 1, &fff);
+		json_write_number(3, ATTR_S_MIN, pr->sliders[knobsN[i]].min_out_value, 1, &fff);
+		json_write_number(3, ATTR_S_MAX, pr->sliders[knobsN[i]].max_out_value, 0, &fff);
+		if (i<KNOBS_N-1){
 		   json_write_string(2, "},", &fff);
 		}else{
 		   json_write_string(2, "}", &fff);
@@ -355,10 +417,27 @@ static json_attr_t split_attr[]={
 		{"",},
 };
 
-static json_attr_t sliders_param_attr[SLIDERS_AMOUNT+1][7];
+
+static json_attr_t pedals_param_attr[PEDALS_N+1][8];
+static json_attr_t pedals_attr[PEDALS_N+1];
+
+static json_attr_t sliders_param_attr[SLIDERS_N+1][7];
+static json_attr_t sliders_attr[SLIDERS_N+1];
+
+static json_attr_t knobs_param_attr[KNOBS_N+1][7];
+static json_attr_t knobs_attr[KNOBS_N+1];
+
 static json_attr_t buttons_param_attr[BUTTONS_AMOUNT+1][8];
-static json_attr_t sliders_attr[SLIDERS_AMOUNT+1];
 static json_attr_t buttons_attr[BUTTONS_AMOUNT+1];
+
+static json_attr_t pitch_param_attr[4];
+static json_attr_t pitch_attr;
+
+static json_attr_t mod_param_attr[7];
+static json_attr_t mod_attr;
+
+static json_attr_t at_param_attr[7];
+static json_attr_t at_attr;
 
 
 static json_attr_t preset_curve_attr[] ={
@@ -378,16 +457,21 @@ static json_attr_t preset_curve_attr[] ={
 };
 
 
-static json_attr_t preset_attr[16] = {
+static json_attr_t preset_attr[20] = {
 		{ATTR_CHANNEL, t_uint8,},
 		{ATTR_SPLIT,t_object, .addr.object = split_attr},
 		{ATTR_HIRES, t_uint8,},
 		{ATTR_ANALOGMIDI, t_uint8,},
 		{ATTR_TRANSPOSE, t_int8,},
 		{ATTR_OCTAVE, t_int8,},
-		{ATTR_CURVE, t_object,.addr.object=preset_curve_attr},
-		{ATTR_SLIDERS, t_object,.addr.object=sliders_attr},
-		{ATTR_BUTTONS, t_object,.addr.object=buttons_attr},
+		{ATTR_CURVE, t_object, .addr.object = preset_curve_attr},
+		{ATTR_PI, t_object, .addr.object = &pitch_attr},
+		{ATTR_MO, t_object, .addr.object = &mod_attr},
+		{ATTR_AT, t_object, .addr.object = &at_attr},
+		{ATTR_PEDALS, t_object, .addr.object = pedals_attr},
+		{ATTR_SLIDERS, t_object, .addr.object = sliders_attr},
+		{ATTR_KNOBS, t_object, .addr.object = knobs_attr},
+		{ATTR_BUTTONS, t_object, .addr.object = buttons_attr},
 		{"",},
 };
 
@@ -429,30 +513,144 @@ static void init_json_preset_attr(presetType *preset) {
 	split_attr[0].addr.uint8 = &(preset->SplitKey);
 	split_attr[1].addr.uint8 = &(preset->SplitChannel);
 
-	sliders_attr[SLIDERS_AMOUNT].attribute[0] =0;
+	/* Assign pitch attribite*/
+	strcpy(pitch_attr.attribute, slider_names[SLIDER_PITCH]);
+	pitch_attr.type = t_object;
+	pitch_attr.addr.object = pitch_param_attr;
+	strcpy(pitch_param_attr[0].attribute, ATTR_S_ACTIVE);
+	pitch_param_attr[0].addr.uint8 = &(preset->sliders[SLIDER_PITCH].active);
+	strcpy(pitch_param_attr[1].attribute, ATTR_S_REVERSE);
+	pitch_param_attr[1].addr.uint8 = &(preset->sliders[SLIDER_PITCH].reverse);
+	strcpy(pitch_param_attr[2].attribute, ATTR_S_CHANNEL);
+	pitch_param_attr[2].addr.uint8 = &(preset->sliders[SLIDER_PITCH].channel);
+	for (int j = 0; j < 3; j++) {
+		pitch_param_attr[j].type = t_uint8;
+	}
+	pitch_param_attr[3].attribute[0] = 0;
+	/*****/
+
+
+
+    /* Assign mod attribite*/
+	strcpy(mod_attr.attribute, slider_names[SLIDER_MOD]);
+	mod_attr.type = t_object;
+	mod_attr.addr.object = mod_param_attr;
+	strcpy(mod_param_attr[0].attribute, ATTR_S_ACTIVE);
+	mod_param_attr[0].addr.uint8 = &(preset->sliders[SLIDER_MOD].active);
+	strcpy(mod_param_attr[1].attribute, ATTR_S_REVERSE);
+	mod_param_attr[1].addr.uint8 = &(preset->sliders[SLIDER_MOD].reverse);
+	strcpy(mod_param_attr[2].attribute, ATTR_S_CHANNEL);
+	mod_param_attr[2].addr.uint8 = &(preset->sliders[SLIDER_MOD].channel);
+	strcpy(mod_param_attr[3].attribute, ATTR_S_EVENT);
+	mod_param_attr[3].addr.uint8 = &(preset->sliders[SLIDER_MOD].event);
+	strcpy(mod_param_attr[4].attribute, ATTR_S_MIN);
+	mod_param_attr[4].addr.uint16 = &(preset->sliders[SLIDER_MOD].min_out_value);
+	strcpy(mod_param_attr[5].attribute, ATTR_S_MAX);
+	mod_param_attr[5].addr.uint16 = &(preset->sliders[SLIDER_MOD].max_out_value);
+	for (int j = 0; j < 6; j++) {
+		mod_param_attr[j].type = t_uint8;
+	}
+	mod_param_attr[6].attribute[0]=0;
+    /*****/
+
+	/* Assign at attribite*/
+	strcpy(at_attr.attribute, slider_names[SLIDER_AT]);
+	at_attr.type = t_object;
+	at_attr.addr.object = at_param_attr;
+	strcpy(at_param_attr[0].attribute, ATTR_S_ACTIVE);
+	at_param_attr[0].addr.uint8 = &(preset->sliders[SLIDER_AT].active);
+	strcpy(at_param_attr[1].attribute, ATTR_S_REVERSE);
+	at_param_attr[1].addr.uint8 = &(preset->sliders[SLIDER_AT].reverse);
+	strcpy(at_param_attr[2].attribute, ATTR_S_CHANNEL);
+	at_param_attr[2].addr.uint8 = &(preset->sliders[SLIDER_AT].channel);
+	strcpy(at_param_attr[3].attribute, ATTR_S_EVENT);
+	at_param_attr[3].addr.uint8 = &(preset->sliders[SLIDER_AT].event);
+	strcpy(at_param_attr[4].attribute, ATTR_S_MIN);
+	at_param_attr[4].addr.uint16 = &(preset->sliders[SLIDER_AT].min_out_value);
+	strcpy(at_param_attr[5].attribute, ATTR_S_MAX);
+	at_param_attr[5].addr.uint16 = &(preset->sliders[SLIDER_AT].max_out_value);
+	for (int j = 0; j < 6; j++) {
+		at_param_attr[j].type = t_uint8;
+	}
+	at_param_attr[6].attribute[0] = 0;
+	/*****/
+
+
+	/*Assign pedals addresses and attributes*/
+	for (int i = 0; i < PEDALS_N; i++) {
+		strcpy(pedals_attr[i].attribute, slider_names[pedalsN[i]]);
+		pedals_attr[i].type = t_object;
+		pedals_attr[i].addr.object = pedals_param_attr[i];
+		strcpy(pedals_param_attr[i][0].attribute, ATTR_S_ACTIVE);
+		pedals_param_attr[i][0].addr.uint8 = &(preset->sliders[pedalsN[i]].active);
+		strcpy(pedals_param_attr[i][1].attribute, ATTR_S_REVERSE);
+		pedals_param_attr[i][1].addr.uint8 = &(preset->sliders[pedalsN[i]].reverse);
+		strcpy(pedals_param_attr[i][1].attribute, ATTR_S_BINARY);
+		pedals_param_attr[i][1].addr.uint8 = &(preset->sliders[pedalsN[i]].binary);
+		strcpy(pedals_param_attr[i][2].attribute, ATTR_S_CHANNEL);
+		pedals_param_attr[i][2].addr.uint8 = &(preset->sliders[pedalsN[i]].channel);
+		strcpy(pedals_param_attr[i][3].attribute, ATTR_S_EVENT);
+		pedals_param_attr[i][3].addr.uint8 = &(preset->sliders[pedalsN[i]].event);
+		strcpy(pedals_param_attr[i][4].attribute, ATTR_S_MIN);
+		pedals_param_attr[i][4].addr.uint16 = &(preset->sliders[pedalsN[i]].min_out_value);
+		strcpy(pedals_param_attr[i][5].attribute, ATTR_S_MAX);
+		pedals_param_attr[i][5].addr.uint16 = &(preset->sliders[pedalsN[i]].max_out_value);
+		for (int j = 0; j < 7; j++) {
+			pedals_param_attr[i][j].type = t_uint8;
+		}
+		pedals_param_attr[i][7].attribute[0]=0;
+	}
+	pedals_attr[PEDALS_N].attribute[0]=0;
+
 	/*Assign sliders addresses and attributes*/
-	for (int i = 0; i < SLIDERS_AMOUNT; i++) {
-		strcpy(sliders_attr[i].attribute, slider_names[i]);
+	for (int i = 0; i < SLIDERS_N; i++) {
+		strcpy(sliders_attr[i].attribute, slider_names[slidersN[i]]);
 		sliders_attr[i].type = t_object;
 		sliders_attr[i].addr.object = sliders_param_attr[i];
 		strcpy(sliders_param_attr[i][0].attribute, ATTR_S_ACTIVE);
-		sliders_param_attr[i][0].addr.uint8 = &(preset->sliders[i].active);
+		sliders_param_attr[i][0].addr.uint8 = &(preset->sliders[slidersN[i]].active);
 		strcpy(sliders_param_attr[i][1].attribute, ATTR_S_REVERSE);
-		sliders_param_attr[i][1].addr.uint8 = &(preset->sliders[i].reverse);
+		sliders_param_attr[i][1].addr.uint8 = &(preset->sliders[slidersN[i]].reverse);
 		strcpy(sliders_param_attr[i][2].attribute, ATTR_S_CHANNEL);
-		sliders_param_attr[i][2].addr.uint8 = &(preset->sliders[i].channel);
+		sliders_param_attr[i][2].addr.uint8 = &(preset->sliders[slidersN[i]].channel);
 		strcpy(sliders_param_attr[i][3].attribute, ATTR_S_EVENT);
-		sliders_param_attr[i][3].addr.uint8 = &(preset->sliders[i].event);
+		sliders_param_attr[i][3].addr.uint8 = &(preset->sliders[slidersN[i]].event);
 		strcpy(sliders_param_attr[i][4].attribute, ATTR_S_MIN);
-		sliders_param_attr[i][4].addr.uint16 = &(preset->sliders[i].min_out_value);
+		sliders_param_attr[i][4].addr.uint16 = &(preset->sliders[slidersN[i]].min_out_value);
 		strcpy(sliders_param_attr[i][5].attribute, ATTR_S_MAX);
-		sliders_param_attr[i][5].addr.uint16 = &(preset->sliders[i].max_out_value);
+		sliders_param_attr[i][5].addr.uint16 = &(preset->sliders[slidersN[i]].max_out_value);
 		for (int j = 0; j < 6; j++) {
 			sliders_param_attr[i][j].type = t_uint8;
 		}
 		sliders_param_attr[i][6].attribute[0]=0;
 	}
-	sliders_attr[SLIDERS_AMOUNT].attribute[0]=0;
+	sliders_attr[SLIDERS_N].attribute[0]=0;
+
+	/*Assign knobs addresses and attributes*/
+	for (int i = 0; i < KNOBS_N; i++) {
+		strcpy(knobs_attr[i].attribute, slider_names[knobsN[i]]);
+		knobs_attr[i].type = t_object;
+		knobs_attr[i].addr.object = knobs_param_attr[i];
+		strcpy(knobs_param_attr[i][0].attribute, ATTR_S_ACTIVE);
+		knobs_param_attr[i][0].addr.uint8 = &(preset->sliders[knobsN[i]].active);
+		strcpy(knobs_param_attr[i][1].attribute, ATTR_S_REVERSE);
+		knobs_param_attr[i][1].addr.uint8 = &(preset->sliders[knobsN[i]].reverse);
+		strcpy(knobs_param_attr[i][2].attribute, ATTR_S_CHANNEL);
+		knobs_param_attr[i][2].addr.uint8 = &(preset->sliders[knobsN[i]].channel);
+		strcpy(knobs_param_attr[i][3].attribute, ATTR_S_EVENT);
+		knobs_param_attr[i][3].addr.uint8 = &(preset->sliders[knobsN[i]].event);
+		strcpy(knobs_param_attr[i][4].attribute, ATTR_S_MIN);
+		knobs_param_attr[i][4].addr.uint16 = &(preset->sliders[knobsN[i]].min_out_value);
+		strcpy(knobs_param_attr[i][5].attribute, ATTR_S_MAX);
+		knobs_param_attr[i][5].addr.uint16 = &(preset->sliders[knobsN[i]].max_out_value);
+		for (int j = 0; j < 6; j++) {
+			knobs_param_attr[i][j].type = t_uint8;
+		}
+		knobs_param_attr[i][6].attribute[0]=0;
+	}
+	knobs_attr[KNOBS_N].attribute[0]=0;
+
+
 	/*Assign buttons addresses and attributes*/
 	for (int i = 0; i < BUTTONS_AMOUNT; i++) {
 		strcpy(buttons_attr[i].attribute, button_names[i]);
@@ -476,6 +674,7 @@ static void init_json_preset_attr(presetType *preset) {
 		buttons_param_attr[i][7].attribute[0]=0;
 	}
 	buttons_attr[BUTTONS_AMOUNT].attribute[0]=0;
+
 	preset_curve_attr[0].addr.uint32=&(preset->Curve.xw1);
 	preset_curve_attr[1].addr.uint32=&(preset->Curve.yw1);
 	preset_curve_attr[2].addr.uint32=&(preset->Curve.xw2);

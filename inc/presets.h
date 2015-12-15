@@ -61,6 +61,9 @@
 #define ATTR_OCTAVE "octave"
 
 #define ATTR_SLIDERS "sliders"
+#define ATTR_PEDALS "pedals"
+#define ATTR_KNOBS "knobs"
+
 #define ATTR_S1 "Slider 1"
 #define ATTR_S2 "Slider 2"
 #define ATTR_S3 "Slider 3"
@@ -88,6 +91,7 @@
 
 #define ATTR_S_ACTIVE "active"
 #define ATTR_S_REVERSE "reverse"
+#define ATTR_S_BINARY "binary"
 #define ATTR_S_CHANNEL "channel"
 #define ATTR_S_EVENT "event"
 #define ATTR_S_MIN "min"

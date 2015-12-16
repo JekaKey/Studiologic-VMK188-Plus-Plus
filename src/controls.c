@@ -198,7 +198,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 	sliders[SLIDER_EMPTY].event = 7;
 	sliders[SLIDER_EMPTY].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_EMPTY].max_out_value = SLIDER_S_MAX_OUT;
-	for (i = 0; i <= SLIDERS_N; i++) {
+	for (i = 0; i < SLIDERS_N; i++) {
 		sliders[slidersN[i]].active = 0;
 		sliders[slidersN[i]].reverse = 0;
 		sliders[slidersN[i]].binary = 0;
@@ -207,7 +207,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 		sliders[slidersN[i]].min_out_value = SLIDER_S_MIN_OUT;
 		sliders[slidersN[i]].max_out_value = SLIDER_S_MAX_OUT;
 	}
-	for (i = 0; i <= KNOBS_N; i++) {
+	for (i = 0; i < KNOBS_N; i++) {
 		sliders[knobsN[i]].active = 0;
 		sliders[knobsN[i]].reverse = 0;
 		sliders[knobsN[i]].binary = 0;
@@ -235,7 +235,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 
 	sliders[SLIDER_P3].active = 0;
 	sliders[SLIDER_P3].reverse = 0;
-	sliders[SLIDER_P3].binary = 0;
+	sliders[SLIDER_P3].binary = 1;
 	sliders[SLIDER_P3].channel = 0;
 	sliders[SLIDER_P3].event = 66;
 	sliders[SLIDER_P3].min_out_value = SLIDER_P_MIN_OUT;

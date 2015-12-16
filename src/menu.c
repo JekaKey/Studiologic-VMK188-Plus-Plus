@@ -58,7 +58,6 @@ static void menu_preset_delete_yes(void);
 static void menu_preset_rename(void);
 static void menu_preset_rename_yes(void);
 static void menu_preset_save_yes(void);
-static void menu_preset_edit(void);//edit key pressed
 static void menu_back_to_preset(void);
 static void preset_name_current_state(void); //save new active preset
 static void text_object_init(text_edit_object_t *obj, const char *st1, const char *st2, i_state_t parent,  void (*com)(void));

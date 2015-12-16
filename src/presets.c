@@ -426,7 +426,7 @@ static json_attr_t sliders_attr[SLIDERS_N+1];
 static json_attr_t knobs_param_attr[KNOBS_N+1][7];
 static json_attr_t knobs_attr[KNOBS_N+1];
 
-static json_attr_t buttons_param_attr[BUTTONS_AMOUNT+1][8];
+static json_attr_t buttons_param_attr[BUTTONS_AMOUNT+1][7];
 static json_attr_t buttons_attr[BUTTONS_AMOUNT+1];
 
 static json_attr_t pitch_param_attr[3];
@@ -435,7 +435,7 @@ static json_attr_t pitch_attr;
 static json_attr_t mod_param_attr[7];
 static json_attr_t mod_attr;
 
-static json_attr_t at_param_attr[7];
+static json_attr_t at_param_attr[5];
 static json_attr_t at_attr;
 
 
@@ -556,20 +556,16 @@ static void init_json_preset_attr(presetType *preset) {
 	at_attr.addr.object = at_param_attr;
 	strcpy(at_param_attr[0].attribute, ATTR_S_ACTIVE);
 	at_param_attr[0].addr.uint8 = &(preset->sliders[SLIDER_AT].active);
-	strcpy(at_param_attr[1].attribute, ATTR_S_REVERSE);
-	at_param_attr[1].addr.uint8 = &(preset->sliders[SLIDER_AT].reverse);
-	strcpy(at_param_attr[2].attribute, ATTR_S_CHANNEL);
-	at_param_attr[2].addr.uint8 = &(preset->sliders[SLIDER_AT].channel);
-	strcpy(at_param_attr[3].attribute, ATTR_S_EVENT);
-	at_param_attr[3].addr.uint8 = &(preset->sliders[SLIDER_AT].event);
-	strcpy(at_param_attr[4].attribute, ATTR_S_MIN);
-	at_param_attr[4].addr.uint16 = &(preset->sliders[SLIDER_AT].min_out_value);
-	strcpy(at_param_attr[5].attribute, ATTR_S_MAX);
-	at_param_attr[5].addr.uint16 = &(preset->sliders[SLIDER_AT].max_out_value);
-	for (int j = 0; j < 6; j++) {
+	strcpy(at_param_attr[1].attribute, ATTR_S_CHANNEL);
+	at_param_attr[1].addr.uint8 = &(preset->sliders[SLIDER_AT].channel);
+	strcpy(at_param_attr[2].attribute, ATTR_S_MIN);
+	at_param_attr[2].addr.uint16 = &(preset->sliders[SLIDER_AT].min_out_value);
+	strcpy(at_param_attr[3].attribute, ATTR_S_MAX);
+	at_param_attr[3].addr.uint16 = &(preset->sliders[SLIDER_AT].max_out_value);
+	for (int j = 0; j < 4; j++) {
 		at_param_attr[j].type = t_uint8;
 	}
-	at_param_attr[6].attribute[0] = 0;
+	at_param_attr[4].attribute[0] = 0;
 	/*****/
 
 
@@ -582,16 +578,16 @@ static void init_json_preset_attr(presetType *preset) {
 		pedals_param_attr[i][0].addr.uint8 = &(preset->sliders[pedalsN[i]].active);
 		strcpy(pedals_param_attr[i][1].attribute, ATTR_S_REVERSE);
 		pedals_param_attr[i][1].addr.uint8 = &(preset->sliders[pedalsN[i]].reverse);
-		strcpy(pedals_param_attr[i][1].attribute, ATTR_S_BINARY);
-		pedals_param_attr[i][1].addr.uint8 = &(preset->sliders[pedalsN[i]].binary);
-		strcpy(pedals_param_attr[i][2].attribute, ATTR_S_CHANNEL);
-		pedals_param_attr[i][2].addr.uint8 = &(preset->sliders[pedalsN[i]].channel);
-		strcpy(pedals_param_attr[i][3].attribute, ATTR_S_EVENT);
-		pedals_param_attr[i][3].addr.uint8 = &(preset->sliders[pedalsN[i]].event);
-		strcpy(pedals_param_attr[i][4].attribute, ATTR_S_MIN);
-		pedals_param_attr[i][4].addr.uint16 = &(preset->sliders[pedalsN[i]].min_out_value);
-		strcpy(pedals_param_attr[i][5].attribute, ATTR_S_MAX);
-		pedals_param_attr[i][5].addr.uint16 = &(preset->sliders[pedalsN[i]].max_out_value);
+		strcpy(pedals_param_attr[i][2].attribute, ATTR_S_BINARY);
+		pedals_param_attr[i][2].addr.uint8 = &(preset->sliders[pedalsN[i]].binary);
+		strcpy(pedals_param_attr[i][3].attribute, ATTR_S_CHANNEL);
+		pedals_param_attr[i][3].addr.uint8 = &(preset->sliders[pedalsN[i]].channel);
+		strcpy(pedals_param_attr[i][4].attribute, ATTR_S_EVENT);
+		pedals_param_attr[i][4].addr.uint8 = &(preset->sliders[pedalsN[i]].event);
+		strcpy(pedals_param_attr[i][5].attribute, ATTR_S_MIN);
+		pedals_param_attr[i][5].addr.uint16 = &(preset->sliders[pedalsN[i]].min_out_value);
+		strcpy(pedals_param_attr[i][6].attribute, ATTR_S_MAX);
+		pedals_param_attr[i][6].addr.uint16 = &(preset->sliders[pedalsN[i]].max_out_value);
 		for (int j = 0; j < 7; j++) {
 			pedals_param_attr[i][j].type = t_uint8;
 		}
@@ -659,16 +655,16 @@ static void init_json_preset_attr(presetType *preset) {
 		buttons_param_attr[i][1].addr.uint8 = &(preset->buttons[i].type);
 		strcpy(buttons_param_attr[i][2].attribute, ATTR_B_CHANNEL);
 		buttons_param_attr[i][2].addr.uint8 = &(preset->buttons[i].channel);
-		strcpy(buttons_param_attr[i][4].attribute, ATTR_B_EVENT);
-		buttons_param_attr[i][4].addr.uint8 = &(preset->buttons[i].event);
-		strcpy(buttons_param_attr[i][5].attribute, ATTR_B_ON);
-		buttons_param_attr[i][5].addr.uint8 = &(preset->buttons[i].on);
-		strcpy(buttons_param_attr[i][6].attribute, ATTR_B_OFF);
-		buttons_param_attr[i][6].addr.uint8 = &(preset->buttons[i].off);
-		for (int j = 0; j < 7; j++) {
+		strcpy(buttons_param_attr[i][3].attribute, ATTR_B_EVENT);
+		buttons_param_attr[i][3].addr.uint8 = &(preset->buttons[i].event);
+		strcpy(buttons_param_attr[i][4].attribute, ATTR_B_ON);
+		buttons_param_attr[i][4].addr.uint8 = &(preset->buttons[i].on);
+		strcpy(buttons_param_attr[i][5].attribute, ATTR_B_OFF);
+		buttons_param_attr[i][5].addr.uint8 = &(preset->buttons[i].off);
+		for (int j = 0; j < 6; j++) {
 			buttons_param_attr[i][j].type = t_uint8;
 		}
-		buttons_param_attr[i][7].attribute[0]=0;
+		buttons_param_attr[i][6].attribute[0]=0;
 	}
 	buttons_attr[BUTTONS_AMOUNT].attribute[0]=0;
 

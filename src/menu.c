@@ -886,8 +886,14 @@ static void menu_slider_enter(void) {
 		menu_sl_min.Value = (int8_t*) (&(Preset.sliders[num].min_out_value));
 		menu_sl_max.Parent = selectedMenuItem;
 		menu_sl_max.Value = (int8_t*) (&Preset.sliders[num].max_out_value);
+	}
+
+	if (num == SLIDER_P1 || num == SLIDER_P2 || num == SLIDER_P3) {
+		menu_sl_max.Next = &menu_sl_bin;
 		menu_sl_bin.Parent = selectedMenuItem;
 		menu_sl_bin.Value = (int8_t*) (&Preset.sliders[num].binary);
+	} else {
+		menu_sl_max.Next = &NULL_ENTRY;
 	}
 
 	sliders_state = SLIDERS_WORK;

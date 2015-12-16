@@ -195,7 +195,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 	sliders[SLIDER_EMPTY].reverse = 0;
 	sliders[SLIDER_EMPTY].binary = 0;
 	sliders[SLIDER_EMPTY].channel = 0;
-	sliders[SLIDER_EMPTY].event = 7;
+	sliders[SLIDER_EMPTY].event = 0;
 	sliders[SLIDER_EMPTY].min_out_value = SLIDER_S_MIN_OUT;
 	sliders[SLIDER_EMPTY].max_out_value = SLIDER_S_MAX_OUT;
 	for (i = 0; i < SLIDERS_N; i++) {
@@ -242,7 +242,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 	sliders[SLIDER_P3].max_out_value = SLIDER_P_MAX_OUT;
 
 	sliders[SLIDER_PITCH].active = 1;
-	sliders[SLIDER_PITCH].reverse = 0;
+	sliders[SLIDER_PITCH].reverse = 1;
 	sliders[SLIDER_PITCH].binary = 0;
 	sliders[SLIDER_PITCH].channel = 0;
 	sliders[SLIDER_PITCH].event = 66;

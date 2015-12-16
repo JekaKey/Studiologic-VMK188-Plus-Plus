@@ -16,6 +16,7 @@ extern FIFO8(128) control_events; //defined in "control.c"
 extern uint16_t slider_calibrate_store;
 extern const char slider_names[][MAX_ATTR_SIZE];//defined in "control.c"
 extern uint8_t slider_calibrate_number;
+extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
 
 menuItem_type Null_Menu = { (void*) 0, (void*) 0, (void*) 0, (void*) 0, 0, (int8_t*) 0, 0, 0, 0, (void*)0,(void*)0,(void*)0, {0x00}, { 0x00 } };
 
@@ -1709,8 +1710,6 @@ static void preset_curvelist_start(void){
 void interface_init(char *name) {
 	I_state = STATE_presets_list;
 	file_list_find(&presets_list, name);
-	PRINTF("interface_init: file_list_find OK:  %s\n\r", presets_list.names[0]);
 	presets_list.active = presets_list.pos;
 	preset_show(&Preset, &presets_list);
-	PRINTF("interface_init: preset_show OK\n\r");
 }

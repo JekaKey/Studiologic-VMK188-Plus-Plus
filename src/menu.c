@@ -1640,6 +1640,7 @@ void control_buttons_handler(uint8_t event) {
 	if (event == BUTTON_PANIC) {
 		for (int i = 0; i < 16; i++)
 			sendControlChange(120, 0, i);
+		return;
 	}
 
 	switch (I_state) {

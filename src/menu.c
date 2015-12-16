@@ -330,12 +330,13 @@ MAKE_MENU(menu_at,			NULL_ENTRY,		menu_mod,		menu_pst_slid,	NULL_ENTRY,		0,		NUL
 /*************************/
 
 /*The following list of menu items can be switched to any slider*/
-MAKE_MENU(menu_sl_active,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	"  Active:"		);
-MAKE_MENU(menu_sl_reverse,	menu_sl_channel,menu_sl_active,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Reverse:"		);
-MAKE_MENU(menu_sl_channel,	menu_sl_event,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		16,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Channel:"		);
-MAKE_MENU(menu_sl_event,	menu_sl_min,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	1,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Event:"		);
-MAKE_MENU(menu_sl_min,		menu_sl_max,	menu_sl_event,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Min:"		);
-MAKE_MENU(menu_sl_max,		NULL_ENTRY,		menu_sl_min,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Max:"		);
+MAKE_MENU(menu_sl_active,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	"  Active:"		);
+MAKE_MENU(menu_sl_channel,	menu_sl_event,	menu_sl_active,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		16,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Channel:"		);
+MAKE_MENU(menu_sl_event,	menu_sl_reverse,menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	1,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"   Event:"		);
+MAKE_MENU(menu_sl_reverse,	menu_sl_min,	menu_sl_event,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	" Reverse:"		);
+MAKE_MENU(menu_sl_min,		menu_sl_max,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Min:"		);
+MAKE_MENU(menu_sl_max,		menu_sl_bin,	menu_sl_min,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		menu_show_param,	"",	"     Max:"		);
+MAKE_MENU(menu_sl_bin,		NULL_ENTRY,		menu_sl_max,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		menu_show_param,	"",	"  Binary:"		);
 /********/
 
 
@@ -855,23 +856,41 @@ static void menu_slider_edit(void){
 
 static void menu_slider_enter(void) {
 	uint8_t num=selectedMenuItem->Min;
+
 	menu_sl_active.Parent = selectedMenuItem;
 	menu_sl_active.Value = (int8_t*)(&Preset.sliders[num].active);
-	menu_sl_reverse.Parent = selectedMenuItem;
-	menu_sl_reverse.Value = (int8_t*)(&Preset.sliders[num].reverse);
 	menu_sl_channel.Parent = selectedMenuItem;
 	menu_sl_channel.Value = (int8_t*)(&Preset.sliders[num].channel);
+
 	if (num == SLIDER_PITCH) {
 		menu_sl_channel.Next = &NULL_ENTRY;
-	} else {
-		menu_sl_channel.Next = &menu_sl_event;
-		menu_sl_event.Parent = selectedMenuItem;
-		menu_sl_event.Value = (int8_t*) (&Preset.sliders[num].event);
+
+	} else if (num == SLIDER_AT) {
+		menu_sl_channel.Next = &menu_sl_min;
+		menu_sl_min.Previous = &menu_sl_channel;
+
 		menu_sl_min.Parent = selectedMenuItem;
 		menu_sl_min.Value = (int8_t*) (&(Preset.sliders[num].min_out_value));
 		menu_sl_max.Parent = selectedMenuItem;
 		menu_sl_max.Value = (int8_t*) (&Preset.sliders[num].max_out_value);
+		menu_sl_bin.Parent = selectedMenuItem;
+		menu_sl_bin.Value = (int8_t*) (&Preset.sliders[num].binary);
+	} else {
+		menu_sl_channel.Next = &menu_sl_event;
+		menu_sl_event.Previous = &menu_sl_channel;
+
+		menu_sl_event.Parent = selectedMenuItem;
+		menu_sl_event.Value = (int8_t*) (&Preset.sliders[num].event);
+		menu_sl_reverse.Parent = selectedMenuItem;
+		menu_sl_reverse.Value = (int8_t*)(&Preset.sliders[num].reverse);
+		menu_sl_min.Parent = selectedMenuItem;
+		menu_sl_min.Value = (int8_t*) (&(Preset.sliders[num].min_out_value));
+		menu_sl_max.Parent = selectedMenuItem;
+		menu_sl_max.Value = (int8_t*) (&Preset.sliders[num].max_out_value);
+		menu_sl_bin.Parent = selectedMenuItem;
+		menu_sl_bin.Value = (int8_t*) (&Preset.sliders[num].binary);
 	}
+
 	sliders_state = SLIDERS_WORK;
     controlLED1on(0);
 	menuChange(&menu_sl_active);

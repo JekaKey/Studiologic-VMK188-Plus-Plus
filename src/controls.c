@@ -352,7 +352,7 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 
 	//the 3rd pedal in a binary mode
 	//TODO: setting the binary mode in the preset
-	if (num == SLIDER_P3) {
+	if (sliders->binary) {
 		double middle = (double)(sliders->max_out_value + sliders->min_out_value) / 2;
 		middle = (middle - (int) middle) > 0   ?  (int) (middle + 1)   :  (int) middle;
 		if (midi_value < middle) {
@@ -400,9 +400,6 @@ void slider_midi_send(uint16_t value, Slider_type* sliders) {
 			break;
 		case SLIDER_AT:
 			sendAfterTouch((uint8_t)(midi_value), channel);
-			break;
-		case SLIDER_MOD:
-			sendControlChange(sliders[num].event, (uint8_t)(midi_value), channel);
 			break;
 		default:
 			sendControlChange(sliders[num].event, (uint8_t)(midi_value), channel);

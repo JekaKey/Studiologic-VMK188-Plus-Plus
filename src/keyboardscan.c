@@ -57,17 +57,19 @@ void checkNoteArray(presetType* preset) {
 
 		FIFO_POP(durations);
 		FIFO_POP(notes);
-		if ((preset->SplitKey) && ((curNote & 0x7F) < preset->SplitKey)) {
-			channel = preset->SplitChannel-1;
-		} else {
-			channel = preset->MidiChannel-1;
-		}
-		if (channel>15)
-			channel=0;
 
 		int delta = NOTE_SHIFT;
-		delta += preset->OctaveShift * 12;
 		delta += preset->Transpose;
+
+		if ((preset->SplitKey) && ((curNote & 0x7F) < preset->SplitKey)) {
+			channel = preset->SplitChannel - 1;
+			delta += preset->SplitOctShift * 12;
+		} else {
+			channel = preset->MidiChannel - 1;
+			delta += preset->OctaveShift * 12;
+		}
+		if (channel > 15)
+			channel = 0;
 
 		int tempNote = (curNote & 0x7F) + delta;
 		if (tempNote < 0 || tempNote > 127)

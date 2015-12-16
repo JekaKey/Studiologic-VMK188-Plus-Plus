@@ -300,7 +300,8 @@ MAKE_MENU(menu_pst_hires,	menu_pst_midi,	menu_pst_oct,	menu_pst_gen,	NULL_ENTRY,
 MAKE_MENU(menu_pst_midi,	NULL_ENTRY,		menu_pst_hires,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					NULL,					menu_show_param,	"",	"Midi Port: "	);
 
 MAKE_MENU(menu_split_key,	menu_split_chan,NULL_ENTRY,		menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitKey,			t_uint8,	0,		40,		NULL,					NULL,					menu_show_splitkey,	"",	"Split Key: "	);
-MAKE_MENU(menu_split_chan,	NULL_ENTRY,		menu_split_key,	menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitChannel,		t_uint8,	1,		16,		NULL,					NULL,					menu_show_param,	"",	"Split Chl: "	);
+MAKE_MENU(menu_split_chan,	menu_split_oct,	menu_split_key,	menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitChannel,		t_uint8,	1,		16,		NULL,					NULL,					menu_show_param,	"",	"Split Chl: "	);
+MAKE_MENU(menu_split_oct,	NULL_ENTRY,		menu_split_chan,menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitOctShift,		t_int8,		-3,		3,		NULL,					NULL,					menu_show_param,	"",	"Split Oct: "	);
 
 /*For sliders menu items "Min" parameter is used for slider number keeping*/
 MAKE_MENU(menu_slider1,		menu_slider2,	NULL_ENTRY,		menu_pst_slid,	NULL_ENTRY,		0,		NULL,						t_uint8,	14,		0,		menu_slider_enter,		menu_preset_sl_edit,	NULL,				"",	"  Slider 1 "	);

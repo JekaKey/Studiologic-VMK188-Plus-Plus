@@ -458,13 +458,19 @@ static void showYNMenu() {
 }
 
 static void toYNMenu() {
+	if (!okIO) {
+		if (menuChange(selectedMenuYNItem->Previous))
+			send_message(MES_REDRAW);
+		else
+			menu_back_to_preset();
+		return;
+	}
+
 	prev_state = I_state;
 	I_state = STATE_yn_menu;
 
 	showYNMenu();
 }
-
-
 
 
 static void menu_show_param(menuItem_type * menu) {
@@ -510,13 +516,18 @@ static void menu_show_splitkey(menuItem_type * menu){
 
 
 static void startMenu_preset(void) {
-	if ((presets_list.pos) == (presets_list.active)){
-		menu_stor_rename.Next=&NULL_ENTRY;
-	}else{
-		menu_stor_rename.Next=&menu_stor_del;
-	}
+	if (!okIO)
+		return;
+
+	if ((presets_list.pos) == (presets_list.active))
+		menu_stor_rename.Next = &NULL_ENTRY;
+	else
+		menu_stor_rename.Next = &menu_stor_del;
+
 	selectedMenuItem = (menuItem_type*) &menu_stor_def;
 	showMenu();
+
+	I_state = STATE_menu;
 }
 
 static void startMenuYN_preset_rename(void) {
@@ -586,6 +597,9 @@ static void menu_preset_as_default(void) {
 
 
 static void menu_preset_rename(void){
+	if (!okIO)
+		return;
+
 	char name[MAX_FNAME - FEXT_SIZE];
 	strcpy(name,presets_list.names[presets_list.pos]);
 	size_t len=strlen(name);
@@ -601,6 +615,9 @@ static void menu_preset_rename_yes(void){
 
 
 static void menu_preset_copy(void){
+	if (!okIO)
+		return;
+
 	char name[MAX_FNAME - FEXT_SIZE];
 	strcpy(name,presets_list.names[presets_list.pos]);
 	size_t len=strlen(name);
@@ -667,6 +684,9 @@ static void menu_edit_calibration(void){
 
 
 static void menu_calibration_rename(void){
+	if (!okIO)
+		return;
+
 	char name[MAX_FNAME-FEXT_SIZE];
 	strcpy(name,calibrations_list.names[calibrations_list.pos]);
 	size_t len=strlen(name);
@@ -688,6 +708,9 @@ static void menu_calibration_save_yes(void){
 
 
 static void menu_calibration_copy(void){
+	if (!okIO)
+		return;
+
 	char name[MAX_FNAME-FEXT_SIZE];
 	strcpy(name,calibrations_list.names[calibrations_list.pos]);
 	size_t len=strlen(name);
@@ -765,11 +788,17 @@ static void menu_preset_edit_curve(void){
 }
 
 static void menu_curve_export(void){
+	if (!okIO)
+		return;
+
 	text_object_init(&Text_Edit_object, "Curve name:", "", STATE_menu, startMenuYN_curve_export);
 }
 
 
 static void menu_curve_rename(void){
+	if (!okIO)
+		return;
+
 	char name[MAX_FNAME-FEXT_SIZE];
 	strcpy(name,curves_list.names[curves_list.pos]);
 	size_t len=strlen(name);
@@ -791,6 +820,9 @@ static void menu_curve_save_yes(void){
 
 
 static void menu_curve_copy(void){
+	if (!okIO)
+		return;
+
 	char name[MAX_FNAME-FEXT_SIZE];
 	strcpy(name,curves_list.names[curves_list.pos]);
 	size_t len=strlen(name);
@@ -1210,8 +1242,14 @@ static void preset_show (const presetType *pr, file_list_type *pr_list){
 	memset(line,' ',HD44780_DISP_LENGTH);
 	line[HD44780_DISP_LENGTH]=0;
 
-	int len = strlen(pr_list->names[pr_list->pos]);
-	memcpy(line,pr_list->names[pr_list->pos], len - FEXT_SIZE);
+	int len = 0;
+
+	if (okIO) {
+		len = strlen(pr_list->names[pr_list->pos]);
+		memcpy(line,pr_list->names[pr_list->pos], len - FEXT_SIZE);
+	} else {
+		strcpy(line, "     ??????     ");
+	}
 
 	hd44780_goto(1,1);
 	hd44780_write_string(line);
@@ -1248,13 +1286,18 @@ static void preset_name_current_state(void){
 
 static void presets_button_handler(uint8_t button){
 	switch (button) {
+
 	case MES_REDRAW:
 		preset_show(&Preset, &presets_list);
 		break;
+
 	case ENCODER_LEFT1:
 	case ENCODER_LEFT2:
 	case ENCODER_LEFT3:
 	case BUTTON_PAGEUP:
+		if (!okIO)
+			break;
+
 		presets_list.pos--;
 		if (presets_list.pos == 0xFFFF)
 			presets_list.pos = presets_list.num - 1;
@@ -1262,10 +1305,14 @@ static void presets_button_handler(uint8_t button){
 			okIO=0;
 		preset_show(&Preset, &presets_list);
 		break;
+
 	case ENCODER_RIGHT3:
 	case ENCODER_RIGHT2:
 	case ENCODER_RIGHT1:
 	case BUTTON_PAGEDOWN:
+		if (!okIO)
+			break;
+
 		presets_list.pos++;
 		if (presets_list.pos >= presets_list.num)
 			presets_list.pos = 0;
@@ -1273,30 +1320,35 @@ static void presets_button_handler(uint8_t button){
 			okIO=0;
 		preset_show(&Preset, &presets_list);
 		break;
+
 	case BUTTON_STORAGE:
 		startMenu_preset();
-		I_state=STATE_menu;
 		break;
+
 	case BUTTON_ENTER:
 		selectedMenuItem = (menuItem_type*) &menu_pst_gen;
 		showMenu();
 		I_state=STATE_menu;
 		break;
+
 	case BUTTON_EDIT:
 		selectedMenuItem = (menuItem_type*) &menu1_item1;
 		showMenu();
 		I_state=STATE_menu;
 		break;
+
 	case BUTTON_LEFT:
 		if (Preset.OctaveShift > -OCTAVE_SHIFT_MAX)
 			Preset.OctaveShift--;
 		octave_shift_show();
 		break;
+
 	case BUTTON_RIGHT:
 		if (Preset.OctaveShift < OCTAVE_SHIFT_MAX)
 			Preset.OctaveShift++;
 		octave_shift_show();
 		break;
+
 	default:
 		break;
 	}
@@ -1731,11 +1783,17 @@ static void menu_back_to_preset(void) {
 }
 
 static void curvelist_start(void){
+	if (!okIO)
+		return;
+
     I_state = STATE_curve_list;
     send_message(MES_REDRAW);
 }
 
 static void preset_curvelist_start(void){
+	if (!okIO)
+		return;
+
     I_state = STATE_preset_curve_list;
     send_message(MES_REDRAW);
 }

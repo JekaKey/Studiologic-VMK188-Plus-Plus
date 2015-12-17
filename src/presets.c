@@ -260,9 +260,7 @@ FIO_status preset_save(const char* path, presetType* pr){
 
 	res|=json_write_object(1, slider_names[SLIDER_AT],  &fff);
 	res|=json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_AT].active, 1, &fff);
-	res|=json_write_number(2, ATTR_S_REVERSE, pr->sliders[SLIDER_AT].reverse, 1, &fff);
 	res|=json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_AT].channel, 1, &fff);
-	res|=json_write_number(2, ATTR_S_EVENT, pr->sliders[SLIDER_AT].event, 1, &fff);
 	res|=json_write_number(2, ATTR_S_MIN, pr->sliders[SLIDER_AT].min_out_value, 1, &fff);
 	res|=json_write_number(2, ATTR_S_MAX, pr->sliders[SLIDER_AT].max_out_value, 0, &fff);
 	res|=json_write_string(1, "},", &fff);
@@ -469,8 +467,8 @@ static json_attr_t preset_attr[20] = {
 		{ATTR_OCTAVE, t_int8,},
 		{ATTR_CURVE, t_object, .addr.object = preset_curve_attr},
 		{ATTR_PI, t_object, .addr.object = &pitch_attr},
-		{ATTR_MO, t_object, .addr.object = &mod_attr},
 		{ATTR_AT, t_object, .addr.object = &at_attr},
+		{ATTR_MO, t_object, .addr.object = &mod_attr},
 		{ATTR_PEDALS, t_object, .addr.object = pedals_attr},
 		{ATTR_SLIDERS, t_object, .addr.object = sliders_attr},
 		{ATTR_KNOBS, t_object, .addr.object = knobs_attr},

@@ -257,7 +257,7 @@ void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders
 	sliders[SLIDER_MOD].min_out_value = SLIDER_MOD_MIN_OUT;
 	sliders[SLIDER_MOD].max_out_value = SLIDER_MOD_MAX_OUT;
 
-	sliders[SLIDER_AT].active = 1;
+	sliders[SLIDER_AT].active = 0;
 	sliders[SLIDER_AT].reverse = 0;
 	sliders[SLIDER_AT].binary = 0;
 	sliders[SLIDER_AT].channel = 0;
@@ -298,11 +298,10 @@ static uint8_t button_counter = 0; //Number of a button in chunk
 static uint8_t encoder_state = 3;
 static uint8_t encoder_zero = 0;
 
-/*Variables to calculate advanced delta*
+/*Variables to calculate advanced delta*/
 static uint16_t delta_sum[SLIDERS_AMOUNT]={0};
-static uint16_t delta_average[SLIDERS_AMOUNT]={0};
-static uint8_t delta_counter =0;
-********/
+static uint8_t delta_counter[SLIDERS_AMOUNT]={0};
+/********/
 
 
 uint8_t slider_calibrate_number = 0; // Slider chosen for calibrate procedure;
@@ -350,8 +349,6 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 		midi_value = (int)(a * value + b);
 	}
 
-	//the 3rd pedal in a binary mode
-	//TODO: setting the binary mode in the preset
 	if (sliders->binary) {
 		double middle = (double)(sliders->max_out_value + sliders->min_out_value) / 2;
 		middle = (middle - (int) middle) > 0   ?  (int) (middle + 1)   :  (int) middle;
@@ -506,6 +503,28 @@ static uint8_t check_delta(uint16_t * ADC_value, uint8_t n, uint16_t delta){
 	else
 		return 0;
 }
+
+static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t n, uint16_t delta){
+	//Calculate change comparing with old value.
+	delta_counter[n]++;
+	uint16_t value = *ADC_value;
+	delta_sum[n]+=value-ADC_old_values[n];
+	uint16_t ADC_change = (delta_sum[n] >=0 ) ? delta_sum[n] : -delta_sum[n];
+//	uint16_t ADC_change = (value > ADC_old_values[n]) ? value - ADC_old_values[n] : ADC_old_values[n] - value;
+	if (ADC_change > delta){  //Change a result only if difference exceeds SLIDERS_DELTA.
+		* ADC_value = ADC_old_values[n]+delta_sum[n]/delta_counter[n];
+		delta_sum[n]=0;
+		delta_counter[n]=0;
+		return 1;
+	}else{
+		if (delta_counter[n]>=MAX_DELTA_COUNTER){
+			delta_counter[n]=0;
+			delta_sum[n]=0;
+		}
+		return 0;
+	}
+}
+
 
 
 void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {

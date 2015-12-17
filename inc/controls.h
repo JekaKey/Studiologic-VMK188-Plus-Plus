@@ -6,6 +6,8 @@
 #include "stm32f4xx_gpio.h"
 #include "filter.h"
 
+#define MAX_DELTA_COUNTER 10
+
 #define SLIDERS_DELTA_S 0x6 //Delta in a level filter algorithm
 #define SLIDERS_DELTA_P 0x8
 #define SLIDERS_DELTA_AT 0x10

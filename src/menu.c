@@ -619,8 +619,10 @@ static void menu_preset_copy_yes(void){
 	string_cut_spaces(file_name);
     strcat(file_name, PRESET_EXT);
     strcat(path, file_name);
-	preset_save(path, &Preset);
-	SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);//update Presets list
+	if (preset_save(path, &Preset)!=FIO_OK)
+		okIO=0;
+	if (SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list)!=SDFS_OK)
+		okIO=0;//update Presets list
 	file_list_find(&presets_list, old_active_preset_name);
 	presets_list.active=presets_list.pos;
 	file_list_find(&presets_list, file_name);
@@ -630,15 +632,18 @@ static void menu_preset_copy_yes(void){
 static void menu_preset_save_yes(void){
 	char path[MAX_PATH]= "0:/" PRESET_DIR_NAME "/";
     strcat(path, presets_list.names[presets_list.pos]);
-	preset_save(path, &Preset);
+	if (preset_save(path, &Preset)!=FIO_OK)
+		okIO=0;
 	Preset.Changed=0;
 }
 
 static void menu_preset_delete_yes(void){
 	char old_active_preset_name [MAX_FNAME];
 	strcpy(old_active_preset_name, presets_list.names[presets_list.active]);
-	preset_delete(&presets_list);
-	SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
+	if (preset_delete(&presets_list)!=FIO_OK)
+		okIO=0;
+	if (SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list)!=SDFS_OK)
+		okIO=0;//update Presets list
 	file_list_find(&presets_list, old_active_preset_name);
 	presets_list.active=presets_list.pos;
 }
@@ -677,7 +682,8 @@ static void menu_calibration_rename_yes(void){
 static void menu_calibration_save_yes(void){
 	char path[MAX_PATH] = "0:/" CALIBR_DIR_NAME "/";
 	strcat(path, calibrations_list.names[calibrations_list.pos]);
-	calibration_save(path, &Calibration);
+	if (calibration_save(path, &Calibration)!=FIO_OK)
+			okIO=0;
 }
 
 
@@ -698,8 +704,10 @@ static void menu_calibration_copy_yes(void){
 	string_cut_spaces(file_name);
     strcat(file_name, CALIBR_EXT);
     strcat(path, file_name);
-	calibration_save(path, &Calibration);
-	SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list);
+	if (calibration_save(path, &Calibration)!=FIO_OK)
+			okIO=0;
+	if(SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list)!=SDFS_OK)
+		okIO=0;
 	file_list_find(&calibrations_list, old_active_calibration_name);
 	calibrations_list.active=calibrations_list.pos;
 	file_list_find(&calibrations_list, file_name);
@@ -709,8 +717,10 @@ static void menu_calibration_copy_yes(void){
 static void menu_calibration_delete_yes(void){
 	char old_active_calibration_name [MAX_FNAME];
 	strcpy(old_active_calibration_name, calibrations_list.names[calibrations_list.active]);
-	calibration_delete(&calibrations_list);
-	SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list);
+	if(calibration_delete(&calibrations_list)!=FIO_OK)
+		okIO=0;
+	if(SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list)!=SDFS_OK)
+		okIO=0;
 	file_list_find(&calibrations_list, old_active_calibration_name);
 	calibrations_list.active=calibrations_list.pos;
 }
@@ -775,7 +785,8 @@ static void menu_curve_rename_yes(void){
 static void menu_curve_save_yes(void){
 	char path[MAX_PATH] = "0:/" CURVE_DIR_NAME "/";
 	strcat(path, curves_list.names[curves_list.pos]);
-	curve_save(path, &Curve);
+	if (curve_save(path, &Curve)!=FIO_OK)
+		okIO=0;
 }
 
 
@@ -795,8 +806,10 @@ static void menu_curve_copy_yes(void){
 	string_cut_spaces(file_name);
     strcat(file_name, CURVE_EXT);
     strcat(path, file_name);
-	curve_save(path, (curve_points_type*)(&Curve));
-	SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list);
+	if(curve_save(path, (curve_points_type*)(&Curve))!=FIO_OK)
+		okIO=0;
+	if(SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list)!=SDFS_OK)
+		okIO=0;
 	file_list_find(&curves_list, file_name);
 }
 
@@ -807,8 +820,10 @@ static void menu_curve_export_yes(void){
 	string_cut_spaces(file_name);
     strcat(file_name, CURVE_EXT);
     strcat(path, file_name);
-	curve_save(path, &Preset.Curve); //Save (export) from selected preset
-	SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list);
+	if(curve_save(path, &Preset.Curve)!=FIO_OK)//Save (export) from selected preset
+		 okIO=0;
+	if(SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list)!=SDFS_OK)
+		okIO=0;
 	file_list_find(&curves_list, file_name);
 }
 
@@ -818,14 +833,17 @@ static void menu_curve_load_yes(void){
 	strcpy(file_name, curves_list.names[curves_list.pos]);
     strcat(file_name, CURVE_EXT);
     strcat(path, file_name);
-    curve_load(file_name, &Preset.Curve);
+    if (curve_load(file_name, &Preset.Curve)!=FIO_OK)
+    	okIO=0;
 }
 
 static void menu_curve_delete_yes(void){
 	char old_active_curve_name [MAX_FNAME];
 	strcpy(old_active_curve_name, curves_list.names[curves_list.active]);
-	curve_delete(&curves_list);
-	SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list);
+	if(curve_delete(&curves_list)!=FIO_OK)
+		okIO=0;
+	if(SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list)!=SDFS_OK)
+		okIO=0;
 	file_list_find(&curves_list, old_active_curve_name);
 	curves_list.active=curves_list.pos;
 }
@@ -1223,7 +1241,8 @@ static void preset_show (const presetType *pr, file_list_type *pr_list){
 static void preset_name_current_state(void){
 	strcpy(Current_state.preset_name, presets_list.names[presets_list.pos]);
 	presets_list.active=presets_list.pos;
-	currentState_save();
+	if(currentState_save()!=FIO_OK)
+		okIO=0;
 }
 
 
@@ -1239,7 +1258,8 @@ static void presets_button_handler(uint8_t button){
 		presets_list.pos--;
 		if (presets_list.pos == 0xFFFF)
 			presets_list.pos = presets_list.num - 1;
-		preset_load(presets_list.names[presets_list.pos], &Preset);
+		if (preset_load(presets_list.names[presets_list.pos], &Preset)!=FIO_OK)
+			okIO=0;
 		preset_show(&Preset, &presets_list);
 		break;
 	case ENCODER_RIGHT3:
@@ -1249,7 +1269,8 @@ static void presets_button_handler(uint8_t button){
 		presets_list.pos++;
 		if (presets_list.pos >= presets_list.num)
 			presets_list.pos = 0;
-		preset_load(presets_list.names[presets_list.pos], &Preset);
+		if (preset_load(presets_list.names[presets_list.pos], &Preset)!=FIO_OK)
+			okIO=0;
 		preset_show(&Preset, &presets_list);
 		break;
 	case BUTTON_STORAGE:
@@ -1302,7 +1323,8 @@ static void show_calibration (const calibrationType *cal, file_list_type *cal_li
 static void calibration_name_current_state(void){
 	strcpy(Current_state.calibration_name, calibrations_list.names[calibrations_list.pos]);
 	calibrations_list.active=calibrations_list.pos;
-	currentState_save();
+	if (currentState_save()!=FIO_OK)
+		okIO=0;
 	calibrationlist_start();
 }
 
@@ -1398,7 +1420,8 @@ static void calibrations_button_handler(uint8_t button){
 		if (calibrations_list.pos == 0xFFFF)
 			calibrations_list.pos = calibrations_list.num - 1;
 		Calibration.calibr[0].min_in_value=99;
-		calibration_load(calibrations_list.names[calibrations_list.pos], &Calibration);
+		if(calibration_load(calibrations_list.names[calibrations_list.pos], &Calibration)!=FIO_OK)
+			okIO=0;
 		show_calibration(&Calibration, &calibrations_list);
 		break;
 	case ENCODER_RIGHT1:
@@ -1408,7 +1431,8 @@ static void calibrations_button_handler(uint8_t button){
 		calibrations_list.pos++;
 		if (calibrations_list.pos >= calibrations_list.num)
 			calibrations_list.pos = 0;
-		calibration_load(calibrations_list.names[calibrations_list.pos], &Calibration);
+		if(calibration_load(calibrations_list.names[calibrations_list.pos], &Calibration)!=FIO_OK)
+			okIO=0;
 		show_calibration(&Calibration, &calibrations_list);
 		break;
 	case BUTTON_STORAGE:
@@ -1455,7 +1479,8 @@ static void preset_curves_button_handler(uint8_t button){
 		curves_list.pos--;
 		if (curves_list.pos == 0xFFFF)
 			curves_list.pos = curves_list.num - 1;
-		curve_load(curves_list.names[curves_list.pos], &(Preset.Curve));
+		if(curve_load(curves_list.names[curves_list.pos], &(Preset.Curve))!=FIO_OK)
+				okIO=0;
 		show_curve(&curves_list);
 		break;
 	case ENCODER_RIGHT1:
@@ -1465,7 +1490,8 @@ static void preset_curves_button_handler(uint8_t button){
 		curves_list.pos++;
 		if (curves_list.pos >= curves_list.num)
 			curves_list.pos = 0;
-		curve_load(curves_list.names[curves_list.pos], &(Preset.Curve));
+		if(curve_load(curves_list.names[curves_list.pos], &(Preset.Curve))!=FIO_OK)
+				okIO=0;
 		show_curve(&curves_list);
 		break;
 	case BUTTON_STORAGE:
@@ -1488,7 +1514,8 @@ static void preset_curves_button_handler(uint8_t button){
 static void curves_button_handler(uint8_t button){
 	switch (button) {
 	case MES_REDRAW:
-		curve_load(curves_list.names[curves_list.pos], &Curve);
+		if(curve_load(curves_list.names[curves_list.pos], &Curve)!=FIO_OK)
+			okIO=0;
 		show_curve(&curves_list);
 		break;
 	case ENCODER_LEFT1:
@@ -1498,7 +1525,8 @@ static void curves_button_handler(uint8_t button){
 		curves_list.pos--;
 		if (curves_list.pos == 0xFFFF)
 			curves_list.pos = curves_list.num - 1;
-		curve_load(curves_list.names[curves_list.pos], &Curve);
+		if(curve_load(curves_list.names[curves_list.pos], &Curve)!=FIO_OK)
+			okIO=0;
 		show_curve(&curves_list);
 		break;
 	case ENCODER_RIGHT1:
@@ -1508,7 +1536,8 @@ static void curves_button_handler(uint8_t button){
 		curves_list.pos++;
 		if (curves_list.pos >= curves_list.num)
 			curves_list.pos = 0;
-		curve_load(curves_list.names[curves_list.pos], &Curve);
+		if(curve_load(curves_list.names[curves_list.pos], &Curve)!=FIO_OK)
+			okIO=0;
 		show_curve(&curves_list);
 		break;
 	case BUTTON_STORAGE:

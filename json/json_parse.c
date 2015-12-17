@@ -43,7 +43,8 @@ parse_result_t tokens_parse(const char * buff, const jsmntok_t* tok,
 			j++;
 		}
 		if (!found){
-			return parse_wrong_attr_err; //Wrong attribute
+			PRINTF("not found\n\r");
+//			return parse_wrong_attr_err; //Wrong attribute
 		}
 		token_number++;
 		j_type = json_attr[j].type;

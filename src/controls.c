@@ -171,7 +171,7 @@ void sliders_calibr_set_defaults(Calibration_slider_type* sliders_calibr) {
 
 	sliders_calibr[SLIDER_PITCH].min_in_value = SLIDER_PITCH_MIN_IN;
 	sliders_calibr[SLIDER_PITCH].max_in_value = SLIDER_PITCH_MAX_IN;
-	sliders_calibr[SLIDER_PITCH].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_PITCH].delta = SLIDERS_DELTA_PI;
 
 	sliders_calibr[SLIDER_MOD].min_in_value = SLIDER_MOD_MIN_IN;
 	sliders_calibr[SLIDER_MOD].max_in_value = SLIDER_MOD_MAX_IN;
@@ -299,7 +299,7 @@ static uint8_t encoder_state = 3;
 static uint8_t encoder_zero = 0;
 
 /*Variables to calculate advanced delta*/
-static uint16_t delta_sum[SLIDERS_AMOUNT]={0};
+static int16_t delta_sum[SLIDERS_AMOUNT]={0};
 static uint8_t delta_counter[SLIDERS_AMOUNT]={0};
 /********/
 
@@ -510,7 +510,6 @@ static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t n, uint16_t de
 	uint16_t value = *ADC_value;
 	delta_sum[n]+=value-ADC_old_values[n];
 	uint16_t ADC_change = (delta_sum[n] >=0 ) ? delta_sum[n] : -delta_sum[n];
-//	uint16_t ADC_change = (value > ADC_old_values[n]) ? value - ADC_old_values[n] : ADC_old_values[n] - value;
 	if (ADC_change > delta){  //Change a result only if difference exceeds SLIDERS_DELTA.
 		* ADC_value = ADC_old_values[n]+delta_sum[n]/delta_counter[n];
 		delta_sum[n]=0;
@@ -557,7 +556,7 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 			switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
 			case SLIDERS_WORK:
 				//Calculate change comparing with old value.
-				if (check_delta(&ADC_value, slider_number, cal->delta)) { //Change a result only if difference exceeds SLIDERS_DELTA.
+				if (check_integral_delta(&ADC_value, slider_number, cal->delta)) { //Change a result only if difference exceeds SLIDERS_DELTA.
 					ADC_old_values[slider_number] = ADC_value;
 					if (sliders[slider_number].active) //only active sliders work send fifo
 						slider_FIFO_send(slider_number, ADC_value, &sliders[slider_number], &cal[slider_number]);

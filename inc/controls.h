@@ -8,9 +8,10 @@
 
 #define MAX_DELTA_COUNTER 10
 
-#define SLIDERS_DELTA_S 0x6 //Delta in a level filter algorithm
-#define SLIDERS_DELTA_P 0x8
-#define SLIDERS_DELTA_AT 0x10
+#define SLIDERS_DELTA_S 0x10 //Delta in a level filter algorithm
+#define SLIDERS_DELTA_P 0x20
+#define SLIDERS_DELTA_AT 0x40
+#define SLIDERS_DELTA_PI 0x40
 #define SLIDERS_DELTA_SEARCH 0x200
 #define ADC_MAX_VALUE 0x0FFF
 

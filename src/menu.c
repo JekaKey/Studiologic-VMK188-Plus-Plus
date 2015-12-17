@@ -1460,10 +1460,14 @@ static void show_curve (file_list_type *curve_list){
 	hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
 	memset(line,' ',16);
 	line[16]=0;
-	int len = strlen(curve_list->names[curve_list->pos]);
-	memcpy(line,curve_list->names[curve_list->pos], len-4);
-	hd44780_goto(1,1);
-	hd44780_write_string(line);
+	if (curve_list->num > 0) {
+		int len = strlen(curve_list->names[curve_list->pos]);
+		memcpy(line, curve_list->names[curve_list->pos], len - 4);
+		hd44780_goto(1, 1);
+		hd44780_write_string(line);
+	}else{
+		hd44780_message_center("EMPTY", 1);
+	}
 }
 
 

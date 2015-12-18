@@ -179,5 +179,6 @@ FIO_status curve_load(char* name, curve_points_type  *curve);
 FIO_status curve_delete(file_list_type *cur_list);
 FIO_status curve_rename(file_list_type *cur_list, char *new_name);
 FIO_status curve_save(const char* path, curve_points_type* curve);
+void set_okIOzero(void);
 
 #endif //PRESETS__H

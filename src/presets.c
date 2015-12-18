@@ -27,21 +27,21 @@ extern const uint8_t pedalsN[PEDALS_N];
 extern const uint8_t slidersN[SLIDERS_N];
 extern const uint8_t knobsN[KNOBS_N];
 
+void set_okIOzero(void){
+	okIO=0;
+}
+
 /***********************/
 
-static FIO_status json_write_string(uint8_t level, const char* st, FIL* fff) { //use to write brackets into json
+static void json_write_string(uint8_t level, const char* st, FIL* fff) { //use to write brackets into json
 	char sss[20] = { 0 };
 	memset(sss, '\t', level * JSON_TAB);
 	strcat(sss, st);
 	strcat(sss, "\r\n");
-	if (f_puts(sss, fff) == FR_OK) {
-		return FIO_OK;
-	} else {
-		return FIO_WRITE_ERROR;
-	}
+	f_puts(sss, fff);
 }
 
-static FIO_status json_write_value(uint8_t level, const char* name,
+static void json_write_value(uint8_t level, const char* name,
 	                  const char* value, uint8_t colon, FIL* fff) {
 	char sss[64] = { 0 };
 	memset(sss, '\t', level * JSON_TAB);
@@ -54,24 +54,16 @@ static FIO_status json_write_value(uint8_t level, const char* name,
 	} else {
 		strcat(sss, "\"\r\n");
 	}
-	if (f_puts(sss, fff) == FR_OK) {
-		return FIO_OK;
-	} else {
-		return FIO_WRITE_ERROR;
-	}
+	f_puts(sss, fff);
 }
 
-static FIO_status json_write_object(uint8_t level, const char* name, FIL* fff) {
+static void json_write_object(uint8_t level, const char* name, FIL* fff) {
 	char sss[64] = { 0 };
 	memset(sss, '\t', level * JSON_TAB);
 	strcat(sss, "\"");
 	strcat(sss, name);
 	strcat(sss, "\":{\r\n");
-	if (f_puts(sss, fff) == FR_OK) {
-		return FIO_OK;
-	} else {
-		return FIO_WRITE_ERROR;
-	}
+	f_puts(sss, fff);
 }
 
 char* itoa(int i, char* b){
@@ -95,8 +87,8 @@ char* itoa(int i, char* b){
 }
 
 
-static FIO_status json_write_number(uint8_t level, const char* name,
-		int number, uint8_t colon, FIL* fff) { //write some json parameter with numeric int value
+static void json_write_number(uint8_t level, const char* name,
+	int number, uint8_t colon, FIL* fff) { //write some json parameter with numeric int value
 	char sss[64]={0};
 	char lll[16];
 	memset(sss, '\t', level * JSON_TAB);
@@ -110,11 +102,7 @@ static FIO_status json_write_number(uint8_t level, const char* name,
 	}else{
 		strcat(sss,"\r\n");
 	}
-	if (f_puts(sss, fff)==FR_OK) {
-		return FIO_OK;
-	}else{
-		return FIO_WRITE_ERROR;
-	}
+	f_puts(sss, fff);
 }
 
 
@@ -153,10 +141,10 @@ FIO_status currentState_save(void){
 	if (SDFS_open(&fff, "0:/" SETTING_NAME, F_WR_CLEAR) != SDFS_OK){
 		return FIO_FILE_CREATE_ERROR;
 	}
-	res|=json_write_string(0,"{",&fff);
-	res|=json_write_value(1, ATTR_SET_CALIBR,Current_state.calibration_name,1,&fff);
-	res|=json_write_value(1, ATTR_SET_PRESET,Current_state.preset_name,0,&fff);
-	res|=json_write_string(0,"}",&fff);
+	json_write_string(0,"{",&fff);
+	json_write_value(1, ATTR_SET_CALIBR,Current_state.calibration_name,1,&fff);
+	json_write_value(1, ATTR_SET_PRESET,Current_state.preset_name,0,&fff);
+	json_write_string(0,"}",&fff);
 	if (SDFS_close(&fff)!= SDFS_OK)
 		return FIO_FILE_CLOSE_ERROR;
 	return res;
@@ -169,22 +157,22 @@ FIO_status calibration_save(const char* path, calibrationType* cal){
 	if (SDFS_open(&fff, path, F_WR_CLEAR) != SDFS_OK) {
 		return FIO_FILE_CREATE_ERROR;
 	}
-	res|=json_write_string(0, "{", &fff);
-	res|=json_write_string(1, "\"" ATTR_CAL_SLIDERS "\":{", &fff);
+	json_write_string(0, "{", &fff);
+	json_write_string(1, "\"" ATTR_CAL_SLIDERS "\":{", &fff);
 
 	for (i = 0; i < SLIDERS_AMOUNT; i++) {
-		res|=json_write_object(2, slider_names[i],  &fff);
-		res|=json_write_number(3, ATTR_CAL_S_MIN, cal->calibr[i].min_in_value, 1, &fff);
-		res|=json_write_number(3, ATTR_CAL_S_MAX, cal->calibr[i].max_in_value, 1, &fff);
-		res|=json_write_number(3, ATTR_CAL_S_DELTA, cal->calibr[i].delta, 0, &fff);
+		json_write_object(2, slider_names[i],  &fff);
+		json_write_number(3, ATTR_CAL_S_MIN, cal->calibr[i].min_in_value, 1, &fff);
+		json_write_number(3, ATTR_CAL_S_MAX, cal->calibr[i].max_in_value, 1, &fff);
+		json_write_number(3, ATTR_CAL_S_DELTA, cal->calibr[i].delta, 0, &fff);
 		if (i < SLIDERS_AMOUNT-1){
-			res|=json_write_string(2, "},", &fff);
+			json_write_string(2, "},", &fff);
 		}else{
-			res|=json_write_string(2, "}", &fff);
+			json_write_string(2, "}", &fff);
 		}
 	}
-	res|=json_write_string(1, "}", &fff);
-	res|=json_write_string(0, "}", &fff);
+	json_write_string(1, "}", &fff);
+	json_write_string(0, "}", &fff);
 	if (SDFS_close(&fff)!= SDFS_OK)
 		return FIO_FILE_CLOSE_ERROR;
 	return res;
@@ -227,120 +215,120 @@ FIO_status preset_save(const char* path, presetType* pr){
 	if (SDFS_open(&fff, path, F_WR_CLEAR) != SDFS_OK) {
 		return FIO_FILE_CREATE_ERROR;
 	}
-	res|=json_write_string(0, "{", &fff);
-	res|=json_write_number(1, ATTR_CHANNEL, pr->MidiChannel, 1, &fff);
-	res|=json_write_string(1, "\"" ATTR_SPLIT "\":{", &fff);
-	res|=json_write_number(2, ATTR_SPLIT_KEY, pr->SplitKey, 1, &fff);
-	res|=json_write_number(2, ATTR_SPLIT_CHANNEL, pr->SplitChannel, 1, &fff);
-	res|=json_write_number(2, ATTR_SPLIT_OCTAVE, pr->SplitOctShift, 0, &fff);
-	res|=json_write_string(1, "},", &fff);
-	res|=json_write_number(1, ATTR_HIRES, pr->HighResEnable, 1, &fff);
-	res|=json_write_number(1, ATTR_ANALOGMIDI, pr->AnalogMidiEnable, 1, &fff);
-	res|=json_write_number(1, ATTR_TRANSPOSE, pr->Transpose, 1, &fff);
-	res|=json_write_number(1, ATTR_OCTAVE, pr->OctaveShift, 1, &fff);
-	res|=json_write_string(1, "\"" ATTR_CURVE "\":{", &fff);
-	res|=json_write_number(2, ATTR_CURVE_XW1, pr->Curve.xw1, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_YW1, pr->Curve.yw1, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_XW2, pr->Curve.xw2, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_YW2, pr->Curve.yw2, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_XW3, pr->Curve.xw3, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_YW3, pr->Curve.yw3, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_XB1, pr->Curve.xb1, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_YB1, pr->Curve.yb1, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_XB2, pr->Curve.xb2, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_YB2, pr->Curve.yb2, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_XB3, pr->Curve.xb3, 1, &fff);
-	res|=json_write_number(2, ATTR_CURVE_YB3, pr->Curve.yb3, 0, &fff);
-	res|=json_write_string(1, "},", &fff);
+	json_write_string(0, "{", &fff);
+	json_write_number(1, ATTR_CHANNEL, pr->MidiChannel, 1, &fff);
+	json_write_string(1, "\"" ATTR_SPLIT "\":{", &fff);
+	json_write_number(2, ATTR_SPLIT_KEY, pr->SplitKey, 1, &fff);
+	json_write_number(2, ATTR_SPLIT_CHANNEL, pr->SplitChannel, 1, &fff);
+	json_write_number(2, ATTR_SPLIT_OCTAVE, pr->SplitOctShift, 0, &fff);
+	json_write_string(1, "},", &fff);
+	json_write_number(1, ATTR_HIRES, pr->HighResEnable, 1, &fff);
+	json_write_number(1, ATTR_ANALOGMIDI, pr->AnalogMidiEnable, 1, &fff);
+	json_write_number(1, ATTR_TRANSPOSE, pr->Transpose, 1, &fff);
+	json_write_number(1, ATTR_OCTAVE, pr->OctaveShift, 1, &fff);
+	json_write_string(1, "\"" ATTR_CURVE "\":{", &fff);
+	json_write_number(2, ATTR_CURVE_XW1, pr->Curve.xw1, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YW1, pr->Curve.yw1, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XW2, pr->Curve.xw2, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YW2, pr->Curve.yw2, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XW3, pr->Curve.xw3, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YW3, pr->Curve.yw3, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XB1, pr->Curve.xb1, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YB1, pr->Curve.yb1, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XB2, pr->Curve.xb2, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YB2, pr->Curve.yb2, 1, &fff);
+	json_write_number(2, ATTR_CURVE_XB3, pr->Curve.xb3, 1, &fff);
+	json_write_number(2, ATTR_CURVE_YB3, pr->Curve.yb3, 0, &fff);
+	json_write_string(1, "},", &fff);
 
-	res|=json_write_object(1, slider_names[SLIDER_PITCH],  &fff);
-	res|=json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_PITCH].active, 1, &fff);
-	res|=json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_PITCH].channel, 0, &fff);
-	res|=json_write_string(1, "},", &fff);
+	json_write_object(1, slider_names[SLIDER_PITCH],  &fff);
+	json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_PITCH].active, 1, &fff);
+	json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_PITCH].channel, 0, &fff);
+	json_write_string(1, "},", &fff);
 
-	res|=json_write_object(1, slider_names[SLIDER_AT],  &fff);
-	res|=json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_AT].active, 1, &fff);
-	res|=json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_AT].channel, 1, &fff);
-	res|=json_write_number(2, ATTR_S_MIN, pr->sliders[SLIDER_AT].min_out_value, 1, &fff);
-	res|=json_write_number(2, ATTR_S_MAX, pr->sliders[SLIDER_AT].max_out_value, 0, &fff);
-	res|=json_write_string(1, "},", &fff);
+	json_write_object(1, slider_names[SLIDER_AT],  &fff);
+	json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_AT].active, 1, &fff);
+	json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_AT].channel, 1, &fff);
+	json_write_number(2, ATTR_S_MIN, pr->sliders[SLIDER_AT].min_out_value, 1, &fff);
+	json_write_number(2, ATTR_S_MAX, pr->sliders[SLIDER_AT].max_out_value, 0, &fff);
+	json_write_string(1, "},", &fff);
 
-	res|=json_write_object(1, slider_names[SLIDER_MOD],  &fff);
-	res|=json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_MOD].active, 1, &fff);
-	res|=json_write_number(2, ATTR_S_REVERSE, pr->sliders[SLIDER_MOD].reverse, 1, &fff);
-	res|=json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_MOD].channel, 1, &fff);
-	res|=json_write_number(2, ATTR_S_EVENT, pr->sliders[SLIDER_MOD].event, 1, &fff);
-	res|=json_write_number(2, ATTR_S_MIN, pr->sliders[SLIDER_MOD].min_out_value, 1, &fff);
-	res|=json_write_number(2, ATTR_S_MAX, pr->sliders[SLIDER_MOD].max_out_value, 0, &fff);
-	res|=json_write_string(1, "},", &fff);
+	json_write_object(1, slider_names[SLIDER_MOD],  &fff);
+	json_write_number(2, ATTR_S_ACTIVE, pr->sliders[SLIDER_MOD].active, 1, &fff);
+	json_write_number(2, ATTR_S_REVERSE, pr->sliders[SLIDER_MOD].reverse, 1, &fff);
+	json_write_number(2, ATTR_S_CHANNEL, pr->sliders[SLIDER_MOD].channel, 1, &fff);
+	json_write_number(2, ATTR_S_EVENT, pr->sliders[SLIDER_MOD].event, 1, &fff);
+	json_write_number(2, ATTR_S_MIN, pr->sliders[SLIDER_MOD].min_out_value, 1, &fff);
+	json_write_number(2, ATTR_S_MAX, pr->sliders[SLIDER_MOD].max_out_value, 0, &fff);
+	json_write_string(1, "},", &fff);
 
 
-	res|=json_write_string(1, "\"" ATTR_PEDALS "\":{", &fff);
+	json_write_string(1, "\"" ATTR_PEDALS "\":{", &fff);
 	for (i = 0; i < PEDALS_N; i++) {
-		res|=json_write_object(2, slider_names[pedalsN[i]],  &fff);
-		res|=json_write_number(3, ATTR_S_ACTIVE, pr->sliders[pedalsN[i]].active, 1, &fff);
-		res|=json_write_number(3, ATTR_S_REVERSE, pr->sliders[pedalsN[i]].reverse, 1, &fff);
-		res|=json_write_number(3, ATTR_S_BINARY, pr->sliders[pedalsN[i]].binary, 1, &fff);
-		res|=json_write_number(3, ATTR_S_CHANNEL, pr->sliders[pedalsN[i]].channel, 1, &fff);
-		res|=json_write_number(3, ATTR_S_EVENT, pr->sliders[pedalsN[i]].event, 1, &fff);
-		res|=json_write_number(3, ATTR_S_MIN, pr->sliders[pedalsN[i]].min_out_value, 1, &fff);
-		res|=json_write_number(3, ATTR_S_MAX, pr->sliders[pedalsN[i]].max_out_value, 0, &fff);
+		json_write_object(2, slider_names[pedalsN[i]],  &fff);
+		json_write_number(3, ATTR_S_ACTIVE, pr->sliders[pedalsN[i]].active, 1, &fff);
+		json_write_number(3, ATTR_S_REVERSE, pr->sliders[pedalsN[i]].reverse, 1, &fff);
+		json_write_number(3, ATTR_S_BINARY, pr->sliders[pedalsN[i]].binary, 1, &fff);
+		json_write_number(3, ATTR_S_CHANNEL, pr->sliders[pedalsN[i]].channel, 1, &fff);
+		json_write_number(3, ATTR_S_EVENT, pr->sliders[pedalsN[i]].event, 1, &fff);
+		json_write_number(3, ATTR_S_MIN, pr->sliders[pedalsN[i]].min_out_value, 1, &fff);
+		json_write_number(3, ATTR_S_MAX, pr->sliders[pedalsN[i]].max_out_value, 0, &fff);
 		if (i<PEDALS_N-1){
-			res|=json_write_string(2, "},", &fff);
+			json_write_string(2, "},", &fff);
 		}else{
-			res|=json_write_string(2, "}", &fff);
+			json_write_string(2, "}", &fff);
 		}
 	}
-	res|=json_write_string(1, "},", &fff);
-	res|=json_write_string(1, "\"" ATTR_SLIDERS "\":{", &fff);
+	json_write_string(1, "},", &fff);
+	json_write_string(1, "\"" ATTR_SLIDERS "\":{", &fff);
 	for (i = 0; i < SLIDERS_N; i++) {
-		res|=json_write_object(2, slider_names[slidersN[i]],  &fff);
-		res|=json_write_number(3, ATTR_S_ACTIVE, pr->sliders[slidersN[i]].active, 1, &fff);
-		res|=json_write_number(3, ATTR_S_REVERSE, pr->sliders[slidersN[i]].reverse, 1, &fff);
-		res|=json_write_number(3, ATTR_S_CHANNEL, pr->sliders[slidersN[i]].channel, 1, &fff);
-		res|=json_write_number(3, ATTR_S_EVENT, pr->sliders[slidersN[i]].event, 1, &fff);
-		res|=json_write_number(3, ATTR_S_MIN, pr->sliders[slidersN[i]].min_out_value, 1, &fff);
-		res|=json_write_number(3, ATTR_S_MAX, pr->sliders[slidersN[i]].max_out_value, 0, &fff);
+		json_write_object(2, slider_names[slidersN[i]],  &fff);
+		json_write_number(3, ATTR_S_ACTIVE, pr->sliders[slidersN[i]].active, 1, &fff);
+		json_write_number(3, ATTR_S_REVERSE, pr->sliders[slidersN[i]].reverse, 1, &fff);
+		json_write_number(3, ATTR_S_CHANNEL, pr->sliders[slidersN[i]].channel, 1, &fff);
+		json_write_number(3, ATTR_S_EVENT, pr->sliders[slidersN[i]].event, 1, &fff);
+		json_write_number(3, ATTR_S_MIN, pr->sliders[slidersN[i]].min_out_value, 1, &fff);
+		json_write_number(3, ATTR_S_MAX, pr->sliders[slidersN[i]].max_out_value, 0, &fff);
 		if (i<SLIDERS_N-1){
-			res|=json_write_string(2, "},", &fff);
+			json_write_string(2, "},", &fff);
 		}else{
-			res|=json_write_string(2, "}", &fff);
+			json_write_string(2, "}", &fff);
 		}
 	}
-	res|=json_write_string(1, "},", &fff);
-	res|=json_write_string(1, "\"" ATTR_KNOBS "\":{", &fff);
+	json_write_string(1, "},", &fff);
+	json_write_string(1, "\"" ATTR_KNOBS "\":{", &fff);
 	for (i = 0; i < KNOBS_N; i++) {
-		res|=json_write_object(2, slider_names[knobsN[i]],  &fff);
-		res|=json_write_number(3, ATTR_S_ACTIVE, pr->sliders[knobsN[i]].active, 1, &fff);
-		res|=json_write_number(3, ATTR_S_REVERSE, pr->sliders[knobsN[i]].reverse, 1, &fff);
-		res|=json_write_number(3, ATTR_S_CHANNEL, pr->sliders[knobsN[i]].channel, 1, &fff);
-		res|=json_write_number(3, ATTR_S_EVENT, pr->sliders[knobsN[i]].event, 1, &fff);
-		res|=json_write_number(3, ATTR_S_MIN, pr->sliders[knobsN[i]].min_out_value, 1, &fff);
-		res|=json_write_number(3, ATTR_S_MAX, pr->sliders[knobsN[i]].max_out_value, 0, &fff);
+		json_write_object(2, slider_names[knobsN[i]],  &fff);
+		json_write_number(3, ATTR_S_ACTIVE, pr->sliders[knobsN[i]].active, 1, &fff);
+		json_write_number(3, ATTR_S_REVERSE, pr->sliders[knobsN[i]].reverse, 1, &fff);
+		json_write_number(3, ATTR_S_CHANNEL, pr->sliders[knobsN[i]].channel, 1, &fff);
+		json_write_number(3, ATTR_S_EVENT, pr->sliders[knobsN[i]].event, 1, &fff);
+		json_write_number(3, ATTR_S_MIN, pr->sliders[knobsN[i]].min_out_value, 1, &fff);
+		json_write_number(3, ATTR_S_MAX, pr->sliders[knobsN[i]].max_out_value, 0, &fff);
 		if (i<KNOBS_N-1){
-			res|=json_write_string(2, "},", &fff);
+			json_write_string(2, "},", &fff);
 		}else{
-			res|=json_write_string(2, "}", &fff);
+			json_write_string(2, "}", &fff);
 		}
 	}
-	res|=json_write_string(1, "},", &fff);
-	res|=json_write_string(1, "\"" ATTR_BUTTONS "\":{", &fff);
+	json_write_string(1, "},", &fff);
+	json_write_string(1, "\"" ATTR_BUTTONS "\":{", &fff);
 	for (i = 0; i < BUTTONS_AMOUNT; i++) {
-		res|=json_write_object(2, button_names[i],  &fff);
-		res|=json_write_number(3, ATTR_B_ACTIVE, pr->buttons[i].active, 1, &fff);
-		res|=json_write_number(3, ATTR_B_TYPE, pr->buttons[i].type, 1, &fff);
-		res|=json_write_number(3, ATTR_B_CHANNEL, pr->buttons[i].channel, 1, &fff);
-		res|=json_write_number(3, ATTR_B_EVENT, pr->buttons[i].event, 1, &fff);
-		res|=json_write_number(3, ATTR_B_ON, pr->buttons[i].on, 1, &fff);
-		res|=json_write_number(3, ATTR_B_OFF, pr->buttons[i].off, 0, &fff);
+		json_write_object(2, button_names[i],  &fff);
+		json_write_number(3, ATTR_B_ACTIVE, pr->buttons[i].active, 1, &fff);
+		json_write_number(3, ATTR_B_TYPE, pr->buttons[i].type, 1, &fff);
+		json_write_number(3, ATTR_B_CHANNEL, pr->buttons[i].channel, 1, &fff);
+		json_write_number(3, ATTR_B_EVENT, pr->buttons[i].event, 1, &fff);
+		json_write_number(3, ATTR_B_ON, pr->buttons[i].on, 1, &fff);
+		json_write_number(3, ATTR_B_OFF, pr->buttons[i].off, 0, &fff);
 		if (i<BUTTONS_AMOUNT-1){
-			res|=json_write_string(2, "},", &fff);
+			json_write_string(2, "},", &fff);
 		}else{
-			res|=json_write_string(2, "}", &fff);
+			json_write_string(2, "}", &fff);
 		}
 	}
-	res|=json_write_string(1, "}", &fff);
-	res|=json_write_string(0, "}", &fff);
+	json_write_string(1, "}", &fff);
+	json_write_string(0, "}", &fff);
 	pr->Changed=0;
 	if (SDFS_close(&fff)!= SDFS_OK)
 		return FIO_FILE_CREATE_ERROR;
@@ -355,20 +343,20 @@ FIO_status curve_save(const char* path, curve_points_type* curve){
 	if (SDFS_open(&fff, path, F_WR_CLEAR) != SDFS_OK) {
 		return FIO_FILE_CREATE_ERROR;
 	}
-	res|=json_write_string(0, "{", &fff);
-	res|=json_write_number(1, ATTR_CURVE_XW1, curve->xw1, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_YW1, curve->yw1, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_XW2, curve->xw2, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_YW2, curve->yw2, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_XW3, curve->xw3, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_YW3, curve->yw3, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_XB1, curve->xb1, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_YB1, curve->yb1, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_XB2, curve->xb2, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_YB2, curve->yb2, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_XB3, curve->xb3, 1, &fff);
-	res|=json_write_number(1, ATTR_CURVE_YB3, curve->yb3, 0, &fff);
-	res|=json_write_string(0, "}", &fff);
+	json_write_string(0, "{", &fff);
+	json_write_number(1, ATTR_CURVE_XW1, curve->xw1, 1, &fff);
+	json_write_number(1, ATTR_CURVE_YW1, curve->yw1, 1, &fff);
+	json_write_number(1, ATTR_CURVE_XW2, curve->xw2, 1, &fff);
+	json_write_number(1, ATTR_CURVE_YW2, curve->yw2, 1, &fff);
+	json_write_number(1, ATTR_CURVE_XW3, curve->xw3, 1, &fff);
+	json_write_number(1, ATTR_CURVE_YW3, curve->yw3, 1, &fff);
+	json_write_number(1, ATTR_CURVE_XB1, curve->xb1, 1, &fff);
+	json_write_number(1, ATTR_CURVE_YB1, curve->yb1, 1, &fff);
+	json_write_number(1, ATTR_CURVE_XB2, curve->xb2, 1, &fff);
+	json_write_number(1, ATTR_CURVE_YB2, curve->yb2, 1, &fff);
+	json_write_number(1, ATTR_CURVE_XB3, curve->xb3, 1, &fff);
+	json_write_number(1, ATTR_CURVE_YB3, curve->yb3, 0, &fff);
+	json_write_string(0, "}", &fff);
 	if (SDFS_close(&fff)!= SDFS_OK)
 		return FIO_FILE_CLOSE_ERROR;
 	return res;
@@ -768,9 +756,7 @@ FIO_status start_load_setting(void){
 	if (currentState_load() == FIO_OK) { //Current state loaded
 		return FIO_OK;
 	} else { 		//Current state file not exist
-		Current_state.calibration_name[0] = 0;
-		Current_state.preset_name[0] = 0;
-		return FIO_READ_ERROR;
+		return currentState_save();
 	}
 }
 
@@ -890,42 +876,11 @@ FIO_status start_load_calibration(calibrationType* cal){
 
 FIO_status start_load_curve_list(void) {
 	SDFS_status_type res;
-//	FIO_status fiores;
-//	char path[64];
-//	if (filename[0]!=0) { //name is not empty string
-//		fiores = curve_load(filename, curve); //Load calibration from file.
-//		if (fiores == FIO_OK) { //loading was successful
-//			calculate_velocity_formula(curve);
-//			res = SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list); //load file list for future usage
-//			return FIO_OK; //all is done
-//		} else {
-//			if (fiores == FIO_SD_ERROR) {
-//				return FIO_SD_ERROR;
-//			}
-//		}
-//	}
 	res = SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list);
 	if (res != SDFS_OK) { //Preset directory is  not found
 		f_mkdir("0:/" CURVE_DIR_NAME);
 		curves_list.num = 0;
 	}
-//	if (curves_list.num != 0) { // Some curve file exists
-//		strcpy(filename, curves_list.names[0]); //Current curve is a first file in a preset directory
-//		fiores = curve_load(filename, curve); //Load curve from file.
-//		if (fiores == FIO_OK) { //loading was successful
-//			return FIO_OK; //all is done
-//		} else {
-//			return fiores;
-//		}
-//	} else { //Directory is empty
-//		strcpy(filename, DEFAULT_CURVE_NAME);
-//		strcpy(path, "0:/" CURVE_DIR_NAME "/");
-//		strcat(path, DEFAULT_CURVE_NAME);
-//		if (curve_save(path, curve) != FIO_OK) {
-//			return FIO_SD_ERROR;
-//		}
-//		return FIO_OK;
-//	}
     return FIO_OK;
 }
 
@@ -1008,7 +963,6 @@ FIO_status start_load_all(presetType* preset, calibrationType* cal){
 	if (start_load_preset(preset, cal) != FIO_OK) {
 		return 0;
 	}
-
 	if (start_load_curve_list() != FIO_OK) {
 		return 0;
 	}

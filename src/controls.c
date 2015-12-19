@@ -363,36 +363,43 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 	double a,b;
 	int midi_value;
 
+	double max_in = sliders_calibr->max_in_value;
+	double min_in = sliders_calibr->min_in_value;
+	double length = max_in - min_in;
+	min_in = min_in + length / 100 * (double)(sliders_calibr->gap);
+	max_in = max_in - length / 100 * (double)(sliders_calibr->gap);
+	length = max_in - min_in;
+
 	//pitch band has a dead zone and 14-bit precision
 	if (num == SLIDER_PITCH) {
-		//pitch potentiometer is inverted
-		value = sliders_calibr->max_in_value - value + sliders_calibr->min_in_value;
-
 		//TODO: setting the dead zone in the preset
-		double dead = 0.25 * (double)(sliders_calibr->max_in_value - sliders_calibr->min_in_value);
-		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (sliders_calibr->max_in_value - sliders_calibr->min_in_value - dead);
+		double dead = (double)sliders_calibr->dead / 100 * length;
+		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (length - dead);
 
-		double middle_in = (double)(sliders_calibr->max_in_value + sliders_calibr->min_in_value) / 2;
+		double middle_in = (double)(max_in + min_in) / 2;
 		double middle_out = (double)(sliders->max_out_value + sliders->min_out_value) / 2;
 
 		//alpha is the point when the dead zone begins
 		double alpha = middle_in - dead/2;
 
+		//pitch potentiometer is inverted
+		value = max_in - value + min_in;
+
 		//the in-out function is piecewise linear
 		if (value < alpha) {
-			midi_value = (int)(a * value - sliders_calibr->min_in_value * a + sliders->min_out_value);
+			midi_value = (int)(a * value - min_in * a + sliders->min_out_value);
 		} else if (value < alpha + dead) {
 			midi_value = (middle_out - (int) middle_out) > 0   ?  (int) (middle_out + 1)   :  (int) middle_out;
 		} else {
 			midi_value = (int)(a * value - (alpha + dead) * a + middle_out);
 		}
 	} else {
-		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (sliders_calibr->max_in_value - sliders_calibr->min_in_value);
+		a = (double) (sliders->max_out_value - sliders->min_out_value) / length;
 		if (sliders->reverse) {
 			a = -a;
-			b = (double) (sliders->max_out_value) - (double) (sliders_calibr->min_in_value) * a;
+			b = (double)(sliders->max_out_value) - min_in * a;
 		} else {
-			b = (double) (sliders->min_out_value) - (double) (sliders_calibr->min_in_value) * a;
+			b = (double)(sliders->min_out_value) - min_in * a;
 		}
 		midi_value = (int)(a * value + b);
 	}

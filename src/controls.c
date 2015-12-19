@@ -88,98 +88,146 @@ void sliders_calibr_set_defaults(Calibration_slider_type* sliders_calibr) {
 	sliders_calibr[SLIDER_EMPTY].min_in_value = SLIDER_S_MIN_IN; //One slider is absent physically
 	sliders_calibr[SLIDER_EMPTY].max_in_value = SLIDER_S_MAX_IN; //and initialized by any correct data
 	sliders_calibr[SLIDER_EMPTY].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_EMPTY].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_EMPTY].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_S1].min_in_value = SLIDER_S_MIN_IN;
 	sliders_calibr[SLIDER_S1].max_in_value = SLIDER_S_MAX_IN;
 	sliders_calibr[SLIDER_S1].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_S1].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_S1].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_S2].min_in_value = SLIDER_S_MIN_IN;
 	sliders_calibr[SLIDER_S2].max_in_value = SLIDER_S_MAX_IN;
 	sliders_calibr[SLIDER_S2].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_S2].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_S2].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_S3].min_in_value = SLIDER_S_MIN_IN;
 	sliders_calibr[SLIDER_S3].max_in_value = SLIDER_S_MAX_IN;
 	sliders_calibr[SLIDER_S3].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_S3].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_S3].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_S4].min_in_value = SLIDER_S_MIN_IN;
 	sliders_calibr[SLIDER_S4].max_in_value = SLIDER_S_MAX_IN;
 	sliders_calibr[SLIDER_S4].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_S4].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_S4].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_S5].min_in_value = SLIDER_S_MIN_IN;
 	sliders_calibr[SLIDER_S5].max_in_value = SLIDER_S_MAX_IN;
 	sliders_calibr[SLIDER_S5].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_S5].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_S5].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_S6].min_in_value = SLIDER_S_MIN_IN;
 	sliders_calibr[SLIDER_S6].max_in_value = SLIDER_S_MAX_IN;
 	sliders_calibr[SLIDER_S6].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_S6].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_S6].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_S7].min_in_value = SLIDER_S_MIN_IN;
 	sliders_calibr[SLIDER_S7].max_in_value = SLIDER_S_MAX_IN;
 	sliders_calibr[SLIDER_S7].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_S7].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_S7].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_S8].min_in_value = SLIDER_S_MIN_IN;
 	sliders_calibr[SLIDER_S8].max_in_value = SLIDER_S_MAX_IN;
 	sliders_calibr[SLIDER_S8].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_S8].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_S8].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_S9].min_in_value = SLIDER_S_MIN_IN;
 	sliders_calibr[SLIDER_S9].max_in_value = SLIDER_S_MAX_IN;
 	sliders_calibr[SLIDER_S9].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_S9].gap = SLIDERS_S_GAP;
+	sliders_calibr[SLIDER_S9].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_R1].min_in_value = SLIDER_R_MIN_IN;
 	sliders_calibr[SLIDER_R1].max_in_value = SLIDER_R_MAX_IN;
 	sliders_calibr[SLIDER_R1].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_R1].gap = SLIDERS_R_GAP;
+	sliders_calibr[SLIDER_R1].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_R2].min_in_value = SLIDER_R_MIN_IN;
 	sliders_calibr[SLIDER_R2].max_in_value = SLIDER_R_MAX_IN;
 	sliders_calibr[SLIDER_R2].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_R2].gap = SLIDERS_R_GAP;
+	sliders_calibr[SLIDER_R2].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_R3].min_in_value = SLIDER_R_MIN_IN;
 	sliders_calibr[SLIDER_R3].max_in_value = SLIDER_R_MAX_IN;
 	sliders_calibr[SLIDER_R3].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_R3].gap = SLIDERS_R_GAP;
+	sliders_calibr[SLIDER_R3].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_R4].min_in_value = SLIDER_R_MIN_IN;
 	sliders_calibr[SLIDER_R4].max_in_value = SLIDER_R_MAX_IN;
 	sliders_calibr[SLIDER_R4].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_R4].gap = SLIDERS_R_GAP;
+	sliders_calibr[SLIDER_R4].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_R5].min_in_value = SLIDER_R_MIN_IN;
 	sliders_calibr[SLIDER_R5].max_in_value = SLIDER_R_MAX_IN;
 	sliders_calibr[SLIDER_R5].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_R5].gap = SLIDERS_R_GAP;
+	sliders_calibr[SLIDER_R5].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_R6].min_in_value = SLIDER_R_MIN_IN;
 	sliders_calibr[SLIDER_R6].max_in_value = SLIDER_R_MAX_IN;
 	sliders_calibr[SLIDER_R6].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_R6].gap = SLIDERS_R_GAP;
+	sliders_calibr[SLIDER_R6].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_R7].min_in_value = SLIDER_R_MIN_IN;
 	sliders_calibr[SLIDER_R7].max_in_value = SLIDER_R_MAX_IN;
 	sliders_calibr[SLIDER_R7].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_R7].gap = SLIDERS_R_GAP;
+	sliders_calibr[SLIDER_R7].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_R8].min_in_value = SLIDER_R_MIN_IN;
 	sliders_calibr[SLIDER_R8].max_in_value = SLIDER_R_MAX_IN;
 	sliders_calibr[SLIDER_R8].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_R8].gap = SLIDERS_R_GAP;
+	sliders_calibr[SLIDER_R8].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_P1].min_in_value = SLIDER_P_MIN_IN;
 	sliders_calibr[SLIDER_P1].max_in_value = SLIDER_P_MAX_IN;
 	sliders_calibr[SLIDER_P1].delta = SLIDERS_DELTA_P;
+	sliders_calibr[SLIDER_P1].gap = SLIDERS_P_GAP;
+	sliders_calibr[SLIDER_P1].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_P2].min_in_value = SLIDER_P_MIN_IN;
 	sliders_calibr[SLIDER_P2].max_in_value = SLIDER_P_MAX_IN;
 	sliders_calibr[SLIDER_P2].delta = SLIDERS_DELTA_P;
+	sliders_calibr[SLIDER_P2].gap = SLIDERS_P_GAP;
+	sliders_calibr[SLIDER_P2].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_P3].min_in_value = SLIDER_P_MIN_IN;
 	sliders_calibr[SLIDER_P3].max_in_value = SLIDER_P_MAX_IN;
 	sliders_calibr[SLIDER_P3].delta = SLIDERS_DELTA_P;
+	sliders_calibr[SLIDER_P3].gap = SLIDERS_P_GAP;
+	sliders_calibr[SLIDER_P3].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_PITCH].min_in_value = SLIDER_PITCH_MIN_IN;
 	sliders_calibr[SLIDER_PITCH].max_in_value = SLIDER_PITCH_MAX_IN;
 	sliders_calibr[SLIDER_PITCH].delta = SLIDERS_DELTA_PI;
+	sliders_calibr[SLIDER_PITCH].gap = SLIDERS_PI_GAP;
+	sliders_calibr[SLIDER_PITCH].dead = SLIDERS_PI_DEAD;
 
 	sliders_calibr[SLIDER_MOD].min_in_value = SLIDER_MOD_MIN_IN;
 	sliders_calibr[SLIDER_MOD].max_in_value = SLIDER_MOD_MAX_IN;
-	sliders_calibr[SLIDER_MOD].delta = SLIDERS_DELTA_S;
+	sliders_calibr[SLIDER_MOD].delta = SLIDERS_DELTA_MOD;
+	sliders_calibr[SLIDER_MOD].gap = SLIDERS_MOD_GAP;
+	sliders_calibr[SLIDER_MOD].dead = SLIDERS_DEAD;
 
 	sliders_calibr[SLIDER_AT].min_in_value = SLIDER_AT_MIN_IN;
 	sliders_calibr[SLIDER_AT].max_in_value = SLIDER_AT_MAX_IN;
 	sliders_calibr[SLIDER_AT].delta = SLIDERS_DELTA_AT;
+	sliders_calibr[SLIDER_AT].gap = SLIDERS_AT_GAP;
+	sliders_calibr[SLIDER_AT].dead = SLIDERS_DEAD;
 }
 
 

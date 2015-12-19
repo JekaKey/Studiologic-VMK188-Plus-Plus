@@ -17,7 +17,7 @@
 #define MENU_YN_NO 	"No"
 
 
-typedef enum {t_uint8, t_uint16, t_int8, t_bool} value_t;
+typedef enum {t_none, t_uint8, t_uint16, t_int8, t_bool, t_perc, t_note} value_tp;
 
 
 
@@ -27,14 +27,12 @@ typedef struct {
 	void       *Parent;
 	void       *Child;
 	uint8_t    Pos;
-	int8_t     *Value;
-	value_t    tValue;
-	uint16_t   Min;
-	uint16_t   Max;
+	void		*Value;
+	value_tp    tValue;
+	int16_t   Min;
+	int16_t   Max;
 	void       (*Command_Enter)(void);
 	void       (*Command_Edit)(void);
-	void       (*Command_Show)(void * menuaddr);
-	const char  Title[16];
 	char       Text[];
 } menuItem_type;
 
@@ -47,12 +45,12 @@ typedef struct {
 } menuYNItem_type;
 
 
-#define MAKE_MENU(Name, Next, Previous, Parent, Child, Pos, Value, tValue, Min, Max, Command_Enter, Command_Edit, Command_Show, Title, Text) \
+#define MAKE_MENU(Name, Next, Previous, Parent, Child, Pos, Value, tValue, Min, Max, Command_Enter, Command_Edit, Text) \
 	extern  menuItem_type  Next;     \
 	extern  menuItem_type  Previous; \
 	extern  menuItem_type  Parent;   \
 	extern  menuItem_type  Child;  \
-	menuItem_type Name = {(void*)&Next, (void*)&Previous, (void*)&Parent, (void*)&Child, (uint8_t)Pos, (void*)Value, (value_t)tValue, (uint16_t)Min, (uint16_t)Max, (void*) Command_Enter, (void*) Command_Edit, (void*) Command_Show, {Title},{ Text }}
+	menuItem_type Name = {(void*)&Next, (void*)&Previous, (void*)&Parent, (void*)&Child, (uint8_t)Pos, (void*)Value, (value_tp)tValue, (uint16_t)Min, (uint16_t)Max, (void*) Command_Enter, (void*) Command_Edit, { Text }}
 
 #define MAKE_MENU_YN(Name, Title, Command_Yes, Return_after_yes, Previous) \
 	extern  menuItem_type  Previous; \
@@ -83,6 +81,7 @@ typedef enum {	STATE_presets_list,
 				STATE_preset_curve_edit,
 				STATE_text_edit,
 				STATE_number_edit,
+				STATE_calibration_select,
 				STATE_calibration_start,
 				STATE_calibration_continue,
 				STATE_calibrations_list,

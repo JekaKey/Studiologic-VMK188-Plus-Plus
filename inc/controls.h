@@ -12,7 +12,19 @@
 #define SLIDERS_DELTA_P 0x20
 #define SLIDERS_DELTA_AT 0x40
 #define SLIDERS_DELTA_PI 0x40
+#define SLIDERS_DELTA_MOD 0x10
 #define SLIDERS_DELTA_SEARCH 0x200
+
+#define SLIDERS_S_GAP 3
+#define SLIDERS_R_GAP 3
+#define SLIDERS_P_GAP 0
+#define SLIDERS_PI_GAP 3
+#define SLIDERS_AT_GAP 3
+#define SLIDERS_MOD_GAP 3
+
+#define SLIDERS_DEAD 0
+#define SLIDERS_PI_DEAD 10
+
 #define ADC_MAX_VALUE 0x0FFF
 
 #define SLIDERS_MUX_DELAY 80/TIMER_TIMPERIOD //Delay in cycles after multiplexors switch
@@ -167,6 +179,8 @@ typedef struct {
 	uint16_t min_in_value;
 	uint16_t max_in_value;
 	uint16_t delta;
+	uint8_t gap;
+	uint8_t dead;
 }Calibration_slider_type;
 
 typedef struct {

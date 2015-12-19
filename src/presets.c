@@ -165,8 +165,8 @@ FIO_status calibration_save(const char* path, calibrationType* cal){
 		json_write_number(3, ATTR_CAL_S_MIN, cal->calibr[i].min_in_value, 1, &fff);
 		json_write_number(3, ATTR_CAL_S_MAX, cal->calibr[i].max_in_value, 1, &fff);
 		json_write_number(3, ATTR_CAL_S_DELTA, cal->calibr[i].delta, 1, &fff);
-		json_write_number(3, ATTR_CAL_S_DELTA, cal->calibr[i].dead, 1, &fff);
-		json_write_number(3, ATTR_CAL_S_DELTA, cal->calibr[i].gap, 0, &fff);
+		json_write_number(3, ATTR_CAL_S_DEAD, cal->calibr[i].dead, 1, &fff);
+		json_write_number(3, ATTR_CAL_S_GAP, cal->calibr[i].gap, 0, &fff);
 		if (i < SLIDERS_AMOUNT-1){
 			json_write_string(2, "},", &fff);
 		}else{

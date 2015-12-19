@@ -687,9 +687,9 @@ static void init_json_calibr_attr(calibrationType *cal) {
 		strcpy(calibr_sliders_param_attr[i][2].attribute, ATTR_CAL_S_DELTA);
 		calibr_sliders_param_attr[i][2].addr.uint16 = &(cal->calibr[i].delta);
 		strcpy(calibr_sliders_param_attr[i][2].attribute, ATTR_CAL_S_DEAD);
-		calibr_sliders_param_attr[i][2].addr.uint16 = &(cal->calibr[i].dead);
+		calibr_sliders_param_attr[i][2].addr.uint8 = &(cal->calibr[i].dead);
 		strcpy(calibr_sliders_param_attr[i][2].attribute, ATTR_CAL_S_GAP);
-		calibr_sliders_param_attr[i][2].addr.uint16 = &(cal->calibr[i].gap);
+		calibr_sliders_param_attr[i][2].addr.uint8 = &(cal->calibr[i].gap);
 		for (int j = 0; j < 5; j++) {
 			calibr_sliders_param_attr[i][j].type = t_uint16;
 		}

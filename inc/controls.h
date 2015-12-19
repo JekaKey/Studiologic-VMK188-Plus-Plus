@@ -59,9 +59,9 @@
 #define SLIDER_AT 17
 #define SLIDER_PITCH 23
 #define SLIDER_MOD 20
-#define SLIDER_P1 5
+#define SLIDER_P1 11
 #define SLIDER_P2 2
-#define SLIDER_P3 11
+#define SLIDER_P3 5
 #define SLIDER_EMPTY 8
 
 #define KNOBS_N 8

@@ -35,6 +35,8 @@
 #define ATTR_CAL_S_MIN "min"
 #define ATTR_CAL_S_MAX "max"
 #define ATTR_CAL_S_DELTA "delta"
+#define ATTR_CAL_S_GAP "gapzone"
+#define ATTR_CAL_S_DEAD "deadzone"
 
 #define ATTR_CURVE_XW1 "xw1"
 #define ATTR_CURVE_YW1 "yw1"

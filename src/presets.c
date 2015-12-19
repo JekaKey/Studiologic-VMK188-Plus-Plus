@@ -164,7 +164,9 @@ FIO_status calibration_save(const char* path, calibrationType* cal){
 		json_write_object(2, slider_names[i],  &fff);
 		json_write_number(3, ATTR_CAL_S_MIN, cal->calibr[i].min_in_value, 1, &fff);
 		json_write_number(3, ATTR_CAL_S_MAX, cal->calibr[i].max_in_value, 1, &fff);
-		json_write_number(3, ATTR_CAL_S_DELTA, cal->calibr[i].delta, 0, &fff);
+		json_write_number(3, ATTR_CAL_S_DELTA, cal->calibr[i].delta, 1, &fff);
+		json_write_number(3, ATTR_CAL_S_DELTA, cal->calibr[i].dead, 1, &fff);
+		json_write_number(3, ATTR_CAL_S_DELTA, cal->calibr[i].gap, 0, &fff);
 		if (i < SLIDERS_AMOUNT-1){
 			json_write_string(2, "},", &fff);
 		}else{
@@ -465,7 +467,7 @@ static json_attr_t preset_attr[20] = {
 };
 
 static json_attr_t calibr_sliders_attr[SLIDERS_AMOUNT+1];
-static json_attr_t calibr_sliders_param_attr[SLIDERS_AMOUNT+1][4];
+static json_attr_t calibr_sliders_param_attr[SLIDERS_AMOUNT+1][6];
 static json_attr_t calibr_attr[] = {
 		{ATTR_CAL_SLIDERS, t_object, .addr.object = calibr_sliders_attr},
 		{"",},
@@ -684,7 +686,11 @@ static void init_json_calibr_attr(calibrationType *cal) {
 		calibr_sliders_param_attr[i][1].addr.uint16 = &(cal->calibr[i].max_in_value);
 		strcpy(calibr_sliders_param_attr[i][2].attribute, ATTR_CAL_S_DELTA);
 		calibr_sliders_param_attr[i][2].addr.uint16 = &(cal->calibr[i].delta);
-		for (int j = 0; j < 3; j++) {
+		strcpy(calibr_sliders_param_attr[i][2].attribute, ATTR_CAL_S_DEAD);
+		calibr_sliders_param_attr[i][2].addr.uint16 = &(cal->calibr[i].dead);
+		strcpy(calibr_sliders_param_attr[i][2].attribute, ATTR_CAL_S_GAP);
+		calibr_sliders_param_attr[i][2].addr.uint16 = &(cal->calibr[i].gap);
+		for (int j = 0; j < 5; j++) {
 			calibr_sliders_param_attr[i][j].type = t_uint16;
 		}
 		calibr_sliders_param_attr[i][3].attribute[0]=0;

@@ -18,7 +18,7 @@ extern const char slider_names[][MAX_ATTR_SIZE];//defined in "control.c"
 extern uint8_t slider_calibrate_number;
 extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
 
-menuItem_type Null_Menu = { (void*) 0, (void*) 0, (void*) 0, (void*) 0, 0, (int8_t*) 0, 0, 0, 0, (void*)0,(void*)0,(void*)0, { 0x00 } };
+menuItem_type Null_Menu = { (void*)0, (void*)0, (void*)0, (void*)0, 0, (void*)0, 0, 0, 0, (void*)0, (void*)0, {0x00} };
 
 menuItem_type* selectedMenuItem; // current menu item
 menuYNItem_type* selectedMenuYNItem;
@@ -97,8 +97,6 @@ static void menu_preset_bt_edit(void);
 static void menu_button_edit(void);
 
 static void menu_show_param(menuItem_type * menu);
-
-static void menu_show_splitkey(menuItem_type * menu);
 
 static void menu_preset_as_default(void);
 
@@ -511,6 +509,9 @@ static void menu_show_param(menuItem_type * menu) {
 		b = (uint8_t*) (menu->Value);
 		note_name (*b, s);
 		hd44780_write_string(s);
+		break;
+
+	default:
 		break;
 	}
 }

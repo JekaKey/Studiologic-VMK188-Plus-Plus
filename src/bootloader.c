@@ -3,21 +3,14 @@
 #include "log.h"
 
 
-__attribute__ ((section (".noinit"))) uint32_t boot_flag;
-
-
-
-
-
-
-
+__attribute__ ((section (".noinit"))) volatile uint32_t boot_flag;
 
 
 void BootLoaderStart(void) {
 
 	void (*SysMemBootJump)(void) = (void (*)(void)) (*((uint32_t *) 0x1FFF0004));
 		if (boot_flag==0xE4E4E4E4) {
-			boot_flag =0;
+			boot_flag = 0;
 		RCC_DeInit();
 		SysTick->CTRL = 0;
 		SysTick->LOAD = 0;

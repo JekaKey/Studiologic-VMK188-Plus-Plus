@@ -25,6 +25,8 @@
 #include "leds.h"
 #include "log.h"
 
+#include "bootloader.h"
+
 extern presetType Preset;
 extern currentStateType Current_state;
 extern calibrationType Calibration;
@@ -83,8 +85,9 @@ static void Timer_init(void){
 
 
 int main(void) {
+	BootLoaderStart();
 	firstInit();
-	set_defaults_all(&Preset, &Calibration);
+    set_defaults_all(&Preset, &Calibration);
     delayms(2000);
     if (!start_load_all(&Preset, &Calibration))
 		   set_okIOzero();

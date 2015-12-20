@@ -9,6 +9,7 @@
 #include "leds.h"
 #include "velocity.h"
 #include "keyboardscan.h"
+#include "bootloader.h"
 
 const xy_t curve_xy[6]={{3,1,2},{7,1,3},{12,1,4},{3,2,2},{7,2,3},{12,2,4}};
 
@@ -85,6 +86,7 @@ static void menu_curve_export(void);
 static void menu_curve_export_yes(void);
 static void curvelist_start(void);
 static void preset_curvelist_start(void);
+static void menu_bootloader_yes(void);
 
 static void menu_preset_sl_enter(void);
 static void menu_preset_sl_edit(void);
@@ -106,7 +108,7 @@ static void startMenuYN_curve_save(void);
 static void startMenuYN_curve_delete(void);
 static void startMenuYN_calibration_save(void);
 static void startMenuYN_calibration_delete(void);
-
+static void startMenuYN_bootloader(void);
 static void check_saving_preset(void);
 
 static void menu_calibrate(void);
@@ -268,7 +270,8 @@ MAKE_MENU(menu_stor_rename,	menu_stor_del,		menu_stor_copy,		NULL_ENTRY,		NULL_E
 MAKE_MENU(menu_stor_del,	NULL_ENTRY,			menu_stor_rename,	NULL_ENTRY,		NULL_ENTRY,		1,		NULL,	t_none,		0,		0,		startMenuYN_preset_delete,			menu_back_to_preset,	"Delete preset"	);
 
 MAKE_MENU(menu1_item1,		menu1_item2,		NULL_ENTRY,			NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		curvelist_start,					menu_back_to_preset,	"Curves"		);
-MAKE_MENU(menu1_item2,		NULL_ENTRY,			menu1_item1,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		calibrationlist_start,				menu_back_to_preset,	"Calibration"	);
+MAKE_MENU(menu1_item2,		menu1_item3,		menu1_item1,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		calibrationlist_start,				menu_back_to_preset,	"Calibration"	);
+MAKE_MENU(menu1_item3,		NULL_ENTRY,			menu1_item2,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		startMenuYN_bootloader,				menu_back_to_preset,	"Firmware"	);
 
 
 MAKE_MENU(menu_clb_edit,	menu_clb_save,		NULL_ENTRY,			NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_calibrate,						calibrationlist_start,	"Edit calibr."	);
@@ -394,6 +397,7 @@ MAKE_MENU_YN(menuYN_curve_delete, 	"Delete curve?", 	menu_curve_delete_yes, 			1
 MAKE_MENU_YN(menuYN_curve_copy, 	"Copy curve?", 		menu_curve_copy_yes, 			1,	menu3_item3);
 MAKE_MENU_YN(menuYN_curve_load, 	"Load curve?", 		menu_curve_load_yes, 			1,	menu4_item1);
 MAKE_MENU_YN(menuYN_curve_export, 	"Export curve?", 	menu_curve_export_yes, 			1,	menu4_item3);
+MAKE_MENU_YN(menuYN_bootloader, 	"Run bootloader?",	menu_bootloader_yes, 			1,	menu1_item3);
 
 
 
@@ -588,6 +592,11 @@ static void startMenuYN_curve_copy(void) {
 
 static void startMenuYN_curve_export(void){
 	selectedMenuYNItem = (menuYNItem_type*) &menuYN_curve_export;
+	toYNMenu();
+}
+
+static void startMenuYN_bootloader(void){
+	selectedMenuYNItem = (menuYNItem_type*) &menuYN_bootloader;
 	toYNMenu();
 }
 
@@ -903,6 +912,13 @@ static void menu_curve_delete_yes(void){
 	file_list_find(&curves_list, old_active_curve_name);
 	curves_list.active=curves_list.pos;
 }
+
+static void menu_bootloader_yes(void){
+   hd44780_clear();
+   hd44780_message_center("BOOTLOADER",1);
+   gotoBootLoader();
+}
+
 
 
 static void menu_preset_sl_enter(void) {

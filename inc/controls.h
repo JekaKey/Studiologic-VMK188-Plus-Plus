@@ -211,9 +211,9 @@ void send_message(uint8_t mes);
 uint16_t get_slider_event(void); //get slider event from FIFO, returns 0 if there is no events
 uint16_t get_pitch_event(void);
 /*!!! In all fuctions with pointer argument as Slider_type*  or Calibration_slider_type MUST point to an array of SLIDERS_AMOUNT*/
-void slider_midi_send(uint16_t value, Slider_type* sliders);
-void pitch_midi_send(uint16_t value, uint8_t channel);
-void button_midi_send(uint16_t value, Button_type* buttons);
+void slider_midi_send(uint16_t value, Slider_type* sliders, uint8_t analog);
+void pitch_midi_send(uint16_t value, uint8_t channel, uint8_t analog);
+void button_midi_send(uint16_t value, Button_type* buttons, uint8_t analog);
 void ADC_init_all(void);
 void read_controls(Slider_type* sliders, Calibration_slider_type* cal);
 void read_buttons_state(void);
@@ -223,8 +223,8 @@ void calculate_sliders_constants(Slider_type* sliders, Calibration_slider_type* 
 void sliders_calibr_set_defaults(Calibration_slider_type* sliders_calibr);
 void sliders_set_defaults(Slider_type* sliders, Calibration_slider_type* sliders_calibr); //Init all sliders parameters if they are not loaded from preset
 void buttons_set_defaults(Button_type* but);
-void checkSliders_events(Slider_type* sliders);
-void checkButtons_events(Button_type* buttons);
+void checkSliders_events(Slider_type* sliders, uint8_t analog);
+void checkButtons_events(Button_type* buttons, uint8_t analog);
 void start_sliders_calibration(void);
 void buttons_delay(void) __attribute__((optimize(0)));
 

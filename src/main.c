@@ -54,8 +54,8 @@ static void firstInit(void) {
 
 	//Hardware init
 	GPIO_init();
-//	USART1_init();
-	USART6_init();
+	USART1_init();//midi
+	USART6_init();//debug
 	usb_init(); //Init everything for midiUSB
 
 	ADC_init_all(); //ADC init
@@ -95,6 +95,7 @@ int main(void) {
 	calibration_init(Current_state.calibration_name);
 
     Timer_init();
+	PRINTF("     Program started\n");
 
 	//Main loop
 	while (1) {
@@ -102,12 +103,12 @@ int main(void) {
 		//Check note array to calculate velocity
 		checkNoteArray(&Preset);
 
+		//TODO: why presets in arguments?
+		checkSliders_events(Preset.sliders, Preset.AnalogMidiEnable);
+		checkButtons_events(Preset.buttons, Preset.AnalogMidiEnable);
 		//Send/receive midi data
 		receiveMidiData();
 		sendMidiData();
-		//TODO: why presets in arguments?
-		checkSliders_events(Preset.sliders);
-		checkButtons_events(Preset.buttons);
 
 	}
 }

@@ -81,14 +81,14 @@ void checkNoteArray(presetType* preset) {
 			vel = getVelocity_on(duration, note_color(curNote));
 			if (preset->HighResEnable) {
 				/*Send High Res Preffix*/
-				sendControlChange(0x58, (byte) (vel & 0x7F), channel); //to midi
+				sendControlChange(0x58, (byte) (vel & 0x7F), channel, preset->AnalogMidiEnable); //to midi
 			}
 			if (vel)
-			  sendNoteOn(curNote, vel, channel); //to midi
+			  sendNoteOn(curNote, vel, channel, preset->AnalogMidiEnable); //to midi
 		} else {
 			sendNoteOff(curNote & 0x7F,
 					getVelocity_off(duration, note_color(curNote)),
-					channel); //to midi
+					channel, preset->AnalogMidiEnable); //to midi
 		}
 
 	}

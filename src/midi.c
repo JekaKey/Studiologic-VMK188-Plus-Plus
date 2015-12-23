@@ -3,6 +3,7 @@
 #include "usb_midi_io.h"
 #include "sysex_events.h"
 #include "midi.h"
+#include "log.h"
 
 
 uint8_t message_buff[4];
@@ -13,61 +14,52 @@ extern FIFO8(8) notes; //Array for current note
 extern FIFO16(8) durations; //Array for duration for current note
 extern FIFO32(128) midi_usb_in;
 
-void sendNoteOn(byte NoteNumber, word Velocity, byte Channel) {
+void sendNoteOn(byte NoteNumber, word Velocity, byte Channel, uint8_t analog) {
 	message_buff[0] = 0x09; //USB-MIDI NoteOn prefix
 	message_buff[1] = NoteOn ^ Channel;
 	message_buff[2] = NoteNumber;
 	message_buff[3] = (uint8_t)(Velocity >> 7);
 	usb_midi_DataTx(message_buff, 4);
 
-	FIFO_PUSH(midiMessagesArray, NoteOn ^ Channel);
-	FIFO_PUSH(midiMessagesArray, NoteNumber);
-	FIFO_PUSH(midiMessagesArray, (byte)(Velocity>>7));
+	if (analog) {
+        PRINTF ("Send Analog MIDI\n");
+		FIFO_PUSH(midiMessagesArray, NoteOn ^ Channel);
+		FIFO_PUSH(midiMessagesArray, NoteNumber);
+		FIFO_PUSH(midiMessagesArray, (byte)(Velocity>>7));
+	}
 }
 
-void sendNoteOff(byte NoteNumber, word Velocity, byte Channel) {
+void sendNoteOff(byte NoteNumber, word Velocity, byte Channel, uint8_t analog) {
 	message_buff[0] = 0x08; //USB-MIDI NoteOff prefix
 	message_buff[1] = NoteOff ^ Channel;
 	message_buff[2] = NoteNumber;
 	message_buff[3] = (uint8_t)(Velocity >> 7);
 	usb_midi_DataTx(message_buff, 4);
 
-	FIFO_PUSH(midiMessagesArray, NoteOff ^ Channel);
-	FIFO_PUSH(midiMessagesArray, NoteNumber);
-	FIFO_PUSH(midiMessagesArray, (byte)(Velocity>>7));
+	if (analog) {
+		FIFO_PUSH(midiMessagesArray, NoteOff ^ Channel);
+		FIFO_PUSH(midiMessagesArray, NoteNumber);
+		FIFO_PUSH(midiMessagesArray, (byte)(Velocity>>7));
+	}
 }
 
-void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel) {
+void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel, uint8_t analog) {
 	message_buff[0] = 0x0B; //USB-MIDI CC prefix
 	message_buff[1] = ControlChange ^ Channel;
 	message_buff[2] = ControlNumber;
 	message_buff[3] = ControlValue;
 	usb_midi_DataTx(message_buff, 4);
 
-	FIFO_PUSH(midiMessagesArray, ControlChange ^ Channel);
-	FIFO_PUSH(midiMessagesArray, ControlNumber);
-	FIFO_PUSH(midiMessagesArray, ControlValue);
+	if (analog) {
+		FIFO_PUSH(midiMessagesArray, ControlChange ^ Channel);
+		FIFO_PUSH(midiMessagesArray, ControlNumber);
+		FIFO_PUSH(midiMessagesArray, ControlValue);
+	}
 }
 
-void sendPitchBend(uint16_t Value, byte Channel) {
+void sendPitchBend(uint16_t Value, byte Channel, uint8_t analog) {
 	byte ValueL = Value & 0x7F;
 	byte ValueM = Value >> 7;
-
-/*	char temp[16];
-	uint8toa(ValueM, temp);
-
-	hd44780_goto(1, 1);
-	hd44780_write_string("       ");
-	hd44780_goto(1, 1);
-	hd44780_write_string(temp);
-
-	uint8toa(ValueL, temp);
-
-	hd44780_goto(2, 1);
-	hd44780_write_string("       ");
-	hd44780_goto(2, 1);
-	hd44780_write_string(temp);
-*/
 
 	message_buff[0] = 0x0E; //USB-MIDI Pitch prefix
 	message_buff[1] = PitchBend ^ Channel;
@@ -75,23 +67,26 @@ void sendPitchBend(uint16_t Value, byte Channel) {
 	message_buff[3] = ValueM;
 	usb_midi_DataTx(message_buff, 4);
 
-	FIFO_PUSH(midiMessagesArray, PitchBend ^ Channel);
-	FIFO_PUSH(midiMessagesArray, ValueL);
-	FIFO_PUSH(midiMessagesArray, ValueM);
+	if (analog) {
+		FIFO_PUSH(midiMessagesArray, PitchBend ^ Channel);
+		FIFO_PUSH(midiMessagesArray, ValueL);
+		FIFO_PUSH(midiMessagesArray, ValueM);
+	}
 }
 
-void sendAfterTouch(byte Preasure, byte Channel) {
+void sendAfterTouch(byte Preasure, byte Channel, uint8_t analog) {
 	message_buff[0] = 0x0D; //USB-MIDI AfterTouch prefix
 	message_buff[1] = AfterTouchChannel ^ Channel;
 	message_buff[2] = Preasure;
 	message_buff[3] = 0;
 	usb_midi_DataTx(message_buff, 4);
-
-	FIFO_PUSH(midiMessagesArray, AfterTouchChannel ^ Channel);
-	FIFO_PUSH(midiMessagesArray, Preasure);
+	if (analog) {
+		FIFO_PUSH(midiMessagesArray, AfterTouchChannel ^ Channel);
+		FIFO_PUSH(midiMessagesArray, Preasure);
+	}
 }
 
-void sendMMC(byte Value) {
+void sendMMC(byte Value, uint8_t analog) {
 	uint8_t buff[8];
 	buff[0] = 0x04;
 	buff[1] = 0xF0;
@@ -104,10 +99,12 @@ void sendMMC(byte Value) {
 
 	usb_midi_DataTx(buff, 8);
 
-	for (uint8_t i = 1; i <= 3; i++)
-		FIFO_PUSH(midiMessagesArray, buff[i]);
-	for (uint8_t i = 5; i <= 7; i++)
-		FIFO_PUSH(midiMessagesArray, buff[i]);
+	if (analog) {
+		for (uint8_t i = 1; i <= 3; i++)
+			FIFO_PUSH(midiMessagesArray, buff[i]);
+		for (uint8_t i = 5; i <= 7; i++)
+			FIFO_PUSH(midiMessagesArray, buff[i]);
+	}
 }
 
 void sendMidiData(void) {
@@ -115,12 +112,13 @@ void sendMidiData(void) {
 	uint8_t test;
 
 	test = FIFO_COUNT(midiMessagesArray);
-	if (test != 0) {
+	if (test) {
+ //       PRINTF("FIFO %d\n", test);
 		if ((USART1->SR & 0x00000040)) {
 			USART_SendData(USART1, FIFO_FRONT(midiMessagesArray));
+            PRINTF("midi data %d\n", (midiMessagesArray.buf[(midiMessagesArray).tail & ((sizeof(midiMessagesArray.buf) / sizeof(midiMessagesArray.buf[0])) - 1)]));
 			FIFO_POP(midiMessagesArray);
-
-		}
+ 		}
 	}
 }
 

@@ -437,7 +437,7 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 	}
 }
 
-void slider_midi_send(uint16_t value, Slider_type* sliders) {
+void slider_midi_send(uint16_t value, Slider_type* sliders, uint8_t analog) {
 		uint8_t num = (uint8_t)(value & 0x00FF);
 		uint8_t midi_value = (uint8_t)(value >> 8);
 
@@ -451,38 +451,38 @@ void slider_midi_send(uint16_t value, Slider_type* sliders) {
 		case SLIDER_PITCH:
 			break;
 		case SLIDER_AT:
-			sendAfterTouch((uint8_t)(midi_value), channel);
+			sendAfterTouch((uint8_t)(midi_value), channel, analog);
 			break;
 		default:
-			sendControlChange(sliders[num].event, (uint8_t)(midi_value), channel);
+			sendControlChange(sliders[num].event, (uint8_t)(midi_value), channel, analog);
 			break;
 		}
 }
 
-void pitch_midi_send(uint16_t value, uint8_t channel) {
+void pitch_midi_send(uint16_t value, uint8_t channel, uint8_t analog) {
 	channel = channel ? channel : Preset.MidiChannel;
 	if (channel)
 		channel--; //Real channels are 0-15
 	if (channel > 15)
 		 channel = 0;
 
-	sendPitchBend(value, channel);
+	sendPitchBend(value, channel, analog);
 }
 
-void button_midi_send(uint16_t value, Button_type* buttons) {
+void button_midi_send(uint16_t value, Button_type* buttons, uint8_t analog) {
 	uint8_t is_pressed = (value & 0x80) ? 0 : 1;
 	uint8_t num = value & 0x7F;
 
 	if ((num < BUTTON_B1) && is_pressed) {
 		switch (num) {
 		case BUTTON_STOP:
-			sendMMC(MMC_STOP);
+			sendMMC(MMC_STOP, analog);
 			break;
 		case BUTTON_PLAY:
-			sendMMC(MMC_PLAY);
+			sendMMC(MMC_PLAY, analog);
 			break;
 		case BUTTON_RECORD:
-			sendMMC(MMC_REC);
+			sendMMC(MMC_REC, analog);
 			break;
 		}
 		return;
@@ -504,17 +504,17 @@ void button_midi_send(uint16_t value, Button_type* buttons) {
 	if (is_pressed) {
 		if (buttons[num].type == BTN_TYPE_SWITCH) {
 			if (buttons_control_state & button_positions[num]) {
-				sendControlChange(buttons[num].event, buttons[num].off, channel);
+				sendControlChange(buttons[num].event, buttons[num].off, channel, analog);
 				buttons_control_state -= button_positions[num];
 			} else {
-				sendControlChange(buttons[num].event, buttons[num].on, channel);
+				sendControlChange(buttons[num].event, buttons[num].on, channel, analog);
 				buttons_control_state += button_positions[num];
 			}
 		} else {
-			sendControlChange(buttons[num].event, buttons[num].on, channel);
+			sendControlChange(buttons[num].event, buttons[num].on, channel, analog);
 		}
 	} else if (buttons[num].type == BTN_TYPE_PUSH) {
-		sendControlChange(buttons[num].event, buttons[num].off, channel);
+		sendControlChange(buttons[num].event, buttons[num].off, channel, analog);
 	}
 }
 
@@ -845,19 +845,19 @@ uint16_t get_pitch_event(void) {
 }
 
 /*Check Sliders events according to the sliders_state*/
-void checkSliders_events(Slider_type* sliders) {
+void checkSliders_events(Slider_type* sliders, uint8_t analog) {
 	uint16_t event = get_slider_event();
 	if (event) {
-    	slider_midi_send(event - 1, sliders);
+    	slider_midi_send(event - 1, sliders, analog);
 	}
 
 	event = get_pitch_event();
 	if (event) {
-		pitch_midi_send(event - 1, sliders[SLIDER_PITCH].channel);
+		pitch_midi_send(event - 1, sliders[SLIDER_PITCH].channel, analog);
 	}
 }
 
-void checkButtons_events(Button_type* buttons) {
+void checkButtons_events(Button_type* buttons, uint8_t analog) {
 	uint8_t event;
 	if (FIFO_COUNT(control_events) == 0)
 		return; //No events
@@ -871,7 +871,7 @@ void checkButtons_events(Button_type* buttons) {
 		if (!(event & 0x80))
 		   control_buttons_handler(event);
 	} else {
-		button_midi_send(event, buttons);
+		button_midi_send(event, buttons, analog);
 	}
 }
 

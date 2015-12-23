@@ -50,16 +50,16 @@ enum kMIDIType {
 	InvalidType = 0x00 ///< For notifying errors
 };
 
-void sendNoteOn(byte NoteNumber, word Velocity, byte Channel);
-void sendNoteOff(byte NoteNumber, word Velocity, byte Channel);
+void sendNoteOn(byte NoteNumber, word Velocity, byte Channel, uint8_t analog);
+void sendNoteOff(byte NoteNumber, word Velocity, byte Channel,  uint8_t analog);
 
-void sendProgramChange(byte ProgramNumber, byte Channel);
-void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel);
-void sendPitchBend(uint16_t Value, byte Channel);
-void sendPolyPressure(byte NoteNumber, byte Pressure, byte Channel);
-void sendAfterTouch(byte Pressure, byte Channel);
+void sendProgramChange(byte ProgramNumber, byte Channel,  uint8_t analog);
+void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel,  uint8_t analog);
+void sendPitchBend(uint16_t Value, byte Channel,  uint8_t analog);
+void sendPolyPressure(byte NoteNumber, byte Pressure, byte Channel,  uint8_t analog);
+void sendAfterTouch(byte Pressure, byte Channel,  uint8_t analog);
 
-void sendMMC(byte Value);
+void sendMMC(byte Value, uint8_t analog);
 
 void sendMidiData(void); //Send one midi message per run from buffer array
 void receiveMidiData(void);

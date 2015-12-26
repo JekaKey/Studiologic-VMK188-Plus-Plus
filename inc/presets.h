@@ -54,6 +54,7 @@
 
 #define ATTR_CHANNEL "channel"
 #define ATTR_SPLIT "split"
+#define ATTR_SPLIT_ACTIVE "active"
 #define ATTR_SPLIT_CHANNEL "channel"
 #define ATTR_SPLIT_KEY "key"
 #define ATTR_SPLIT_OCTAVE "octave"
@@ -143,6 +144,7 @@ typedef struct{
 
 typedef struct {
 	uint8_t MidiChannel; //1-16
+	uint8_t SplitActive;
 	uint8_t SplitKey;//0 - NoSplit, 1-87 - Split
 	uint8_t SplitChannel; //1-16, MIDI Channel for a left part of a split keyboard
 	int8_t SplitOctShift; //-3..3

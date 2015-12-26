@@ -37,13 +37,14 @@ void calculate_velocity_formula(curve_points_type *cp) {
 
 /*Find a color of a key with number "note_num"*/
 uint16_t note_color(uint16_t note_num) {
-	//TODO: Reduce 21 for simplify
-#ifdef VMK188
-	return (0x0001 << ((note_num - NOTE_SHIFT) % 12)) & 0x0A52;
-#endif
-#ifdef VMK176
-	return (0x0001 << ((note_num - NOTE_SHIFT) % 12)) & 0x0A54;
-#endif
+	uint8_t note = note_num % 12;
+	if (note == 1 ||
+		note == 3 ||
+		note == 6 ||
+		note == 8 ||
+		note == 10)
+		return 1;
+	return 0;
 }
 
 uint16_t getVelocity_on(uint16_t tickNum, uint16_t black) {

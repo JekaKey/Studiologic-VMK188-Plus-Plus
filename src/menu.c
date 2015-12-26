@@ -226,14 +226,9 @@ static char rotate_char(const char ch, int8_t direction, uint8_t space_enable){
 /***************************************************************************/
 /*Function for the testing of buttons, encoders, and the display*/
 
-const char note_names[12][3]={"A","A#","B","C","C#","D","D#","E","F","F#","G","G#"};
+const char note_names[12][3]={"C","C#","D","D#","E","F","F#","G","G#", "A","A#","B"};
 
 static int note_name (uint8_t note_num, char *name) {
-	if (!note_num) {
-		strcpy(name, "No");
-		return 0;
-	}
-	note_num--;
 	strcpy(name, note_names[note_num%12]);
 	int l=strlen(name);
 	name[l]=note_num/12+'0';
@@ -303,7 +298,7 @@ MAKE_MENU(menu4_item3,		NULL_ENTRY,			menu4_item2,		menu_pst_curve,	NULL_ENTRY,	
 //							NEXT,			PREVIOUS		PARENT,			CHILD,			POS,	Value,						t_Value,	Min,	Max,	COMMAND_ENTER,			COMMAND_EDIT			
 
 MAKE_MENU(menu_pst_gen,		menu_pst_split,	NULL_ENTRY,		NULL_ENTRY,		menu_pst_chan,	0,		NULL,						t_none,		0,		0,		NULL,					check_saving_preset,	"  General "	);
-MAKE_MENU(menu_pst_split,	menu_pst_curve,	menu_pst_gen,	NULL_ENTRY,		menu_split_key,	0,		NULL,						t_none,		0,		0,		NULL,					check_saving_preset,	"  Split   "	);
+MAKE_MENU(menu_pst_split,	menu_pst_curve,	menu_pst_gen,	NULL_ENTRY,		menu_split_on,	0,		NULL,						t_none,		0,		0,		NULL,					check_saving_preset,	"  Split   "	);
 MAKE_MENU(menu_pst_curve,	menu_pst_slid,	menu_pst_split,	NULL_ENTRY,		menu4_item1, 	0,		NULL,						t_none,		0,		0,		NULL,					check_saving_preset,	"  Curve   "	);
 MAKE_MENU(menu_pst_slid,	menu_pst_btns,	menu_pst_curve,	NULL_ENTRY,		menu_slider1,	0,		NULL,						t_none,		0,		0,		menu_preset_sl_enter,	check_saving_preset,	"  Sliders "	);
 MAKE_MENU(menu_pst_btns,	NULL_ENTRY,		menu_pst_slid,	NULL_ENTRY,		menu_button1,	1,		NULL,						t_none,		0,		0,		menu_preset_bt_enter,	check_saving_preset,	"  Buttons "	);
@@ -314,7 +309,8 @@ MAKE_MENU(menu_pst_oct,		menu_pst_hires,	menu_pst_transp,menu_pst_gen,	NULL_ENTR
 MAKE_MENU(menu_pst_hires,	menu_pst_midi,	menu_pst_oct,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.HighResEnable,		t_bool,		0,		1,		NULL,					NULL,					" High Res: "	);
 MAKE_MENU(menu_pst_midi,	NULL_ENTRY,		menu_pst_hires,	menu_pst_gen,	NULL_ENTRY,		1,		&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					NULL,					"Midi Port: "	);
 
-MAKE_MENU(menu_split_key,	menu_split_chan,NULL_ENTRY,		menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitKey,			t_note,		0,		40,		NULL,					NULL,					"Split Key: "	);
+MAKE_MENU(menu_split_on,	menu_split_key,	NULL_ENTRY,		menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitActive,		t_bool,		0,		1,		NULL,					NULL,					"    Split: "	);
+MAKE_MENU(menu_split_key,	menu_split_chan,menu_split_on,	menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitKey,			t_note,		0,		40,		NULL,					NULL,					"Split Key: "	);
 MAKE_MENU(menu_split_chan,	menu_split_oct,	menu_split_key,	menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitChannel,		t_uint8,	1,		16,		NULL,					NULL,					"Split Chl: "	);
 MAKE_MENU(menu_split_oct,	NULL_ENTRY,		menu_split_chan,menu_pst_split,	NULL_ENTRY,		1,		&Preset.SplitOctShift,		t_int8,		-3,		3,		NULL,					NULL,					"Split Oct: "	);
 
@@ -347,7 +343,7 @@ MAKE_MENU(menu_at,			NULL_ENTRY,		menu_mod,		menu_pst_slid,	NULL_ENTRY,		1,		NUL
 /*The following list of menu items can be switched to any slider*/
 MAKE_MENU(menu_sl_active,	menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		"  Active:"		);
 MAKE_MENU(menu_sl_channel,	menu_sl_event,	menu_sl_active,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		16,		NULL,					menu_slider_edit,		" Channel:"		);
-MAKE_MENU(menu_sl_event,	menu_sl_reverse,menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	1,		127,	NULL,					menu_slider_edit,		"   Event:"		);
+MAKE_MENU(menu_sl_event,	menu_sl_reverse,menu_sl_channel,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint8,	0,		127,	NULL,					menu_slider_edit,		"   Event:"		);
 MAKE_MENU(menu_sl_reverse,	menu_sl_min,	menu_sl_event,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_bool,		0,		1,		NULL,					menu_slider_edit,		" Reverse:"		);
 MAKE_MENU(menu_sl_min,		menu_sl_max,	menu_sl_reverse,NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint16,	0,		127,	NULL,					menu_slider_edit,		"     Min:"		);
 MAKE_MENU(menu_sl_max,		menu_sl_bin,	menu_sl_min,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,						t_uint16,	0,		127,	NULL,					menu_slider_edit,		"     Max:"		);
@@ -1327,7 +1323,7 @@ static void preset_show (const presetType *pr, file_list_type *pr_list){
 	memcpy(line,"Ch:",3);
     btoa_mem(pr->MidiChannel,line+3);
 
-    if (pr->SplitKey){
+    if (pr->SplitActive){
 	    len=note_name(pr->SplitKey,line+6)+6;
 	    memcpy(line+len,":",1 );
 	    btoa_mem(pr->SplitChannel,line +len+1);

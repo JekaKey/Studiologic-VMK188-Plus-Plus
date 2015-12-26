@@ -19,7 +19,7 @@ static uint16_t duration_note[88] = { 0 };
 static uint16_t lastState_key[88] = { 0 };
 
 
-static uint8_t curNote;
+static int16_t curNote;
 static uint16_t duration;
 
 
@@ -50,45 +50,45 @@ static gpioPins_t gpioPins[22] =  {{ GPIOC, GPIO_Pin_5 },  { GPIOC, GPIO_Pin_4 }
 void checkNoteArray(presetType* preset) {
 	word vel;
 	uint8_t channel;
-	if (FIFO_COUNT(notes) != 0) {
 
+	if (FIFO_COUNT(notes) != 0) {
 		curNote = FIFO_FRONT(notes);
 		duration = FIFO_FRONT(durations);
 
 		FIFO_POP(durations);
 		FIFO_POP(notes);
 
-		int delta = NOTE_SHIFT;
-		delta += preset->Transpose;
+		uint8_t noteOn = (curNote & 0x80) == 0;
+		curNote = curNote & 0x7F;
+		curNote += NOTE_SHIFT;
 
-		if ((preset->SplitKey) && ((curNote & 0x7F) < preset->SplitKey)) {
+		if (preset->SplitActive && curNote < preset->SplitKey) {
 			channel = preset->SplitChannel - 1;
-			delta += preset->SplitOctShift * 12;
+			curNote += preset->SplitOctShift * 12;
 		} else {
 			channel = preset->MidiChannel - 1;
-			delta += preset->OctaveShift * 12;
+			curNote += preset->OctaveShift * 12;
 		}
+
 		if (channel > 15)
 			channel = 0;
 
-		int tempNote = (curNote & 0x7F) + delta;
-		if (tempNote < 0 || tempNote > 127)
+		curNote += preset->Transpose;
+		if (curNote < 0 || curNote > 127)
 			return;
 
-		curNote += delta;
-
-		if ((curNote & 0x80) == 0) {
+		if (noteOn) {
 			vel = getVelocity_on(duration, note_color(curNote));
-			if (preset->HighResEnable) {
-				/*Send High Res Preffix*/
-				sendControlChange(0x58, (byte) (vel & 0x7F), channel, preset->AnalogMidiEnable); //to midi
-			}
+			//Send High Res Preffix
+			if (preset->HighResEnable)
+				sendControlChange(0x58, (byte) (vel & 0x7F), channel, preset->AnalogMidiEnable);
 			if (vel)
-			  sendNoteOn(curNote, vel, channel, preset->AnalogMidiEnable); //to midi
+				sendNoteOn(curNote, vel, channel, preset->AnalogMidiEnable);
 		} else {
-			sendNoteOff(curNote & 0x7F,
+			sendNoteOff(curNote,
 					getVelocity_off(duration, note_color(curNote)),
-					channel, preset->AnalogMidiEnable); //to midi
+					channel,
+					preset->AnalogMidiEnable);
 		}
 
 	}

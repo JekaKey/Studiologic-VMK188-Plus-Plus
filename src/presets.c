@@ -220,6 +220,7 @@ FIO_status preset_save(const char* path, presetType* pr){
 	json_write_string(0, "{", &fff);
 	json_write_number(1, ATTR_CHANNEL, pr->MidiChannel, 1, &fff);
 	json_write_string(1, "\"" ATTR_SPLIT "\":{", &fff);
+	json_write_number(2, ATTR_SPLIT_ACTIVE, pr->SplitActive, 1, &fff);
 	json_write_number(2, ATTR_SPLIT_KEY, pr->SplitKey, 1, &fff);
 	json_write_number(2, ATTR_SPLIT_CHANNEL, pr->SplitChannel, 1, &fff);
 	json_write_number(2, ATTR_SPLIT_OCTAVE, pr->SplitOctShift, 0, &fff);
@@ -402,6 +403,7 @@ static json_attr_t setting_attr[] = {
 };
 
 static json_attr_t split_attr[]={
+		{ATTR_SPLIT_ACTIVE, t_uint8,},
 		{ATTR_SPLIT_KEY, t_uint8,},
 		{ATTR_SPLIT_CHANNEL, t_uint8,},
 		{ATTR_SPLIT_OCTAVE, t_int8,},
@@ -501,9 +503,10 @@ static void init_json_preset_attr(presetType *preset) {
 	preset_attr[4].addr.int8 = &(preset->Transpose);
 	preset_attr[5].addr.int8 = &(preset->OctaveShift);
 
-	split_attr[0].addr.uint8 = &(preset->SplitKey);
-	split_attr[1].addr.uint8 = &(preset->SplitChannel);
-	split_attr[2].addr.int8 = &(preset->SplitOctShift);
+	split_attr[0].addr.uint8 = &(preset->SplitActive);
+	split_attr[1].addr.uint8 = &(preset->SplitKey);
+	split_attr[2].addr.uint8 = &(preset->SplitChannel);
+	split_attr[3].addr.int8 = &(preset->SplitOctShift);
 
 	/* Assign pitch attribite*/
 	strcpy(pitch_attr.attribute, slider_names[SLIDER_PITCH]);
@@ -802,6 +805,7 @@ FIO_status preset_load(char* name, presetType* pr) {
 static void preset_set_defaults(presetType* pr){
 	pr->MidiChannel=1;
 	pr->HighResEnable=0;
+	pr->SplitActive=0;
 	pr->SplitKey=0;
 	pr->SplitChannel=1;
 	pr->SplitOctShift=0;

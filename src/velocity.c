@@ -37,14 +37,7 @@ void calculate_velocity_formula(curve_points_type *cp) {
 
 /*Find a color of a key with number "note_num"*/
 uint16_t note_color(uint16_t note_num) {
-	uint8_t note = note_num % 12;
-	if (note == 1 ||
-		note == 3 ||
-		note == 6 ||
-		note == 8 ||
-		note == 10)
-		return 1;
-	return 0;
+	return (0x01 << (note_num % 12)) & 0b010101001010;//apply piano keyboard octave pattern from right to left
 }
 
 uint16_t getVelocity_on(uint16_t tickNum, uint16_t black) {

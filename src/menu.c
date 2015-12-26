@@ -19,6 +19,8 @@ extern const char slider_names[][MAX_ATTR_SIZE];//defined in "control.c"
 extern uint8_t slider_calibrate_number;
 extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
 
+extern uint8_t keySeek;
+
 menuItem_type Null_Menu = { (void*)0, (void*)0, (void*)0, (void*)0, 0, (void*)0, 0, 0, 0, (void*)0, (void*)0, {0x00} };
 
 menuItem_type * menus_sliders_ordered [SLIDERS_AMOUNT] = { NULL };
@@ -310,7 +312,7 @@ MAKE_MENU(menu_pst_hires,	menu_pst_midi,	menu_pst_oct,	menu_pst_gen,	NULL_ENTRY,
 MAKE_MENU(menu_pst_midi,	NULL_ENTRY,		menu_pst_hires,	menu_pst_gen,	NULL_ENTRY,		1,		&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					NULL,					"Midi Port: "	);
 
 MAKE_MENU(menu_split_on,	menu_split_key,	NULL_ENTRY,		menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitActive,		t_bool,		0,		1,		NULL,					NULL,					"    Split: "	);
-MAKE_MENU(menu_split_key,	menu_split_chan,menu_split_on,	menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitKey,			t_note,		0,		40,		NULL,					NULL,					"Split Key: "	);
+MAKE_MENU(menu_split_key,	menu_split_chan,menu_split_on,	menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitKey,			t_note,		22,		108,	NULL,					NULL,					"Split Key: "	);
 MAKE_MENU(menu_split_chan,	menu_split_oct,	menu_split_key,	menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitChannel,		t_uint8,	1,		16,		NULL,					NULL,					"Split Chl: "	);
 MAKE_MENU(menu_split_oct,	NULL_ENTRY,		menu_split_chan,menu_pst_split,	NULL_ENTRY,		1,		&Preset.SplitOctShift,		t_int8,		-3,		3,		NULL,					NULL,					"Split Oct: "	);
 
@@ -453,6 +455,25 @@ static void showMenu() {
 			menu_show_param(MENU_NEXT);
 		menu_cursor_draw(&Menu_Cursor, 1, MENU_CURSOR_POS);
 	}
+
+	if (selectedMenuItem->tValue == t_note)
+		keySeek = 1;
+	else
+		keySeek = 0;
+}
+
+void changeSplitKey(uint8_t note) {
+	if (selectedMenuItem->tValue != t_note || Preset.SplitKey == note)
+		return;
+
+	Preset.SplitKey = note;
+	Preset.Changed = 1;
+
+	hd44780_goto(MENU_POS + 1, MENU_VALUE_POS);
+	hd44780_write_string("    ");
+	hd44780_goto(MENU_POS + 1, MENU_VALUE_POS);
+
+	menu_show_param(selectedMenuItem);
 }
 
 static void showYNMenu() {

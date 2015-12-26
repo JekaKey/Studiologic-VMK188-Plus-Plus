@@ -10,6 +10,7 @@ FIFO8(128) midiMessagesArray; //Array for midi messages buffer
 FIFO8(8) notes; //Array for current note
 FIFO16(8) durations; //Array for duration for current note
 
+uint8_t keySeek = 0;
 
 static uint8_t lastState[11] = { 0 };
 
@@ -61,6 +62,11 @@ void checkNoteArray(presetType* preset) {
 		uint8_t noteOn = (curNote & 0x80) == 0;
 		curNote = curNote & 0x7F;
 		curNote += NOTE_SHIFT;
+
+		if (keySeek) {
+			changeSplitKey(curNote);
+			return;
+		}
 
 		if (preset->SplitActive && curNote < preset->SplitKey) {
 			channel = preset->SplitChannel - 1;

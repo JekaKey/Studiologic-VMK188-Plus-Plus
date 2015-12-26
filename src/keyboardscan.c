@@ -49,7 +49,7 @@ static gpioPins_t gpioPins[22] =  {{ GPIOC, GPIO_Pin_5 },  { GPIOC, GPIO_Pin_4 }
 
 
 void checkNoteArray(presetType* preset) {
-	word vel;
+	uint16_t vel;
 	uint8_t channel;
 
 	if (FIFO_COUNT(notes) != 0) {
@@ -87,7 +87,7 @@ void checkNoteArray(presetType* preset) {
 			vel = getVelocity_on(duration, note_color(curNote));
 			//Send High Res Preffix
 			if (preset->HighResEnable)
-				sendControlChange(0x58, (byte) (vel & 0x7F), channel, preset->AnalogMidiEnable);
+				sendControlChange(0x58, (uint8_t) (vel & 0x7F), channel, preset->AnalogMidiEnable);
 			if (vel)
 				sendNoteOn(curNote, vel, channel, preset->AnalogMidiEnable);
 		} else {

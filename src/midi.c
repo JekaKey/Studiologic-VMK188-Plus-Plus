@@ -14,7 +14,7 @@ extern FIFO8(8) notes; //Array for current note
 extern FIFO16(8) durations; //Array for duration for current note
 extern FIFO32(128) midi_usb_in;
 
-void sendNoteOn(byte NoteNumber, word Velocity, byte Channel, uint8_t analog) {
+void sendNoteOn(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t analog) {
 	message_buff[0] = 0x09; //USB-MIDI NoteOn prefix
 	message_buff[1] = NoteOn ^ Channel;
 	message_buff[2] = NoteNumber;
@@ -25,11 +25,11 @@ void sendNoteOn(byte NoteNumber, word Velocity, byte Channel, uint8_t analog) {
         PRINTF ("Send Analog MIDI\n");
 		FIFO_PUSH(midiMessagesArray, NoteOn ^ Channel);
 		FIFO_PUSH(midiMessagesArray, NoteNumber);
-		FIFO_PUSH(midiMessagesArray, (byte)(Velocity>>7));
+		FIFO_PUSH(midiMessagesArray, (uint8_t)(Velocity>>7));
 	}
 }
 
-void sendNoteOff(byte NoteNumber, word Velocity, byte Channel, uint8_t analog) {
+void sendNoteOff(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t analog) {
 	message_buff[0] = 0x08; //USB-MIDI NoteOff prefix
 	message_buff[1] = NoteOff ^ Channel;
 	message_buff[2] = NoteNumber;
@@ -39,11 +39,11 @@ void sendNoteOff(byte NoteNumber, word Velocity, byte Channel, uint8_t analog) {
 	if (analog) {
 		FIFO_PUSH(midiMessagesArray, NoteOff ^ Channel);
 		FIFO_PUSH(midiMessagesArray, NoteNumber);
-		FIFO_PUSH(midiMessagesArray, (byte)(Velocity>>7));
+		FIFO_PUSH(midiMessagesArray, (uint8_t)(Velocity>>7));
 	}
 }
 
-void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel, uint8_t analog) {
+void sendControlChange(uint8_t ControlNumber, uint8_t ControlValue, uint8_t Channel, uint8_t analog) {
 	message_buff[0] = 0x0B; //USB-MIDI CC prefix
 	message_buff[1] = ControlChange ^ Channel;
 	message_buff[2] = ControlNumber;
@@ -57,9 +57,9 @@ void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel, uint
 	}
 }
 
-void sendPitchBend(uint16_t Value, byte Channel, uint8_t analog) {
-	byte ValueL = Value & 0x7F;
-	byte ValueM = Value >> 7;
+void sendPitchBend(uint16_t Value, uint8_t Channel, uint8_t analog) {
+	uint8_t ValueL = Value & 0x7F;
+	uint8_t ValueM = Value >> 7;
 
 	message_buff[0] = 0x0E; //USB-MIDI Pitch prefix
 	message_buff[1] = PitchBend ^ Channel;
@@ -74,7 +74,7 @@ void sendPitchBend(uint16_t Value, byte Channel, uint8_t analog) {
 	}
 }
 
-void sendAfterTouch(byte Preasure, byte Channel, uint8_t analog) {
+void sendAfterTouch(uint8_t Preasure, uint8_t Channel, uint8_t analog) {
 	message_buff[0] = 0x0D; //USB-MIDI AfterTouch prefix
 	message_buff[1] = AfterTouchChannel ^ Channel;
 	message_buff[2] = Preasure;
@@ -86,7 +86,7 @@ void sendAfterTouch(byte Preasure, byte Channel, uint8_t analog) {
 	}
 }
 
-void sendMMC(byte Value, uint8_t analog) {
+void sendMMC(uint8_t Value, uint8_t analog) {
 	uint8_t buff[8];
 	buff[0] = 0x04;
 	buff[1] = 0xF0;

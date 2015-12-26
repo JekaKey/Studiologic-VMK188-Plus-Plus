@@ -21,9 +21,6 @@
 #define MMC_RW 0x05
 #define MMC_REC 0x06
 
-/*! Type definition for practical use (because "unsigned char" is a bit long to write.. )*/
-typedef uint8_t byte;
-typedef uint16_t word;
 
 /*! Enumeration of MIDI types */
 enum kMIDIType {
@@ -50,16 +47,16 @@ enum kMIDIType {
 	InvalidType = 0x00 ///< For notifying errors
 };
 
-void sendNoteOn(byte NoteNumber, word Velocity, byte Channel, uint8_t analog);
-void sendNoteOff(byte NoteNumber, word Velocity, byte Channel,  uint8_t analog);
+void sendNoteOn(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t analog);
+void sendNoteOff(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel,  uint8_t analog);
 
-void sendProgramChange(byte ProgramNumber, byte Channel,  uint8_t analog);
-void sendControlChange(byte ControlNumber, byte ControlValue, byte Channel,  uint8_t analog);
-void sendPitchBend(uint16_t Value, byte Channel,  uint8_t analog);
-void sendPolyPressure(byte NoteNumber, byte Pressure, byte Channel,  uint8_t analog);
-void sendAfterTouch(byte Pressure, byte Channel,  uint8_t analog);
+void sendProgramChange(uint8_t ProgramNumber, uint8_t Channel,  uint8_t analog);
+void sendControlChange(uint8_t ControlNumber, uint8_t ControlValue, uint8_t Channel,  uint8_t analog);
+void sendPitchBend(uint16_t Value, uint8_t Channel,  uint8_t analog);
+void sendPolyPressure(uint8_t NoteNumber, uint8_t Pressure, uint8_t Channel,  uint8_t analog);
+void sendAfterTouch(uint8_t Pressure, uint8_t Channel,  uint8_t analog);
 
-void sendMMC(byte Value, uint8_t analog);
+void sendMMC(uint8_t Value, uint8_t analog);
 
 void sendMidiData(void); //Send one midi message per run from buffer array
 void receiveMidiData(void);

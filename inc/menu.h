@@ -157,3 +157,4 @@ void interface_init(char *name);
 void calibration_init(char *name);
 void checkControl_events(void);
 void control_buttons_handler(uint8_t event);
+void changeSplitKey(uint8_t note);

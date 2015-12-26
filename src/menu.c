@@ -109,6 +109,7 @@ static void menu_show_param(menuItem_type * menu);
 static void menu_preset_as_default(void);
 
 
+static void startMenuYN_preset_save(void);
 static void startMenuYN_preset_delete(void);
 static void startMenuYN_curve_save(void);
 static void startMenuYN_curve_delete(void);
@@ -265,8 +266,9 @@ int file_list_find(file_list_type *fl, const char *name){
 
 //							NEXT				PREVIOUS			PARENT			CHILD			POS		Value	t_Value		Min		Max		COMMAND_ENTER						COMMAND_EDIT			TEXT
 
-MAKE_MENU(menu_stor_def,	menu_stor_copy,		NULL_ENTRY,			NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_preset_as_default,				menu_back_to_preset,	"Pst as default");
-MAKE_MENU(menu_stor_copy,	menu_stor_rename,	menu_stor_def,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_preset_copy,					menu_back_to_preset,	"Copy preset"	);
+MAKE_MENU(menu_stor_def,	menu_stor_save,		NULL_ENTRY,			NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_preset_as_default,				menu_back_to_preset,	"Pst as default");
+MAKE_MENU(menu_stor_save,	menu_stor_copy,		menu_stor_def,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		startMenuYN_preset_save,			menu_back_to_preset,	"Save preset"	);
+MAKE_MENU(menu_stor_copy,	menu_stor_rename,	menu_stor_save,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_preset_copy,					menu_back_to_preset,	"Copy preset"	);
 MAKE_MENU(menu_stor_rename,	menu_stor_del,		menu_stor_copy,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_preset_rename,					menu_back_to_preset,	"Rename preset"	);
 MAKE_MENU(menu_stor_del,	NULL_ENTRY,			menu_stor_rename,	NULL_ENTRY,		NULL_ENTRY,		1,		NULL,	t_none,		0,		0,		startMenuYN_preset_delete,			menu_back_to_preset,	"Delete preset"	);
 
@@ -565,6 +567,11 @@ static void startMenu_preset(void) {
 	showMenu();
 
 	I_state = STATE_menu;
+}
+
+static void startMenuYN_preset_save(void) {
+	selectedMenuYNItem = (menuYNItem_type*) &menuYN_preset_save;
+	toYNMenu();
 }
 
 static void startMenuYN_preset_rename(void) {

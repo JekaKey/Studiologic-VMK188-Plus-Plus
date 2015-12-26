@@ -31,7 +31,9 @@ const uint8_t button_positions[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array wit
 FIFO8(128) control_events;
 FIFO16(128) sliders_events;
 FIFO16(128) pitch_events;
-sliders_state_t sliders_state;
+
+sliders_state_t sliders_state = SLIDERS_WORK;
+uint8_t buttonsToMenu = 0;
 uint8_t buttons_control_state = 0;
 
 
@@ -372,7 +374,6 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 
 	//pitch band has a dead zone and 14-bit precision
 	if (num == SLIDER_PITCH) {
-		//TODO: setting the dead zone in the preset
 		double dead = (double)sliders_calibr->dead / 100 * length;
 		a = (double) (sliders->max_out_value - sliders->min_out_value) / (double) (length - dead);
 
@@ -867,7 +868,7 @@ void checkButtons_events(Button_type* buttons, uint8_t analog) {
 
 	uint8_t btn_num = event & 0x7F;
 
-	if (btn_num <= BUTTON_RIGHT || btn_num >= ENCODER_LEFT1) {
+	if (btn_num <= BUTTON_RIGHT || btn_num >= ENCODER_LEFT1 || buttonsToMenu) {
 		if (!(event & 0x80))
 		   control_buttons_handler(event);
 	} else {

@@ -19,6 +19,7 @@ extern const char slider_names[][MAX_ATTR_SIZE];//defined in "control.c"
 extern uint8_t slider_calibrate_number;
 extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
 
+extern uint8_t buttonsToMenu;
 extern uint8_t keySeek;
 
 menuItem_type Null_Menu = { (void*)0, (void*)0, (void*)0, (void*)0, 0, (void*)0, 0, 0, 0, (void*)0, (void*)0, {0x00} };
@@ -1027,16 +1028,22 @@ static void menu_slider_enter(void) {
 
 
 static void menu_preset_bt_enter(void) {
+	buttonsToMenu = 1;
+	controlLED1on(1);
 	menuChange(MENU_CHILD);
 	send_message(MES_REDRAW);
 }
 
 static void menu_preset_bt_edit(void) {
+	buttonsToMenu = 0;
+	controlLED1on(0);
 	menuChange(MENU_PARENT);
 	send_message(MES_REDRAW);
 }
 
 static void menu_button_edit(void) {
+	buttonsToMenu = 1;
+	controlLED1on(1);
 	menuChange(MENU_PARENT);
 	send_message(MES_REDRAW);
 }
@@ -1057,6 +1064,8 @@ static void menu_button_enter(void) {
 	menu_bt_off.Parent = selectedMenuItem;
 	menu_bt_off.Value = (uint8_t*)(&Preset.buttons[but_num].off);
 
+	buttonsToMenu = 0;
+	controlLED1on(0);
 	menuChange(&menu_bt_active);
 	send_message(MES_REDRAW);
 }
@@ -1117,6 +1126,12 @@ static void change_value(int16_t changer) {
 
 
 void menu_button_handler(uint8_t button) {
+	if (button >= BUTTON_B1 && button <= BUTTON_B8) {
+		selectedMenuItem = menus_buttons_ordered[button - BUTTON_B1];
+		showMenu();
+		return;
+	}
+
 	switch (button) {
 	case MES_SLIDER_MENU_FOUND:
 		selectedMenuItem = menus_sliders_ordered[slider_calibrate_number];

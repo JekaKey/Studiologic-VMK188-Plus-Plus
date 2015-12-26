@@ -21,6 +21,7 @@ extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
 
 extern uint8_t buttonsToMenu;
 extern uint8_t keySeek;
+extern uint8_t curNoteSeek;
 
 menuItem_type Null_Menu = { (void*)0, (void*)0, (void*)0, (void*)0, 0, (void*)0, 0, 0, 0, (void*)0, (void*)0, {0x00} };
 
@@ -470,7 +471,6 @@ void changeSplitKey(uint8_t note) {
 		return;
 
 	Preset.SplitKey = note;
-	Preset.Changed = 1;
 
 	hd44780_goto(MENU_POS + 1, MENU_VALUE_POS);
 	hd44780_write_string("    ");
@@ -700,7 +700,7 @@ static void menu_preset_save_yes(void){
     strcat(path, presets_list.names[presets_list.pos]);
 	if (preset_save(path, &Preset)!=FIO_OK)
 		set_okIOzero();
-	Preset.Changed=0;
+	Preset.Crc = presetCRC(&Preset);
 }
 
 static void menu_preset_delete_yes(void){
@@ -855,7 +855,6 @@ static void menu_preset_edit_curve(void){
     curve_editor_init(Curve_Edit_object, &(Preset.Curve));
 //    Curve_Edit_object.parent=STATE_menu;
 	I_state = STATE_preset_curve_edit;
-	Preset.Changed = 1;
 	send_message(MES_REDRAW);
 }
 
@@ -1109,8 +1108,6 @@ static void change_value(int16_t changer) {
 	if (old_value == value)
 		return;
 
-	Preset.Changed = 1;
-
 	switch (selectedMenuItem->tValue) {
 	case t_uint16:
 		*((uint16_t*) selectedMenuItem->Value) = (uint16_t) value;
@@ -1143,6 +1140,9 @@ void menu_button_handler(uint8_t button) {
 	case MES_SLIDER_MENU_FOUND:
 		selectedMenuItem = menus_sliders_ordered[slider_calibrate_number];
 		showMenu();
+		break;
+	case MES_KEY_SEEK:
+		changeSplitKey(curNoteSeek);
 		break;
 	case MES_REDRAW:
 		showMenu();
@@ -1902,7 +1902,7 @@ void control_buttons_handler(uint8_t event) {
 }
 
 static void check_saving_preset(void) {
-	if (Preset.Changed) {
+	if (Preset.Crc != presetCRC(&Preset)) {
 		selectedMenuYNItem = (menuYNItem_type*) &menuYN_preset_save;
 		toYNMenu();
 	} else {

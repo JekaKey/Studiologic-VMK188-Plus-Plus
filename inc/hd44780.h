@@ -1,4 +1,5 @@
-#define STM32F40XX
+//#ifndef STM32F40XX
+//#define STM32F40XX
 #ifndef _HD44780_H_
 #define _HD44780_H_
 

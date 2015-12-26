@@ -1,5 +1,4 @@
 /*******************************************************************/
-#define STM32F40XX
 
 #include "stm32f4xx.h"
 #include "system_stm32f4xx.h"

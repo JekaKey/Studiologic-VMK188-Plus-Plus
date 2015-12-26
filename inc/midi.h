@@ -1,4 +1,3 @@
-#define STM32F40XX
 #ifndef MIDI_H
 #define MIDI_H
 

@@ -86,10 +86,10 @@
         </Includepaths>
         <DefinedSymbols>
           <Define name="STM32F407VG"/>
-          <Define name="STM32F4XX"/>
           <Define name="__FPU_USED"/>
           <Define name="USE_STDPERIPH_DRIVER"/>
           <Define name="VMK188"/>
+          <Define name="STM32F40XX"/>
         </DefinedSymbols>
       </Compile>
       <Link useDefault="0">
@@ -98,7 +98,7 @@
         <Option name="UseMemoryLayout" value="1"/>
         <Option name="LTO" value="0"/>
         <Option name="IsNewStartupCode" value="1"/>
-        <Option name="Library" value="Not use C Library"/>
+        <Option name="Library" value="Retarget"/>
         <Option name="UserEditLinker" value="--entry=main; -Map=output.map; "/>
         <LinkedLibraries/>
         <MemoryAreas debugInFlashNotRAM="1">

@@ -1,9 +1,9 @@
-#define STM32F40XX
 
 #include "presets.h"
 #include "keyboardscan.h"
 #include "usb_midi_io.h"
 #include "fifo.h"
+#include "controls.h"
 
 
 FIFO8(128) midiMessagesArray; //Array for midi messages buffer
@@ -11,6 +11,7 @@ FIFO8(8) notes; //Array for current note
 FIFO16(8) durations; //Array for duration for current note
 
 uint8_t keySeek = 0;
+uint8_t curNoteSeek=0;
 
 static uint8_t lastState[11] = { 0 };
 
@@ -64,7 +65,8 @@ void checkNoteArray(presetType* preset) {
 		curNote += NOTE_SHIFT;
 
 		if (keySeek) {
-			changeSplitKey(curNote);
+			send_message(MES_KEY_SEEK);
+			curNoteSeek=curNote;
 			return;
 		}
 

@@ -1,4 +1,3 @@
-#define STM32F40XX
 //--------------------------------------------------------------
 #ifndef __STM32F4_UB_MAIN_H
 #define __STM32F4_UB_MAIN_H

@@ -143,6 +143,7 @@ typedef struct{
 }calibrationType;
 
 typedef struct {
+	uint16_t Crc; //control sum
 	uint8_t MidiChannel; //1-16
 	uint8_t SplitActive;
 	uint8_t SplitKey;//0 - NoSplit, 1-87 - Split
@@ -155,8 +156,7 @@ typedef struct {
 	curve_points_type Curve;//curve nodes for B&W keys
 	Slider_type sliders[SLIDERS_AMOUNT];
 	Button_type buttons[BUTTONS_AMOUNT];
-	uint8_t Changed;
-} presetType;
+}presetType;
 
 
 FIO_status start_load_setting(void);
@@ -184,5 +184,6 @@ FIO_status curve_delete(file_list_type *cur_list);
 FIO_status curve_rename(file_list_type *cur_list, char *new_name);
 FIO_status curve_save(const char* path, curve_points_type* curve);
 void set_okIOzero(void);
+uint16_t presetCRC(presetType *pr);
 
 #endif //PRESETS__H

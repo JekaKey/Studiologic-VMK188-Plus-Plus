@@ -161,6 +161,7 @@
 #define MES_SLIDER_EDGE 32
 #define MES_SLIDER_FOUND 33
 #define MES_SLIDER_MENU_FOUND 34
+#define MES_KEY_SEEK 35
 
 
 /*the events to send to controls FIFO*/

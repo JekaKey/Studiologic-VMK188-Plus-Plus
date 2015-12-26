@@ -1,4 +1,3 @@
-#define STM32F40XX
 #ifndef SYSEXEVENT_H
 #define SYSEXEVENT_H
 

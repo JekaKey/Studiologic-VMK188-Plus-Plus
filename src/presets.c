@@ -12,7 +12,9 @@
 
 uint8_t okIO=1;//if this flag is zero all I/O operations will be canceled.
 
-presetType Preset;
+
+presetType Preset;  //Current preset global structure
+
 currentStateType Current_state={"",""};
 calibrationType Calibration;
 curve_points_type Curve;
@@ -31,6 +33,19 @@ void set_okIOzero(void){
 	okIO=0;
 }
 
+uint16_t presetCRC(presetType *pr) {
+	uint16_t crc = 0xFFFF;
+	uint8_t i;
+	uint8_t * data = (uint8_t*)pr+2; //first 2 bytes is crc itself
+	uint16_t len=sizeof(presetType)-2;
+    while(len--) {
+        crc ^= *data++ << 8;
+
+        for(i = 0; i < 8; i++)
+            crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
+    }
+    return crc;
+}
 /***********************/
 
 static void json_write_string(uint8_t level, const char* st, FIL* fff) { //use to write brackets into json
@@ -332,7 +347,7 @@ FIO_status preset_save(const char* path, presetType* pr){
 	}
 	json_write_string(1, "}", &fff);
 	json_write_string(0, "}", &fff);
-	pr->Changed=0;
+	pr->Crc=presetCRC(pr);
 	if (SDFS_close(&fff)!= SDFS_OK)
 		return FIO_FILE_CREATE_ERROR;
 	return res;
@@ -812,7 +827,6 @@ static void preset_set_defaults(presetType* pr){
 	pr->AnalogMidiEnable=0;
 	pr->Transpose=0;
 	pr->OctaveShift=0;
-//	strcpy(pr->CurveFileName, DEFAULT_CURVE_NAME);
 }
 
 static void curve_set_defaults(presetType* pr){
@@ -910,7 +924,7 @@ FIO_status start_load_preset(presetType* preset, calibrationType* cal){
 	if (Current_state.preset_name[0]) { //name is not empty string
 		fiores = preset_load(Current_state.preset_name, preset); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
-			res = SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
+			preset->Crc=presetCRC(preset);
 			return FIO_OK; //all is done
 		} else {
 			if (fiores == FIO_SD_ERROR) {

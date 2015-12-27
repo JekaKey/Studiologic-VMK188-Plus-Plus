@@ -7,26 +7,27 @@
 static double Aw, Bw, Cw, Ab, Bb, Cb;
 
 void calculate_velocity_formula(curve_points_type *cp) {
-	double x1, y1, x2, y2, x3, y3, z;
+	double x1, y1, x2, y2, x3, y3, z, t;
+	t=(double)(TIMER_TIMPERIOD);
 	/*Calculate parameters for white keys*/
-	x1 = cp->xw1 / TIMER_TIMPERIOD; //Calculation in ticks of the timer
-	y1 = cp->yw1;
-	x2 = cp->xw2 / TIMER_TIMPERIOD; //Calculation in ticks of the timer
-	y2 = cp->yw2;
-	x3 = cp->xw3 / TIMER_TIMPERIOD; //Calculation in ticks of the timer
-	y3 = cp->yw3;
+	x1 = (double)(cp->xw1) / t; //Calculation in ticks of the timer
+	y1 = (double)(cp->yw1);
+	x2 = (double)(cp->xw2) / t; //Calculation in ticks of the timer
+	y2 = (double)(cp->yw2);
+	x3 = (double)(cp->xw3) / t; //Calculation in ticks of the timer
+	y3 = (double)(cp->yw3);
 	z = (y2 - y1) * (x1 - x3) / ((y3 - y1) * (x1 - x2));
 	Bw = (x3 - z * x2) / (z - 1);
 	Aw = (y2 - y1) * (x1 + Bw) * (x2 + Bw) / (x1 - x2);
 	Cw = y2 - Aw / (x2 + Bw);
 
 	/*Calculate parameters for black keys*/
-	x1 = cp->xb1 / TIMER_TIMPERIOD; //Calculation in ticks of the timer
-	y1 = cp->yb1;
-	x2 = cp->xb2 / TIMER_TIMPERIOD; //Calculation in ticks of the timer
-	y2 = cp->yb2;
-	x3 = cp->xb3 / TIMER_TIMPERIOD; //Calculation in ticks of the timer
-	y3 = cp->yb3;
+	x1 = (double)(cp->xb1) / t; //Calculation in ticks of the timer
+	y1 = (double)(cp->yb1);
+	x2 = (double)(cp->xb2) / t; //Calculation in ticks of the timer
+	y2 = (double)(cp->yb2);
+	x3 = (double)(cp->xb3) / t; //Calculation in ticks of the timer
+	y3 = (double)(cp->yb3);
 	z = (y2 - y1) * (x1 - x3) / ((y3 - y1) * (x1 - x2));
 	Bb = (x3 - z * x2) / (z - 1);
 	Ab = (y2 - y1) * (x1 + Bb) * (x2 + Bb) / (x1 - x2);

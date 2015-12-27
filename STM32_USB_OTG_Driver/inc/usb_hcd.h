@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    usb_bsp.h
+  * @file    usb_hcd.h
   * @author  MCD Application Team
   * @version V2.2.0
   * @date    09-November-2015
-  * @brief   Specific api's relative to the used hardware platform
+  * @brief   Host layer Header file
   ******************************************************************************
   * @attention
   *
@@ -26,23 +26,25 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USB_BSP__H__
-#define __USB_BSP__H__
+#ifndef __USB_HCD_H__
+#define __USB_HCD_H__
 
 /* Includes ------------------------------------------------------------------*/
+#include "usb_regs.h"
 #include "usb_core.h"
+
 
 /** @addtogroup USB_OTG_DRIVER
   * @{
   */
   
-/** @defgroup USB_BSP
+/** @defgroup USB_HCD
   * @brief This file is the 
   * @{
   */ 
 
 
-/** @defgroup USB_BSP_Exported_Defines
+/** @defgroup USB_HCD_Exported_Defines
   * @{
   */ 
 /**
@@ -50,7 +52,7 @@
   */ 
 
 
-/** @defgroup USB_BSP_Exported_Types
+/** @defgroup USB_HCD_Exported_Types
   * @{
   */ 
 /**
@@ -58,42 +60,44 @@
   */ 
 
 
-/** @defgroup USB_BSP_Exported_Macros
+/** @defgroup USB_HCD_Exported_Macros
   * @{
   */ 
 /**
   * @}
   */ 
 
-/** @defgroup USB_BSP_Exported_Variables
+/** @defgroup USB_HCD_Exported_Variables
   * @{
   */ 
 /**
   * @}
   */ 
 
-/** @defgroup USB_BSP_Exported_FunctionsPrototype
+/** @defgroup USB_HCD_Exported_FunctionsPrototype
   * @{
   */ 
-void BSP_Init(void);
+uint32_t  HCD_Init                 (USB_OTG_CORE_HANDLE *pdev ,
+                                    USB_OTG_CORE_ID_TypeDef coreID);
+uint32_t  HCD_HC_Init              (USB_OTG_CORE_HANDLE *pdev , 
+                                    uint8_t hc_num); 
+uint32_t  HCD_SubmitRequest        (USB_OTG_CORE_HANDLE *pdev , 
+                                    uint8_t hc_num) ;
+uint32_t  HCD_GetCurrentSpeed      (USB_OTG_CORE_HANDLE *pdev);
+uint32_t  HCD_ResetPort            (USB_OTG_CORE_HANDLE *pdev);
+uint32_t  HCD_IsDeviceConnected    (USB_OTG_CORE_HANDLE *pdev);
+uint32_t  HCD_IsPortEnabled         (USB_OTG_CORE_HANDLE *pdev);
 
-void USB_OTG_BSP_Init (USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_uDelay (const uint32_t usec);
-void USB_OTG_BSP_mDelay (const uint32_t msec);
-void USB_OTG_BSP_EnableInterrupt (USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_TimerIRQ (void);
-#ifdef USE_HOST_MODE
-void USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev,uint8_t state);
-void USB_OTG_BSP_Resume(USB_OTG_CORE_HANDLE *pdev) ;                                                                
-void USB_OTG_BSP_Suspend(USB_OTG_CORE_HANDLE *pdev);
-
-#endif /* USE_HOST_MODE */
+uint32_t  HCD_GetCurrentFrame      (USB_OTG_CORE_HANDLE *pdev) ;
+URB_STATE HCD_GetURB_State         (USB_OTG_CORE_HANDLE *pdev,  uint8_t ch_num); 
+uint32_t  HCD_GetXferCnt           (USB_OTG_CORE_HANDLE *pdev,  uint8_t ch_num); 
+HC_STATUS HCD_GetHCState           (USB_OTG_CORE_HANDLE *pdev,  uint8_t ch_num) ;
 /**
   * @}
   */ 
 
-#endif /* __USB_BSP__H__ */
+#endif //__USB_HCD_H__
+
 
 /**
   * @}

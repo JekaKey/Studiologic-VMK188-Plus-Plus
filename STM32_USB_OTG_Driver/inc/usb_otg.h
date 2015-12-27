@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    usb_bsp.h
+  * @file    usb_otg.h
   * @author  MCD Application Team
   * @version V2.2.0
   * @date    09-November-2015
-  * @brief   Specific api's relative to the used hardware platform
+  * @brief   OTG Core Header
   ******************************************************************************
   * @attention
   *
@@ -26,23 +26,36 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USB_BSP__H__
-#define __USB_BSP__H__
+#ifndef __USB_OTG__
+#define __USB_OTG__
 
-/* Includes ------------------------------------------------------------------*/
-#include "usb_core.h"
 
 /** @addtogroup USB_OTG_DRIVER
   * @{
   */
   
-/** @defgroup USB_BSP
+/** @defgroup USB_OTG
   * @brief This file is the 
   * @{
   */ 
 
 
-/** @defgroup USB_BSP_Exported_Defines
+/** @defgroup USB_OTG_Exported_Defines
+  * @{
+  */ 
+
+
+void USB_OTG_InitiateSRP(void);
+void USB_OTG_InitiateHNP(uint8_t state , uint8_t mode);
+void USB_OTG_Switchback (USB_OTG_CORE_DEVICE *pdev);
+uint32_t  USB_OTG_GetCurrentState (USB_OTG_CORE_DEVICE *pdev);
+
+/**
+  * @}
+  */ 
+
+
+/** @defgroup USB_OTG_Exported_Types
   * @{
   */ 
 /**
@@ -50,7 +63,21 @@
   */ 
 
 
-/** @defgroup USB_BSP_Exported_Types
+/** @defgroup USB_OTG_Exported_Macros
+  * @{
+  */ 
+/**
+  * @}
+  */ 
+
+/** @defgroup USB_OTG_Exported_Variables
+  * @{
+  */ 
+/**
+  * @}
+  */ 
+
+/** @defgroup USB_OTG_Exported_FunctionsPrototype
   * @{
   */ 
 /**
@@ -58,42 +85,8 @@
   */ 
 
 
-/** @defgroup USB_BSP_Exported_Macros
-  * @{
-  */ 
-/**
-  * @}
-  */ 
+#endif //__USB_OTG__
 
-/** @defgroup USB_BSP_Exported_Variables
-  * @{
-  */ 
-/**
-  * @}
-  */ 
-
-/** @defgroup USB_BSP_Exported_FunctionsPrototype
-  * @{
-  */ 
-void BSP_Init(void);
-
-void USB_OTG_BSP_Init (USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_uDelay (const uint32_t usec);
-void USB_OTG_BSP_mDelay (const uint32_t msec);
-void USB_OTG_BSP_EnableInterrupt (USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_TimerIRQ (void);
-#ifdef USE_HOST_MODE
-void USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev,uint8_t state);
-void USB_OTG_BSP_Resume(USB_OTG_CORE_HANDLE *pdev) ;                                                                
-void USB_OTG_BSP_Suspend(USB_OTG_CORE_HANDLE *pdev);
-
-#endif /* USE_HOST_MODE */
-/**
-  * @}
-  */ 
-
-#endif /* __USB_BSP__H__ */
 
 /**
   * @}

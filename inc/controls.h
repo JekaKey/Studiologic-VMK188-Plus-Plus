@@ -163,6 +163,7 @@
 #define MES_SLIDER_MENU_FOUND 34
 #define MES_KEY_SEEK 35
 #define MES_SHOW_TEMP_MSG 36
+#define MES_TIMER_END 37
 
 /*the events to send to controls FIFO*/
 #define MES_REDRAW 40

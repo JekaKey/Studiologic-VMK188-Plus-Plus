@@ -2,6 +2,7 @@
 #include "controls.h"
 #include "fifo.h"
 #include "hd44780.h"
+#include "main.h"
 #include "menu.h"
 #include "midi.h"
 #include "sd_fatfs.h"
@@ -33,6 +34,7 @@ menuYNItem_type* selectedMenuYNItem;
 
 char temp_msg_1[HD44780_DISP_LENGTH + 1] = {' '};
 char temp_msg_2[HD44780_DISP_LENGTH + 1] = {' '};
+uint8_t temp_msg_time = TEMP_MSG_INTERVAL;
 uint8_t showing_temp_msg = 0;
 
 static i_state_t I_state;
@@ -496,6 +498,10 @@ static void showYNMenu() {
 }
 
 static void toYNMenu() {
+	//Example of using temp message.
+	//strcpy(temp_msg_1, "why it works?");
+	//send_message(MES_SHOW_TEMP_MSG);
+
 	if (!okIO) {
 		if (menuChange(selectedMenuYNItem->Previous))
 			send_message(MES_REDRAW);
@@ -1855,9 +1861,10 @@ static void temp_msg_handler(uint8_t event) {
 		case MES_SHOW_TEMP_MSG:
 			showing_temp_msg = 1;
 			hd44780_show_temp_msg(temp_msg_1, temp_msg_2);
+			setTimerMs(temp_msg_time * 1000);
 			break;
 
-		case MES_REDRAW:
+		case MES_TIMER_END:
 		case BUTTON_ENTER:
 		case BUTTON_STORAGE:
 		case BUTTON_EDIT:

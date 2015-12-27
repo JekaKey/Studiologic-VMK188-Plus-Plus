@@ -31,6 +31,9 @@ extern currentStateType Current_state;
 extern calibrationType Calibration;
 extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
 
+volatile uint32_t timerTicks = 0;
+uint32_t timerOld = 0;
+uint32_t timerPeriod = 0;
 
 
 void delay(volatile uint32_t c) {
@@ -108,7 +111,7 @@ int main(void) {
 		//Send/receive midi data
 		receiveMidiData();
 		sendMidiData();
-
+		checkTimer();
 	}
 }
 
@@ -122,7 +125,7 @@ void TIM4_IRQHandler() {
 
 		//TODO: Rewrite this w/o SPL
 		//Clear interrupt bit
-
+		timerTicks++;
 //		readKeyChunk();
 		readKeyState();
 		read_controls(Preset.sliders, Calibration.calibr);
@@ -130,5 +133,18 @@ void TIM4_IRQHandler() {
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 	}
 
+}
+
+
+void checkTimer() {
+	if (timerPeriod && timerTicks - timerOld >= timerPeriod) {
+		send_message(MES_TIMER_END);
+		timerPeriod = 0;
+	}
+}
+
+void setTimerMs(uint16_t value) {
+	timerPeriod = value * 1000 / TIMER_TIMPERIOD;
+	timerOld = timerTicks;
 }
 

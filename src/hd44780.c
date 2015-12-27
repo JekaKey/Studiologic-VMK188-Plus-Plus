@@ -24,7 +24,8 @@ const uint8_t symbol_check[]=       {0b00000111,
 char buffer[HD44780_DISP_VOLUME] = {' '};
 uint8_t currentPos = 0;
 char oldBuffer[HD44780_DISP_VOLUME] = {' '};
-uint8_t oldPos = HD44780_NOT_SHOW_MSG;
+uint8_t oldPos = 0;
+uint8_t showingTemp = 0;
 
 
 volatile uint8_t hd44780_active=0;
@@ -172,12 +173,14 @@ void hd44780_clear() {
 	for (int i = 0; i < HD44780_DISP_VOLUME; i++)
 		buffer[i] = ' ';
 
-	hd44780_wr_cmd(HD44780_CMD_CLEAR);
+	if (!showingTemp)
+		hd44780_wr_cmd(HD44780_CMD_CLEAR);
 }
 
 void hd44780_home() {
 	currentPos = 0;
-	hd44780_wr_cmd(HD44780_CMD_RETURN_HOME);
+	if (!showingTemp)
+		hd44780_wr_cmd(HD44780_CMD_RETURN_HOME);
 }
 
 
@@ -190,6 +193,11 @@ void hd44780_wr_data(const uint8_t data) {
 	buffer[currentPos] = data;
 	if (currentPos < HD44780_DISP_VOLUME - 1)
 		currentPos++;
+	if (!showingTemp)
+		hd44780_wr_data_no_block(data);
+}
+
+void hd44780_wr_data_no_block(const uint8_t data) {
 	hd44780_RS_On();
 	hd44780_write(data);
 }
@@ -253,14 +261,24 @@ void hd44780_write_string(const char *s) {
 }
 
 void hd44780_goto(uint8_t line, uint8_t position) {
-	while (buttons_active){
-
+	while (buttons_active) {
 	}
+
 	currentPos = HD44780_DISP_LENGTH * (line - 1) + position - 1;
-	hd44780_active=1;
+	if (showingTemp)
+		return;
+
+	hd44780_goto_no_block(line, position);
+}
+
+void hd44780_goto_no_block(uint8_t line, uint8_t position) {
+	while (buttons_active) {
+	}
+
+	hd44780_active = 1;
 	controlLEDs_enable(0);
 	hd44780_ddram_addr((0x40 * (line - 1)) + (position - 1));
-	hd44780_active=0;
+	hd44780_active = 0;
 	controlLEDs_enable(1);
 }
 
@@ -274,7 +292,7 @@ void hd44780_message(const char *s){
 	hd44780_rewrite_string(s);
 }
 
-//TODO: not work (no center)
+//TODO: don't work (no center)
 void hd44780_message_center(const char *s, uint8_t line) {
 	hd44780_goto(line, (HD44780_DISP_LENGTH - strlen(s)) / 2 + 1);
 	hd44780_write_string(s);
@@ -289,28 +307,35 @@ void hd44780_load_symbol(uint8_t addr, const uint8_t * data){
 }
 
 void hd44780_show_temp_msg(const char *line1, const char *line2) {
-	if (oldPos == HD44780_NOT_SHOW_MSG) {
+	if (!showingTemp) {
 		for (int i = 0; i < HD44780_DISP_VOLUME; i++)
 			oldBuffer[i] = buffer[i];
 
 		oldPos = currentPos;
+		showingTemp = 1;
 	}
 
-	hd44780_clear();
-	hd44780_message_center(line1, 1);
-	hd44780_message_center(line2, 2);
+	hd44780_wr_cmd(HD44780_CMD_CLEAR);
+
+	hd44780_goto_no_block(1, (HD44780_DISP_LENGTH - strlen(line1)) / 2 + 1);
+	for (uint8_t i = 0; line1[i] != '\0'; ++i)
+		hd44780_wr_data_no_block(line1[i]);
+
+	hd44780_goto_no_block(2, (HD44780_DISP_LENGTH - strlen(line2)) / 2 + 1);
+	for (uint8_t i = 0; line2[i] != '\0'; ++i)
+		hd44780_wr_data_no_block(line2[i]);
 }
 
 void hd44780_remove_temp_msg() {
-	hd44780_goto(1, 1);
-	for (int i = 0; i < HD44780_DISP_LENGTH; i++)
-		hd44780_write_char(oldBuffer[i]);
+	hd44780_goto_no_block(1, 1);
+	for (uint8_t i = 0; i < HD44780_DISP_LENGTH; i++)
+		hd44780_wr_data_no_block(oldBuffer[i]);
 
-	hd44780_goto(2, 1);
-	for (int i = 0; i < HD44780_DISP_LENGTH; i++)
-		hd44780_write_char(oldBuffer[i + HD44780_DISP_LENGTH]);
+	hd44780_goto_no_block(2, 1);
+	for (uint8_t i = 0; i < HD44780_DISP_LENGTH; i++)
+		hd44780_wr_data_no_block(oldBuffer[i + HD44780_DISP_LENGTH]);
 
-	hd44780_goto(oldPos / HD44780_DISP_LENGTH + 1, oldPos % HD44780_DISP_LENGTH + 1);
+	hd44780_goto_no_block(oldPos / HD44780_DISP_LENGTH + 1, oldPos % HD44780_DISP_LENGTH + 1);
 
-	oldPos = HD44780_NOT_SHOW_MSG;
+	showingTemp = 0;
 }

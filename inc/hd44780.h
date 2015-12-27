@@ -89,7 +89,6 @@
 #define HD44780_EN_PORT             GPIOB
 #define HD44780_EN_BIT              GPIO_Pin_9
 
-#define HD44780_NOT_SHOW_MSG      	100
 
 
 /***************************************************************
@@ -125,9 +124,11 @@ void hd44780_home();
 void hd44780_clear();
 void hd44780_wr_cmd( uint8_t );
 void hd44780_wr_data( uint8_t );
+void hd44780_wr_data_no_block( uint8_t );
 void hd44780_init( void );
 void hd44780_write_string( const char *s );
 void hd44780_goto( uint8_t line, uint8_t position);
+void hd44780_goto_no_block( uint8_t line, uint8_t position);
 void hd44780_rewrite_string( const char *s );
 void delay( uint32_t c );
 void delayms( uint32_t c );

@@ -86,6 +86,11 @@ void sendAfterTouch(uint8_t Preasure, uint8_t Channel, uint8_t analog) {
 	}
 }
 
+void sendPanic(uint8_t analog) {
+	for (int i = 0; i < 16; i++)
+		sendControlChange(120, 0, i, analog);
+}
+
 void sendMMC(uint8_t Value, uint8_t analog) {
 	uint8_t buff[8];
 	buff[0] = 0x04;

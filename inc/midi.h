@@ -54,6 +54,7 @@ void sendControlChange(uint8_t ControlNumber, uint8_t ControlValue, uint8_t Chan
 void sendPitchBend(uint16_t Value, uint8_t Channel,  uint8_t analog);
 void sendPolyPressure(uint8_t NoteNumber, uint8_t Pressure, uint8_t Channel,  uint8_t analog);
 void sendAfterTouch(uint8_t Pressure, uint8_t Channel,  uint8_t analog);
+void sendPanic(uint8_t analog);
 
 void sendMMC(uint8_t Value, uint8_t analog);
 

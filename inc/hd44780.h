@@ -69,6 +69,7 @@
 
 #define HD44780_DISP_LENGTH         16
 #define HD44780_DISP_ROWS           2
+#define HD44780_DISP_VOLUME         HD44780_DISP_LENGTH * HD44780_DISP_ROWS
 #define HD44780_CONF_SCROLL_MS      20
 
 #define HD44780_DATAPORT            GPIOE
@@ -87,6 +88,8 @@
 //#define HD44780_RW_BIT              GPIO_Pin_6
 #define HD44780_EN_PORT             GPIOB
 #define HD44780_EN_BIT              GPIO_Pin_9
+
+#define HD44780_NOT_SHOW_MSG      	100
 
 
 /***************************************************************
@@ -110,8 +113,6 @@
 //#define hd44780_init_end_delay()        delayms( 1 )
 #define hd44780_init_end_delay()        delay( 6000 )
 
-#define hd44780_clear()                           hd44780_wr_cmd( HD44780_CMD_CLEAR )
-#define hd44780_home()                            hd44780_wr_cmd( HD44780_CMD_RETURN_HOME )
 #define hd44780_entry( inc_dec, shift )           hd44780_wr_cmd( ( HD44780_CMD_ENTRY_MODE | inc_dec | shift ) & 0x07 )
 #define hd44780_display( on_off, cursor, blink )  hd44780_wr_cmd( ( HD44780_CMD_DISPLAY | on_off | cursor | blink ) & 0x0F )
 #define hd44780_shift( inc_dec, shift )           hd44780_wr_cmd( ( HD44780_CMD_SHIFT | inc_dec | shift ) & 0x1F )
@@ -120,11 +121,12 @@
 #define hd44780_ddram_addr( addr )                hd44780_wr_cmd( HD44780_CMD_DDRAM_ADDR | ( (addr) & 0x7F ) )
 #define hd44780_write_char( c )                   hd44780_wr_data( c & 0xff )
 
+void hd44780_home();
+void hd44780_clear();
 void hd44780_wr_cmd( uint8_t );
 void hd44780_wr_data( uint8_t );
 void hd44780_init( void );
 void hd44780_write_string( const char *s );
-void hd44780_write_line( uint8_t line, char *msg );
 void hd44780_goto( uint8_t line, uint8_t position);
 void hd44780_rewrite_string( const char *s );
 void delay( uint32_t c );
@@ -132,5 +134,7 @@ void delayms( uint32_t c );
 void hd44780_message(const char *s);
 void hd44780_message_center(const char *s, uint8_t line);
 void hd44780_load_symbol(uint8_t addr, const uint8_t * data);
+void hd44780_show_temp_msg(const char *line1, const char *line2);
+void hd44780_remove_temp_msg();
 
 #endif /* !_HD44780_H_ */

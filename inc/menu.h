@@ -16,6 +16,8 @@
 #define MENU_YN_YES "Yes"
 #define MENU_YN_NO 	"No"
 
+#define TEMP_MSG_INTERVAL 3
+
 
 typedef enum {t_none, t_uint8, t_uint16, t_int8, t_bool, t_perc, t_note} value_tp;
 
@@ -156,5 +158,5 @@ void btoa(uint8_t value, char* buffer);
 void interface_init(char *name);
 void calibration_init(char *name);
 void checkControl_events(void);
-void control_buttons_handler(uint8_t event);
+void menu_btns_n_msg_handler(uint8_t event);
 void changeSplitKey(uint8_t note);

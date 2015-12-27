@@ -31,6 +31,10 @@ menuItem_type * menus_buttons_ordered [BUTTONS_AMOUNT] = { NULL };
 menuItem_type* selectedMenuItem; // current menu item
 menuYNItem_type* selectedMenuYNItem;
 
+char temp_msg_1[HD44780_DISP_LENGTH + 1] = {' '};
+char temp_msg_2[HD44780_DISP_LENGTH + 1] = {' '};
+uint8_t showing_temp_msg = 0;
+
 static i_state_t I_state;
 static i_state_t prev_state;
 
@@ -1846,16 +1850,34 @@ static void curves_editor_button_handler(uint8_t button){
 
 }
 
+static void temp_msg_handler(uint8_t event) {
+	switch (event) {
+		case MES_SHOW_TEMP_MSG:
+			showing_temp_msg = 1;
+			hd44780_show_temp_msg(temp_msg_1, temp_msg_2);
+			break;
+
+		case MES_REDRAW:
+		case BUTTON_ENTER:
+		case BUTTON_STORAGE:
+		case BUTTON_EDIT:
+			showing_temp_msg = 0;
+			hd44780_remove_temp_msg();
+			break;
+
+		default:
+			break;
+	}
+}
 
 
 /*this function is calling if any setup button pressed, according to
  * the interface status it calls button_handlers
  */
 
-void control_buttons_handler(uint8_t event) {
-	if (event == BUTTON_PANIC) {
-		for (int i = 0; i < 16; i++)
-			sendControlChange(120, 0, i, Preset.AnalogMidiEnable);
+void menu_btns_n_msg_handler(uint8_t event) {
+	if (event == MES_SHOW_TEMP_MSG || showing_temp_msg) {
+		temp_msg_handler(event);
 		return;
 	}
 

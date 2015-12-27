@@ -868,9 +868,14 @@ void checkButtons_events(Button_type* buttons, uint8_t analog) {
 
 	uint8_t btn_num = event & 0x7F;
 
-	if (btn_num <= BUTTON_RIGHT || btn_num >= ENCODER_LEFT1 || buttonsToMenu) {
+	//messages has number > ENCODER_LEFT1
+	//so messages sends to menu_btns_n_msg_handler
+	if (btn_num == BUTTON_PANIC) {
 		if (!(event & 0x80))
-		   control_buttons_handler(event);
+			sendPanic(analog);
+	} else if (btn_num <= BUTTON_RIGHT || btn_num >= ENCODER_LEFT1 || buttonsToMenu) {
+		if (!(event & 0x80))
+		   menu_btns_n_msg_handler(event);
 	} else {
 		button_midi_send(event, buttons, analog);
 	}

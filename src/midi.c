@@ -20,8 +20,8 @@ void sendNoteOn(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t 
 	message_buff[2] = NoteNumber;
 	message_buff[3] = (uint8_t)(Velocity >> 7);
 	usb_midi_DataSend(message_buff, 4);
+
 	if (analog) {
-        PRINTF ("Send Analog MIDI\n");
 		FIFO_PUSH(midiMessagesArray, NoteOn ^ Channel);
 		FIFO_PUSH(midiMessagesArray, NoteNumber);
 		FIFO_PUSH(midiMessagesArray, (uint8_t)(Velocity>>7));

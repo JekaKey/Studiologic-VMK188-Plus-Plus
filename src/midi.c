@@ -15,23 +15,21 @@ extern FIFO16(8) durations; //Array for duration for current note
 extern FIFO32(128) midi_usb_in;
 
 void sendNoteOn(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t analog) {
-	uint8_t message_buff[4];
 	message_buff[0] = 0x09; //USB-MIDI NoteOn prefix
 	message_buff[1] = NoteOn ^ Channel;
 	message_buff[2] = NoteNumber;
 	message_buff[3] = (uint8_t)(Velocity >> 7);
 	usb_midi_DataSend(message_buff, 4);
-
 	if (analog) {
         PRINTF ("Send Analog MIDI\n");
 		FIFO_PUSH(midiMessagesArray, NoteOn ^ Channel);
 		FIFO_PUSH(midiMessagesArray, NoteNumber);
 		FIFO_PUSH(midiMessagesArray, (uint8_t)(Velocity>>7));
 	}
+
 }
 
 void sendNoteOff(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t analog) {
-	uint8_t message_buff[4];
 	message_buff[0] = 0x08; //USB-MIDI NoteOff prefix
 	message_buff[1] = NoteOff ^ Channel;
 	message_buff[2] = NoteNumber;
@@ -46,7 +44,6 @@ void sendNoteOff(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t
 }
 
 void sendControlChange(uint8_t ControlNumber, uint8_t ControlValue, uint8_t Channel, uint8_t analog) {
-	uint8_t message_buff[4];
 	message_buff[0] = 0x0B; //USB-MIDI CC prefix
 	message_buff[1] = ControlChange ^ Channel;
 	message_buff[2] = ControlNumber;

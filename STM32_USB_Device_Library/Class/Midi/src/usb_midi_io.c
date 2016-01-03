@@ -6,7 +6,7 @@
 
 
 extern USB_OTG_CORE_HANDLE USB_OTG_dev;
-extern __IO  USB_Tx_State;
+extern volatile uint32_t USB_Tx_State;
 
 void usb_midi_DataSend(uint8_t* Buf, uint32_t Len) {
 	while (USB_Tx_State){}

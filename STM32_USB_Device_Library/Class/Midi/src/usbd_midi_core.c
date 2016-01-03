@@ -18,7 +18,7 @@ static uint8_t *usbd_midi_GetCfgDesc(uint8_t speed, uint16_t *length);
 
 FIFO32(128) midi_usb_in; //FIFO buffer for 32-bit midi packets from a computer
 static 	uint32_t midiPacket; //32-bit buffer for receiving midi data from a computer
-__IO  USB_Tx_State; //USB endpoint ready flag
+volatile uint32_t USB_Tx_State; //USB endpoint ready flag
 
 
 USBD_Class_cb_TypeDef midi_cb = {

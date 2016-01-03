@@ -18,6 +18,7 @@ static uint8_t *usbd_midi_GetCfgDesc(uint8_t speed, uint16_t *length);
 
 FIFO32(128) midi_usb_in; //FIFO buffer for 32-bit midi packets from a computer
 static 	uint32_t midiPacket; //32-bit buffer for receiving midi data from a computer
+__IO  USB_Tx_State; //USB endpoint ready flag
 
 
 USBD_Class_cb_TypeDef midi_cb = {
@@ -189,20 +190,18 @@ static uint8_t usbd_midi_EP0_RxReady(void *pdev) {
 }
 
 static uint8_t usbd_midi_DataIn(void *pdev, uint8_t epnum) {
-	DCD_EP_Flush((USB_OTG_CORE_HANDLE *) pdev, 0x81);
-//    usbReady = true;
-
+	DCD_EP_Flush((USB_OTG_CORE_HANDLE *) pdev, MIDI_IN_EP);
+	USB_Tx_State = 0;
 	return USBD_OK;
 }
 
 static uint8_t usbd_midi_DataOut(void *pdev, uint8_t epnum) {
     FIFO_PUSH (midi_usb_in, midiPacket); //put midi packet to FIFO
-	DCD_EP_PrepareRx((USB_OTG_CORE_HANDLE *) pdev, 0x1, (uint8_t*)& midiPacket, 4);
+	DCD_EP_PrepareRx((USB_OTG_CORE_HANDLE *) pdev, MIDI_OUT_EP, (uint8_t*)& midiPacket, 4);
 	return USBD_OK;
 }
 
 static uint8_t usbd_midi_SOF(void *pdev) {
-
 	return USBD_OK;
 }
 

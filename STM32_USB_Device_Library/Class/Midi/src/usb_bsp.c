@@ -167,6 +167,25 @@ void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
 
 }
 
+void USB_OTG_BSP_DisableInterrupt(USB_OTG_CORE_HANDLE *pdev)
+{
+	  /* Disable USB Interrupt */
+
+	  NVIC_InitTypeDef NVIC_InitStructure;
+
+	  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
+
+	  // FS
+	  NVIC_InitStructure.NVIC_IRQChannel = OTG_FS_IRQn;
+	  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+	  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+	  NVIC_InitStructure.NVIC_IRQChannelCmd = DISABLE;
+	  NVIC_Init(&NVIC_InitStructure);
+
+}
+
+
+
 /**
   * @brief  BSP_Drive_VBUS
   *         Drives the Vbus signal through IO

@@ -191,6 +191,8 @@ typedef struct {
         uint8_t CardType;
 } SD_CardInfo;
 
+
+
 /**
  * @}
  */

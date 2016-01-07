@@ -33,6 +33,11 @@ void set_okIOzero(void){
 	okIO=0;
 }
 
+void reset_okIOzero(void){
+	okIO=1;
+}
+
+
 uint16_t presetCRC(presetType *pr) {
 	uint16_t crc = 0xFFFF;
 	uint8_t i;
@@ -925,6 +930,7 @@ FIO_status start_load_preset(presetType* preset, calibrationType* cal){
 		fiores = preset_load(Current_state.preset_name, preset); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
 			preset->Crc=presetCRC(preset);
+			res = SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
 			return FIO_OK; //all is done
 		} else {
 			if (fiores == FIO_SD_ERROR) {

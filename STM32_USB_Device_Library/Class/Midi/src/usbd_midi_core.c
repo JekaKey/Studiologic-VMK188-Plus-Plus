@@ -3,18 +3,6 @@
 #include "usbd_conf.h"
 #include "fifo.h"
 
-/*********************************************
- midi Device library callbacks
- *********************************************/
-static uint8_t usbd_midi_Init(void *pdev, uint8_t cfgidx);
-static uint8_t usbd_midi_DeInit(void *pdev, uint8_t cfgidx);
-static uint8_t usbd_midi_Setup(void *pdev, USB_SETUP_REQ *req);
-static uint8_t usbd_midi_EP0_RxReady(void *pdev);
-static uint8_t usbd_midi_DataIn(void *pdev, uint8_t epnum);
-static uint8_t usbd_midi_DataOut(void *pdev, uint8_t epnum);
-static uint8_t usbd_midi_SOF(void *pdev);
-static uint8_t usbd_midi_OUT_Incplt(void *pdev);
-static uint8_t *usbd_midi_GetCfgDesc(uint8_t speed, uint16_t *length);
 
 FIFO32(128) midi_usb_in; //FIFO buffer for 32-bit midi packets from a computer
 static 	uint32_t midiPacket; //32-bit buffer for receiving midi data from a computer
@@ -22,33 +10,34 @@ volatile uint32_t USB_Tx_State; //USB endpoint ready flag
 
 
 USBD_Class_cb_TypeDef midi_cb = {
-		usbd_midi_Init,
-		usbd_midi_DeInit,
-		usbd_midi_Setup,
+		USBD_MIDI_Init,
+		USBD_MIDI_DeInit,
+		USBD_MIDI_Setup,
         /* Control Endpoints*/
         (void*) 0, /* EP0_TxSent */
-        usbd_midi_EP0_RxReady,
+        USBD_MIDI_EP0_RxReady,
         /* Class Specific Endpoints*/
-        usbd_midi_DataIn,
-        usbd_midi_DataOut,
-        usbd_midi_SOF,
+        USBD_MIDI_DataIn,
+        USBD_MIDI_DataOut,
+        USBD_MIDI_SOF,
         (void*) 0, //IsoINIncomplete
-		usbd_midi_OUT_Incplt, //IsoOUTIncomplete
-		usbd_midi_GetCfgDesc //GetConfigDescriptor
+        USBD_MIDI_OUT_Incplt, //IsoOUTIncomplete
+        USBD_MIDI_GetCfgDesc //GetConfigDescriptor
 		};
+
 
 /* USB midi device Configuration Descriptor */
 static uint8_t usbd_midi_CfgDesc[MIDI_CONFIG_DESC_SIZE] = {
 /* Configuration 1 */
         0x09, /* bLength */
         USB_CONFIGURATION_DESCRIPTOR_TYPE, /* bDescriptorType */
-        0x56, //LOBYTE(MIDI_CONFIG_DESC_SIZE),        /* wTotalLength  */
+        MIDI_CONFIG_DESC_SIZE, //LOBYTE(MIDI_CONFIG_DESC_SIZE),        /* wTotalLength  */
 		0x00, //HIBYTE(MIDI_CONFIG_DESC_SIZE),
 		0x02, /* bNumInterfaces: two interfaces*/
 		0x01, /* bConfigurationValue: ID of this configuration */
 		0x00, /* iConfiguration: Unused*/
 		0x80, /* bmAttributes  = bus powered */
-		0x4B, /* bMaxPower = 150 mA*/
+		0x32, /* bMaxPower = 100 mA*/
 		/* 09 byte*/
 
 		// B.3.1 Standard AC Interface Descriptor
@@ -156,7 +145,8 @@ static uint8_t usbd_midi_CfgDesc[MIDI_CONFIG_DESC_SIZE] = {
 
 };
 
-static uint8_t usbd_midi_Init(void *pdev, uint8_t cfgidx) {
+
+uint8_t USBD_MIDI_Init(void *pdev, uint8_t cfgidx) {
 	/* Open EP IN */
 	DCD_EP_Open((USB_OTG_CORE_HANDLE *) pdev, MIDI_IN_EP, midi_data_in_pack_size, USB_OTG_EP_BULK); //bulk type endpoint
 
@@ -174,7 +164,8 @@ static uint8_t usbd_midi_Init(void *pdev, uint8_t cfgidx) {
 	return USBD_OK;
 }
 
-static uint8_t usbd_midi_DeInit(void *pdev, uint8_t cfgidx) {
+
+uint8_t USBD_MIDI_DeInit(void *pdev, uint8_t cfgidx) {
 	/* Close MIDI endpoints */
 	DCD_EP_Close((USB_OTG_CORE_HANDLE *) pdev, MIDI_IN_EP);
 	DCD_EP_Close((USB_OTG_CORE_HANDLE *) pdev, MIDI_OUT_EP);
@@ -182,34 +173,34 @@ static uint8_t usbd_midi_DeInit(void *pdev, uint8_t cfgidx) {
 	return USBD_OK;
 }
 
-static uint8_t usbd_midi_Setup(void *pdev, USB_SETUP_REQ *req) {
+uint8_t USBD_MIDI_Setup(void *pdev, USB_SETUP_REQ *req) {
 	return 0;
 }
-static uint8_t usbd_midi_EP0_RxReady(void *pdev) {
+uint8_t USBD_MIDI_EP0_RxReady(void *pdev) {
 	return 0;
 }
 
-static uint8_t usbd_midi_DataIn(void *pdev, uint8_t epnum) {
+uint8_t USBD_MIDI_DataIn(void *pdev, uint8_t epnum) {
 	DCD_EP_Flush((USB_OTG_CORE_HANDLE *) pdev, MIDI_IN_EP);
 	USB_Tx_State = 0;
 	return USBD_OK;
 }
 
-static uint8_t usbd_midi_DataOut(void *pdev, uint8_t epnum) {
+uint8_t USBD_MIDI_DataOut(void *pdev, uint8_t epnum) {
     FIFO_PUSH (midi_usb_in, midiPacket); //put midi packet to FIFO
 	DCD_EP_PrepareRx((USB_OTG_CORE_HANDLE *) pdev, MIDI_OUT_EP, (uint8_t*)& midiPacket, 4);
 	return USBD_OK;
 }
 
-static uint8_t usbd_midi_SOF(void *pdev) {
+uint8_t USBD_MIDI_SOF(void *pdev) {
 	return USBD_OK;
 }
 
-static uint8_t usbd_midi_OUT_Incplt(void *pdev) {
+uint8_t USBD_MIDI_OUT_Incplt(void *pdev) {
 	return USBD_OK;
 }
-static uint8_t *usbd_midi_GetCfgDesc(uint8_t speed, uint16_t *length) {
+
+uint8_t *USBD_MIDI_GetCfgDesc(uint8_t speed, uint16_t *length) {
 	*length = sizeof(usbd_midi_CfgDesc);
 	return usbd_midi_CfgDesc;
 }
-

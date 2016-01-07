@@ -1,14 +1,14 @@
 /**
   ******************************************************************************
-  * @file    usbd_conf_template.h
+  * @file    usbd_msc_data.h
   * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    19-March-2012
-  * @brief   usb device configuration template file
+  * @version V1.2.0
+  * @date    09-November-2015
+  * @brief   header for the usbd_msc_data.c file
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
   *
   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
   * You may not use this file except in compliance with the License.
@@ -23,84 +23,82 @@
   * limitations under the License.
   *
   ******************************************************************************
-  */
+  */ 
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CONF__H__
-#define __USBD_CONF__H__
+
+#ifndef _USBD_MSC_DATA_H_
+#define _USBD_MSC_DATA_H_
 
 /* Includes ------------------------------------------------------------------*/
-#include "usb_conf.h"
+#include "usbd_conf.h"
 
-/** @defgroup USB_CONF_Exported_Defines
+/** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
+  * @{
+  */
+  
+/** @defgroup USB_INFO
+  * @brief general defines for the usb device library file
   * @{
   */ 
 
-#define USBD_CFG_MAX_NUM           1
-#define USBD_ITF_MAX_NUM           1
-
-#define USB_MAX_STR_DESC_SIZ       64 
-#define USBD_EP0_MAX_PACKET_SIZE   64
-
-/**** USB_AUDIO_MIDI_Class_Layer_Parameter *********/
-
-#define MIDI_IN_EP 0x81
-#define MIDI_OUT_EP 0x01
-#define MSC_IN_EP  0x82
-#define MSC_OUT_EP 0x02
-
-#ifdef USE_USB_OTG_HS
-#ifdef USE_ULPI_PHY
-#define MSC_MAX_PACKET               512
-#else
-#define MSC_MAX_PACKET               64
-#endif
-#else  /*USE_USB_OTG_FS*/
-#define MSC_MAX_PACKET                64
-#endif
-
-
-#define MSC_MEDIA_PACKET             4096
-
-
-
+/** @defgroup USB_INFO_Exported_Defines
+  * @{
+  */ 
+#define MODE_SENSE6_LEN			 8
+#define MODE_SENSE10_LEN		 8
+#define LENGTH_INQUIRY_PAGE00		 7
+#define LENGTH_FORMAT_CAPACITIES    	20
 
 /**
   * @}
   */ 
 
 
-/** @defgroup USB_CONF_Exported_Types
+/** @defgroup USBD_INFO_Exported_TypesDefinitions
   * @{
-  */ 
+  */
 /**
   * @}
   */ 
 
 
-/** @defgroup USB_CONF_Exported_Macros
+
+/** @defgroup USBD_INFO_Exported_Macros
   * @{
   */ 
+
 /**
   * @}
   */ 
 
-/** @defgroup USB_CONF_Exported_Variables
+/** @defgroup USBD_INFO_Exported_Variables
   * @{
   */ 
+extern const uint8_t MSC_Page00_Inquiry_Data[];  
+extern const uint8_t MSC_Mode_Sense6_data[];
+extern const uint8_t MSC_Mode_Sense10_data[] ;
+
 /**
   * @}
   */ 
 
-/** @defgroup USB_CONF_Exported_FunctionsPrototype
+/** @defgroup USBD_INFO_Exported_FunctionsPrototypes
   * @{
   */ 
+
 /**
   * @}
   */ 
 
+#endif /* _USBD_MSC_DATA_H_ */
 
-#endif //__USBD_CONF__H__
+/**
+  * @}
+  */ 
+
+/**
+* @}
+*/ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

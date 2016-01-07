@@ -1,14 +1,14 @@
 /**
   ******************************************************************************
-  * @file    usbd_conf_template.h
+  * @file    usbd_msc_mem.h
   * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    19-March-2012
-  * @brief   usb device configuration template file
+  * @version V1.2.0
+  * @date    09-November-2015
+  * @brief   header for the STORAGE DISK file file
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT 2015 STMicroelectronics</center></h2>
   *
   * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
   * You may not use this file except in compliance with the License.
@@ -23,84 +23,90 @@
   * limitations under the License.
   *
   ******************************************************************************
-  */
+  */ 
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CONF__H__
-#define __USBD_CONF__H__
 
+#ifndef __USBD_MEM_H
+#define __USBD_MEM_H
 /* Includes ------------------------------------------------------------------*/
-#include "usb_conf.h"
+#include "usbd_def.h"
 
-/** @defgroup USB_CONF_Exported_Defines
+
+/** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
+  * @{
+  */
+  
+/** @defgroup USBD_MEM
+  * @brief header file for the storage disk file
   * @{
   */ 
 
-#define USBD_CFG_MAX_NUM           1
-#define USBD_ITF_MAX_NUM           1
-
-#define USB_MAX_STR_DESC_SIZ       64 
-#define USBD_EP0_MAX_PACKET_SIZE   64
-
-/**** USB_AUDIO_MIDI_Class_Layer_Parameter *********/
-
-#define MIDI_IN_EP 0x81
-#define MIDI_OUT_EP 0x01
-#define MSC_IN_EP  0x82
-#define MSC_OUT_EP 0x02
-
-#ifdef USE_USB_OTG_HS
-#ifdef USE_ULPI_PHY
-#define MSC_MAX_PACKET               512
-#else
-#define MSC_MAX_PACKET               64
-#endif
-#else  /*USE_USB_OTG_FS*/
-#define MSC_MAX_PACKET                64
-#endif
-
-
-#define MSC_MEDIA_PACKET             4096
-
-
-
-
+/** @defgroup USBD_MEM_Exported_Defines
+  * @{
+  */ 
+#define USBD_STD_INQUIRY_LENGTH		36
 /**
   * @}
   */ 
 
 
-/** @defgroup USB_CONF_Exported_Types
+/** @defgroup USBD_MEM_Exported_TypesDefinitions
   * @{
-  */ 
+  */
+
+typedef struct _USBD_STORAGE
+{
+  int8_t (* Init) (uint8_t lun);
+  int8_t (* GetCapacity) (uint8_t lun, uint32_t *block_num, uint32_t *block_size);
+  int8_t (* IsReady) (uint8_t lun);
+  int8_t (* IsWriteProtected) (uint8_t lun);
+  int8_t (* Read) (uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_len);
+  int8_t (* Write)(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_len);
+  int8_t (* GetMaxLun)(void);
+  int8_t *pInquiry;
+  
+}USBD_STORAGE_cb_TypeDef;
 /**
   * @}
   */ 
 
 
-/** @defgroup USB_CONF_Exported_Macros
+
+/** @defgroup USBD_MEM_Exported_Macros
   * @{
   */ 
+
 /**
   * @}
   */ 
 
-/** @defgroup USB_CONF_Exported_Variables
+/** @defgroup USBD_MEM_Exported_Variables
   * @{
   */ 
+
 /**
   * @}
   */ 
 
-/** @defgroup USB_CONF_Exported_FunctionsPrototype
+/** @defgroup USBD_MEM_Exported_FunctionsPrototype
   * @{
   */ 
+extern USBD_STORAGE_cb_TypeDef *USBD_STORAGE_fops;
 /**
   * @}
   */ 
 
+#endif /* __USBD_MEM_H */
+/**
+  * @}
+  */ 
 
-#endif //__USBD_CONF__H__
+/**
+  * @}
+  */ 
 
+/**
+* @}
+*/ 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

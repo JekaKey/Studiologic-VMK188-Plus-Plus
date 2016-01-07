@@ -11,6 +11,7 @@
 #include "velocity.h"
 #include "keyboardscan.h"
 #include "bootloader.h"
+#include "usb_init.h"
 
 const xy_t curve_xy[6]={{3,1,2},{7,1,3},{12,1,4},{3,2,2},{7,2,3},{12,2,4}};
 
@@ -100,6 +101,8 @@ static void menu_curve_export_yes(void);
 static void curvelist_start(void);
 static void preset_curvelist_start(void);
 static void menu_bootloader_yes(void);
+static void menu_USBdisk_on_yes(void);
+static void menu_USBdisk_off_yes(void);
 
 static void menu_preset_sl_enter(void);
 static void menu_preset_sl_edit(void);
@@ -123,6 +126,7 @@ static void startMenuYN_curve_delete(void);
 static void startMenuYN_calibration_save(void);
 static void startMenuYN_calibration_delete(void);
 static void startMenuYN_bootloader(void);
+static void startMenuYN_USBdisk(void);
 static void check_saving_preset(void);
 
 static void menu_calibrate(void);
@@ -281,7 +285,8 @@ MAKE_MENU(menu_stor_del,	NULL_ENTRY,			menu_stor_rename,	NULL_ENTRY,		NULL_ENTRY
 
 MAKE_MENU(menu1_item1,		menu1_item2,		NULL_ENTRY,			NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		curvelist_start,					menu_back_to_preset,	"Curves"		);
 MAKE_MENU(menu1_item2,		menu1_item3,		menu1_item1,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		calibrationlist_start,				menu_back_to_preset,	"Calibration"	);
-MAKE_MENU(menu1_item3,		NULL_ENTRY,			menu1_item2,		NULL_ENTRY,		NULL_ENTRY,		1,		NULL,	t_none,		0,		0,		startMenuYN_bootloader,				menu_back_to_preset,	"Firmware"	);
+MAKE_MENU(menu1_item3,		menu1_item4,		menu1_item2,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		startMenuYN_USBdisk,				menu_back_to_preset,	"USB disk"	);
+MAKE_MENU(menu1_item4,		NULL_ENTRY,			menu1_item3,		NULL_ENTRY,		NULL_ENTRY,		1,		NULL,	t_none,		0,		0,		startMenuYN_bootloader,				menu_back_to_preset,	"Firmware"	);
 
 
 MAKE_MENU(menu_clb_edit,	menu_clb_save,		NULL_ENTRY,			NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_calibrate,						calibrationlist_start,	"Edit calibr."	);
@@ -419,7 +424,9 @@ MAKE_MENU_YN(menuYN_curve_delete, 	"Delete curve?", 	menu_curve_delete_yes, 			1
 MAKE_MENU_YN(menuYN_curve_copy, 	"Copy curve?", 		menu_curve_copy_yes, 			1,	menu3_item3);
 MAKE_MENU_YN(menuYN_curve_load, 	"Load curve?", 		menu_curve_load_yes, 			1,	menu4_item1);
 MAKE_MENU_YN(menuYN_curve_export, 	"Export curve?", 	menu_curve_export_yes, 			1,	menu4_item3);
-MAKE_MENU_YN(menuYN_bootloader, 	"Run bootloader?",	menu_bootloader_yes, 			1,	menu1_item3);
+MAKE_MENU_YN(menuYN_USBdisk_on,    	"USB disk On?",		menu_USBdisk_on_yes,   			1,	menu1_item3);
+MAKE_MENU_YN(menuYN_USBdisk_off,    "USB disk Off?",	menu_USBdisk_off_yes,  			1,	menu1_item3);
+MAKE_MENU_YN(menuYN_bootloader, 	"Run bootloader?",	menu_bootloader_yes, 			1,	menu1_item4);
 
 
 
@@ -510,6 +517,16 @@ static void toYNMenu() {
 		return;
 	}
 
+	prev_state = I_state;
+	I_state = STATE_yn_menu;
+
+	showYNMenu();
+}
+
+static void toYNMenu_noIO() {
+	//Example of using temp message.
+	//strcpy(temp_msg_1, "why it works?");
+	//send_message(MES_SHOW_TEMP_MSG);
 	prev_state = I_state;
 	I_state = STATE_yn_menu;
 
@@ -646,8 +663,18 @@ static void startMenuYN_curve_export(void){
 
 static void startMenuYN_bootloader(void){
 	selectedMenuYNItem = (menuYNItem_type*) &menuYN_bootloader;
-	toYNMenu();
+	toYNMenu_noIO();
 }
+
+static void startMenuYN_USBdisk(void){
+	if (USBdisk_active)
+    	selectedMenuYNItem = (menuYNItem_type*) &menuYN_USBdisk_off;
+	else {
+    	selectedMenuYNItem = (menuYNItem_type*) &menuYN_USBdisk_on;
+	}
+	toYNMenu_noIO();
+}
+
 
 static void menu_preset_as_default(void) {
 	selectedMenuYNItem = (menuYNItem_type*) &menuYN_preset_default;
@@ -967,6 +994,17 @@ static void menu_bootloader_yes(void){
    gotoBootLoader();
 }
 
+static void menu_USBdisk_on_yes(void){
+	set_okIOzero();
+	USBdisk_active=1;
+	usb_midi_MSC_cb();
+}
+
+static void menu_USBdisk_off_yes(void){
+	USBdisk_active=0;
+	usb_midi_cb();
+	reset_okIOzero();
+}
 
 
 static void menu_preset_sl_enter(void) {
@@ -1366,7 +1404,10 @@ static void preset_show (const presetType *pr, file_list_type *pr_list){
 		len = strlen(pr_list->names[pr_list->pos]);
 		memcpy(line,pr_list->names[pr_list->pos], len - FEXT_SIZE);
 	} else {
-		strcpy(line, "     ??????     ");
+		if (USBdisk_active)
+		    strcpy(line, "USB DISK ACTIVE ");
+		else
+		    strcpy(line, "     ??????     ");
 	}
 
 	hd44780_goto(1,1);

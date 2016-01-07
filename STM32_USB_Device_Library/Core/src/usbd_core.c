@@ -31,6 +31,7 @@
 #include "usbd_ioreq.h"
 #include "usb_dcd_int.h"
 #include "usb_bsp.h"
+#include "log.h"
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
 * @{
@@ -131,16 +132,19 @@ USBD_DCD_INT_cb_TypeDef  *USBD_DCD_INT_fops = &USBD_DCD_INT_cb;
 * @param  usr_cb: User callback structure address
 * @retval None
 */
+
+
 void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
                USB_OTG_CORE_ID_TypeDef coreID,
                USBD_DEVICE *pDevice,                  
                USBD_Class_cb_TypeDef *class_cb, 
                USBD_Usr_cb_TypeDef *usr_cb)
 {
-  /* Hardware Init */
-  USB_OTG_BSP_Init(pdev);  
   
   USBD_DeInit(pdev);
+	/* Hardware Init */
+  USB_OTG_BSP_Init(pdev);
+
   
   /*Register class and user callbacks */
   pdev->dev.class_cb = class_cb;
@@ -151,10 +155,14 @@ void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
   DCD_Init(pdev , coreID);
   
   /* Upon Init call usr callback */
-  pdev->dev.usr_cb->Init();
+  pdev->dev.usr_cb->Init();//In this it is empty callback, does nothing
   
+  /* Force Device Mode*/
+  USB_OTG_SetCurrentMode(pdev, DEVICE_MODE);
+
   /* Enable Interrupts */
   USB_OTG_BSP_EnableInterrupt(pdev);
+
 }
 
 /**
@@ -166,9 +174,30 @@ void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
 USBD_Status USBD_DeInit(USB_OTG_CORE_HANDLE *pdev)
 {
   /* Software Init */
-  
+
+//  USB_OTG_BSP_DisableInterrupt(pdev);
+//  USB_OTG_DisableGlobalInt(pdev);
   return USBD_OK;
 }
+
+
+void USBD_change_cb(USB_OTG_CORE_HANDLE *pdev,  USBD_Class_cb_TypeDef *class_cb){
+	  USB_OTG_BSP_DisableInterrupt(pdev);
+	  USB_OTG_DisableGlobalInt(pdev);
+	  pdev->dev.class_cb = class_cb;
+//	    /*Init the Core (common init.) */
+//	  USB_OTG_CoreInit(pdev);
+//	  /* Force Device Mode*/
+//	  USB_OTG_SetCurrentMode(pdev, DEVICE_MODE);
+//	  /* Init Device */
+//	  USB_OTG_CoreInitDev(pdev);
+	  DCD_DevDisconnect(pdev);
+	  USB_OTG_EnableGlobalInt(pdev);
+	  USB_OTG_BSP_EnableInterrupt(pdev);
+	  DCD_DevConnect(pdev);
+
+}
+
 
 /**
 * @brief  USBD_SetupStage 

@@ -1,15 +1,7 @@
 #include "sdio_high_level.h"
 #include "diskio.h"
 
-DSTATUS disk_initialize (
-    BYTE pdrv                /* Physical drive nmuber (0..) */
-)
-{
-    if (pdrv != 0)
-    {
-        return STA_NOINIT;
-    }
-
+void SD_DMA_activate(void){
     NVIC_InitTypeDef NVIC_InitStructure;
 
     /* Configure the NVIC Preemption Priority Bits */
@@ -22,6 +14,19 @@ DSTATUS disk_initialize (
     NVIC_InitStructure.NVIC_IRQChannel = SD_SDIO_DMA_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
     NVIC_Init (&NVIC_InitStructure);
+
+}
+
+
+DSTATUS disk_initialize (
+    BYTE pdrv                /* Physical drive nmuber (0..) */
+)
+{
+    if (pdrv != 0)
+    {
+        return STA_NOINIT;
+    }
+
 
     SD_Error Status = SD_Init ();
     if (Status != SD_OK)

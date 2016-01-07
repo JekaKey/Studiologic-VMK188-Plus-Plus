@@ -31,7 +31,7 @@ typedef enum {
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
 
-
+void SD_DMA_activate(void);
 DSTATUS disk_initialize (BYTE);
 DSTATUS disk_status (BYTE);
 DRESULT disk_read (

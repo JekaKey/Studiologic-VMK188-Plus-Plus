@@ -20,6 +20,7 @@
 
 #include "ff.h"
 #include "sd_fatfs.h"
+#include "diskio.h"
 
 #include "leds.h"
 #include "log.h"
@@ -56,9 +57,14 @@ static void firstInit(void) {
 
 	//Hardware init
 	GPIO_init();
+	SD_DMA_activate();
 	USART1_init();//midi
 	USART6_init();//debug
-	usb_init(); //Init everything for midiUSB
+	usb_midi_init(); //Init everything for midiUSB
+
+//	usb_midi_MSC_init(); //Init everything for midiUSB+MCS
+
+
 
 	ADC_init_all(); //ADC init
 //	velocity_init();
@@ -89,7 +95,9 @@ static void Timer_init(void){
 int main(void) {
 	BootLoaderStart();
 	firstInit();
+	PRINTF("     first_init finished\n");
     set_defaults_all(&Preset, &Calibration);
+	PRINTF("     set_defaults_all finished\n");
     delayms(2000);
     if (!start_load_all(&Preset, &Calibration))
 		   set_okIOzero();
@@ -97,7 +105,6 @@ int main(void) {
 	calibration_init(Current_state.calibration_name);
 
     Timer_init();
-	PRINTF("     Program started\n");
 
 	//Main loop
 	while (1) {

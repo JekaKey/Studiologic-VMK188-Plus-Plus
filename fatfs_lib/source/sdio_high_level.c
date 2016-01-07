@@ -350,6 +350,7 @@ static uint8_t SDSTATUS_Tab[16];
 __IO uint32_t StopCondition = 0;
 __IO SD_Error TransferError = SD_OK;
 __IO uint32_t TransferEnd = 0, DMAEndOfTransfer = 0;
+
 SD_CardInfo SDCardInfo;
 
 SDIO_InitTypeDef SDIO_InitStructure;
@@ -449,7 +450,7 @@ SD_Error SD_Init (void)
         if (errorstatus == SD_OK) {
                 /*----------------- Select Card --------------------------------*/
                 logf ("SD_GetCardInfo OK\r\n");
-		        logf("Card_info: \r\nCapacity: %u\r\n",SDCardInfo.CardCapacity);
+		        logf("Card_info: \r\nCapacity: %u, ",SDCardInfo.CardCapacity);
 		        logf("Block size: %u\r\n", SDCardInfo.CardBlockSize);
 		        logf("RCA: %u\r\n",SDCardInfo.RCA);
 		        logf("Card type: %u\r\n", SDCardInfo.CardType);
@@ -1291,6 +1292,7 @@ SD_Error SD_ReadMultiBlocks (uint8_t *readbuff, uint64_t ReadAddr, uint16_t Bloc
         StopCondition = 1;
 
         SDIO ->DCTRL = 0x0;
+        logf("SD_ReadMultiBlocks\n, BlockSize: %d, NumberOfBlocks: %d", BlockSize, NumberOfBlocks);
 
 #if defined (SD_DMA_MODE)
         SDIO_ITConfig (SDIO_IT_DCRCFAIL | SDIO_IT_DTIMEOUT | SDIO_IT_DATAEND | SDIO_IT_RXOVERR | SDIO_IT_STBITERR, ENABLE);

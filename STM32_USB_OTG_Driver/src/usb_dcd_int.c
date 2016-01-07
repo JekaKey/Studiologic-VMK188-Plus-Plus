@@ -669,15 +669,25 @@ static uint32_t DCD_WriteEmptyTxFifo(USB_OTG_CORE_HANDLE *pdev, uint32_t epnum)
     ep->xfer_buff  += len;
     ep->xfer_count += len;
     
+
+    if( ep->xfer_count >= ep->xfer_len){
+          uint32_t fifoemptymsk = 1 << epnum;
+          USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DIEPEMPMSK, fifoemptymsk, 0);
+          break;
+        }
+
+
+
     txstatus.d32 = USB_OTG_READ_REG32(&pdev->regs.INEP_REGS[epnum]->DTXFSTS);
+
     
-    /* Mask the TxFIFOEmpty interrupt  */
-    if (ep->xfer_len == ep->xfer_count)
-    {
-      fifoemptymsk = 0x1 << ep->num;  
-      USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DIEPEMPMSK, 
-                           fifoemptymsk, 0); 
-    }
+//    /* Mask the TxFIFOEmpty interrupt  */
+//    if (ep->xfer_len == ep->xfer_count)
+//    {
+//      fifoemptymsk = 0x1 << ep->num;
+//      USB_OTG_MODIFY_REG32(&pdev->regs.DREGS->DIEPEMPMSK,
+//                           fifoemptymsk, 0);
+//    }
   }
   
   return 1;

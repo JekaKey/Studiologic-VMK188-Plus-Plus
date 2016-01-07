@@ -1,10 +1,10 @@
 /**
   ******************************************************************************
-  * @file    usbd_core.h
+  * @file    usbd_msc_data.c
   * @author  MCD Application Team
   * @version V1.2.0
   * @date    09-November-2015
-  * @brief   Header file for usbd_core.c
+  * @brief   This file provides all the vital inquiry pages and sense data.
   ******************************************************************************
   * @attention
   *
@@ -25,99 +25,110 @@
   ******************************************************************************
   */ 
 
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USBD_CORE_H
-#define __USBD_CORE_H
-
 /* Includes ------------------------------------------------------------------*/
-#include "usb_dcd.h"
-#include "usbd_def.h"
-#include "usbd_conf.h"
+#include "usbd_msc_data.h"
+
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
   */
-  
-/** @defgroup USBD_CORE
-  * @brief This file is the Header file for usbd_core.c file
+
+
+/** @defgroup MSC_DATA 
+  * @brief Mass storage info/data module
   * @{
   */ 
 
-
-/** @defgroup USBD_CORE_Exported_Defines
+/** @defgroup MSC_DATA_Private_TypesDefinitions
   * @{
   */ 
-
-typedef enum {
-  USBD_OK   = 0,
-  USBD_BUSY,
-  USBD_FAIL,
-}USBD_Status;
 /**
   * @}
   */ 
 
 
-/** @defgroup USBD_CORE_Exported_TypesDefinitions
+/** @defgroup MSC_DATA_Private_Defines
   * @{
-  */
- 
-
+  */ 
 /**
   * @}
   */ 
 
 
-
-/** @defgroup USBD_CORE_Exported_Macros
+/** @defgroup MSC_DATA_Private_Macros
   * @{
   */ 
-
 /**
   * @}
   */ 
 
-/** @defgroup USBD_CORE_Exported_Variables
+
+/** @defgroup MSC_DATA_Private_Variables
   * @{
   */ 
 
+
+/* USB Mass storage Page 0 Inquiry Data */
+const uint8_t  MSC_Page00_Inquiry_Data[] = {//7						
+	0x00,		
+	0x00, 
+	0x00, 
+	(LENGTH_INQUIRY_PAGE00 - 4),
+	0x00, 
+	0x80, 
+	0x83 
+};  
+/* USB Mass storage sense 6  Data */
+const uint8_t  MSC_Mode_Sense6_data[] = {
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00,
+	0x00, 
+	0x00,
+	0x00
+};	
+/* USB Mass storage sense 10  Data */
+const uint8_t  MSC_Mode_Sense10_data[] = {
+	0x00,
+	0x06, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00, 
+	0x00
+};
 /**
   * @}
   */ 
 
-/** @defgroup USBD_CORE_Exported_FunctionsPrototype
+
+/** @defgroup MSC_DATA_Private_FunctionPrototypes
   * @{
   */ 
-void USBD_Init(USB_OTG_CORE_HANDLE *pdev,
-               USB_OTG_CORE_ID_TypeDef coreID, 
-               USBD_DEVICE *pDevice,                  
-               USBD_Class_cb_TypeDef *class_cb, 
-               USBD_Usr_cb_TypeDef *usr_cb);
-
-void USBD_change_cb(USB_OTG_CORE_HANDLE *pdev,  USBD_Class_cb_TypeDef *class_cb);
-
-USBD_Status USBD_DeInit(USB_OTG_CORE_HANDLE *pdev);
+/**
+  * @}
+  */ 
 
 
-USBD_Status USBD_ClrCfg(USB_OTG_CORE_HANDLE  *pdev, uint8_t cfgidx);
-
-USBD_Status USBD_SetCfg(USB_OTG_CORE_HANDLE  *pdev, uint8_t cfgidx);
+/** @defgroup MSC_DATA_Private_Functions
+  * @{
+  */ 
 
 /**
   * @}
   */ 
 
-#endif /* __USBD_CORE_H */
 
 /**
   * @}
   */ 
 
+
 /**
-* @}
-*/ 
+  * @}
+  */ 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-
-
-

@@ -1,9 +1,11 @@
 #include "usb_midi_usr.h"
 #include "usbd_midi_core.h"
+#include "usbd_midi_msc_core.h"
 #include "usbd_midi_desc.h"
 //#include "usb_fifo.h"
 #include "usb_midi_io.h"
 #include "usb_init.h"
+#include "usb_dcd.h"
 
 __ALIGN_BEGIN USB_OTG_CORE_HANDLE     USB_OTG_dev __ALIGN_END;
 
@@ -11,17 +13,42 @@ __ALIGN_BEGIN USB_OTG_CORE_HANDLE     USB_OTG_dev __ALIGN_END;
 
 extern uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev);
 
-void usb_init(void) {
+uint8_t USBdisk_active=0;
 
 
-//usb_fifo_init();	
+void usb_temp_disconnect(void){
+	DCD_DevDisconnect(&USB_OTG_dev);
+}
 
+void usb_deinit(void){
+
+}
+
+void usb_midi_cb(void){
+	USBD_change_cb(&USB_OTG_dev, &midi_cb);
+}
+
+void usb_midi_MSC_cb(void){
+	USBD_change_cb(&USB_OTG_dev, &midi_MSC_cb);
+}
+
+
+void usb_midi_init(void) {
+USBD_Init(&USB_OTG_dev,
+        USB_OTG_FS_CORE_ID,
+        &midi_Descriptor,
+        &midi_cb,
+        &MS_Usr_cb);
+}
+
+void usb_midi_MSC_init(void) {
 USBD_Init(&USB_OTG_dev, 
         USB_OTG_FS_CORE_ID, 
         &midi_Descriptor, 
-        &midi_cb, 
+        &midi_MSC_cb,
         &MS_Usr_cb);
 }
+
 
 
 /*Handler services wake up interrupt. Should be tested  */

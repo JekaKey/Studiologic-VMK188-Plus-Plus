@@ -184,6 +184,7 @@ FIO_status curve_delete(file_list_type *cur_list);
 FIO_status curve_rename(file_list_type *cur_list, char *new_name);
 FIO_status curve_save(const char* path, curve_points_type* curve);
 void set_okIOzero(void);
+void reset_okIOzero(void);
 uint16_t presetCRC(presetType *pr);
 
 #endif //PRESETS__H

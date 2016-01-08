@@ -90,8 +90,6 @@ void ADC_init_all()
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
 	ADC_InitStructure.ADC_NbrOfConversion = 3;
 	ADC_Init(ADC1, &ADC_InitStructure);
-//	ADC_Init(ADC2, &ADC_InitStructure);
-//	ADC_Init(ADC3, &ADC_InitStructure);
 
 	ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
 	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
@@ -105,8 +103,6 @@ void ADC_init_all()
 	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 3, ADC_SampleTime_15Cycles);
 
 
-    //ADC_DiscModeCmd(ADC1, DISABLE);
-    //ADC_EOCOnEachRegularChannelCmd(ADC1, ENABLE);
     ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
     ADC_DMACmd(ADC1, ENABLE);
 	ADC_Cmd(ADC1, ENABLE);
@@ -631,9 +627,9 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 		break;
 	case check_value:
 		//Calculate ADC results after measurement.
-		for (uint8_t i = 0; i < 3; i++) { //Same for ADC1, ADC2, ADC3
+		for (uint8_t i = 0; i < 3; i++) { //Same for all ADC channels
 			slider_number = mux_pin * 3 + i;
-			ADC_value = median_filter(ADC_res[mux_pin][i],&filter_storage[slider_number]); //big median filter
+			ADC_value = median_filter(ADC_res[mux_pin][i],&filter_storage[slider_number]); //big window median filter
 			switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
 			case SLIDERS_WORK:
 				//Calculate change comparing with old value.

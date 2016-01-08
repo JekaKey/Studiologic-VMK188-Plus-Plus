@@ -61,7 +61,7 @@ void GPIO_init() {
 	GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 
-	/*Configure GPIO pin ADC1, ADC2, ADS3*/
+	/*Configure GPIO pin ADC 3 channels */
 	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2;
 	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AN;
 	GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_NOPULL;

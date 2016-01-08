@@ -43,43 +43,77 @@ void send_message(uint8_t mes){
 	FIFO_PUSH(control_events, mes);
 }
 
+static volatile uint16_t ADC_DMA_buffer[3]={0,0,0};// DMA puts ADC values to this buffer
 
-void ADC_init_all(void) {
-	ADC_InitTypeDef ADC_InitStructure;
+void ADC_init_all()
+{
+	//variables
+	DMA_InitTypeDef DMA_InitStructure;
 	ADC_CommonInitTypeDef ADC_CommonInitStructure;
-	/* ADC Common configuration *************************************************/
-	ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
-	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div6;
-	ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
-	ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
-	ADC_CommonInit(&ADC_CommonInitStructure);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 | RCC_APB2Periph_ADC2 | RCC_APB2Periph_ADC3, ENABLE);
+	ADC_InitTypeDef ADC_InitStructure;
 
-	RCC_AHB1PeriphClockCmd(RCC_AHB1ENR_GPIOCEN, ENABLE);
+    // DMA
+
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
+
+
+    DMA_DeInit(DMA2_Stream4);//Can be used for ADC1
+    DMA_InitStructure.DMA_Channel = 0;//Can be used for ADC1
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) &ADC1->DR;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) &ADC_DMA_buffer; //DMA buffer Address
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;//From ADC to memory
+    DMA_InitStructure.DMA_BufferSize = 3;// 3
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+    DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
+    DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
+    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+    DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+    DMA_Init(DMA2_Stream4, &DMA_InitStructure);
+    DMA_Cmd(DMA2_Stream4, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+
+	//RCC_AHB1PeriphClockCmd(RCC_AHB1ENR_GPIOCEN, ENABLE);
+
+
 
 	ADC_DeInit();
 
 	ADC_InitStructure.ADC_Resolution = ADC_Resolution_12b;
-	ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+	ADC_InitStructure.ADC_ScanConvMode = ENABLE;
 	ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
 	ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
 	ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-	ADC_InitStructure.ADC_NbrOfConversion = 1;
+	ADC_InitStructure.ADC_NbrOfConversion = 3;
 	ADC_Init(ADC1, &ADC_InitStructure);
-	ADC_Init(ADC2, &ADC_InitStructure);
-	ADC_Init(ADC3, &ADC_InitStructure);
+//	ADC_Init(ADC2, &ADC_InitStructure);
+//	ADC_Init(ADC3, &ADC_InitStructure);
 
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_3Cycles);
-	ADC_RegularChannelConfig(ADC2, ADC_Channel_11, 1, ADC_SampleTime_3Cycles);
-	ADC_RegularChannelConfig(ADC3, ADC_Channel_12, 1, ADC_SampleTime_3Cycles);
+	ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
+	ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div2;
+	ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
+	ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
+	ADC_CommonInit(&ADC_CommonInitStructure);
 
-	/* Enable ADC1 to ADC3*/
+
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_15Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 2, ADC_SampleTime_15Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 3, ADC_SampleTime_15Cycles);
+
+
+    //ADC_DiscModeCmd(ADC1, DISABLE);
+    //ADC_EOCOnEachRegularChannelCmd(ADC1, ENABLE);
+    ADC_DMARequestAfterLastTransferCmd(ADC1, ENABLE);
+    ADC_DMACmd(ADC1, ENABLE);
 	ADC_Cmd(ADC1, ENABLE);
-	ADC_Cmd(ADC2, ENABLE);
-	ADC_Cmd(ADC3, ENABLE);
+
+	ADC_SoftwareStartConv(ADC1);
 	median_filter_init();
 }
-
 
 
 /*
@@ -534,14 +568,6 @@ void buttons_delay(void) {
 }
 
 
-static uint16_t read_ADC(uint32_t adc){
-	ADC_SoftwareStartConv((ADC_TypeDef*) (adc));
-	while (ADC_GetSoftwareStartConvStatus((ADC_TypeDef*) (adc))
-			!= RESET) {
-	}
-   return ADC_GetConversionValue((ADC_TypeDef*) (adc));
-}
-
 
 static enum controls_read_status_type {
 	next_mux, wait_mux, read_data, check_value
@@ -591,10 +617,9 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	uint16_t adc_med;
 	switch (controls_read_status) {
 	case read_data:
-		for (uint8_t i = 0; i < 3; i++) { //read all ADC1, ADC2, ADC3 3 times each and add to sum. Search min & max values for each ADC to remove them from sum in future
-			for (uint8_t j = 0; j < 3; j++) { //Same for ADC1, ADC2, ADC3
-				uint32_t adc = ADC1_BASE + j * 0x100; //change ADC base address to ADC2_BASE, ADC3_BASE
-				adc_arr[j][i] = read_ADC(adc);
+		for (uint8_t i = 0; i < 3; i++) { //read all ADC1-3 channels 3 times each and add to sum. Search min & max values for each ADC to remove them from sum in future
+			for (uint8_t j = 0; j < 3; j++) { //Same for all ADC channels
+				adc_arr[j][i] = ADC_DMA_buffer[j];//copy from DMA buffer
 			}
 		}
 		for (uint8_t j = 0; j < 3; j++) {

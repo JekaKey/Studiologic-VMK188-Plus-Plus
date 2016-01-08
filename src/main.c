@@ -62,13 +62,7 @@ static void firstInit(void) {
 	USART6_init();//debug
 	usb_midi_init(); //Init everything for midiUSB
 
-//	usb_midi_MSC_init(); //Init everything for midiUSB+MCS
-
-
-
 	ADC_init_all(); //ADC init
-//	velocity_init();
-
 	//Display
 	delayms(400);
 	hd44780_init();
@@ -135,8 +129,8 @@ void TIM4_IRQHandler() {
 		timerTicks++;
 //		readKeyChunk();
 		readKeyState();
-		read_controls(Preset.sliders, Calibration.calibr);
 		read_buttons_state();
+		read_controls(Preset.sliders, Calibration.calibr);
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 	}
 

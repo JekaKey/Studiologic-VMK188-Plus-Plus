@@ -6,24 +6,24 @@
 #include "stm32f4xx_gpio.h"
 #include "filter.h"
 
-#define MAX_DELTA_COUNTER 10
+#define MAX_DELTA_COUNTER 16 //maximum number of count/average in integral delta
 
-#define SLIDERS_DELTA_S 0x10 //Delta in a level filter algorithm
-#define SLIDERS_DELTA_P 0x20
-#define SLIDERS_DELTA_AT 0x40
-#define SLIDERS_DELTA_PI 0x40
-#define SLIDERS_DELTA_MOD 0x10
+#define SLIDERS_DELTA_S 32 //Delta in a level filter algorithm
+#define SLIDERS_DELTA_P 32
+#define SLIDERS_DELTA_AT 64
+#define SLIDERS_DELTA_PI 64
+#define SLIDERS_DELTA_MOD 32
 #define SLIDERS_DELTA_SEARCH 0x200
 
-#define SLIDERS_S_GAP 3
-#define SLIDERS_R_GAP 3
-#define SLIDERS_P_GAP 0
+#define SLIDERS_S_GAP 2
+#define SLIDERS_R_GAP 2
+#define SLIDERS_P_GAP 2
 #define SLIDERS_PI_GAP 3
 #define SLIDERS_AT_GAP 3
 #define SLIDERS_MOD_GAP 3
 
 #define SLIDERS_DEAD 0
-#define SLIDERS_PI_DEAD 10
+#define SLIDERS_PI_DEAD 20
 
 #define ADC_MAX_VALUE 0x0FFF
 
@@ -68,13 +68,14 @@
 #define PEDALS_N 3
 #define SLIDERS_N 9
 
-#define SLIDER_S_MIN_IN 0
-#define SLIDER_S_MAX_IN 4050
+#define SLIDER_S_MIN_IN 300
+#define SLIDER_S_MAX_IN 4000
 #define SLIDER_S_MIN_OUT 0
 #define SLIDER_S_MAX_OUT 127
 
-#define SLIDER_R_MIN_IN 850
-#define SLIDER_R_MAX_IN 3420
+
+#define SLIDER_R_MIN_IN 300
+#define SLIDER_R_MAX_IN 4000
 #define SLIDER_R_MIN_OUT 0
 #define SLIDER_R_MAX_OUT 127
 
@@ -82,6 +83,7 @@
 #define SLIDER_P_MAX_IN 3850
 #define SLIDER_P_MIN_OUT 0
 #define SLIDER_P_MAX_OUT 127
+
 
 #define SLIDER_PITCH_MIN_IN 1419
 #define SLIDER_PITCH_MAX_IN 2584
@@ -97,6 +99,7 @@
 #define SLIDER_AT_MAX_IN 4200
 #define SLIDER_AT_MIN_OUT 0
 #define SLIDER_AT_MAX_OUT 127
+
 
 #define ENCODER1_PORT            GPIOD
 #define ENCODER1_PIN        GPIO_Pin_0

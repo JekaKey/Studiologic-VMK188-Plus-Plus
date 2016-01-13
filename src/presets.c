@@ -15,9 +15,9 @@ uint8_t okIO=1;//if this flag is zero all I/O operations will be canceled.
 
 presetType Preset;  //Current preset global structure
 
-currentStateType Current_state={"",""};
-calibrationType Calibration;
-curve_points_type Curve;
+currentStateType Current_state={"",""};//Current state global structure
+calibrationType Calibration;//Calibration global structure
+curve_points_type Curve; //Curve global structure
 
 /*jsmn global variables*/
 jsmntok_t tokens[TOKENS_NUM];

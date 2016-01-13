@@ -78,8 +78,14 @@ static void firstInit(void) {
 
 //	Start key scan timer
 static void Timer_init(void){
+	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
     TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
-	TIM_Cmd(TIM4, ENABLE);
+    TIM_Cmd(TIM4, ENABLE);
 	NVIC_EnableIRQ(TIM4_IRQn);
 }
 

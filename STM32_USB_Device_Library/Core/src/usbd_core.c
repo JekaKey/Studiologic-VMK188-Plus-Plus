@@ -181,16 +181,12 @@ USBD_Status USBD_DeInit(USB_OTG_CORE_HANDLE *pdev)
 }
 
 
+/*Change block of callbacks. This function is not from native library */
+
 void USBD_change_cb(USB_OTG_CORE_HANDLE *pdev,  USBD_Class_cb_TypeDef *class_cb){
 	  USB_OTG_BSP_DisableInterrupt(pdev);
 	  USB_OTG_DisableGlobalInt(pdev);
 	  pdev->dev.class_cb = class_cb;
-//	    /*Init the Core (common init.) */
-//	  USB_OTG_CoreInit(pdev);
-//	  /* Force Device Mode*/
-//	  USB_OTG_SetCurrentMode(pdev, DEVICE_MODE);
-//	  /* Init Device */
-//	  USB_OTG_CoreInitDev(pdev);
 	  DCD_DevDisconnect(pdev);
 	  USB_OTG_EnableGlobalInt(pdev);
 	  USB_OTG_BSP_EnableInterrupt(pdev);

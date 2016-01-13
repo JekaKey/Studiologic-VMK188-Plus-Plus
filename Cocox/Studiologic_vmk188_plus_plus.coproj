@@ -15,10 +15,10 @@
         </Includepaths>
         <DefinedSymbols>
           <Define name="STM32F407VG"/>
-          <Define name="STM32F4XX"/>
           <Define name="__FPU_USED"/>
           <Define name="USE_STDPERIPH_DRIVER"/>
           <Define name="VMK176"/>
+          <Define name="STM32F40XX"/>
         </DefinedSymbols>
       </Compile>
       <Link useDefault="0">

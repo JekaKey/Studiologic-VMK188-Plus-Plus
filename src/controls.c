@@ -599,32 +599,31 @@ static uint8_t check_delta(uint16_t * ADC_value, uint8_t n, uint16_t delta){
 
 
 
-static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t n, uint16_t delta){
+static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t sliderNum, uint16_t delta) {
 	//Calculate change comparing with old value.
-	uint16_t value = *ADC_value;
-	uint16_t ADC_change;
-	int16_t diff = value-ADC_old_values[n];
-	uint8_t buffer_full=(delta_storage[n].count>=MAX_DELTA_COUNTER);
 
-	if (!buffer_full){
-		delta_storage[n].count++;
-	}
+	uint8_t buffer_full = (delta_storage[sliderNum].count >= MAX_DELTA_COUNTER);
+	if (!buffer_full)
+		delta_storage[sliderNum].count++;
 
+	int16_t diff = *ADC_value - ADC_old_values[sliderNum];
+	delta_storage[sliderNum].sum += diff;
+	if (buffer_full)
+		delta_storage[sliderNum].sum -= delta_storage[sliderNum].buf[ delta_storage[sliderNum].index ];
 
-	delta_storage[n].sum+=diff;
-	if (buffer_full){
-		delta_storage[n].sum-=delta_storage[n].buf[delta_storage[n].index];
-	}
-	delta_storage[n].buf[delta_storage[n].index]=diff;
-	ADC_change = (delta_storage[n].sum >=0 ) ? delta_storage[n].sum : -delta_storage[n].sum;
-	delta_storage[n].index++;
-	if (delta_storage[n].index>=MAX_DELTA_COUNTER)
-		delta_storage[n].index=0;
-	if (ADC_change > delta){  //Change a result only if difference exceeds SLIDERS_DELTA.
-		* ADC_value = ADC_old_values[n]+delta_storage[n].sum/delta_storage[n].count;
-		delta_storage[n].sum=0;
-		delta_storage[n].count=0;
-		delta_storage[n].index=0;
+	delta_storage[sliderNum].buf[ delta_storage[sliderNum].index ] = diff;
+
+	delta_storage[sliderNum].index++;
+	if (delta_storage[sliderNum].index >= MAX_DELTA_COUNTER)
+		delta_storage[sliderNum].index = 0;
+
+	uint16_t ADC_change = delta_storage[sliderNum].sum;
+	ADC_change = ADC_change > 0  ?  ADC_change  :  - ADC_change;
+	if (ADC_change > delta) {  //Change a result only if difference exceeds SLIDERS_DELTA.
+		*ADC_value = ADC_old_values[sliderNum] + delta_storage[sliderNum].sum / delta_storage[sliderNum].count;
+		delta_storage[sliderNum].sum = 0;
+		delta_storage[sliderNum].count = 0;
+		delta_storage[sliderNum].index = 0;
 		return 1;
 	}
 	return 0;

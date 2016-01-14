@@ -109,8 +109,12 @@
 #define hd44780_init_delay()            delayms( 16 )
 #define hd44780_init_delay2()           delayms( 5 )
 #define hd44780_init_delay3()           delayms( 1 )
-//#define hd44780_init_end_delay()        delayms( 1 )
+#ifdef VMK176
+#define hd44780_init_end_delay()        delayms( 1 )
+#else
 #define hd44780_init_end_delay()        delay( 6000 )
+#endif
+
 
 #define hd44780_entry( inc_dec, shift )           hd44780_wr_cmd( ( HD44780_CMD_ENTRY_MODE | inc_dec | shift ) & 0x07 )
 #define hd44780_display( on_off, cursor, blink )  hd44780_wr_cmd( ( HD44780_CMD_DISPLAY | on_off | cursor | blink ) & 0x0F )

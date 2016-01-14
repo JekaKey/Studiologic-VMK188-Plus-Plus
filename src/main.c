@@ -57,12 +57,12 @@ static void firstInit(void) {
 
 	//Hardware init
 	GPIO_init();
-	SD_DMA_activate();
 	USART1_init();//midi
 	USART6_init();//debug
 	usb_midi_init(); //Init everything for midiUSB
 
 	ADC_init_all(); //ADC init
+	SD_DMA_activate();
 	//Display
 	delayms(400);
 	hd44780_init();

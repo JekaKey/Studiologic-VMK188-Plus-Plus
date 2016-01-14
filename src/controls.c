@@ -618,6 +618,8 @@ static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t sliderNum, uin
 		delta_storage[sliderNum].sum = 0;
 		delta_storage[sliderNum].count = 0;
 		delta_storage[sliderNum].index = 0;
+		for (int i = 0; i < MAX_DELTA_COUNTER; i++)
+			delta_storage[sliderNum].buf[i] = 0;
 		return 1;
 	}
 	return 0;

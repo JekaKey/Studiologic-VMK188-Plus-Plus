@@ -43,7 +43,7 @@ void send_message(uint8_t mes){
 	FIFO_PUSH(control_events, mes);
 }
 
-static volatile uint16_t ADC_DMA_buffer[3]={0,0,0};// DMA puts ADC values to this buffer
+static volatile uint32_t ADC_DMA_buffer[3]={0,0,0};// DMA puts ADC values to this buffer
 
 void ADC_init_all()
 {
@@ -65,8 +65,8 @@ void ADC_init_all()
     DMA_InitStructure.DMA_BufferSize = 3;// 3
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
     DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
-    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
     DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
     DMA_InitStructure.DMA_Priority = DMA_Priority_High;
     DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
@@ -634,7 +634,7 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	case read_data:
 		for (uint8_t i = 0; i < 3; i++) { //read all ADC1-3 channels 3 times each and add to sum. Search min & max values for each ADC to remove them from sum in future
 			for (uint8_t j = 0; j < 3; j++) { //Same for all ADC channels
-				adc_arr[j][i] = ADC_DMA_buffer[j];//copy from DMA buffer
+				adc_arr[j][i] =(uint16_t)(ADC_DMA_buffer[j]&0x0000FFFF);//copy from DMA buffer
 			}
 		}
 		for (uint8_t j = 0; j < 3; j++) {

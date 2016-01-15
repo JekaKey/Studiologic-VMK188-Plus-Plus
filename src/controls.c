@@ -619,7 +619,7 @@ static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t sliderNum, uin
 
 	uint16_t ADC_change = delta_storage[sliderNum].sum;
 	ADC_change = ADC_change > 0  ?  ADC_change  :  - ADC_change;
-	if (ADC_change > delta) {  //Change a result only if difference exceeds SLIDERS_DELTA.
+	if (ADC_change > delta*(delta_storage[sliderNum].count+1+MAX_DELTA_COUNTER/2)) {  //Change a result only if difference exceeds SLIDERS_DELTA.
 		*ADC_value = ADC_old_values[sliderNum] + delta_storage[sliderNum].sum / delta_storage[sliderNum].count;
 		delta_storage[sliderNum].sum = 0;
 		delta_storage[sliderNum].count = 0;

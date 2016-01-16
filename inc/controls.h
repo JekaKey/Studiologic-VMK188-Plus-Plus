@@ -6,7 +6,7 @@
 #include "stm32f4xx_gpio.h"
 #include "filter.h"
 
-#define MAX_DELTA_COUNTER 16 //maximum number of count/average in integral delta
+#define MAX_DELTA_COUNTER 8 //maximum number of count/average in integral delta
 
 #define SLIDERS_DELTA_S 32 //Delta in a level filter algorithm
 #define SLIDERS_DELTA_P 32
@@ -27,7 +27,7 @@
 
 #define ADC_MAX_VALUE 0x0FFF
 
-#define SLIDERS_MUX_DELAY 80/TIMER_TIMPERIOD //Delay in cycles after multiplexors switch
+#define SLIDERS_MUX_DELAY 40/TIMER_TIMPERIOD //Delay in cycles after multiplexors switch
 #define SLIDERS_MEASURE_NUM 20
 #define SLIDERS_AMOUNT 24  //Number of sliders in the piano
 #define BUTTONS_AMOUNT 8  //Number of user buttons in the piano

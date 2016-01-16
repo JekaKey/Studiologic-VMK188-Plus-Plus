@@ -135,8 +135,8 @@ void TIM4_IRQHandler() {
 		timerTicks++;
 //		readKeyChunk();
 		readKeyState();
-		read_buttons_state();
 		read_controls(Preset.sliders, Calibration.calibr);
+		read_buttons_state();
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 	}
 

@@ -10,7 +10,7 @@
 
 #define STOPPER 0                                      /* Smaller than any datum */
 #define NULL_POINTER 0                                      /* Smaller than any datum */
-#define MEDIAN_FILTER_SIZE    (21)
+#define MEDIAN_FILTER_SIZE    (31)
 
 
 #define NUMBER_OF_BUFFERS 24

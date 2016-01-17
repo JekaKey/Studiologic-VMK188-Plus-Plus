@@ -93,7 +93,6 @@ static void menu_curve_save_yes(void);
 static void menu_curve_delete_yes(void);
 static void menu_curve_rename(void);
 static void menu_curve_export(void);
-static void menu_curve_export_yes(void);
 static void curvelist_start(void);
 static void preset_curvelist_start(void);
 static void menu_bootloader_yes(void);
@@ -411,7 +410,6 @@ MAKE_MENU_YN(menuYN_calibr_delete, 	"Delete calibr.?", 	menu_calibration_delete_
 MAKE_MENU_YN(menuYN_curve_save, 	"Save curve?", 		menu_curve_save_yes, 			1,	menu3_item2);
 MAKE_MENU_YN(menuYN_curve_delete, 	"Delete curve?", 	menu_curve_delete_yes, 			1,	menu3_item5);
 MAKE_MENU_YN(menuYN_curve_load, 	"Load curve?", 		menu_curve_load_yes, 			1,	menu4_item1);
-MAKE_MENU_YN(menuYN_curve_export, 	"Export curve?", 	menu_curve_export_yes, 			1,	menu4_item3);
 
 MAKE_MENU_YN(menuYN_USBdisk_on,    	"USB disk On?",		menu_USBdisk_on_yes,   			1,	menu1_item3);
 MAKE_MENU_YN(menuYN_USBdisk_off,    "USB disk Off?",	menu_USBdisk_off_yes,  			1,	menu1_item3);
@@ -707,8 +705,19 @@ static void startMenuYN_curve_copy(void) {
 }
 
 static void startMenuYN_curve_export(void) {
-	selectedMenuYNItem = (menuYNItem_type*) &menuYN_curve_export;
-	toYNMenu();
+	char path[MAX_PATH] = "0:/" CURVE_DIR_NAME "/";
+	char file_name[MAX_FNAME];
+	strcpy(file_name, Text_Edit_object.text);
+	string_cut_spaces(file_name);
+	strcat(file_name, CURVE_EXT);
+	strcat(path, file_name);
+	if (curve_save(path, &Preset.Curve) != FIO_OK)//Save (export) from selected preset
+		set_okIOzero();
+	if (SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list) != SDFS_OK)
+		set_okIOzero();
+	file_list_find(&curves_list, file_name);
+
+	showTempMessage("Curve", "was exported!");
 }
 
 static void startMenuYN_bootloader(void) {
@@ -913,20 +922,6 @@ static void menu_curve_copy(void) {
 	name[len - FEXT_SIZE] = 0; //cut file extension from the name
 
 	text_object_init(&Text_Edit_object, "Copy curve:", name, startMenuYN_curve_copy);
-}
-
-static void menu_curve_export_yes(void) {
-	char path[MAX_PATH] = "0:/" CURVE_DIR_NAME "/";
-	char file_name[MAX_FNAME];
-	strcpy(file_name, Text_Edit_object.text);
-	string_cut_spaces(file_name);
-    strcat(file_name, CURVE_EXT);
-    strcat(path, file_name);
-	if (curve_save(path, &Preset.Curve) != FIO_OK)//Save (export) from selected preset
-		set_okIOzero();
-	if (SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list) != SDFS_OK)
-		set_okIOzero();
-	file_list_find(&curves_list, file_name);
 }
 
 static void menu_curve_load_yes(void) {

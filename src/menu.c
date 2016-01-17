@@ -1415,14 +1415,18 @@ static void preset_show (const presetType *pr, file_list_type *pr_list) {
 	hd44780_goto(1, 1);
 	hd44780_write_string(line);
 
-	memset(line,' ',HD44780_DISP_LENGTH);
-	memcpy(line,"Ch:",3);
-    btoa_mem(pr->MidiChannel,line+3);
+	memset(line, ' ', HD44780_DISP_LENGTH);
+	memcpy(line, "Ch:", 3);
 
-    if (pr->SplitActive){
-	    len=note_name(pr->SplitKey,line+6)+6;
-	    memcpy(line+len,":",1 );
-	    btoa_mem(pr->SplitChannel,line +len+1);
+    if (pr->SplitActive) {
+    	btoa_mem(pr->SplitChannel, line + 3);
+
+    	memcpy(line + 5, "-", 1);
+	    len = note_name(pr->SplitKey, line + 6) + 6;
+	    memcpy(line + len, "-", 1);
+	    btoa_mem(pr->MidiChannel, line + len + 1);
+    } else {
+    	btoa_mem(pr->MidiChannel, line + 3);
     }
 
     hd44780_goto(2, 1);

@@ -596,6 +596,11 @@ static void startMenu_preset(void) {
 }
 
 static void startMenuYN_preset_save(void) {
+	if (Preset.Crc == presetCRC(&Preset)) {
+		showTempMessage("Preset has not", "changes!");
+		return;
+	}
+
 	selectedMenuYNItem = (menuYNItem_type*) &menuYN_preset_save;
 	toYNMenu();
 }
@@ -736,6 +741,11 @@ static void startMenuYN_USBdisk(void) {
 
 
 static void menu_preset_as_default(void) {
+	if (presets_list.active == presets_list.pos) {
+		showTempMessage("Preset is", "already default!");
+		return;
+	}
+
 	selectedMenuYNItem = (menuYNItem_type*) &menuYN_preset_default;
 	toYNMenu();
 }

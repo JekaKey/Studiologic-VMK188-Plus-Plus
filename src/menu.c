@@ -607,10 +607,13 @@ static void startMenuYN_preset_save(void) {
 
 static void startMenuYN_preset_rename(void) {
 	string_cut_spaces(Text_Edit_object.text);
-	preset_rename(&presets_list, Text_Edit_object.text);
-
-	showTempMessage("Preset", "was renamed!");
-	menu_back_to_preset();
+	if (preset_rename(&presets_list, Text_Edit_object.text) != FIO_OK) {
+		showTempMessage("This name", "already exists!");
+		menu_preset_rename();
+	} else {
+		showTempMessage("Preset", "was renamed!");
+		menu_back_to_preset();
+	}
 }
 
 static void startMenuYN_preset_delete(void) {
@@ -641,9 +644,12 @@ static void startMenuYN_preset_copy(void) {
 
 static void startMenuYN_calibration_rename(void) {
 	string_cut_spaces(Text_Edit_object.text);
-	calibration_rename(&calibrations_list, Text_Edit_object.text);
-
-	showTempMessage("Calibration", "was renamed!");
+	if (calibration_rename(&calibrations_list, Text_Edit_object.text) != FIO_OK) {
+		showTempMessage("This name", "already exists!");
+		menu_calibration_rename();
+	} else {
+		showTempMessage("Calibration", "was renamed!");
+	}
 }
 
 static void startMenuYN_calibration_save(void) {
@@ -678,9 +684,12 @@ static void startMenuYN_calibration_copy(void) {
 
 static void startMenuYN_curve_rename(void) {
 	string_cut_spaces(Text_Edit_object.text);
-	curve_rename(&curves_list, Text_Edit_object.text);
-
-	showTempMessage("Curve", "was renamed!");
+	if (curve_rename(&curves_list, Text_Edit_object.text) != FIO_OK) {
+		showTempMessage("This name", "already exists!");
+		menu_curve_rename();
+	} else {
+		showTempMessage("Curve", "was renamed!");
+	}
 }
 
 static void startMenuYN_curve_save(void) {

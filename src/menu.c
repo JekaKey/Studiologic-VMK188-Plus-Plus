@@ -419,6 +419,12 @@ MAKE_MENU_YN(menuYN_bootloader, 	"Run bootloader?",	menu_bootloader_yes, 			1,	m
 
 
 
+void showTempMessage(char* line1, char* line2) {
+	strcpy(temp_msg_1, line1);
+	strcpy(temp_msg_2, line2);
+	send_message(MES_SHOW_TEMP_MSG);
+}
+
 static void menu_cursor_draw(menu_cursor_object_t* cursor, uint8_t y, uint8_t x){
 	if (cursor->on) {
 		hd44780_goto(cursor->y, cursor->x);
@@ -600,9 +606,7 @@ static void startMenuYN_preset_rename(void) {
 	string_cut_spaces(Text_Edit_object.text);
 	preset_rename(&presets_list, Text_Edit_object.text);
 
-	strcpy(temp_msg_1, "Preset");
-	strcpy(temp_msg_2, "was renamed!");
-	send_message(MES_SHOW_TEMP_MSG);
+	showTempMessage("Preset", "was renamed!");
 }
 
 static void startMenuYN_preset_delete(void) {
@@ -627,18 +631,14 @@ static void startMenuYN_preset_copy(void) {
 	presets_list.active = presets_list.pos;
 	file_list_find(&presets_list, file_name);
 
-	strcpy(temp_msg_1, "Preset");
-	strcpy(temp_msg_2, "was copied!");
-	send_message(MES_SHOW_TEMP_MSG);
+	showTempMessage("Preset", "was copied!");
 }
 
 static void startMenuYN_calibration_rename(void) {
 	string_cut_spaces(Text_Edit_object.text);
 	calibration_rename(&calibrations_list, Text_Edit_object.text);
 
-	strcpy(temp_msg_1, "Calibration");
-	strcpy(temp_msg_2, "was renamed!");
-	send_message(MES_SHOW_TEMP_MSG);
+	showTempMessage("Calibration", "was renamed!");
 }
 
 static void startMenuYN_calibration_save(void) {
@@ -668,18 +668,14 @@ static void startMenuYN_calibration_copy(void) {
 	calibrations_list.active = calibrations_list.pos;
 	file_list_find(&calibrations_list, file_name);
 
-	strcpy(temp_msg_1, "Calibration");
-	strcpy(temp_msg_2, "was copied!");
-	send_message(MES_SHOW_TEMP_MSG);
+	showTempMessage("Calibration", "was copied!");
 }
 
 static void startMenuYN_curve_rename(void) {
 	string_cut_spaces(Text_Edit_object.text);
 	curve_rename(&curves_list, Text_Edit_object.text);
 
-	strcpy(temp_msg_1, "Curve");
-	strcpy(temp_msg_2, "was renamed!");
-	send_message(MES_SHOW_TEMP_MSG);
+	showTempMessage("Curve", "was renamed!");
 }
 
 static void startMenuYN_curve_save(void) {
@@ -707,9 +703,7 @@ static void startMenuYN_curve_copy(void) {
 		set_okIOzero();
 	file_list_find(&curves_list, file_name);
 
-	strcpy(temp_msg_1, "Curve");
-	strcpy(temp_msg_2, "was copied!");
-	send_message(MES_SHOW_TEMP_MSG);
+	showTempMessage("Curve", "was copied!");
 }
 
 static void startMenuYN_curve_export(void) {

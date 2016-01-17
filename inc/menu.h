@@ -141,3 +141,4 @@ void calibration_init(char *name);
 void checkControl_events(void);
 void menu_btns_n_msg_handler(uint8_t event);
 void changeSplitKey(uint8_t note);
+void showTempMessage(char* line1, char* line2);

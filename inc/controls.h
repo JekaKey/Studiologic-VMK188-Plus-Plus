@@ -176,7 +176,7 @@
 /*************************************/
 
 
-typedef enum {SLIDERS_WORK=0, SLIDERS_SEARCH,  SLIDERS_FOUND, SLIDERS_CALIBRATE, SLIDERS_EDGE, SLIDERS_MENU_SEARCH} sliders_state_t;
+typedef enum {SLIDERS_WORK=0, SLIDERS_FOUND, SLIDERS_CALIBRATE, SLIDERS_EDGE, SLIDERS_MENU_SEARCH} sliders_state_t;
 
 typedef enum {ENCODER_SLOW, ENCODER_AVERAGE, ENCODER_FAST} encoder_speed_t;
 

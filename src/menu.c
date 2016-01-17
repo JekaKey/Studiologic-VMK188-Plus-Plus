@@ -41,6 +41,8 @@ uint8_t showing_temp_msg = 0;
 static i_state_t I_state;
 static i_state_t prev_state;
 
+static uint8_t calibrationActive = 0;
+
 static text_edit_object_t Text_Edit_object;
 static menu_cursor_object_t Menu_Cursor;
 
@@ -128,8 +130,6 @@ static void startMenuYN_calibration_delete(void);
 static void startMenuYN_bootloader(void);
 static void startMenuYN_USBdisk(void);
 static void check_saving_preset(void);
-
-static void menu_calibrate(void);
 
 
 /**********************************************/
@@ -289,16 +289,16 @@ MAKE_MENU(menu1_item3,		menu1_item4,		menu1_item2,		NULL_ENTRY,		NULL_ENTRY,		0,
 MAKE_MENU(menu1_item4,		NULL_ENTRY,			menu1_item3,		NULL_ENTRY,		NULL_ENTRY,		1,		NULL,	t_none,		0,		0,		startMenuYN_bootloader,				menu_back_to_preset,	"Firmware"	);
 
 
-MAKE_MENU(menu_clb_edit,	menu_clb_save,		NULL_ENTRY,			NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_calibrate,						calibrationlist_start,	"Edit calibr."	);
+MAKE_MENU(menu_clb_edit,	menu_clb_save,		NULL_ENTRY,			NULL_ENTRY,		menu_slider1,	0,		NULL,	t_none,		0,		0,		menu_preset_sl_enter,				calibrationlist_start,	"Edit calibr."	);
 MAKE_MENU(menu_clb_save,	menu_clb_copy,		menu_clb_edit,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		startMenuYN_calibration_save,		calibrationlist_start,	"Save calibr."	);
 MAKE_MENU(menu_clb_copy,	menu_clb_rename,	menu_clb_save,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_calibration_copy,				calibrationlist_start,	"Copy calibr."	);
 MAKE_MENU(menu_clb_rename,	menu_clb_del,		menu_clb_copy,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_calibration_rename,			calibrationlist_start,	"Rename calibr.");
 MAKE_MENU(menu_clb_del,		NULL_ENTRY,			menu_clb_rename,	NULL_ENTRY,		NULL_ENTRY,		1,		NULL,	t_none,		0,		0,		startMenuYN_calibration_delete,		calibrationlist_start,	"Delete calibr.");
 
-MAKE_MENU(menu_clb_e_set,	menu_clb_e_delta,	NULL_ENTRY,			menu_clb_edit,	NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_edit_calibration,				NULL,					"Set min & max"	);
-MAKE_MENU(menu_clb_e_delta,	menu_clb_e_gaps,	menu_clb_e_set,		menu_clb_edit,	NULL_ENTRY,		0,		NULL,	t_uint16,	2,		512,	NULL,								NULL,					"Delta:"	);
-MAKE_MENU(menu_clb_e_gaps,	menu_clb_e_dead,	menu_clb_e_delta,	menu_clb_edit,	NULL_ENTRY,		0,		NULL,	t_perc,		0,		49,		NULL,								NULL,					"Gaps:");
-MAKE_MENU(menu_clb_e_dead,	NULL_ENTRY,			menu_clb_e_gaps,	menu_clb_edit,	NULL_ENTRY,		1,		NULL,	t_perc,		0,		99,		NULL,								NULL,					"Dead zone:");
+MAKE_MENU(menu_clb_e_set,	menu_clb_e_delta,	NULL_ENTRY,			NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_edit_calibration,				menu_slider_edit,		"Set min & max"	);
+MAKE_MENU(menu_clb_e_delta,	menu_clb_e_gaps,	menu_clb_e_set,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_uint16,	2,		512,	NULL,								menu_slider_edit,		"Delta:"	);
+MAKE_MENU(menu_clb_e_gaps,	menu_clb_e_dead,	menu_clb_e_delta,	NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_perc,		0,		49,		NULL,								menu_slider_edit,		"Gaps:");
+MAKE_MENU(menu_clb_e_dead,	NULL_ENTRY,			menu_clb_e_gaps,	NULL_ENTRY,		NULL_ENTRY,		1,		NULL,	t_perc,		0,		99,		NULL,								menu_slider_edit,		"Dead zone:");
 
 MAKE_MENU(menu3_item1,		menu3_item2,		NULL_ENTRY,			NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		menu_edit_curve,					curvelist_start,		"Edit curve"	);
 MAKE_MENU(menu3_item2,		menu3_item3,		menu3_item1,		NULL_ENTRY,		NULL_ENTRY,		0,		NULL,	t_none,		0,		0,		startMenuYN_curve_save,				curvelist_start,		"Save curve"	);
@@ -766,13 +766,6 @@ static void menu_edit_calibration(void){
 	send_message(MES_SLIDER_SHOW);
 }
 
-static void menu_calibrate(void){
-	calibration_message_draw("Move control","to select");
-	I_state = STATE_calibration_select;
-	sliders_state = SLIDERS_SEARCH;
-	controlLED1on(1);
-}
-
 
 static void startMenu_calibration(void) {
 	if (!okIO)
@@ -853,20 +846,6 @@ static void menu_calibration_delete_yes(void){
 	calibrations_list.active=calibrations_list.pos;
 }
 
-
-static void startMenu_calibration_edit(void) {
-	if (slider_calibrate_number == SLIDER_PITCH)
-		menu_clb_e_gaps.Next = &menu_clb_e_dead;
-	else
-		menu_clb_e_gaps.Next = &NULL_ENTRY;
-
-	menu_clb_e_delta.Value = (uint16_t*)(&Calibration.calibr[slider_calibrate_number].delta);
-	menu_clb_e_gaps.Value = (uint8_t*)(&Calibration.calibr[slider_calibrate_number].gap);
-	menu_clb_e_dead.Value = (uint8_t*)(&Calibration.calibr[slider_calibrate_number].dead);
-
-	selectedMenuItem = (menuItem_type*) &menu_clb_e_set;
-	showMenu();
-}
 
 /*Initialize pointers to Curve_points structure elements*/
 static void curve_editor_init(curve_edit_object_t  * C_object, curve_points_type * curve){ //Initialize pointers to Curve_points structure elements
@@ -1017,7 +996,11 @@ static void menu_preset_sl_enter(void) {
 static void menu_preset_sl_edit(void) {
 	sliders_state = SLIDERS_WORK;
     controlLED1on(0);
-	menuChange(MENU_PARENT);
+
+    if (calibrationActive)
+    	menuChange(&menu_clb_edit);
+    else
+    	menuChange(MENU_PARENT);
 	send_message(MES_REDRAW);
 }
 
@@ -1027,56 +1010,77 @@ static void menu_slider_edit(void){
     controlLED1on(1);
 	menuChange(MENU_PARENT);
 	send_message(MES_REDRAW);
-
 }
 
 
 static void menu_slider_enter(void) {
-	uint8_t num=selectedMenuItem->Min;
-
-	menu_sl_active.Parent = selectedMenuItem;
-	menu_sl_active.Value = (uint8_t*)(&Preset.sliders[num].active);
-	menu_sl_channel.Parent = selectedMenuItem;
-	menu_sl_channel.Value = (uint8_t*)(&Preset.sliders[num].channel);
-
-	if (num == SLIDER_PITCH) {
-		menu_sl_channel.Next = &NULL_ENTRY;
-
-	} else if (num == SLIDER_AT) {
-		menu_sl_channel.Next = &menu_sl_min;
-		menu_sl_min.Previous = &menu_sl_channel;
-
-		menu_sl_min.Parent = selectedMenuItem;
-		menu_sl_min.Value = (uint16_t*) (&(Preset.sliders[num].min_out_value));
-		menu_sl_max.Parent = selectedMenuItem;
-		menu_sl_max.Value = (uint16_t*) (&Preset.sliders[num].max_out_value);
-		menu_sl_bin.Parent = selectedMenuItem;
-		menu_sl_bin.Value = (uint8_t*) (&Preset.sliders[num].binary);
-	} else {
-		menu_sl_channel.Next = &menu_sl_event;
-		menu_sl_event.Previous = &menu_sl_channel;
-
-		menu_sl_event.Parent = selectedMenuItem;
-		menu_sl_event.Value = (uint8_t*) (&Preset.sliders[num].event);
-		menu_sl_reverse.Parent = selectedMenuItem;
-		menu_sl_reverse.Value = (uint8_t*)(&Preset.sliders[num].reverse);
-		menu_sl_min.Parent = selectedMenuItem;
-		menu_sl_min.Value = (uint16_t*) (&(Preset.sliders[num].min_out_value));
-		menu_sl_max.Parent = selectedMenuItem;
-		menu_sl_max.Value = (uint16_t*) (&Preset.sliders[num].max_out_value);
-	}
-
-	if (num == SLIDER_P1 || num == SLIDER_P2 || num == SLIDER_P3) {
-		menu_sl_max.Next = &menu_sl_bin;
-		menu_sl_bin.Parent = selectedMenuItem;
-		menu_sl_bin.Value = (uint8_t*) (&Preset.sliders[num].binary);
-	} else {
-		menu_sl_max.Next = &NULL_ENTRY;
-	}
-
 	sliders_state = SLIDERS_WORK;
-    controlLED1on(0);
-	menuChange(&menu_sl_active);
+	controlLED1on(0);
+
+	uint8_t num = selectedMenuItem->Min;
+	slider_calibrate_number = num;
+
+	if (calibrationActive) {
+		if (num == SLIDER_PITCH) {
+			menu_clb_e_dead.Parent = selectedMenuItem;
+			menu_clb_e_dead.Value = (uint8_t*)(&Calibration.calibr[num].dead);
+			menu_clb_e_gaps.Next = &menu_clb_e_dead;
+		} else {
+			menu_clb_e_gaps.Next = &NULL_ENTRY;
+		}
+
+		menu_clb_e_set.Parent = selectedMenuItem;
+		menu_clb_e_delta.Parent = selectedMenuItem;
+		menu_clb_e_delta.Value = (uint16_t*)(&Calibration.calibr[num].delta);
+		menu_clb_e_gaps.Parent = selectedMenuItem;
+		menu_clb_e_gaps.Value = (uint8_t*)(&Calibration.calibr[num].gap);
+
+		menuChange(&menu_clb_e_set);
+
+	} else {
+		menu_sl_active.Parent = selectedMenuItem;
+		menu_sl_active.Value = (uint8_t*)(&Preset.sliders[num].active);
+		menu_sl_channel.Parent = selectedMenuItem;
+		menu_sl_channel.Value = (uint8_t*)(&Preset.sliders[num].channel);
+
+		if (num == SLIDER_PITCH) {
+			menu_sl_channel.Next = &NULL_ENTRY;
+
+		} else if (num == SLIDER_AT) {
+			menu_sl_channel.Next = &menu_sl_min;
+			menu_sl_min.Previous = &menu_sl_channel;
+
+			menu_sl_min.Parent = selectedMenuItem;
+			menu_sl_min.Value = (uint16_t*) (&(Preset.sliders[num].min_out_value));
+			menu_sl_max.Parent = selectedMenuItem;
+			menu_sl_max.Value = (uint16_t*) (&Preset.sliders[num].max_out_value);
+			menu_sl_bin.Parent = selectedMenuItem;
+			menu_sl_bin.Value = (uint8_t*) (&Preset.sliders[num].binary);
+		} else {
+			menu_sl_channel.Next = &menu_sl_event;
+			menu_sl_event.Previous = &menu_sl_channel;
+
+			menu_sl_event.Parent = selectedMenuItem;
+			menu_sl_event.Value = (uint8_t*) (&Preset.sliders[num].event);
+			menu_sl_reverse.Parent = selectedMenuItem;
+			menu_sl_reverse.Value = (uint8_t*)(&Preset.sliders[num].reverse);
+			menu_sl_min.Parent = selectedMenuItem;
+			menu_sl_min.Value = (uint16_t*) (&(Preset.sliders[num].min_out_value));
+			menu_sl_max.Parent = selectedMenuItem;
+			menu_sl_max.Value = (uint16_t*) (&Preset.sliders[num].max_out_value);
+		}
+
+		if (num == SLIDER_P1 || num == SLIDER_P2 || num == SLIDER_P3) {
+			menu_sl_max.Next = &menu_sl_bin;
+			menu_sl_bin.Parent = selectedMenuItem;
+			menu_sl_bin.Value = (uint8_t*) (&Preset.sliders[num].binary);
+		} else {
+			menu_sl_max.Next = &NULL_ENTRY;
+		}
+
+		menuChange(&menu_sl_active);
+	}
+
 	send_message(MES_REDRAW);
 }
 
@@ -1205,8 +1209,8 @@ void menu_button_handler(uint8_t button) {
 		change_value(-10);
 		break;
 	case BUTTON_PAGEUP:
-		if (menuChange(MENU_PREVIOUS)){
-    		MENU_POS=0;
+		if (menuChange(MENU_PREVIOUS)) {
+    		MENU_POS = 0;
 	    	showMenu();
 		}
 		break;
@@ -1220,31 +1224,28 @@ void menu_button_handler(uint8_t button) {
 		change_value(10);
 		break;
 	case BUTTON_PAGEDOWN:
-		if  (menuChange(MENU_NEXT)){
-	    	MENU_POS=1;
+		if (menuChange(MENU_NEXT)) {
+	    	MENU_POS = 1;
     		showMenu();
 		}
 		break;
 	case BUTTON_ENTER:
-		if (selectedMenuItem->Command_Enter){
+		if (selectedMenuItem->Command_Enter) {
 	        selectedMenuItem->Command_Enter();
-            break;
-		}else{
+		} else {
 			menuChange(MENU_CHILD);
 			send_message(MES_REDRAW);
-			break;
 		}
-	case BUTTON_STORAGE:
 		break;
 	case BUTTON_EDIT:
-		if (selectedMenuItem->Command_Edit){
+		if (selectedMenuItem->Command_Edit) {
 	        selectedMenuItem->Command_Edit();
-            break;
-		}else{
+		} else {
 			menuChange(MENU_PARENT);
 			send_message(MES_REDRAW);
-			break;
 		}
+		break;
+	case BUTTON_STORAGE:
 	default:
 		break;
 	}
@@ -1545,36 +1546,18 @@ void calibration_init(char *name) {
 	calibrations_list.active = calibrations_list.pos;
 }
 
+static void calibrationActiveSwitch(uint8_t active) {
+	calibrationActive = active;
+}
 
 static void calibrationlist_start(void) {
 	I_state = STATE_calibrations_list;
+	calibrationActiveSwitch(1);
 	show_calibration(&Calibration, &calibrations_list);
 }
 
 
 static uint16_t slider_edge1, slider_edge2;
-
-static void select_calibration_handler(uint8_t event) {
-	switch (event) {
-	case MES_SLIDER_SHOW:
-		if (sliders_state == SLIDERS_FOUND) {
-			sliders_state = SLIDERS_WORK;
-			controlLED1on(0);
-			I_state = STATE_menu;
-			startMenu_calibration_edit();
-		}
-		break;
-
-	case BUTTON_EDIT:
-		sliders_state = SLIDERS_WORK;
-        controlLED1on(0);
-		I_state = STATE_menu;
-		send_message(MES_REDRAW);
-		break;
-	default:
-		break;
-	}
-}
 
 static void start_calibration_handler(uint8_t event){
 	switch (event) {
@@ -1678,6 +1661,8 @@ static void calibrations_button_handler(uint8_t button){
 		I_state=STATE_menu;
 		break;
 	case BUTTON_EDIT:
+		calibrationActiveSwitch(0);
+
 		selectedMenuItem = (menuItem_type*) &menu1_item1;
 		showMenu();
 		I_state=STATE_menu;
@@ -1953,9 +1938,6 @@ void menu_btns_n_msg_handler(uint8_t event) {
 		break;
 	case STATE_calibrations_list:
 		calibrations_button_handler(event);
-		break;
-	case STATE_calibration_select:
-		select_calibration_handler(event);
 		break;
 	case STATE_calibration_start:
 		start_calibration_handler(event);

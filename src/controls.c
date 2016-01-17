@@ -675,15 +675,6 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 						slider_FIFO_send(slider_number, ADC_value, &sliders[slider_number], &cal[slider_number]);
 				}
 				break;
-			case SLIDERS_SEARCH:
-				//Calculate change comparing with old value.
-				if (check_delta(&ADC_value, slider_number, SLIDERS_DELTA_SEARCH)) { //Change a result only if difference exceeds SLIDERS_DELTA.
-					ADC_old_values[slider_number] = ADC_value;
-					slider_calibrate_number = slider_number;
-					sliders_state = SLIDERS_FOUND;
-					send_message(MES_SLIDER_SHOW);
-				}
-				break;
 			case SLIDERS_MENU_SEARCH:
 				//Calculate change comparing with old value.
 				if (check_delta(&ADC_value, slider_number, SLIDERS_DELTA_SEARCH)) { //Change a result only if difference exceeds SLIDERS_DELTA.

@@ -609,8 +609,8 @@ static void startMenuYN_preset_rename(void) {
 	string_cut_spaces(Text_Edit_object.text);
 	preset_rename(&presets_list, Text_Edit_object.text);
 
-	strcpy(temp_msg_1, "Preset was");
-	strcpy(temp_msg_2, "renamed!");
+	strcpy(temp_msg_1, "Preset");
+	strcpy(temp_msg_2, "was renamed!");
 	send_message(MES_SHOW_TEMP_MSG);
 }
 
@@ -664,22 +664,22 @@ static void startMenuYN_curve_copy(void) {
 	toYNMenu();
 }
 
-static void startMenuYN_curve_export(void){
+static void startMenuYN_curve_export(void) {
 	selectedMenuYNItem = (menuYNItem_type*) &menuYN_curve_export;
 	toYNMenu();
 }
 
-static void startMenuYN_bootloader(void){
+static void startMenuYN_bootloader(void) {
 	selectedMenuYNItem = (menuYNItem_type*) &menuYN_bootloader;
 	toYNMenu_noIO();
 }
 
-static void startMenuYN_USBdisk(void){
+static void startMenuYN_USBdisk(void) {
 	if (USBdisk_active)
     	selectedMenuYNItem = (menuYNItem_type*) &menuYN_USBdisk_off;
-	else {
+	else
     	selectedMenuYNItem = (menuYNItem_type*) &menuYN_USBdisk_on;
-	}
+
 	toYNMenu_noIO();
 }
 
@@ -804,7 +804,7 @@ static void menu_calibration_save_yes(void){
 	char path[MAX_PATH] = "0:/" CALIBR_DIR_NAME "/";
 	strcat(path, calibrations_list.names[calibrations_list.pos]);
 	if (calibration_save(path, &Calibration)!=FIO_OK)
-			set_okIOzero();
+		set_okIOzero();
 }
 
 

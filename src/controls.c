@@ -375,7 +375,6 @@ void buttons_set_defaults(Button_type* but) {
 
 const button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTTON1_PORT, BUTTON1_PIN }, { BUTTON2_PORT, BUTTON2_PIN } };
 
-static uint16_t tick_counter = 0; //Counter of timer ticks
 static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
 static uint16_t ADC_old_values[SLIDERS_AMOUNT] = { 0 };
 static uint8_t sliders_old_values[SLIDERS_AMOUNT] = { 0 };
@@ -690,12 +689,7 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 		controls_read_status = WAIT_MUX;
 		break;
 	case WAIT_MUX:
-		//Waiting several ticks after multiplexors switch
-		tick_counter++;
-		if (tick_counter >= SLIDERS_MUX_DELAY) {
-			tick_counter = 0;
-			controls_read_status = CHECK_VALUE;
-		}
+		controls_read_status = CHECK_VALUE;
 		break;
 	}
 }

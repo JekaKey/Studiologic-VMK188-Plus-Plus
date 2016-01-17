@@ -638,7 +638,6 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	uint16_t ODR_tmp;
 	uint16_t tmp;
 	uint16_t adc_res;
-	uint8_t i;
 	switch (controls_read_status) {
 	case CHECK_VALUE:
 		slider_number = mux_pin * 3 + ADC_channel;

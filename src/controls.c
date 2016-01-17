@@ -384,6 +384,7 @@ static uint8_t buttons; //result of IDR reading
 static uint8_t button_counter = 0; //Number of a button in chunk
 static uint8_t encoder_state = 3;
 static uint8_t encoder_zero = 0;
+static uint8_t ADC_channel=0;
 
 
 
@@ -617,9 +618,7 @@ static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t sliderNum, uin
 
 	uint16_t ADC_change = delta_storage[sliderNum].sum;
 	ADC_change = ADC_change > 0  ?  ADC_change  :  - ADC_change;
-	if (ADC_change > delta
-			// * (delta_storage[sliderNum].count+1+MAX_DELTA_COUNTER/2)
-			) {  //Change a result only if difference exceeds SLIDERS_DELTA.
+	if (ADC_change > delta) {  //Change a result only if difference exceeds SLIDERS_DELTA.
 		*ADC_value = ADC_old_values[sliderNum] + delta_storage[sliderNum].sum / delta_storage[sliderNum].count;
 		delta_storage[sliderNum].sum = 0;
 		delta_storage[sliderNum].count = 0;
@@ -639,43 +638,47 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	uint16_t ODR_tmp;
 	uint16_t tmp;
 	uint16_t adc_res;
+	uint8_t i;
 	switch (controls_read_status) {
 	case CHECK_VALUE:
-		//Calculate ADC results after measurement.
-		for (uint8_t i = 0; i < 3; i++) { //Same for all ADC channels
-			slider_number = mux_pin * 3 + i;
-			adc_res=ADC_DMA_buffer[i]&0x0FFF;
-			ADC_value = median_filter(adc_res,&filter_storage[slider_number]); //big window median filter
-			//if (slider_number==12) PRINTF("$%d %d;",adc_res, ADC_value);
-			switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
-			case SLIDERS_WORK:
-				//Calculate change comparing with old value.
-				if (check_integral_delta(&ADC_value, slider_number, cal[slider_number].delta)) { //Change a result only if difference exceeds SLIDERS_DELTA.
-					ADC_old_values[slider_number] = ADC_value;
-					if (sliders[slider_number].active) //only active sliders work send fifo
-						slider_FIFO_send(slider_number, ADC_value, &sliders[slider_number], &cal[slider_number]);
-				}
-				break;
-			case SLIDERS_MENU_SEARCH:
-				//Calculate change comparing with old value.
-				if (check_delta(&ADC_value, slider_number, SLIDERS_DELTA_SEARCH)) { //Change a result only if difference exceeds SLIDERS_DELTA.
-					ADC_old_values[slider_number] = ADC_value;
-					slider_calibrate_number = slider_number;
-					send_message(MES_SLIDER_MENU_FOUND);
-				}
-				break;
-			case SLIDERS_CALIBRATE:
-				if (slider_number == slider_calibrate_number) {
-					sliders_state = SLIDERS_EDGE;
-					slider_calibrate_store = ADC_value;
-					send_message(MES_SLIDER_EDGE);
-				}
-				break;
-			default:
-				break;
+		slider_number = mux_pin * 3 + ADC_channel;
+		adc_res = ADC_DMA_buffer[ADC_channel] & 0x0FFF;
+		ADC_value = median_filter(adc_res, &filter_storage[slider_number]); //big window median filter
+		//if (slider_number==12) PRINTF("$%d %d;",adc_res, ADC_value);
+		switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
+		case SLIDERS_WORK:
+			//Calculate change comparing with old value.
+			if (check_integral_delta(&ADC_value, slider_number,
+					cal[slider_number].delta)) { //Change a result only if difference exceeds SLIDERS_DELTA.
+				ADC_old_values[slider_number] = ADC_value;
+				if (sliders[slider_number].active) //only active sliders work send fifo
+					slider_FIFO_send(slider_number, ADC_value,
+							&sliders[slider_number], &cal[slider_number]);
 			}
+			break;
+		case SLIDERS_MENU_SEARCH:
+			//Calculate change comparing with old value.
+			if (check_delta(&ADC_value, slider_number, SLIDERS_DELTA_SEARCH)) { //Change a result only if difference exceeds SLIDERS_DELTA.
+				ADC_old_values[slider_number] = ADC_value;
+				slider_calibrate_number = slider_number;
+				send_message(MES_SLIDER_MENU_FOUND);
+			}
+			break;
+		case SLIDERS_CALIBRATE:
+			if (slider_number == slider_calibrate_number) {
+				sliders_state = SLIDERS_EDGE;
+				slider_calibrate_store = ADC_value;
+				send_message(MES_SLIDER_EDGE);
+			}
+			break;
+		default:
+			break;
 		}
-		controls_read_status = NEXT_MUX;
+		ADC_channel++;
+		if (ADC_channel>=3){
+		   ADC_channel=0;
+		   controls_read_status = NEXT_MUX;
+		}
 		break;
 	case NEXT_MUX:
 		//Switch multiplexors to next state

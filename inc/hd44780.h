@@ -122,17 +122,16 @@
 #define hd44780_function( bus, lines, font )      hd44780_wr_cmd( ( HD44780_CMD_FUNCTION | bus | lines | font ) & 0x3F )
 #define hd44780_cgram_addr( addr )                hd44780_wr_cmd( HD44780_CMD_CGRAM_ADDR | ( addr & 0x3F ) )
 #define hd44780_ddram_addr( addr )                hd44780_wr_cmd( HD44780_CMD_DDRAM_ADDR | ( (addr) & 0x7F ) )
-#define hd44780_write_char( c )                   hd44780_wr_data( c & 0xff )
 
 void hd44780_home();
 void hd44780_clear();
 void hd44780_wr_cmd( uint8_t );
-void hd44780_wr_data( uint8_t );
-void hd44780_wr_data_no_block( uint8_t );
+void hd44780_write_char( uint8_t );
+void hd44780_wr_data_noblock( uint8_t );
 void hd44780_init( void );
 void hd44780_write_string( const char *s );
 void hd44780_goto( uint8_t line, uint8_t position);
-void hd44780_goto_no_block( uint8_t line, uint8_t position);
+void hd44780_goto_noblock( uint8_t line, uint8_t position);
 void hd44780_rewrite_string( const char *s );
 void delay( uint32_t c );
 void delayms( uint32_t c );

@@ -23,8 +23,7 @@ const uint8_t symbol_check[]=       {0b00000111,
 
 char buffer[HD44780_DISP_VOLUME] = {' '};
 uint8_t currentPos = 0;
-char oldBuffer[HD44780_DISP_VOLUME] = {' '};
-uint8_t oldPos = 0;
+
 uint8_t showingTemp = 0;
 
 
@@ -189,17 +188,19 @@ void hd44780_wr_cmd(const uint8_t cmd) {
 	hd44780_write(cmd);
 }
 
-void hd44780_wr_data(const uint8_t data) {
+void hd44780_write_char(const uint8_t data) {
 	buffer[currentPos] = data;
 
 	if (currentPos < HD44780_DISP_VOLUME - 1)
 		currentPos++;
 
 	if (!showingTemp)
-		hd44780_wr_data_no_block(data);
+		hd44780_wr_data_noblock(data);
 }
 
-void hd44780_wr_data_no_block(const uint8_t data) {
+void hd44780_wr_data_noblock(const uint8_t data) {
+	while (buttons_active) {}
+
 	hd44780_RS_On();
 	hd44780_write(data);
 }
@@ -253,26 +254,19 @@ void hd44780_init(void) {
 
 
 void hd44780_write_string(const char *s) {
-	uint32_t i;
-	for (i = 0; s[i] != '\0'; ++i) {
-		hd44780_write_char( s[i]);
-	}
+	for (uint8_t i = 0; (s[i] != '\0') && (i < HD44780_DISP_LENGTH); i++)
+		hd44780_write_char(s[i]);
 }
 
 void hd44780_goto(uint8_t line, uint8_t position) {
-	while (buttons_active) {
-	}
-
 	currentPos = HD44780_DISP_LENGTH * (line - 1) + position - 1;
-	if (showingTemp)
-		return;
 
-	hd44780_goto_no_block(line, position);
+	if (!showingTemp)
+		hd44780_goto_noblock(line, position);
 }
 
-void hd44780_goto_no_block(uint8_t line, uint8_t position) {
-	while (buttons_active) {
-	}
+void hd44780_goto_noblock(uint8_t line, uint8_t position) {
+	while (buttons_active) {}
 
 	hd44780_active = 1;
 	controlLEDs_enable(0);
@@ -300,41 +294,37 @@ void hd44780_message_center(const char *s, uint8_t line) {
 void hd44780_load_symbol(uint8_t addr, const uint8_t * data) {
 //	hd44780_wr_cmd((addr<<3)+0b10000000);
 	hd44780_cgram_addr(addr);
-	for (uint8_t i=0; i<=7; i++)
-		hd44780_wr_data(data[i]);
+	for (uint8_t i = 0; i < 8; i++)
+		hd44780_write_char(data[i]);
 //	hd44780_ddram_addr(0);
 }
 
 void hd44780_show_temp_msg(const char *line1, const char *line2) {
-	if (!showingTemp) {
-		for (int i = 0; i < HD44780_DISP_VOLUME; i++)
-			oldBuffer[i] = buffer[i];
-
-		oldPos = currentPos;
-		showingTemp = 1;
-	}
+	if (showingTemp)
+		return;
+	showingTemp = 1;
 
 	hd44780_wr_cmd(HD44780_CMD_CLEAR);
 
-	hd44780_goto_no_block(1, (HD44780_DISP_LENGTH - strlen(line1)) / 2 + 1);
+	hd44780_goto_noblock(1, (HD44780_DISP_LENGTH - strlen(line1)) / 2 + 1);
 	for (uint8_t i = 0; line1[i] != '\0'; ++i)
-		hd44780_wr_data_no_block(line1[i]);
+		hd44780_wr_data_noblock(line1[i]);
 
-	hd44780_goto_no_block(2, (HD44780_DISP_LENGTH - strlen(line2)) / 2 + 1);
+	hd44780_goto_noblock(2, (HD44780_DISP_LENGTH - strlen(line2)) / 2 + 1);
 	for (uint8_t i = 0; line2[i] != '\0'; ++i)
-		hd44780_wr_data_no_block(line2[i]);
+		hd44780_wr_data_noblock(line2[i]);
 }
 
 void hd44780_remove_temp_msg() {
-	hd44780_goto_no_block(1, 1);
+	hd44780_goto_noblock(1, 1);
 	for (uint8_t i = 0; i < HD44780_DISP_LENGTH; i++)
-		hd44780_wr_data_no_block(oldBuffer[i]);
+		hd44780_wr_data_noblock(buffer[i]);
 
-	hd44780_goto_no_block(2, 1);
+	hd44780_goto_noblock(2, 1);
 	for (uint8_t i = 0; i < HD44780_DISP_LENGTH; i++)
-		hd44780_wr_data_no_block(oldBuffer[i + HD44780_DISP_LENGTH]);
+		hd44780_wr_data_noblock(buffer[i + HD44780_DISP_LENGTH]);
 
-	hd44780_goto_no_block(oldPos / HD44780_DISP_LENGTH + 1, oldPos % HD44780_DISP_LENGTH + 1);
+	hd44780_goto_noblock(currentPos / HD44780_DISP_LENGTH + 1, currentPos % HD44780_DISP_LENGTH + 1);
 
 	showingTemp = 0;
 }

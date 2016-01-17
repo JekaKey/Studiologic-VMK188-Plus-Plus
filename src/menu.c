@@ -1888,6 +1888,8 @@ static void temp_msg_handler(uint8_t event) {
 		case MES_SHOW_TEMP_MSG:
 			showing_temp_msg = 1;
 			hd44780_show_temp_msg(temp_msg_1, temp_msg_2);
+			strcpy(temp_msg_1, "");
+			strcpy(temp_msg_2, "");
 			setTimerMs(temp_msg_time * 1000);
 			break;
 
@@ -1910,7 +1912,7 @@ static void temp_msg_handler(uint8_t event) {
  */
 
 void menu_btns_n_msg_handler(uint8_t event) {
-	if (event == MES_SHOW_TEMP_MSG || showing_temp_msg) {
+	if ((event == MES_SHOW_TEMP_MSG || showing_temp_msg) && event != MES_REDRAW) {
 		temp_msg_handler(event);
 		return;
 	}

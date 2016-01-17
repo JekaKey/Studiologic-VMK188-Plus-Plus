@@ -266,7 +266,7 @@ void USART6_init() {
 	/* Now the USART_InitStruct is used to define the
 	 * properties of USART6
 	 */
-	USART_InitStruct.USART_BaudRate = 256000; // the baudrate is set to the value we passed into this init function
+	USART_InitStruct.USART_BaudRate = 230400; // the baudrate is set to the value we passed into this init function
 	USART_InitStruct.USART_WordLength = USART_WordLength_8b; // we want the data frame size to be 8 bits (standard)
 	USART_InitStruct.USART_StopBits = USART_StopBits_1; // we want 1 stop bit (standard)
 	USART_InitStruct.USART_Parity = USART_Parity_No; // we don't want a parity bit (standard)

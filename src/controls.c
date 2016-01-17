@@ -377,7 +377,6 @@ const button_port_type button_ports[3] = { { BUTTON0_PORT, BUTTON0_PIN }, { BUTT
 
 static uint16_t tick_counter = 0; //Counter of timer ticks
 static uint16_t mux_pin = 0; //Multiplexor pin number 0..7
-static uint16_t ADC_res[8][3] = {{0}}; //Result of ADC1,2,3 measuring after first 3x median filter.
 static uint16_t ADC_old_values[SLIDERS_AMOUNT] = { 0 };
 static uint8_t sliders_old_values[SLIDERS_AMOUNT] = { 0 };
 static uint16_t pitch_old_value = 8192;
@@ -571,8 +570,8 @@ void buttons_delay(void) {
 
 
 static enum controls_read_status_type {
-	next_mux, wait_mux, read_data, check_value
-} controls_read_status = read_data;
+	NEXT_MUX, WAIT_MUX, CHECK_VALUE
+} controls_read_status = CHECK_VALUE;
 
 extern filter_storage_t filter_storage[NUMBER_OF_BUFFERS];
 
@@ -640,32 +639,15 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	uint8_t slider_number;
 	uint16_t ODR_tmp;
 	uint16_t tmp;
-	uint16_t adc_arr[3][3];
-	uint16_t adc_med;
+	uint16_t adc_res;
 	switch (controls_read_status) {
-	case read_data:
-		for (uint8_t i = 0; i < 3; i++) { //read all ADC1-3 channels 3 times each and add to sum. Search min & max values for each ADC to remove them from sum in future
-			for (uint8_t j = 0; j < 3; j++) { //Same for all ADC channels
-				adc_arr[j][i] = ADC_DMA_buffer[j]&0x0FFF;//copy from DMA buffer
-			}
-		}
-		for (uint8_t j = 0; j < 3; j++) {
-			adc_med = median(adc_arr[j]); //apply simple median filter to all  ADC values
-			ADC_res[mux_pin][j] = adc_med; //Calculate sum of values
-		}
-//		for (uint8_t j = 0; j < 3; j++) {
-//			ADC_res[mux_pin][j] = ADC_DMA_buffer[j]&0x0FFF; //Calculate sum of values
-//
-//		}
-//        if (mux_pin==5) PRINTF("$%d %d %d;",ADC_res[mux_pin][0],ADC_res[mux_pin][1],ADC_res[mux_pin][2]);
-		controls_read_status = check_value;
-		break;
-	case check_value:
+	case CHECK_VALUE:
 		//Calculate ADC results after measurement.
 		for (uint8_t i = 0; i < 3; i++) { //Same for all ADC channels
 			slider_number = mux_pin * 3 + i;
-			ADC_value = median_filter(ADC_res[mux_pin][i],&filter_storage[slider_number]); //big window median filter
-			//if (slider_number==14) PRINTF("$%d %d;",ADC_res[mux_pin][i],ADC_value);
+			adc_res=ADC_DMA_buffer[i]&0x0FFF;
+			ADC_value = median_filter(adc_res,&filter_storage[slider_number]); //big window median filter
+			//if (slider_number==12) PRINTF("$%d %d;",adc_res, ADC_value);
 			switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
 			case SLIDERS_WORK:
 				//Calculate change comparing with old value.
@@ -694,9 +676,9 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 				break;
 			}
 		}
-		controls_read_status = next_mux;
+		controls_read_status = NEXT_MUX;
 		break;
-	case next_mux:
+	case NEXT_MUX:
 		//Switch multiplexors to next state
 		mux_pin++;
 		if (mux_pin > 7) {
@@ -705,18 +687,19 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 		ODR_tmp = GPIOB->ODR & 0xFF8F; //PB4, PB5, PB6
 		tmp = ODR_tmp | (mux_pin << 4); //next value to multiplexors PB4, PB5, PB6
 		GPIOB->ODR = tmp;
-		controls_read_status = wait_mux;
+		controls_read_status = WAIT_MUX;
 		break;
-	case wait_mux:
+	case WAIT_MUX:
 		//Waiting several ticks after multiplexors switch
 		tick_counter++;
 		if (tick_counter >= SLIDERS_MUX_DELAY) {
 			tick_counter = 0;
-			controls_read_status = read_data;
+			controls_read_status = CHECK_VALUE;
 		}
 		break;
 	}
 }
+
 
 static enum buttons_read_status_type {
 	read_buttons, check_button, next_buttons_chunk, read_encoders

@@ -106,50 +106,32 @@ typedef struct {
 	uint8_t state;
 	uint8_t pos;
 	uint8_t line;
-	i_state_t parent;
-	void (*command)(void);
-}text_edit_object_t;
-
-typedef struct {
-	char title[17];
-	char text[17];
-    uint16_t value;
-    uint16_t old_value;
-    uint16_t min;
-    uint16_t max;
-	uint8_t state;
-	uint8_t pos;
-	uint8_t line;
-	uint8_t left;
-	uint8_t size;
-	i_state_t parent;
-	void (*command)(void);
-}number_edit_object_t;
+	void (*onComplete)(void);
+} text_edit_object_t;
 
 typedef struct {
 	uint32_t * value;
     uint32_t min;
     uint32_t max;
-}curve_edit_item_t;
+} curve_edit_item_t;
 
 typedef struct {
-	i_state_t parent;
 	int8_t pos;
 	curve_points_type * Curve;
 	curve_edit_item_t item[6];
-}curve_edit_object_t;
+} curve_edit_object_t;
 
 typedef struct {
 	uint8_t x;
 	uint8_t y;
 	uint8_t on;
-}menu_cursor_object_t;
+} menu_cursor_object_t;
 
 
 typedef struct {
    uint8_t on;
    uint8_t pressed;
-}button_object_t;
+} button_object_t;
 
 void btoa(uint8_t value, char* buffer);
 

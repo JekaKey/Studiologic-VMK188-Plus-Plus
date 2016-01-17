@@ -53,7 +53,7 @@ extern sliders_state_t sliders_state;
 extern calibrationType Calibration;
 extern curve_points_type Curve;
 
-static curve_edit_object_t Curve_Edit_object[6]={{STATE_menu, 0, &Curve, //Initialization of bounds for white and black curves points
+static curve_edit_object_t Curve_Edit_object[6]={{0, &Curve, //Initialization of bounds for white and black curves points
 		{{NULL, MIN_XW1, MAX_XW1},
 		{NULL, MIN_XW2, MAX_XW2},
 		{NULL, MIN_XW3, MAX_XW3},
@@ -77,7 +77,7 @@ static void menu_preset_rename(void);
 static void menu_preset_save_yes(void);
 static void menu_back_to_preset(void);
 static void preset_name_current_state(void); //save new active preset
-static void text_object_init(text_edit_object_t *obj, const char *st1, const char *st2, i_state_t parent,  void (*com)(void));
+static void text_object_init(text_edit_object_t *obj, const char *st1, const char *st2, void (*onComplete)(void));
 static void menu_edit_calibration(void);
 static void calibration_name_current_state(void); //save new active preset
 static void menu_calibration_copy(void);
@@ -612,8 +612,6 @@ static void startMenuYN_preset_rename(void) {
 	strcpy(temp_msg_1, "Preset was");
 	strcpy(temp_msg_2, "renamed!");
 	send_message(MES_SHOW_TEMP_MSG);
-
-	send_message(MES_REDRAW);
 }
 
 static void startMenuYN_preset_delete(void) {
@@ -692,7 +690,7 @@ static void menu_preset_as_default(void) {
 }
 
 
-static void menu_preset_rename(void){
+static void menu_preset_rename(void) {
 	if (!okIO)
 		return;
 
@@ -701,11 +699,11 @@ static void menu_preset_rename(void){
 	size_t len=strlen(name);
 	name[len-4]=0; //cut file extension from the name
 
-	text_object_init(&Text_Edit_object, "Rename preset:", name, STATE_menu, startMenuYN_preset_rename);
+	text_object_init(&Text_Edit_object, "Rename preset:", name, startMenuYN_preset_rename);
 }
 
 
-static void menu_preset_copy(void){
+static void menu_preset_copy(void) {
 	if (!okIO)
 		return;
 
@@ -713,7 +711,7 @@ static void menu_preset_copy(void){
 	strcpy(name,presets_list.names[presets_list.pos]);
 	size_t len=strlen(name);
 	name[len-4]=0; //cut file extension from the name
-	text_object_init(&Text_Edit_object, "Copy preset:", name, STATE_menu, startMenuYN_preset_copy);
+	text_object_init(&Text_Edit_object, "Copy preset:", name, startMenuYN_preset_copy);
 }
 
 
@@ -794,7 +792,7 @@ static void menu_calibration_rename(void){
 	strcpy(name,calibrations_list.names[calibrations_list.pos]);
 	size_t len=strlen(name);
 	name[len-FEXT_SIZE]=0; //cut file extension from the name
-	text_object_init(&Text_Edit_object, "Rename calibr.:", name, STATE_menu, startMenuYN_calibration_rename);
+	text_object_init(&Text_Edit_object, "Rename calibr.:", name, startMenuYN_calibration_rename);
 }
 
 static void menu_calibration_rename_yes(void){
@@ -818,7 +816,7 @@ static void menu_calibration_copy(void){
 	strcpy(name,calibrations_list.names[calibrations_list.pos]);
 	size_t len=strlen(name);
 	name[len-FEXT_SIZE]=0; //cut file extension from the name
-	text_object_init(&Text_Edit_object, "Copy calibr.:", name, STATE_menu, startMenuYN_calibration_copy);
+	text_object_init(&Text_Edit_object, "Copy calibr.:", name, startMenuYN_calibration_copy);
 }
 
 static void menu_calibration_copy_yes(void){
@@ -883,7 +881,7 @@ static void menu_curve_export(void){
 	if (!okIO)
 		return;
 
-	text_object_init(&Text_Edit_object, "Curve name:", "", STATE_menu, startMenuYN_curve_export);
+	text_object_init(&Text_Edit_object, "Curve name:", "", startMenuYN_curve_export);
 }
 
 
@@ -895,7 +893,7 @@ static void menu_curve_rename(void){
 	strcpy(name,curves_list.names[curves_list.pos]);
 	size_t len=strlen(name);
 	name[len-FEXT_SIZE]=0; //cut file extension from the name
-	text_object_init(&Text_Edit_object, "Rename curve.:", name, STATE_menu, startMenuYN_curve_rename);
+	text_object_init(&Text_Edit_object, "Rename curve.:", name, startMenuYN_curve_rename);
 }
 
 static void menu_curve_rename_yes(void){
@@ -919,7 +917,7 @@ static void menu_curve_copy(void){
 	strcpy(name,curves_list.names[curves_list.pos]);
 	size_t len=strlen(name);
 	name[len-FEXT_SIZE]=0; //cut file extension from the name
-	text_object_init(&Text_Edit_object, "Copy curve:", name, STATE_menu, startMenuYN_curve_copy);
+	text_object_init(&Text_Edit_object, "Copy curve:", name, startMenuYN_curve_copy);
 }
 
 //ÍÀÄÎ ÇÀÃÐÓÇÈÒÜ ×ÒÎ ÑÎÕÐÀÍßÒÜ
@@ -1312,22 +1310,21 @@ static void text_object_draw(text_edit_object_t *obj){
 	}
 }
 
-static void text_object_init(text_edit_object_t *obj, const char *st1, const char *st2, i_state_t parent, void (*com)(void)) {
+static void text_object_init(text_edit_object_t *obj, const char *st1, const char *st2, void (*onComplete)(void)) {
+	prev_state = I_state;
 	I_state = STATE_text_edit;
 
-	int len=strlen(st2); //remove file extension
 	strcpy(obj->title, st1);
-	memset(obj->text,' ', 16);
-	memcpy(obj->text, st2, len);
-	obj->text[16]=0;
-	strcpy(obj->old_text,obj->text); //save initial text string
+	memset(obj->text, ' ', 16);
+	memcpy(obj->text, st2, strlen(st2)); //remove file extension
+	obj->text[16] = 0;
+	strcpy(obj->old_text, obj->text); //save initial text string
 	obj->pos = 0;
 	obj->state = 0;
-	obj->parent=parent;
-	text_object_draw(obj);
-	obj->command=com;
-}
+	obj->onComplete = onComplete;
 
+	text_object_draw(obj);
+}
 
 
 static void text_object_edit(uint8_t button, text_edit_object_t *obj) {
@@ -1364,14 +1361,21 @@ static void text_object_edit(uint8_t button, text_edit_object_t *obj) {
 		break;
 
 	case BUTTON_ENTER:
-	case BUTTON_STORAGE:
 		if (strcmp(obj->text, obj->old_text)) { //text changed
-			I_state = obj->parent;
+			I_state = prev_state;
 			hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
-			obj->command();
+			obj->onComplete();
+			send_message(MES_REDRAW);
 		}
 		break;
 
+	case BUTTON_EDIT:
+		I_state = prev_state;
+		hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
+		send_message(MES_REDRAW);
+		break;
+
+	case BUTTON_STORAGE:
 	default:
 	    break;
 	}

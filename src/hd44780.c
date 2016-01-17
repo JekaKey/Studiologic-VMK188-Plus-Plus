@@ -191,8 +191,10 @@ void hd44780_wr_cmd(const uint8_t cmd) {
 
 void hd44780_wr_data(const uint8_t data) {
 	buffer[currentPos] = data;
+
 	if (currentPos < HD44780_DISP_VOLUME - 1)
 		currentPos++;
+
 	if (!showingTemp)
 		hd44780_wr_data_no_block(data);
 }
@@ -203,10 +205,7 @@ void hd44780_wr_data_no_block(const uint8_t data) {
 }
 
 void hd44780_init(void) {
-
-	while (buttons_active){
-
-	}
+	while (buttons_active) {}
 
 	hd44780_active=1;
 	controlLEDs_enable(0);
@@ -282,12 +281,12 @@ void hd44780_goto_no_block(uint8_t line, uint8_t position) {
 	controlLEDs_enable(1);
 }
 
-void hd44780_rewrite_string( const char *s ){
+void hd44780_rewrite_string(const char *s) {
 	hd44780_goto(1,1);
 	hd44780_write_string(s);
 }
 
-void hd44780_message(const char *s){
+void hd44780_message(const char *s) {
 	hd44780_clear();
 	hd44780_rewrite_string(s);
 }
@@ -298,7 +297,7 @@ void hd44780_message_center(const char *s, uint8_t line) {
 	hd44780_write_string(s);
 }
 
-void hd44780_load_symbol(uint8_t addr, const uint8_t * data){
+void hd44780_load_symbol(uint8_t addr, const uint8_t * data) {
 //	hd44780_wr_cmd((addr<<3)+0b10000000);
 	hd44780_cgram_addr(addr);
 	for (uint8_t i=0; i<=7; i++)

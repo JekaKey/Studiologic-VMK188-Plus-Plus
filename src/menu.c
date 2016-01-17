@@ -444,7 +444,7 @@ static void menu_cursor_draw(menu_cursor_object_t* cursor, uint8_t y, uint8_t x)
 
 static void showMenu() {
 	hd44780_clear();
-	Menu_Cursor.on=0;
+	Menu_Cursor.on = 0;
 	hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
 
 	if (MENU_POS) {
@@ -453,23 +453,29 @@ static void showMenu() {
 		hd44780_goto(1, MENU_VALUE_POS);
 		if (MENU_PREVIOUS->tValue != t_none)
 			menu_show_param(MENU_PREVIOUS);
+
 		hd44780_goto(2, MENU_TEXT_POS);
 		hd44780_write_string(selectedMenuItem->Text);
 		hd44780_goto(2, MENU_VALUE_POS);
 		if (selectedMenuItem->tValue != t_none)
 			menu_show_param(selectedMenuItem);
+
 		menu_cursor_draw(&Menu_Cursor, 2, MENU_CURSOR_POS);
+
 	} else {
 		hd44780_goto(1, MENU_TEXT_POS);
 		hd44780_write_string(selectedMenuItem->Text);
 		hd44780_goto(1, MENU_VALUE_POS);
+
 		if (selectedMenuItem->tValue != t_none)
 			menu_show_param(selectedMenuItem);
 		hd44780_goto(2, MENU_TEXT_POS);
 		hd44780_write_string(MENU_NEXT->Text);
 		hd44780_goto(2, MENU_VALUE_POS);
+
 		if (MENU_NEXT->tValue != t_none)
 			menu_show_param(MENU_NEXT);
+
 		menu_cursor_draw(&Menu_Cursor, 1, MENU_CURSOR_POS);
 	}
 
@@ -1325,54 +1331,50 @@ static void text_object_init(text_edit_object_t *obj, const char *st1, const cha
 
 
 
-static void text_object_edit(uint8_t button, text_edit_object_t *obj){
+static void text_object_edit(uint8_t button, text_edit_object_t *obj) {
 	uint8_t pos;
 	switch (button) {
-	case BUTTON_PAGEUP: {
+	case BUTTON_PAGEUP:
 		(obj->pos)++;
 		if (obj->pos>15) obj->pos=0;
 		hd44780_goto(2, obj->pos+1);
 		break;
-	}
-	case BUTTON_PAGEDOWN: {
+
+	case BUTTON_PAGEDOWN:
 		(obj->pos)--;
 		if (obj->pos==0xFF) obj->pos=15;
 		hd44780_goto(2, obj->pos+1);
 		break;
-	}
+
 	case ENCODER_LEFT3:
 	case ENCODER_LEFT2:
-	case ENCODER_LEFT1: {
+	case ENCODER_LEFT1:
 		pos=obj->pos;
 		obj->text[pos]=rotate_char(obj->text[pos],-1,pos);
 		hd44780_write_char(obj->text[pos]);
 		hd44780_goto(2, pos+1);
 		break;
-	}
+
 	case ENCODER_RIGHT3:
 	case ENCODER_RIGHT2:
-	case ENCODER_RIGHT1: {
+	case ENCODER_RIGHT1:
 		pos=obj->pos;
 		obj->text[pos]=rotate_char(obj->text[pos],1,pos);
 		hd44780_write_char(obj->text[pos]);
 		hd44780_goto(2, pos+1);
 		break;
-	}
-	case BUTTON_ENTER: {
-		break;
-	}
-	case BUTTON_STORAGE: {
+
+	case BUTTON_ENTER:
+	case BUTTON_STORAGE:
 		if (strcmp(obj->text, obj->old_text)) { //text changed
 			I_state = STATE_menu;
-			hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF,
-					HD44780_DISP_BLINK_OFF);
+			hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
 			obj->command();
 		}
 		break;
-	}
-	default: {
+
+	default:
 	    break;
-	}
 	}
 
 }
@@ -1392,26 +1394,25 @@ static void octave_shift_show(void) {
 	hd44780_write_string(temp);
 }
 
-static void preset_show (const presetType *pr, file_list_type *pr_list){
+static void preset_show (const presetType *pr, file_list_type *pr_list) {
 	hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
 
 	char line[MAX_FNAME];
-	memset(line,' ',HD44780_DISP_LENGTH);
-	line[HD44780_DISP_LENGTH]=0;
+	memset(line, ' ', HD44780_DISP_LENGTH);
+	line[HD44780_DISP_LENGTH] = 0;
 
 	int len = 0;
 
 	if (okIO) {
 		len = strlen(pr_list->names[pr_list->pos]);
-		memcpy(line,pr_list->names[pr_list->pos], len - FEXT_SIZE);
+		memcpy(line, pr_list->names[pr_list->pos], len - FEXT_SIZE);
+	} else if (USBdisk_active) {
+		strcpy(line, "USB DISK ACTIVE");
 	} else {
-		if (USBdisk_active)
-		    strcpy(line, "USB DISK ACTIVE ");
-		else
-		    strcpy(line, "     ??????     ");
+		strcpy(line, " SD CARD ERROR!");
 	}
 
-	hd44780_goto(1,1);
+	hd44780_goto(1, 1);
 	hd44780_write_string(line);
 
 	memset(line,' ',HD44780_DISP_LENGTH);
@@ -1424,11 +1425,11 @@ static void preset_show (const presetType *pr, file_list_type *pr_list){
 	    btoa_mem(pr->SplitChannel,line +len+1);
     }
 
-    hd44780_goto(2,1);
+    hd44780_goto(2, 1);
 	hd44780_write_string(line);
 
-	if (pr_list->pos==pr_list->active){
-		hd44780_goto(1,16);
+	if (pr_list->pos == pr_list->active) {
+		hd44780_goto(1, 16);
 		hd44780_write_char(MENU_CHECK_CHAR);
 	}
 
@@ -1436,10 +1437,10 @@ static void preset_show (const presetType *pr, file_list_type *pr_list){
 }
 
 
-static void preset_name_current_state(void){
+static void preset_name_current_state(void) {
 	strcpy(Current_state.preset_name, presets_list.names[presets_list.pos]);
-	presets_list.active=presets_list.pos;
-	if(currentState_save()!=FIO_OK)
+	presets_list.active = presets_list.pos;
+	if (currentState_save() != FIO_OK)
 		set_okIOzero();
 }
 

@@ -589,7 +589,7 @@ static void startMenu_preset(void) {
 	if (!okIO)
 		return;
 
-	if ((presets_list.pos) == (presets_list.active))
+	if (presets_list.pos == presets_list.active)
 		menu_stor_rename.Next = &NULL_ENTRY;
 	else
 		menu_stor_rename.Next = &menu_stor_del;
@@ -696,8 +696,8 @@ static void menu_preset_rename(void) {
 
 	char name[MAX_FNAME - FEXT_SIZE];
 	strcpy(name,presets_list.names[presets_list.pos]);
-	size_t len=strlen(name);
-	name[len-4]=0; //cut file extension from the name
+	size_t len = strlen(name);
+	name[len - FEXT_SIZE] = 0; //cut file extension from the name
 
 	text_object_init(&Text_Edit_object, "Rename preset:", name, startMenuYN_preset_rename);
 }
@@ -736,24 +736,23 @@ static void menu_preset_copy_yes(void){
 
 
 static void menu_preset_save_yes(void){
-	char path[MAX_PATH]= "0:/" PRESET_DIR_NAME "/";
+	char path[MAX_PATH] = "0:/" PRESET_DIR_NAME "/";
     strcat(path, presets_list.names[presets_list.pos]);
-	if (preset_save(path, &Preset)!=FIO_OK)
+	if (preset_save(path, &Preset) != FIO_OK)
 		set_okIOzero();
 	Preset.Crc = presetCRC(&Preset);
 }
 
-static void menu_preset_delete_yes(void){
-	char old_active_preset_name [MAX_FNAME];
+static void menu_preset_delete_yes(void) {
+	char old_active_preset_name[MAX_FNAME];
 	strcpy(old_active_preset_name, presets_list.names[presets_list.active]);
-	if (preset_delete(&presets_list)!=FIO_OK)
+	if (preset_delete(&presets_list) != FIO_OK)
 		set_okIOzero();
-	if (SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list)!=SDFS_OK)
+	if (SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list) != SDFS_OK)
 		set_okIOzero();//update Presets list
 	file_list_find(&presets_list, old_active_preset_name);
-	presets_list.active=presets_list.pos;
+	presets_list.active = presets_list.pos;
 }
-
 
 
 
@@ -784,7 +783,7 @@ static void startMenu_calibration(void) {
 }
 
 
-static void menu_calibration_rename(void){
+static void menu_calibration_rename(void) {
 	if (!okIO)
 		return;
 
@@ -800,15 +799,14 @@ static void menu_calibration_rename_yes(void){
 	calibration_rename(&calibrations_list, Text_Edit_object.text);
 }
 
-static void menu_calibration_save_yes(void){
+static void menu_calibration_save_yes(void) {
 	char path[MAX_PATH] = "0:/" CALIBR_DIR_NAME "/";
 	strcat(path, calibrations_list.names[calibrations_list.pos]);
-	if (calibration_save(path, &Calibration)!=FIO_OK)
+	if (calibration_save(path, &Calibration) != FIO_OK)
 		set_okIOzero();
 }
 
-
-static void menu_calibration_copy(void){
+static void menu_calibration_copy(void) {
 	if (!okIO)
 		return;
 
@@ -839,14 +837,14 @@ static void menu_calibration_copy_yes(void){
 
 
 static void menu_calibration_delete_yes(void){
-	char old_active_calibration_name [MAX_FNAME];
+	char old_active_calibration_name[MAX_FNAME];
 	strcpy(old_active_calibration_name, calibrations_list.names[calibrations_list.active]);
-	if(calibration_delete(&calibrations_list)!=FIO_OK)
+	if (calibration_delete(&calibrations_list) != FIO_OK)
 		set_okIOzero();
-	if(SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list)!=SDFS_OK)
+	if (SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list) != SDFS_OK)
 		set_okIOzero();
 	file_list_find(&calibrations_list, old_active_calibration_name);
-	calibrations_list.active=calibrations_list.pos;
+	calibrations_list.active = calibrations_list.pos;
 }
 
 
@@ -863,21 +861,19 @@ static void curve_editor_init(curve_edit_object_t  * C_object, curve_points_type
 }
 
 
-static void menu_edit_curve(void){
+static void menu_edit_curve(void) {
     curve_editor_init(Curve_Edit_object, &Curve);
-//    Curve_Edit_object.parent=STATE_menu;
 	I_state = STATE_curve_edit;
 	send_message(MES_REDRAW);
 }
 
-static void menu_preset_edit_curve(void){
+static void menu_preset_edit_curve(void) {
     curve_editor_init(Curve_Edit_object, &(Preset.Curve));
-//    Curve_Edit_object.parent=STATE_menu;
 	I_state = STATE_preset_curve_edit;
 	send_message(MES_REDRAW);
 }
 
-static void menu_curve_export(void){
+static void menu_curve_export(void) {
 	if (!okIO)
 		return;
 
@@ -885,14 +881,15 @@ static void menu_curve_export(void){
 }
 
 
-static void menu_curve_rename(void){
+static void menu_curve_rename(void) {
 	if (!okIO)
 		return;
 
-	char name[MAX_FNAME-FEXT_SIZE];
-	strcpy(name,curves_list.names[curves_list.pos]);
-	size_t len=strlen(name);
-	name[len-FEXT_SIZE]=0; //cut file extension from the name
+	char name[MAX_FNAME - FEXT_SIZE];
+	strcpy(name, curves_list.names[curves_list.pos]);
+	size_t len = strlen(name);
+	name[len - FEXT_SIZE] = 0; //cut file extension from the name
+
 	text_object_init(&Text_Edit_object, "Rename curve.:", name, startMenuYN_curve_rename);
 }
 
@@ -901,22 +898,23 @@ static void menu_curve_rename_yes(void){
 	curve_rename(&curves_list, Text_Edit_object.text);
 }
 
-static void menu_curve_save_yes(void){
+static void menu_curve_save_yes(void) {
 	char path[MAX_PATH] = "0:/" CURVE_DIR_NAME "/";
 	strcat(path, curves_list.names[curves_list.pos]);
-	if (curve_save(path, &Curve)!=FIO_OK)
+	if (curve_save(path, &Curve) != FIO_OK)
 		set_okIOzero();
 }
 
 
-static void menu_curve_copy(void){
+static void menu_curve_copy(void) {
 	if (!okIO)
 		return;
 
-	char name[MAX_FNAME-FEXT_SIZE];
-	strcpy(name,curves_list.names[curves_list.pos]);
-	size_t len=strlen(name);
-	name[len-FEXT_SIZE]=0; //cut file extension from the name
+	char name[MAX_FNAME - FEXT_SIZE];
+	strcpy(name, curves_list.names[curves_list.pos]);
+	size_t len = strlen(name);
+	name[len - FEXT_SIZE] = 0; //cut file extension from the name
+
 	text_object_init(&Text_Edit_object, "Copy curve:", name, startMenuYN_curve_copy);
 }
 
@@ -924,7 +922,7 @@ static void menu_curve_copy(void){
 static void menu_curve_copy_yes(void){
 	char path[MAX_PATH]= "0:/" CURVE_DIR_NAME "/";
 	char file_name[MAX_FNAME];
-	strcpy(file_name,Text_Edit_object.text);
+	strcpy(file_name, Text_Edit_object.text);
 	string_cut_spaces(file_name);
     strcat(file_name, CURVE_EXT);
     strcat(path, file_name);
@@ -949,25 +947,25 @@ static void menu_curve_export_yes(void){
 	file_list_find(&curves_list, file_name);
 }
 
-static void menu_curve_load_yes(void){
-	char path[MAX_PATH]= "0:/" CURVE_DIR_NAME "/";
+static void menu_curve_load_yes(void) {
+	char path[MAX_PATH] = "0:/" CURVE_DIR_NAME "/";
 	char file_name[MAX_FNAME];
 	strcpy(file_name, curves_list.names[curves_list.pos]);
     strcat(file_name, CURVE_EXT);
     strcat(path, file_name);
-    if (curve_load(file_name, &Preset.Curve)!=FIO_OK)
+    if (curve_load(file_name, &Preset.Curve) != FIO_OK)
     	set_okIOzero();
 }
 
-static void menu_curve_delete_yes(void){
-	char old_active_curve_name [MAX_FNAME];
+static void menu_curve_delete_yes(void) {
+	char old_active_curve_name[MAX_FNAME];
 	strcpy(old_active_curve_name, curves_list.names[curves_list.active]);
-	if(curve_delete(&curves_list)!=FIO_OK)
+	if (curve_delete(&curves_list) != FIO_OK)
 		set_okIOzero();
-	if(SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list)!=SDFS_OK)
+	if (SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list) != SDFS_OK)
 		set_okIOzero();
 	file_list_find(&curves_list, old_active_curve_name);
-	curves_list.active=curves_list.pos;
+	curves_list.active = curves_list.pos;
 }
 
 static void menu_bootloader_yes(void){

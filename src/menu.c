@@ -398,10 +398,10 @@ menuItem_type * const  menus_buttons [] = {
 		&menu_button1, &menu_button2, &menu_button3, &menu_button4, &menu_button5, &menu_button6, &menu_button7, &menu_button8};
 
 
-
-MAKE_MENU_YN(menuYN_preset_default, "Set as default?", 	preset_name_current_state, 		1,	menu_stor_def);
-MAKE_MENU_YN(menuYN_preset_save, 	"Save changes?", 	menu_preset_save_yes, 			1,	NULL_ENTRY);
-MAKE_MENU_YN(menuYN_preset_delete, 	"Delete preset?", 	menu_preset_delete_yes, 		1,	menu_stor_del);
+MAKE_MENU_YN(menuYN_preset_changes, "Save changes?", 	menu_preset_save_yes, 			0,	NULL_ENTRY);
+MAKE_MENU_YN(menuYN_preset_default, "Set as default?", 	preset_name_current_state, 		0,	menu_stor_def);
+MAKE_MENU_YN(menuYN_preset_save, 	"Save preset?", 	menu_preset_save_yes, 			0,	menu_stor_save);
+MAKE_MENU_YN(menuYN_preset_delete, 	"Delete preset?", 	menu_preset_delete_yes, 		0,	menu_stor_del);
 
 MAKE_MENU_YN(menuYN_calibr_active, 	"Set active?", 		calibration_name_current_state,	0,	NULL_ENTRY);
 MAKE_MENU_YN(menuYN_calibr_save, 	"Save calibr.?", 	menu_calibration_save_yes, 		1,	menu_clb_save);
@@ -610,6 +610,7 @@ static void startMenuYN_preset_rename(void) {
 	preset_rename(&presets_list, Text_Edit_object.text);
 
 	showTempMessage("Preset", "was renamed!");
+	menu_back_to_preset();
 }
 
 static void startMenuYN_preset_delete(void) {
@@ -635,6 +636,7 @@ static void startMenuYN_preset_copy(void) {
 	file_list_find(&presets_list, file_name);
 
 	showTempMessage("Preset", "was copied!");
+	menu_back_to_preset();
 }
 
 static void startMenuYN_calibration_rename(void) {
@@ -1950,7 +1952,7 @@ void menu_btns_n_msg_handler(uint8_t event) {
 
 static void check_saving_preset(void) {
 	if (Preset.Crc != presetCRC(&Preset)) {
-		selectedMenuYNItem = (menuYNItem_type*) &menuYN_preset_save;
+		selectedMenuYNItem = (menuYNItem_type*) &menuYN_preset_changes;
 		toYNMenu();
 	} else {
 		menu_back_to_preset();

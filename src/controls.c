@@ -79,9 +79,9 @@ void ADC_init_all()
 	ADC_Init(ADC1, &ADC_InitStructure);
 
 
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_15Cycles);
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 2, ADC_SampleTime_15Cycles);
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 3, ADC_SampleTime_15Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_10, 1, ADC_SampleTime_84Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 2, ADC_SampleTime_84Cycles);
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 3, ADC_SampleTime_84Cycles);
 
     // DMA
 
@@ -653,7 +653,11 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 			adc_med = median(adc_arr[j]); //apply simple median filter to all  ADC values
 			ADC_res[mux_pin][j] = adc_med; //Calculate sum of values
 		}
-
+//		for (uint8_t j = 0; j < 3; j++) {
+//			ADC_res[mux_pin][j] = ADC_DMA_buffer[j]&0x0FFF; //Calculate sum of values
+//
+//		}
+//        if (mux_pin==5) PRINTF("$%d %d %d;",ADC_res[mux_pin][0],ADC_res[mux_pin][1],ADC_res[mux_pin][2]);
 		controls_read_status = check_value;
 		break;
 	case check_value:
@@ -661,6 +665,7 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 		for (uint8_t i = 0; i < 3; i++) { //Same for all ADC channels
 			slider_number = mux_pin * 3 + i;
 			ADC_value = median_filter(ADC_res[mux_pin][i],&filter_storage[slider_number]); //big window median filter
+			//if (slider_number==14) PRINTF("$%d %d;",ADC_res[mux_pin][i],ADC_value);
 			switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
 			case SLIDERS_WORK:
 				//Calculate change comparing with old value.

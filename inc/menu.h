@@ -16,7 +16,7 @@
 #define MENU_YN_YES "Yes"
 #define MENU_YN_NO 	"No"
 
-#define TEMP_MSG_INTERVAL 1500
+#define TEMP_MSG_INTERVAL 1200
 
 
 typedef enum {t_none, t_uint8, t_uint16, t_int8, t_bool, t_perc, t_note} value_tp;

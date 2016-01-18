@@ -13,7 +13,7 @@
 #include "bootloader.h"
 #include "usb_init.h"
 
-const xy_t curve_xy[6]={{3,1,2},{7,1,3},{12,1,4},{3,2,2},{7,2,3},{12,2,4}};
+const xy_t curve_xy[6] = {{3, 1, 2}, {7, 1, 3}, {12, 1, 4}, {3, 2, 2}, {7, 2, 3}, {12, 2, 4}};
 
 extern FIFO8(128) control_events; //defined in "control.c"
 extern uint16_t slider_calibrate_store;
@@ -430,16 +430,16 @@ void showTempMessage(char* line1, char* line2) {
 	send_message(MES_SHOW_TEMP_MSG);
 }
 
-static void menu_cursor_draw(menu_cursor_object_t* cursor, uint8_t y, uint8_t x){
+static void menu_cursor_draw(menu_cursor_object_t* cursor, uint8_t y, uint8_t x) {
 	if (cursor->on) {
 		hd44780_goto(cursor->y, cursor->x);
 		hd44780_write_char(' ');
 	}
 	hd44780_goto(y, x);
 	hd44780_write_char(MENU_CURSOR_CHAR);
-	cursor->y=y;
-	cursor->x=x;
-	cursor->on=1;
+	cursor->y = y;
+	cursor->x = x;
+	cursor->on = 1;
 }
 
 static void showMenu() {
@@ -824,24 +824,22 @@ static void menu_preset_delete_yes(void) {
 }
 
 
-static void calibration_message_draw(const char *line1, const char *line2){
+static void calibration_message_draw(const char *line1, const char *line2) {
 	hd44780_clear();
 	hd44780_message_center(line1, 1);
 	hd44780_message_center(line2, 2);
 }
 
-
-static void menu_edit_calibration(void){
+static void menu_edit_calibration(void) {
 	I_state = STATE_calibration_start;
 	send_message(MES_SLIDER_SHOW);
 }
-
 
 static void startMenu_calibration(void) {
 	if (!okIO)
 		return;
 
-	if ((calibrations_list.pos) == (calibrations_list.active))
+	if (calibrations_list.pos == calibrations_list.active)
 		menu_clb_rename.Next = &NULL_ENTRY;
 	else
 		menu_clb_rename.Next = &menu_clb_del;
@@ -986,7 +984,7 @@ static void menu_curve_delete_yes(void) {
 
 static void menu_bootloader_yes(void){
    hd44780_clear();
-   hd44780_message_center("BOOTLOADER",1);
+   hd44780_message_center("BOOTLOADER", 1);
    gotoBootLoader();
 }
 
@@ -1312,14 +1310,14 @@ void menu_yn_button_handler(uint8_t button) {
 }
 
 
-static void text_object_draw(text_edit_object_t *obj){
+static void text_object_draw(text_edit_object_t *obj) {
 	if (!obj->state) {
 		hd44780_clear();
 		hd44780_message_center(obj->title, 1);
-		hd44780_goto(2,1);
+		hd44780_goto(2, 1);
 		hd44780_write_string(obj->text);
 		hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_ON, HD44780_DISP_BLINK_OFF);
-		hd44780_goto(2,obj->pos+1);
+		hd44780_goto(2, obj->pos + 1);
 	}
 }
 
@@ -1328,7 +1326,7 @@ static void text_object_init(text_edit_object_t *obj, const char *st1, const cha
 	I_state = STATE_text_edit;
 
 	strcpy(obj->title, st1);
-	memset(obj->text, ' ', 16);
+	memset(obj->text, ' ', HD44780_DISP_LENGTH);
 	memcpy(obj->text, st2, strlen(st2)); //remove file extension
 	obj->text[16] = 0;
 	strcpy(obj->old_text, obj->text); //save initial text string
@@ -1345,32 +1343,34 @@ static void text_object_edit(uint8_t button, text_edit_object_t *obj) {
 	switch (button) {
 	case BUTTON_PAGEUP:
 		(obj->pos)++;
-		if (obj->pos>15) obj->pos=0;
-		hd44780_goto(2, obj->pos+1);
+		if (obj->pos > 15)
+			obj->pos = 0;
+		hd44780_goto(2, obj->pos + 1);
 		break;
 
 	case BUTTON_PAGEDOWN:
 		(obj->pos)--;
-		if (obj->pos==0xFF) obj->pos=15;
-		hd44780_goto(2, obj->pos+1);
+		if (obj->pos == 0xFF)
+			obj->pos = 15;
+		hd44780_goto(2, obj->pos + 1);
 		break;
 
 	case ENCODER_LEFT3:
 	case ENCODER_LEFT2:
 	case ENCODER_LEFT1:
-		pos=obj->pos;
-		obj->text[pos]=rotate_char(obj->text[pos],-1,pos);
+		pos = obj->pos;
+		obj->text[pos] = rotate_char(obj->text[pos], -1, pos);
 		hd44780_write_char(obj->text[pos]);
-		hd44780_goto(2, pos+1);
+		hd44780_goto(2, pos + 1);
 		break;
 
 	case ENCODER_RIGHT3:
 	case ENCODER_RIGHT2:
 	case ENCODER_RIGHT1:
-		pos=obj->pos;
-		obj->text[pos]=rotate_char(obj->text[pos],1,pos);
+		pos = obj->pos;
+		obj->text[pos] = rotate_char(obj->text[pos], 1, pos);
 		hd44780_write_char(obj->text[pos]);
-		hd44780_goto(2, pos+1);
+		hd44780_goto(2, pos + 1);
 		break;
 
 	case BUTTON_ENTER:
@@ -1406,7 +1406,7 @@ static void octave_shift_show(void) {
 		strcpy(temp, "   ");
 	}
 
-	hd44780_goto(2, 14);
+	hd44780_goto(2, HD44780_DISP_LENGTH - 2);
 	hd44780_write_string(temp);
 }
 
@@ -1449,7 +1449,7 @@ static void preset_show (const presetType *pr, file_list_type *pr_list) {
 	hd44780_write_string(line);
 
 	if (pr_list->pos == pr_list->active) {
-		hd44780_goto(1, 16);
+		hd44780_goto(1, HD44780_DISP_LENGTH);
 		hd44780_write_char(MENU_CHECK_CHAR);
 	}
 
@@ -1537,18 +1537,18 @@ static void presets_button_handler(uint8_t button){
 }
 
 
-static void show_calibration (const calibrationType *cal, file_list_type *cal_list){
-	char line[17];
+static void show_calibration (const calibrationType *cal, file_list_type *cal_list) {
+	char line[HD44780_DISP_LENGTH + 1];
     hd44780_clear();
 	hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
-	memset(line,' ',16);
-	line[16]=0;
+	memset(line, ' ', HD44780_DISP_LENGTH);
+	line[HD44780_DISP_LENGTH] = 0;
 	int len = strlen(cal_list->names[cal_list->pos]);
-	memcpy(line,cal_list->names[cal_list->pos], len-4);
-	hd44780_goto(1,1);
+	memcpy(line, cal_list->names[cal_list->pos], len - FEXT_SIZE);
+	hd44780_goto(1, 1);
 	hd44780_write_string(line);
-	if (cal_list->pos==cal_list->active){
-		hd44780_goto(2,1);
+	if (cal_list->pos == cal_list->active) {
+		hd44780_goto(2, 1);
 		hd44780_write_char(MENU_CHECK_CHAR);
 	}
 }
@@ -1697,24 +1697,24 @@ static void calibrations_button_handler(uint8_t button){
 
 }
 
-static void show_curve (file_list_type *curve_list){
-	char line[17];
+static void show_curve (file_list_type *curve_list) {
+	char line[HD44780_DISP_LENGTH + 1];
     hd44780_clear();
 	hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
-	memset(line,' ',16);
-	line[16]=0;
+	memset(line, ' ', HD44780_DISP_LENGTH);
+	line[HD44780_DISP_LENGTH] = 0;
 	if (curve_list->num > 0) {
 		int len = strlen(curve_list->names[curve_list->pos]);
-		memcpy(line, curve_list->names[curve_list->pos], len - 4);
+		memcpy(line, curve_list->names[curve_list->pos], len - FEXT_SIZE);
 		hd44780_goto(1, 1);
 		hd44780_write_string(line);
-	}else{
+	} else {
 		hd44780_message_center("EMPTY", 1);
 	}
 }
 
 
-static void preset_curves_button_handler(uint8_t button){
+static void preset_curves_button_handler(uint8_t button) {
 	switch (button) {
 	case MES_REDRAW:
 		show_curve(&curves_list);
@@ -1726,8 +1726,8 @@ static void preset_curves_button_handler(uint8_t button){
 		curves_list.pos--;
 		if (curves_list.pos == 0xFFFF)
 			curves_list.pos = curves_list.num - 1;
-		if(curve_load(curves_list.names[curves_list.pos], &(Preset.Curve))!=FIO_OK)
-				set_okIOzero();
+		if (curve_load(curves_list.names[curves_list.pos], &(Preset.Curve)) != FIO_OK)
+			set_okIOzero();
 		show_curve(&curves_list);
 		break;
 	case ENCODER_RIGHT1:
@@ -1737,8 +1737,8 @@ static void preset_curves_button_handler(uint8_t button){
 		curves_list.pos++;
 		if (curves_list.pos >= curves_list.num)
 			curves_list.pos = 0;
-		if(curve_load(curves_list.names[curves_list.pos], &(Preset.Curve))!=FIO_OK)
-				set_okIOzero();
+		if (curve_load(curves_list.names[curves_list.pos], &(Preset.Curve)) != FIO_OK)
+			set_okIOzero();
 		show_curve(&curves_list);
 		break;
 	case BUTTON_STORAGE:
@@ -1750,7 +1750,7 @@ static void preset_curves_button_handler(uint8_t button){
 	case BUTTON_EDIT:
 		selectedMenuItem = (menuItem_type*) &menu4_item1;
 		showMenu();
-		I_state=STATE_menu;
+		I_state = STATE_menu;
 		break;
 	default:
 		break;
@@ -1758,10 +1758,10 @@ static void preset_curves_button_handler(uint8_t button){
 
 }
 
-static void curves_button_handler(uint8_t button){
+static void curves_button_handler(uint8_t button) {
 	switch (button) {
 	case MES_REDRAW:
-		if(curve_load(curves_list.names[curves_list.pos], &Curve)!=FIO_OK)
+		if (curve_load(curves_list.names[curves_list.pos], &Curve) != FIO_OK)
 			set_okIOzero();
 		show_curve(&curves_list);
 		break;
@@ -1772,7 +1772,7 @@ static void curves_button_handler(uint8_t button){
 		curves_list.pos--;
 		if (curves_list.pos == 0xFFFF)
 			curves_list.pos = curves_list.num - 1;
-		if(curve_load(curves_list.names[curves_list.pos], &Curve)!=FIO_OK)
+		if (curve_load(curves_list.names[curves_list.pos], &Curve) != FIO_OK)
 			set_okIOzero();
 		show_curve(&curves_list);
 		break;
@@ -1783,26 +1783,26 @@ static void curves_button_handler(uint8_t button){
 		curves_list.pos++;
 		if (curves_list.pos >= curves_list.num)
 			curves_list.pos = 0;
-		if(curve_load(curves_list.names[curves_list.pos], &Curve)!=FIO_OK)
+		if (curve_load(curves_list.names[curves_list.pos], &Curve) != FIO_OK)
 			set_okIOzero();
 		show_curve(&curves_list);
 		break;
 	case BUTTON_STORAGE:
 		break;
 	case BUTTON_ENTER:
-	//	if ((curves_list.pos) == (curves_list.active)){
+	//	if ((curves_list.pos) == (curves_list.active)) {
 	//		menu3_item3.Next=&NULL_ENTRY;
-	//	}else{
+	//	} else {
 	//		menu3_item3.Next=&menu3_item4;
 	//	}
 		selectedMenuItem = (menuItem_type*) &menu3_item1;
 		showMenu();
-		I_state=STATE_menu;
+		I_state = STATE_menu;
 		break;
 	case BUTTON_EDIT:
 		selectedMenuItem = (menuItem_type*) &menu1_item1;
 		showMenu();
-		I_state=STATE_menu;
+		I_state = STATE_menu;
 		break;
 	default:
 		break;
@@ -1811,7 +1811,7 @@ static void curves_button_handler(uint8_t button){
 }
 
 
-static void curve_editor_value_draw(curve_edit_object_t* C_object, uint8_t i){
+static void curve_editor_value_draw(curve_edit_object_t* C_object, uint8_t i) {
 	uint16_t n;
 	char s[10];
 	n = (uint16_t)((*(C_object->item[i].value))/CURVE_X_FACTOR);
@@ -1821,31 +1821,28 @@ static void curve_editor_value_draw(curve_edit_object_t* C_object, uint8_t i){
 	hd44780_write_string(s);
 }
 
-
-
-
-static void curve_editor_draw(curve_edit_object_t* C_object){
+static void curve_editor_draw(curve_edit_object_t* C_object) {
     hd44780_clear();
-    Menu_Cursor.on=0;
+    Menu_Cursor.on = 0;
 	hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
-	hd44780_goto(1,1);
+	hd44780_goto(1, 1);
 	hd44780_write_char('w');
-	hd44780_goto(2,1);
+	hd44780_goto(2, 1);
 	hd44780_write_char('b');
-	for (uint8_t i=0; i<6; i++){
+	for (uint8_t i = 0; i < 6; i++)
 		curve_editor_value_draw(C_object, i);
-	}
-	menu_cursor_draw(&Menu_Cursor, curve_xy[C_object->pos].y, curve_xy[C_object->pos].x-1);
+
+	menu_cursor_draw(&Menu_Cursor, curve_xy[C_object->pos].y, curve_xy[C_object->pos].x - 1);
 }
 
-static void curve_editor_change_pos(curve_edit_object_t* C_object, int8_t n){
-	int8_t pos=C_object->pos+n;
-	if (pos>5)
-		pos=pos-6;
-	else if (pos<0)
-		pos=pos+6;
-	menu_cursor_draw(&Menu_Cursor, curve_xy[pos].y, curve_xy[pos].x-1);
-	C_object->pos=pos;
+static void curve_editor_change_pos(curve_edit_object_t* C_object, int8_t n) {
+	int8_t pos = C_object->pos + n;
+	if (pos > 5)
+		pos = pos - 6;
+	else if (pos < 0)
+		pos = pos + 6;
+	menu_cursor_draw(&Menu_Cursor, curve_xy[pos].y, curve_xy[pos].x - 1);
+	C_object->pos = pos;
 }
 
 static void curves_editor_change_value(curve_edit_object_t* C_object, int32_t change) {
@@ -1863,41 +1860,41 @@ static void curves_editor_change_value(curve_edit_object_t* C_object, int32_t ch
 	calculate_velocity_formula(C_object->Curve);
 }
 
-static void curves_editor_button_handler(uint8_t button){
+static void curves_editor_button_handler(uint8_t button) {
 	switch (button) {
 	case MES_REDRAW:
 		curve_editor_draw(Curve_Edit_object);
 		break;
 	case ENCODER_LEFT1:
-		curves_editor_change_value(Curve_Edit_object, -1*CURVE_X_FACTOR);
+		curves_editor_change_value(Curve_Edit_object, -1 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_LEFT2:
-		curves_editor_change_value(Curve_Edit_object, -10*CURVE_X_FACTOR);
+		curves_editor_change_value(Curve_Edit_object, -10 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_LEFT3:
-		curves_editor_change_value(Curve_Edit_object, -50*CURVE_X_FACTOR);
+		curves_editor_change_value(Curve_Edit_object, -50 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_RIGHT1:
-		curves_editor_change_value(Curve_Edit_object, 1*CURVE_X_FACTOR);
+		curves_editor_change_value(Curve_Edit_object, 1 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_RIGHT2:
-		curves_editor_change_value(Curve_Edit_object, 10*CURVE_X_FACTOR);
+		curves_editor_change_value(Curve_Edit_object, 10 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_RIGHT3:
-		curves_editor_change_value(Curve_Edit_object, 50*CURVE_X_FACTOR);
+		curves_editor_change_value(Curve_Edit_object, 50 * CURVE_X_FACTOR);
 		break;
 	case BUTTON_PAGEDOWN:
-		curve_editor_change_pos(Curve_Edit_object,1);
+		curve_editor_change_pos(Curve_Edit_object, 1);
 		break;
 	case BUTTON_PAGEUP:
-		curve_editor_change_pos(Curve_Edit_object,-1);
+		curve_editor_change_pos(Curve_Edit_object, -1);
 		break;
 	case BUTTON_STORAGE:
 		break;
 	case BUTTON_ENTER:
 		break;
 	case BUTTON_EDIT:
-		I_state=STATE_menu;
+		I_state = STATE_menu;
 		send_message(MES_REDRAW);
 		break;
 	default:
@@ -2012,7 +2009,7 @@ static void menu_back_to_preset(void) {
 	preset_show(&Preset, &presets_list);
 }
 
-static void curvelist_start(void){
+static void curvelist_start(void) {
 	if (!okIO)
 		return;
 
@@ -2020,7 +2017,7 @@ static void curvelist_start(void){
     send_message(MES_REDRAW);
 }
 
-static void preset_curvelist_start(void){
+static void preset_curvelist_start(void) {
 	if (!okIO)
 		return;
 

@@ -38,19 +38,21 @@ void reset_okIOzero(void){
 }
 
 
-uint16_t presetCRC(presetType *pr) {
+uint16_t getCRC(void *obj, uint16_t size) {
 	uint16_t crc = 0xFFFF;
-	uint8_t i;
-	uint8_t * data = (uint8_t*)pr+2; //first 2 bytes is crc itself
-	uint16_t len=sizeof(presetType)-2;
-    while(len--) {
-        crc ^= *data++ << 8;
+	uint8_t * data = (uint8_t*) obj + 2; //first 2 bytes is crc itself
+	uint16_t len = size - 2;
 
-        for(i = 0; i < 8; i++)
-            crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
-    }
-    return crc;
+	uint8_t i;
+	while (len--) {
+		crc ^= *data++ << 8;
+
+		for (i = 0; i < 8; i++)
+			crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
+	}
+	return crc;
 }
+
 /***********************/
 
 static void json_write_string(uint8_t level, const char* st, FIL* fff) { //use to write brackets into json
@@ -195,6 +197,7 @@ FIO_status calibration_save(const char* path, calibrationType* cal){
 	}
 	json_write_string(1, "}", &fff);
 	json_write_string(0, "}", &fff);
+	cal->Crc = getCRC(cal, sizeof(calibrationType));
 	if (SDFS_close(&fff)!= SDFS_OK)
 		return FIO_FILE_CLOSE_ERROR;
 	return res;
@@ -352,7 +355,9 @@ FIO_status preset_save(const char* path, presetType* pr){
 	}
 	json_write_string(1, "}", &fff);
 	json_write_string(0, "}", &fff);
-	pr->Crc=presetCRC(pr);
+
+	pr->Crc = getCRC(&pr, sizeof(presetType));
+
 	if (SDFS_close(&fff)!= SDFS_OK)
 		return FIO_FILE_CREATE_ERROR;
 	return res;
@@ -380,6 +385,8 @@ FIO_status curve_save(const char* path, curve_points_type* curve){
 	json_write_number(1, ATTR_CURVE_XB3, curve->xb3, 1, &fff);
 	json_write_number(1, ATTR_CURVE_YB3, curve->yb3, 0, &fff);
 	json_write_string(0, "}", &fff);
+
+	curve->Crc = getCRC(curve, sizeof(curve_points_type));
 	if (SDFS_close(&fff)!= SDFS_OK)
 		return FIO_FILE_CLOSE_ERROR;
 	return res;
@@ -795,11 +802,12 @@ FIO_status start_load_setting(void){
 /*If some parameters do not exist in JSON they will not change*/
 
 FIO_status calibration_load(char* name, calibrationType* cal ){
-	    char path[64] = "0:/" CALIBR_DIR_NAME "/";
-    	strcat(path, name);
-    	init_json_calibr_attr(cal);
-     	FIO_status status=load_JSON(path, js_buff, tokens, calibr_attr);
-        return status;
+	char path[64] = "0:/" CALIBR_DIR_NAME "/";
+	strcat(path, name);
+	init_json_calibr_attr(cal);
+	FIO_status status=load_JSON(path, js_buff, tokens, calibr_attr);
+	cal->Crc = getCRC(cal, sizeof(calibrationType));
+	return status;
 }
 
 FIO_status curve_load(char* name, curve_points_type  *curve) {
@@ -807,6 +815,7 @@ FIO_status curve_load(char* name, curve_points_type  *curve) {
 	strcat(path, name); //add file name to path
 	init_json_curve_attr(curve);
 	FIO_status status=load_JSON(path, js_buff, tokens, curve_attr);
+	curve->Crc = getCRC(curve, sizeof(curve_points_type));
     return status;
 }
 
@@ -817,6 +826,7 @@ FIO_status preset_load(char* name, presetType* pr) {
 	init_json_preset_attr(pr);
 	FIO_status status=load_JSON(path, js_buff, tokens, preset_attr);
 	calculate_velocity_formula(&pr->Curve);
+	pr->Crc = getCRC(pr, sizeof(presetType));
 	return status;
 }
 
@@ -929,7 +939,6 @@ FIO_status start_load_preset(presetType* preset, calibrationType* cal){
 	if (Current_state.preset_name[0]) { //name is not empty string
 		fiores = preset_load(Current_state.preset_name, preset); //Load calibration from file.
 		if (fiores == FIO_OK) { //loading was successful
-			preset->Crc=presetCRC(preset);
 			res = SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list);
 			return FIO_OK; //all is done
 		} else {

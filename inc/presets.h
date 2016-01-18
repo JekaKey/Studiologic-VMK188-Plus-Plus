@@ -138,6 +138,7 @@ typedef struct {//Keeps names of current presets and calibrations.
 } currentStateType;
 
 typedef struct{
+	uint16_t Crc; //control sum
 	uint8_t Id; //
 	Calibration_slider_type calibr[SLIDERS_AMOUNT];
 }calibrationType;
@@ -185,6 +186,6 @@ FIO_status curve_rename(file_list_type *cur_list, char *new_name);
 FIO_status curve_save(const char* path, curve_points_type* curve);
 void set_okIOzero(void);
 void reset_okIOzero(void);
-uint16_t presetCRC(presetType *pr);
+uint16_t getCRC(void *obj, uint16_t size);
 
 #endif //PRESETS__H

@@ -41,6 +41,7 @@ difference in their mechanical behaviour.
 
 /**********************************************/
 typedef struct {
+	uint16_t Crc; //control sum
 	uint32_t xw1;
 	uint32_t yw1;
 	uint32_t xw2;

@@ -403,24 +403,24 @@ menuItem_type * const  menus_buttons [] = {
 		&menu_button1, &menu_button2, &menu_button3, &menu_button4, &menu_button5, &menu_button6, &menu_button7, &menu_button8};
 
 
-MAKE_MENU_YN(menuYN_preset_changes, "Save changes?", 	menu_preset_save_yes, 			0,	NULL_ENTRY);
-MAKE_MENU_YN(menuYN_preset_default, "Set as default?", 	preset_name_current_state, 		0,	menu_stor_def);
-MAKE_MENU_YN(menuYN_preset_save, 	"Save preset?", 	menu_preset_save_yes, 			0,	menu_stor_save);
-MAKE_MENU_YN(menuYN_preset_delete, 	"Delete preset?", 	menu_preset_delete_yes, 		0,	menu_stor_del);
+MAKE_MENU_YN(menuYN_preset_changes, "Save changes?", 	menu_preset_save_yes, 			0,	NULL_ENTRY,		menu_back_to_preset);
+MAKE_MENU_YN(menuYN_preset_default, "Set as default?", 	preset_name_current_state, 		0,	menu_stor_def,	menu_back_to_preset);
+MAKE_MENU_YN(menuYN_preset_save, 	"Save preset?", 	menu_preset_save_yes, 			0,	menu_stor_save,	menu_back_to_preset);
+MAKE_MENU_YN(menuYN_preset_delete, 	"Delete preset?", 	menu_preset_delete_yes, 		0,	menu_stor_del,	menu_back_to_preset);
 
-MAKE_MENU_YN(menuYN_calibr_changes, "Save changes?", 	menu_calibration_save_yes, 		0,	NULL_ENTRY);
-MAKE_MENU_YN(menuYN_calibr_active, 	"Set active?", 		calibration_name_current_state,	0,	NULL_ENTRY);
-MAKE_MENU_YN(menuYN_calibr_save, 	"Save calibr.?", 	menu_calibration_save_yes, 		1,	menu_clb_save);
-MAKE_MENU_YN(menuYN_calibr_delete, 	"Delete calibr.?", 	menu_calibration_delete_yes, 	1,	menu_clb_del);
+MAKE_MENU_YN(menuYN_calibr_changes, "Save changes?", 	menu_calibration_save_yes, 		0,	NULL_ENTRY,		calibrationlist_start);
+MAKE_MENU_YN(menuYN_calibr_active, 	"Set active?", 		calibration_name_current_state,	0,	NULL_ENTRY,		calibrationlist_start);
+MAKE_MENU_YN(menuYN_calibr_save, 	"Save calibr.?", 	menu_calibration_save_yes, 		0,	menu_clb_save,	calibrationlist_start);
+MAKE_MENU_YN(menuYN_calibr_delete, 	"Delete calibr.?", 	menu_calibration_delete_yes, 	0,	menu_clb_del,	calibrationlist_start);
 
-MAKE_MENU_YN(menuYN_curve_changes, 	"Save changes?", 	menu_curve_save_yes, 			0,	NULL_ENTRY);
-MAKE_MENU_YN(menuYN_curve_save, 	"Save curve?", 		menu_curve_save_yes, 			1,	menu3_item2);
-MAKE_MENU_YN(menuYN_curve_delete, 	"Delete curve?", 	menu_curve_delete_yes, 			1,	menu3_item5);
-MAKE_MENU_YN(menuYN_curve_load, 	"Load curve?", 		menu_curve_load_yes, 			1,	menu4_item1);
+MAKE_MENU_YN(menuYN_curve_changes, 	"Save changes?", 	menu_curve_save_yes, 			0,	NULL_ENTRY,		curvelist_start);
+MAKE_MENU_YN(menuYN_curve_save, 	"Save curve?", 		menu_curve_save_yes, 			0,	menu3_item2,	curvelist_start);
+MAKE_MENU_YN(menuYN_curve_delete, 	"Delete curve?", 	menu_curve_delete_yes, 			0,	menu3_item5,	curvelist_start);
+MAKE_MENU_YN(menuYN_curve_load, 	"Load curve?", 		menu_curve_load_yes, 			0,	menu4_item1,	curvelist_start);
 
-MAKE_MENU_YN(menuYN_USBdisk_on,    	"USB disk On?",		menu_USBdisk_on_yes,   			1,	menu1_item3);
-MAKE_MENU_YN(menuYN_USBdisk_off,    "USB disk Off?",	menu_USBdisk_off_yes,  			1,	menu1_item3);
-MAKE_MENU_YN(menuYN_bootloader, 	"Run bootloader?",	menu_bootloader_yes, 			1,	menu1_item4);
+MAKE_MENU_YN(menuYN_USBdisk_on,    	"USB disk On?",		menu_USBdisk_on_yes,   			1,	menu1_item3,	menu_back_to_preset);
+MAKE_MENU_YN(menuYN_USBdisk_off,    "USB disk Off?",	menu_USBdisk_off_yes,  			1,	menu1_item3,	menu_back_to_preset);
+MAKE_MENU_YN(menuYN_bootloader, 	"Run bootloader?",	menu_bootloader_yes, 			0,	menu1_item4,	NULL);
 
 
 
@@ -804,7 +804,7 @@ static void menu_preset_copy(void) {
 }
 
 
-static void menu_preset_save_yes(void){
+static void menu_preset_save_yes(void) {
 	char path[MAX_PATH] = "0:/" PRESET_DIR_NAME "/";
     strcat(path, presets_list.names[presets_list.pos]);
 	if (preset_save(path, &Preset) != FIO_OK)
@@ -1282,11 +1282,10 @@ void menu_yn_button_handler(uint8_t button) {
 		if (selectedMenuYNItem->Command_Yes)
 	        selectedMenuYNItem->Command_Yes();
 
-		if (selectedMenuYNItem->Return_after_yes &&
-				menuChange(selectedMenuYNItem->Previous))
+		if (selectedMenuYNItem->Return_after_yes && menuChange(selectedMenuYNItem->Previous))
 			send_message(MES_REDRAW);
-		else
-			menu_back_to_preset();
+		else if (selectedMenuYNItem->returnFunc)
+			selectedMenuYNItem->returnFunc();
 
 		break;
 
@@ -1295,8 +1294,8 @@ void menu_yn_button_handler(uint8_t button) {
 
 		if (menuChange(selectedMenuYNItem->Previous))
 			send_message(MES_REDRAW);
-		else
-			menu_back_to_preset();
+		else if (selectedMenuYNItem->returnFunc)
+			selectedMenuYNItem->returnFunc();
 
 		break;
 
@@ -1554,12 +1553,11 @@ static void show_calibration (const calibrationType *cal, file_list_type *cal_li
 	}
 }
 
-static void calibration_name_current_state(void){
+static void calibration_name_current_state(void) {
 	strcpy(Current_state.calibration_name, calibrations_list.names[calibrations_list.pos]);
-	calibrations_list.active=calibrations_list.pos;
-	if (currentState_save()!=FIO_OK)
+	calibrations_list.active = calibrations_list.pos;
+	if (currentState_save() != FIO_OK)
 		set_okIOzero();
-	calibrationlist_start();
 }
 
 
@@ -1675,8 +1673,12 @@ static void calibrations_button_handler(uint8_t button){
 		show_calibration(&Calibration, &calibrations_list);
 		break;
 	case BUTTON_STORAGE:
-		selectedMenuYNItem = (menuYNItem_type*) &menuYN_calibr_active;
-		toYNMenu();
+		if (calibrations_list.active == calibrations_list.pos) {
+			showTempMessage("Calibration is", "already default!");
+		} else {
+			selectedMenuYNItem = (menuYNItem_type*) &menuYN_calibr_active;
+			toYNMenu();
+		}
 		break;
 	case BUTTON_ENTER:
 		startMenu_calibration();
@@ -1685,7 +1687,7 @@ static void calibrations_button_handler(uint8_t button){
 	case BUTTON_EDIT:
 		calibrationActiveSwitch(0);
 
-		selectedMenuItem = (menuItem_type*) &menu1_item1;
+		selectedMenuItem = (menuItem_type*) &menu1_item2;
 		showMenu();
 		I_state=STATE_menu;
 		break;

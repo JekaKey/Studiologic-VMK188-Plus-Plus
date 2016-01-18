@@ -44,6 +44,7 @@ typedef struct {
 	void       (*Command_Yes)(void);
 	uint8_t    Return_after_yes;
 	void       *Previous;
+	void       (*returnFunc)(void);
 } menuYNItem_type;
 
 
@@ -54,9 +55,9 @@ typedef struct {
 	extern  menuItem_type  Child;  \
 	menuItem_type Name = {(void*)&Next, (void*)&Previous, (void*)&Parent, (void*)&Child, (uint8_t)Pos, (void*)Value, (value_tp)tValue, (uint16_t)Min, (uint16_t)Max, (void*) Command_Enter, (void*) Command_Edit, { Text }}
 
-#define MAKE_MENU_YN(Name, Title, Command_Yes, Return_after_yes, Previous) \
+#define MAKE_MENU_YN(Name, Title, Command_Yes, Return_after_yes, Previous, returnFunc) \
 	extern  menuItem_type  Previous; \
-	menuYNItem_type Name = {{Title}, (void*) Command_Yes, (uint8_t) Return_after_yes, (void*)&Previous}
+	menuYNItem_type Name = {{Title}, (void*) Command_Yes, (uint8_t) Return_after_yes, (void*)&Previous, (void*) returnFunc}
 
 
 #define NULL_ENTRY Null_Menu

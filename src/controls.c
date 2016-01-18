@@ -605,7 +605,7 @@ static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t sliderNum, uin
 	if (!buffer_full)
 		delta_storage[sliderNum].count++;
 
-	int16_t diff = *ADC_value - ADC_old_values[sliderNum];
+	int16_t diff = (int16_t)(*ADC_value) - (int16_t)(ADC_old_values[sliderNum]);
 	delta_storage[sliderNum].sum += diff;
 	if (buffer_full)
 		delta_storage[sliderNum].sum -= delta_storage[sliderNum].buf[ delta_storage[sliderNum].index ];
@@ -616,9 +616,9 @@ static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t sliderNum, uin
 	if (delta_storage[sliderNum].index >= MAX_DELTA_COUNTER)
 		delta_storage[sliderNum].index = 0;
 
-	uint16_t ADC_change = delta_storage[sliderNum].sum;
+	int16_t ADC_change = delta_storage[sliderNum].sum;
 	ADC_change = ADC_change > 0  ?  ADC_change  :  - ADC_change;
-	if (ADC_change > delta) {  //Change a result only if difference exceeds SLIDERS_DELTA.
+	if ((uint16_t)ADC_change > delta) {  //Change a result only if difference exceeds SLIDERS_DELTA.
 		*ADC_value = ADC_old_values[sliderNum] + delta_storage[sliderNum].sum / delta_storage[sliderNum].count;
 		delta_storage[sliderNum].sum = 0;
 		delta_storage[sliderNum].count = 0;
@@ -643,12 +643,11 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 		slider_number = mux_pin * 3 + ADC_channel;
 		adc_res = ADC_DMA_buffer[ADC_channel] & 0x0FFF;
 		ADC_value = median_filter(adc_res, &filter_storage[slider_number]); //big window median filter
-		//if (slider_number==12) PRINTF("$%d %d;",adc_res, ADC_value);
+		//if (slider_number==SLIDER_PITCH) PRINTF("%d\t%d\n",adc_res, ADC_value);
 		switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
 		case SLIDERS_WORK:
 			//Calculate change comparing with old value.
-			if (check_integral_delta(&ADC_value, slider_number,
-					cal[slider_number].delta)) { //Change a result only if difference exceeds SLIDERS_DELTA.
+			if (check_integral_delta(&ADC_value, slider_number, cal[slider_number].delta)) { //Change a result only if difference exceeds SLIDERS_DELTA.
 				ADC_old_values[slider_number] = ADC_value;
 				if (sliders[slider_number].active) //only active sliders work send fifo
 					slider_FIFO_send(slider_number, ADC_value,

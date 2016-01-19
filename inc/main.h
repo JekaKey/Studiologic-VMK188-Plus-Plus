@@ -12,7 +12,7 @@
 #define APP_NAME "VMK176++"
 #endif
 
-#define APP_VERSION "V. 0.1.5"
+#define APP_VERSION "V. 0.8.5"
 
 void checkTimer();
 void setTimerMs(uint16_t value);

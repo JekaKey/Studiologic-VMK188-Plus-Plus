@@ -67,11 +67,9 @@ static void firstInit(void) {
 	delayms(400);
 	hd44780_init();
 	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
-#ifdef VMK188
-	hd44780_write_string("     VMK188++");
-#else
-	hd44780_write_string("     VMK176++");
-#endif
+	hd44780_message_center(APP_NAME, 1);
+	hd44780_message_center(APP_VERSION, 2);
+
 }
 
 
@@ -95,10 +93,8 @@ static void Timer_init(void){
 int main(void) {
 	BootLoaderStart();
 	firstInit();
-	PRINTF("     first_init finished\n");
     set_defaults_all(&Preset, &Calibration);
-	PRINTF("     set_defaults_all finished\n");
-    delayms(2000);
+    delayms(3000);
     if (!start_load_all(&Preset, &Calibration))
 		   set_okIOzero();
 	interface_init(Current_state.preset_name);

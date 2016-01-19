@@ -6,6 +6,13 @@
 //--------------------------------------------------------------
 #endif // __STM32F4_UB_MAIN_H
 
+#ifdef VMK188
+#define APP_NAME "VMK188++"
+#else
+#define APP_NAME "VMK176++"
+#endif
+
+#define APP_VERSION "V. 0.1.5"
 
 void checkTimer();
 void setTimerMs(uint16_t value);

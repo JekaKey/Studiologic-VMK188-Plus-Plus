@@ -637,7 +637,7 @@ static uint32_t DCD_WriteEmptyTxFifo(USB_OTG_CORE_HANDLE *pdev, uint32_t epnum)
   uint32_t len = 0;
   uint32_t len32b;
   txstatus.d32 = 0;
-  uint32_t fifoemptymsk;
+  //uint32_t fifoemptymsk;
   
   ep = &pdev->dev.in_ep[epnum];    
   

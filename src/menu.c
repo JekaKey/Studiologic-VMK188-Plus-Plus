@@ -12,6 +12,7 @@
 #include "keyboardscan.h"
 #include "bootloader.h"
 #include "usb_init.h"
+#include "timer.h"
 
 const xy_t curve_xy[6] = {{3, 1, 2}, {7, 1, 3}, {12, 1, 4}, {3, 2, 2}, {7, 2, 3}, {12, 2, 4}};
 
@@ -37,6 +38,9 @@ char temp_msg_1[HD44780_DISP_LENGTH + 1] = {' '};
 char temp_msg_2[HD44780_DISP_LENGTH + 1] = {' '};
 uint16_t temp_msg_time = TEMP_MSG_INTERVAL;
 uint8_t showing_temp_msg = 0;
+
+timer_counter_t temp_msg_timer_counter={0,0};
+timer_counter_t MSC_stop_timer_counter={0,0};
 
 static i_state_t I_state;
 static i_state_t prev_state;
@@ -1903,6 +1907,7 @@ static void curves_editor_button_handler(uint8_t button) {
 
 }
 
+
 static void temp_msg_handler(uint8_t event) {
 	switch (event) {
 		case MES_SHOW_TEMP_MSG:
@@ -1910,7 +1915,7 @@ static void temp_msg_handler(uint8_t event) {
 			hd44780_show_temp_msg(temp_msg_1, temp_msg_2);
 			strcpy(temp_msg_1, "");
 			strcpy(temp_msg_2, "");
-			setTimerMs(temp_msg_time);
+			setTimerMs(&temp_msg_timer_counter, temp_msg_time);
 			break;
 
 		case MES_TIMER_END:
@@ -1934,6 +1939,17 @@ static void temp_msg_handler(uint8_t event) {
 void menu_btns_n_msg_handler(uint8_t event) {
 	if ((event == MES_SHOW_TEMP_MSG || showing_temp_msg) && event != MES_REDRAW) {
 		temp_msg_handler(event);
+		return;
+	}
+
+	if(event==MES_MSCSTOP_TIMER_END){
+		menu_USBdisk_off_yes();
+		send_message(MES_REDRAW);
+		return;
+	}
+
+	if(event==MES_MSC_STOP){
+		setTimerMs(&MSC_stop_timer_counter,100);
 		return;
 	}
 

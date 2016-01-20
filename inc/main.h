@@ -14,5 +14,3 @@
 
 #define APP_VERSION "V. 0.8.5"
 
-void checkTimer();
-void setTimerMs(uint16_t value);

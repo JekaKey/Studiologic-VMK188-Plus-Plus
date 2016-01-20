@@ -31,11 +31,9 @@ extern presetType Preset;
 extern currentStateType Current_state;
 extern calibrationType Calibration;
 extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
-
-volatile uint32_t timerTicks = 0;
-uint32_t timerOld = 0;
-uint32_t timerPeriod = 0;
-
+extern uint32_t timerTicks;
+extern timer_counter_t temp_msg_timer_counter; //defined in menu.c
+extern timer_counter_t MSC_stop_timer_counter;
 
 void delay(volatile uint32_t c) {
 	while (--c) {
@@ -114,7 +112,8 @@ int main(void) {
 		//Send/receive midi data
 		receiveMidiData();
 		sendMidiData();
-		checkTimer();
+		checkTimer(&temp_msg_timer_counter, MES_TIMER_END);
+		checkTimer(&MSC_stop_timer_counter, MES_MSCSTOP_TIMER_END);
 	}
 }
 
@@ -136,18 +135,5 @@ void TIM4_IRQHandler() {
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 	}
 
-}
-
-
-void checkTimer() {
-	if (timerPeriod && timerTicks - timerOld >= timerPeriod) {
-		send_message(MES_TIMER_END);
-		timerPeriod = 0;
-	}
-}
-
-void setTimerMs(uint16_t value) {
-	timerPeriod = value * 1000 / TIMER_TIMPERIOD;
-	timerOld = timerTicks;
 }
 

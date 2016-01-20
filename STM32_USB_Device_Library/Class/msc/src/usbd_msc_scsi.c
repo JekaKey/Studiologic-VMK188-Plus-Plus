@@ -30,8 +30,7 @@
 #include "usbd_msc_scsi.h"
 #include "usbd_msc_mem.h"
 #include "usbd_msc_data.h"
-#include "log.h"
-
+#include "controls.h"
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
@@ -131,7 +130,6 @@ int8_t SCSI_ProcessCmd(USB_OTG_CORE_HANDLE  *pdev,
                            uint8_t *params)
 {
   cdev = pdev;
-	 PRINTF("    SCSI_ProcessCmd, lun: %d, params[0]: %d \n", lun, params[0] );
 
   switch (params[0])
   {
@@ -188,7 +186,6 @@ int8_t SCSI_ProcessCmd(USB_OTG_CORE_HANDLE  *pdev,
 */
 static int8_t SCSI_TestUnitReady(uint8_t lun, uint8_t *params)
 {
-	 PRINTF("           SCSI_TestUnitReady, lun: %d \n", lun);
 
   /* case 9 : Hi > D0 */
   if (MSC_BOT_cbw.dDataLength != 0)
@@ -221,7 +218,6 @@ static int8_t  SCSI_Inquiry(uint8_t lun, uint8_t *params)
 {
   uint8_t* pPage;
   uint16_t len;
-	 PRINTF("              SCSI_Inquiry, lun: %d, params: %d,%d,%d,%d,%d,%d,%d,%d \n", lun, params[0],params[1],params[2],params[3],params[4],params[5],params[6],params[7]);
   
   if (params[1] & 0x01)/*Evpd is set*/
   {
@@ -240,12 +236,10 @@ static int8_t  SCSI_Inquiry(uint8_t lun, uint8_t *params)
     }
   }
   MSC_BOT_DataLen = len;
-  PRINTF("MSC_BOT_Data: \n");
   while (len) 
   {
     len--;
     MSC_BOT_Data[len] = pPage[len];
-    PRINTF("%d: %d\n", len, MSC_BOT_Data[len] );
   }
   return 0;
 }
@@ -259,7 +253,6 @@ static int8_t  SCSI_Inquiry(uint8_t lun, uint8_t *params)
 */
 static int8_t SCSI_ReadCapacity10(uint8_t lun, uint8_t *params)
 {
-	 PRINTF("                SCSI_ReadCapacity10, lun: %d \n", lun);
   
   if(USBD_STORAGE_fops->GetCapacity(lun, &SCSI_blk_nbr, &SCSI_blk_size) != 0)
   {
@@ -298,7 +291,6 @@ static int8_t SCSI_ReadFormatCapacity(uint8_t lun, uint8_t *params)
   uint32_t blk_size;
   uint32_t blk_nbr;
   uint16_t i;
-	 PRINTF("              SCSI_ReadFormatCapacity, lun: %d \n", lun);
   
   for(i=0 ; i < 12 ; i++) 
   {
@@ -423,7 +415,6 @@ static int8_t SCSI_RequestSense (uint8_t lun, uint8_t *params)
 */
 void SCSI_SenseCode(uint8_t lun, uint8_t sKey, uint8_t ASC)
 {
-	PRINTF("                SCSI_SenseCode, lun: %d, sKey: %d, ASC: %d\n", lun, sKey, ASC);
   SCSI_Sense[SCSI_Sense_Tail].Skey  = sKey;
   SCSI_Sense[SCSI_Sense_Tail].w.ASC = ASC << 8;
   SCSI_Sense_Tail++;
@@ -442,6 +433,7 @@ void SCSI_SenseCode(uint8_t lun, uint8_t sKey, uint8_t ASC)
 static int8_t SCSI_StartStopUnit(uint8_t lun, uint8_t *params)
 {
   MSC_BOT_DataLen = 0;
+  send_message(MES_MSC_STOP);
   return 0;
 }
 
@@ -455,7 +447,6 @@ static int8_t SCSI_StartStopUnit(uint8_t lun, uint8_t *params)
 static int8_t SCSI_Read10(uint8_t lun , uint8_t *params)
 {
 
-	 PRINTF("                SCSI_Read10, lun: %d \n", lun);
 
 	if(MSC_BOT_State == BOT_IDLE)  /* Idle */
   {
@@ -651,7 +642,6 @@ static int8_t SCSI_CheckAddressRange (uint8_t lun , uint32_t blk_offset , uint16
 static int8_t SCSI_ProcessRead (uint8_t lun)
 {
   uint32_t len;
-	 PRINTF("                SCSI_ProcessRead, lun: %d \n", lun);
   
   len = MIN(SCSI_blk_len , MSC_MEDIA_PACKET); 
   

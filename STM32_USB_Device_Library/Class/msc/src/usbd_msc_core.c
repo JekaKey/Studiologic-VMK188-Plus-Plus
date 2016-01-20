@@ -45,7 +45,6 @@
 #include "usbd_msc_core.h"
 #include "usbd_msc_bot.h"
 #include "usbd_req.h"
-#include "log.h"
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
   * @{
@@ -259,7 +258,6 @@ __ALIGN_BEGIN static uint8_t  USBD_MSC_AltSet  __ALIGN_END = 0;
 uint8_t  USBD_MSC_Init (void  *pdev, 
                             uint8_t cfgidx)
 {
-  PRINTF("USBD_MSC_Init\n");
 
   USBD_MSC_DeInit(pdev , cfgidx );
   
@@ -421,7 +419,6 @@ uint8_t  USBD_MSC_Setup (void  *pdev, USB_SETUP_REQ *req)
 uint8_t  USBD_MSC_DataIn (void  *pdev, 
                               uint8_t epnum)
 {
-  PRINTF("USBD_MSC_DataIn\n");
   MSC_BOT_DataIn(pdev , epnum);
   return USBD_OK;
 }
@@ -436,7 +433,6 @@ uint8_t  USBD_MSC_DataIn (void  *pdev,
 uint8_t  USBD_MSC_DataOut (void  *pdev, 
                                uint8_t epnum)
 {
-  PRINTF("USBD_MSC_DataOut\n");
   MSC_BOT_DataOut(pdev , epnum);
   return USBD_OK;
 }

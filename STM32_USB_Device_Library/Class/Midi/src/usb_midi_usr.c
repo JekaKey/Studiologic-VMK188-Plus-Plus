@@ -24,7 +24,6 @@ USBD_Usr_cb_TypeDef MS_Usr_cb =
 */
 void USBD_USR_Init(void)
 {
-
 }
 
 /**
@@ -35,7 +34,6 @@ void USBD_USR_Init(void)
 */
 void USBD_USR_DeviceReset(uint8_t speed )
 {
-
 }
 
 
@@ -47,7 +45,6 @@ void USBD_USR_DeviceReset(uint8_t speed )
 */
 void USBD_USR_DeviceConfigured (void)
 {
-
 }
 
 
@@ -59,7 +56,6 @@ void USBD_USR_DeviceConfigured (void)
 */
 void USBD_USR_DeviceConnected (void)
 {
-
 }
 
 
@@ -71,7 +67,6 @@ void USBD_USR_DeviceConnected (void)
 */
 void USBD_USR_DeviceDisconnected (void)
 {
-
 }
 
 /**

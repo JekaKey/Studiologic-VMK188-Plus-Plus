@@ -72,19 +72,6 @@ static void firstInit(void) {
 
 
 
-//	Start key scan timer
-static void Timer_init(void){
-	NVIC_InitTypeDef NVIC_InitStructure;
-	NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);
-    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
-    TIM_Cmd(TIM4, ENABLE);
-	NVIC_EnableIRQ(TIM4_IRQn);
-}
-
 
 
 
@@ -98,7 +85,7 @@ int main(void) {
 	interface_init(Current_state.preset_name);
 	calibration_init(Current_state.calibration_name);
 
-    Timer_init();
+    TIM4_init();
 
 	//Main loop
 	while (1) {
@@ -124,11 +111,7 @@ int main(void) {
 void TIM4_IRQHandler() {
 
 	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
-
-		//TODO: Rewrite this w/o SPL
-		//Clear interrupt bit
 		timerTicks++;
-//		readKeyChunk();
 		readKeyState();
 		read_controls(Preset.sliders, Calibration.calibr);
 		read_buttons_state();

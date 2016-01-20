@@ -13,5 +13,6 @@ typedef struct
 
 void checkTimer(timer_counter_t * counter, uint8_t mes);
 void setTimerMs(timer_counter_t * counter, uint16_t value);
+void TIM4_init(void);
 
 #endif //__TIMER_H

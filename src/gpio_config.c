@@ -5,7 +5,6 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_conf.h"
 #include "gpio_config.h"
-#include "timer.h"
 
 void GPIO_init() {
 	GPIO_InitTypeDef GPIO_InitStruct;
@@ -105,14 +104,6 @@ void GPIO_init() {
 	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-
-	TIM_TimeBaseInitTypeDef timer;
-
-	TIM_TimeBaseStructInit(&timer);
-	timer.TIM_Prescaler = TIMER_PRESCALER - 1;
-	timer.TIM_Period = TIMER_TIMPERIOD - 1;
-	timer.TIM_ClockDivision = 0;
-	TIM_TimeBaseInit(TIM4, &timer);
 }
 
 

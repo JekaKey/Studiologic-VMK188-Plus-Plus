@@ -23,3 +23,26 @@ void setTimerMs (timer_counter_t * counter, uint16_t value){
 	counter->old = timerTicks;
 }
 
+//	Start key scan timer
+void TIM4_init(void){
+
+	TIM_TimeBaseInitTypeDef timer;
+
+	TIM_TimeBaseStructInit(&timer);
+	timer.TIM_Prescaler = TIMER_PRESCALER - 1;
+	timer.TIM_Period = TIMER_TIMPERIOD - 1;
+	timer.TIM_ClockDivision = 0;
+	TIM_TimeBaseInit(TIM4, &timer);
+
+	NVIC_InitTypeDef NVIC_InitStructure;
+	NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+    TIM_ITConfig(TIM4, TIM_IT_Update, ENABLE);
+    TIM_Cmd(TIM4, ENABLE);
+	NVIC_EnableIRQ(TIM4_IRQn);
+
+}
+

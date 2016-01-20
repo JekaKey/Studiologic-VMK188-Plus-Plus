@@ -82,6 +82,9 @@ uint32_t  SCSI_blk_addr;
 uint32_t  SCSI_blk_len;
 
 USB_OTG_CORE_HANDLE  *cdev;
+
+extern uint8_t USBdisk_active;
+
 /**
   * @}
   */ 
@@ -433,7 +436,8 @@ void SCSI_SenseCode(uint8_t lun, uint8_t sKey, uint8_t ASC)
 static int8_t SCSI_StartStopUnit(uint8_t lun, uint8_t *params)
 {
   MSC_BOT_DataLen = 0;
-  send_message(MES_MSC_STOP);
+  if (USBdisk_active)
+    send_message(MES_MSC_STOP);
   return 0;
 }
 

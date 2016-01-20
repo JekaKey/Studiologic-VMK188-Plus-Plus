@@ -148,6 +148,7 @@ int8_t SCSI_ProcessCmd(USB_OTG_CORE_HANDLE  *pdev,
     return SCSI_StartStopUnit(lun, params);
     
   case SCSI_ALLOW_MEDIUM_REMOVAL:
+    send_message(MES_MSC_STOP);
     return SCSI_StartStopUnit(lun, params);
     
   case SCSI_MODE_SENSE6:
@@ -436,8 +437,6 @@ void SCSI_SenseCode(uint8_t lun, uint8_t sKey, uint8_t ASC)
 static int8_t SCSI_StartStopUnit(uint8_t lun, uint8_t *params)
 {
   MSC_BOT_DataLen = 0;
-  if (USBdisk_active)
-    send_message(MES_MSC_STOP);
   return 0;
 }
 

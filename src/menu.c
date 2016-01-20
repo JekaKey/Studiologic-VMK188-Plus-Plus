@@ -1915,7 +1915,7 @@ static void temp_msg_handler(uint8_t event) {
 			hd44780_show_temp_msg(temp_msg_1, temp_msg_2);
 			strcpy(temp_msg_1, "");
 			strcpy(temp_msg_2, "");
-			setTimerMs(&temp_msg_timer_counter, temp_msg_time);
+			TIM6start();
 			break;
 
 		case MES_TIMER_END:
@@ -1949,7 +1949,7 @@ void menu_btns_n_msg_handler(uint8_t event) {
 	}
 
 	if(event==MES_MSC_STOP){
-		setTimerMs(&MSC_stop_timer_counter,100);
+		TIM7start();
 		return;
 	}
 

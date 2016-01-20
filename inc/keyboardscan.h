@@ -1,3 +1,5 @@
+#ifndef __KEYBOARDSCAN
+#define __KEYBOARDSCAN
 
 #include "stm32f4xx.h"
 #include "stm32f4xx_gpio.h"
@@ -35,3 +37,5 @@ void readKeyState(); //Read state of all 88 keys and send info to FIFO
 void checkNoteArray();
 void delay(volatile uint32_t c);
 void key_delay(void) __attribute__((optimize(0)));
+
+#endif //__KEYBOARDSCAN

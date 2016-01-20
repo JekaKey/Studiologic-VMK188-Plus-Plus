@@ -27,11 +27,8 @@
 
 #include "bootloader.h"
 
-extern presetType Preset;
-extern currentStateType Current_state;
-extern calibrationType Calibration;
+
 extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
-extern uint32_t timerTicks;
 extern timer_counter_t temp_msg_timer_counter; //defined in menu.c
 extern timer_counter_t MSC_stop_timer_counter;
 
@@ -85,7 +82,9 @@ int main(void) {
 	interface_init(Current_state.preset_name);
 	calibration_init(Current_state.calibration_name);
 
-    TIM4_init();
+    TIM4_init();//keyboard timer
+    TIM6_init(1500);//delay for temp messages
+    TIM7_init(200); //delay for MSC
 
 	//Main loop
 	while (1) {
@@ -99,24 +98,6 @@ int main(void) {
 		//Send/receive midi data
 		receiveMidiData();
 		sendMidiData();
-		checkTimer(&temp_msg_timer_counter, MES_TIMER_END);
-		checkTimer(&MSC_stop_timer_counter, MES_MSCSTOP_TIMER_END);
 	}
-}
-
-/**
- Timer 4 interrupt
- **/
-
-void TIM4_IRQHandler() {
-
-	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
-		timerTicks++;
-		readKeyState();
-		read_controls(Preset.sliders, Calibration.calibr);
-		read_buttons_state();
-		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
-	}
-
 }
 

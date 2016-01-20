@@ -159,6 +159,11 @@ typedef struct {
 	Button_type buttons[BUTTONS_AMOUNT];
 }presetType;
 
+extern presetType Preset;
+extern currentStateType Current_state;
+extern calibrationType Calibration;
+
+
 
 FIO_status start_load_setting(void);
 FIO_status start_load_calibration(calibrationType* cal);

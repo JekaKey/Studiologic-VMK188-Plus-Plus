@@ -11,8 +11,10 @@ typedef struct
 } timer_counter_t;
 
 
-void checkTimer(timer_counter_t * counter, uint8_t mes);
-void setTimerMs(timer_counter_t * counter, uint16_t value);
 void TIM4_init(void);
+void TIM6_init (uint32_t delay);
+void TIM7_init (uint32_t delay);
+void TIM7start (void);
+void TIM6start (void);
 
 #endif //__TIMER_H

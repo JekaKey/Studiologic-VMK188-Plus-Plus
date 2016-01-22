@@ -9,7 +9,6 @@
 #include "midi.h"
 #include "presets.h"
 #include "keyboardscan.h"
-#include "leds.h"
 
 
 void TIM4_init(void){
@@ -62,6 +61,8 @@ void TIM6_init (uint32_t delay){//ms
 	timer.TIM_Period = delay - 1;
 	timer.TIM_ClockDivision = 0;
 	TIM_TimeBaseInit(TIM6, &timer);
+	TIM_SelectOnePulseMode(TIM6, TIM_OPMode_Single);
+    TIM_ITConfig(TIM6, TIM_IT_Update, ENABLE);
 
 	NVIC_InitStructure.NVIC_IRQChannel = TIM6_DAC_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
@@ -69,31 +70,21 @@ void TIM6_init (uint32_t delay){//ms
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
+	NVIC_EnableIRQ(TIM6_DAC_IRQn);
+
 }
 
-static uint8_t TIM6_is_finished=0;
 
 
 void TIM6start (void){//used for temp messages
-	TIM6_is_finished=0;
-    TIM_ITConfig(TIM6, TIM_IT_Update, ENABLE);
     TIM_Cmd(TIM6, ENABLE);
-	NVIC_EnableIRQ(TIM6_DAC_IRQn);
 }
 
 
 void TIM6_DAC_IRQHandler() {
 	if (TIM_GetITStatus(TIM6, TIM_IT_Update) != RESET) {
-		if (TIM6_is_finished) {
-			TIM_ClearITPendingBit(TIM6, TIM_IT_Update); //clear interrupt bit
-			TIM_ITConfig(TIM6, TIM_IT_Update, DISABLE);
-			TIM_Cmd(TIM6, DISABLE);
-			NVIC_DisableIRQ(TIM6_DAC_IRQn);
-			send_message(MES_TIMER_END);
-		} else {
-			TIM_ClearITPendingBit(TIM6, TIM_IT_Update); //clear interrupt bit
-			TIM6_is_finished = 1;
-		}
+		send_message(MES_TIMER_END);
+		TIM_ClearITPendingBit(TIM6, TIM_IT_Update); //clear interrupt bit
 	}
 }
 
@@ -104,11 +95,14 @@ void TIM7_init (uint32_t delay){//ms
 
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
 
+
 	TIM_TimeBaseStructInit(&timer);
-	timer.TIM_Prescaler = 2400 - 1;
+	timer.TIM_Prescaler = 24000 - 1;
 	timer.TIM_Period = delay - 1;
 	timer.TIM_ClockDivision = 0;
 	TIM_TimeBaseInit(TIM7, &timer);
+	TIM_SelectOnePulseMode(TIM7, TIM_OPMode_Single);
+    TIM_ITConfig(TIM7, TIM_IT_Update, ENABLE);
 
 	NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
@@ -116,30 +110,21 @@ void TIM7_init (uint32_t delay){//ms
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
+	NVIC_EnableIRQ(TIM7_IRQn);
+
 }
 
-static uint8_t TIM7_is_finished=0;
 
 
 void TIM7start (void){//used for temp messages
-	TIM7_is_finished=0;
-    TIM_ITConfig(TIM7, TIM_IT_Update, ENABLE);
     TIM_Cmd(TIM7, ENABLE);
-	NVIC_EnableIRQ(TIM7_IRQn);
 }
 
 
 void TIM7_IRQHandler() {
 	if (TIM_GetITStatus(TIM7, TIM_IT_Update) != RESET) {
+		send_message(MES_MSCSTOP_TIMER_END);
 		TIM_ClearITPendingBit(TIM7, TIM_IT_Update); //clear interrupt bit
-		if (TIM7_is_finished) {
-			TIM_ITConfig(TIM7, TIM_IT_Update, DISABLE);
-			TIM_Cmd(TIM7, DISABLE);
-			NVIC_DisableIRQ(TIM7_IRQn);
-			send_message(MES_MSCSTOP_TIMER_END);
-		} else {
-			TIM7_is_finished = 1;
-		}
 	}
 }
 

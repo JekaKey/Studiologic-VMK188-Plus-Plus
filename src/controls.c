@@ -630,7 +630,7 @@ static uint8_t check_integral_delta(uint16_t * ADC_value, uint8_t sliderNum, uin
 	return 0;
 }
 
-
+static uint16_t ADC_sourse[SLIDERS_AMOUNT] [3];
 
 void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	uint16_t ADC_value;
@@ -638,12 +638,18 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 	uint16_t ODR_tmp;
 	uint16_t tmp;
 	uint16_t adc_res;
+	uint8_t mux3;
+	uint8_t i;
+
 	switch (controls_read_status) {
 	case CHECK_VALUE:
-		slider_number = mux_pin * 3 + ADC_channel;
-		adc_res = ADC_DMA_buffer[ADC_channel] & 0x0FFF;
+		mux3=mux_pin*3;
+		for (i=0; i<3; i++)
+			ADC_sourse[mux3+i][ADC_channel]= ADC_DMA_buffer[i] & 0x0FFF;
+		slider_number = mux3 + ADC_channel;
+		adc_res = median(&ADC_sourse[slider_number][0]);
 		ADC_value = median_filter(adc_res, &filter_storage[slider_number]); //big window median filter
-		//if (slider_number==SLIDER_PITCH) PRINTF("%d\t%d\n",adc_res, ADC_value);
+//		if (slider_number==SLIDER_R8) PRINTF("$%d %d;",adc_res, ADC_value);
 		switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
 		case SLIDERS_WORK:
 			//Calculate change comparing with old value.

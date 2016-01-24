@@ -145,10 +145,10 @@ int8_t SCSI_ProcessCmd(USB_OTG_CORE_HANDLE  *pdev,
     return SCSI_Inquiry(lun, params);
     
   case SCSI_START_STOP_UNIT:
+    send_message(MES_MSC_STOP);
     return SCSI_StartStopUnit(lun, params);
     
   case SCSI_ALLOW_MEDIUM_REMOVAL:
-    send_message(MES_MSC_STOP);
     return SCSI_StartStopUnit(lun, params);
     
   case SCSI_MODE_SENSE6:

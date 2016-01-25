@@ -83,8 +83,8 @@ int main(void) {
 	calibration_init(Current_state.calibration_name);
 
     TIM4_init();//keyboard timer
-    TIM6_init(1500);//delay for temp messages
-    TIM7_init(200); //delay for MSC
+    TIM6_init();//delay for temp messages
+    TIM7_init(); //delay for MSC
 
 	//Main loop
 	while (1) {

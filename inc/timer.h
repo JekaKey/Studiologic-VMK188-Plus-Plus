@@ -12,9 +12,9 @@ typedef struct
 
 
 void TIM4_init(void);
-void TIM6_init (uint32_t delay);
-void TIM7_init (uint32_t delay);
-void TIM7start (void);
-void TIM6start (void);
+void TIM6_init (void);
+void TIM7_init (void);
+void TIM6start (uint32_t delay, uint8_t mes);//ms
+void TIM7start (uint32_t delay, uint8_t mes);//ms
 
 #endif //__TIMER_H

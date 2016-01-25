@@ -48,21 +48,9 @@ void TIM4_IRQHandler() {
 
 
 
-void TIM6_init (uint32_t delay){//ms
+void TIM6_init (){
 
-	TIM_TimeBaseInitTypeDef timer;
 	NVIC_InitTypeDef NVIC_InitStructure;
-
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE);
-
-
-	TIM_TimeBaseStructInit(&timer);
-	timer.TIM_Prescaler = 24000 - 1;
-	timer.TIM_Period = delay - 1;
-	timer.TIM_ClockDivision = 0;
-	TIM_TimeBaseInit(TIM6, &timer);
-	TIM_SelectOnePulseMode(TIM6, TIM_OPMode_Single);
-    TIM_ITConfig(TIM6, TIM_IT_Update, ENABLE);
 
 	NVIC_InitStructure.NVIC_IRQChannel = TIM6_DAC_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
@@ -70,39 +58,36 @@ void TIM6_init (uint32_t delay){//ms
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-	NVIC_EnableIRQ(TIM6_DAC_IRQn);
+	RCC->APB1ENR |= RCC_APB1ENR_TIM6EN; // Enable TIM6 clock
+	TIM6->PSC = 41999; // Set prescaler to 41999
+	TIM6->CR1 |= TIM_CR1_OPM; // One pulse mode
+	TIM6->EGR |= TIM_EGR_UG; // Force update
+	TIM6->SR &= ~TIM_SR_UIF; // Clear the update flag
+	TIM6->DIER |= TIM_DIER_UIE; // Enable interrupt on update event
+	NVIC_EnableIRQ(TIM6_DAC_IRQn); // Enable TIM6 IRQ
 
 }
 
+static uint8_t TIM6_message;
 
 
-void TIM6start (void){//used for temp messages
-    TIM_Cmd(TIM6, ENABLE);
+void TIM6start (uint32_t delay, uint8_t mes){//ms ~30 seconds maximum
+	TIM6_message=mes;
+	TIM6->ARR = delay<<1; // Set auto-reload to 5999
+	TIM6->CR1 |= TIM_CR1_CEN; // Enable TIM6 counter
 }
 
 
 void TIM6_DAC_IRQHandler() {
-	if (TIM_GetITStatus(TIM6, TIM_IT_Update) != RESET) {
-		send_message(MES_TIMER_END);
-		TIM_ClearITPendingBit(TIM6, TIM_IT_Update); //clear interrupt bit
-	}
+    if((TIM6->SR & TIM_SR_UIF) != 0){                      // If update flag is set
+     send_message(TIM6_message);
+     TIM6->SR &= ~TIM_SR_UIF;                            // Interrupt has been handled
+    }
 }
 
-void TIM7_init (uint32_t delay){//ms
+void TIM7_init (){
 
-	TIM_TimeBaseInitTypeDef timer;
 	NVIC_InitTypeDef NVIC_InitStructure;
-
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM7, ENABLE);
-
-
-	TIM_TimeBaseStructInit(&timer);
-	timer.TIM_Prescaler = 24000 - 1;
-	timer.TIM_Period = delay - 1;
-	timer.TIM_ClockDivision = 0;
-	TIM_TimeBaseInit(TIM7, &timer);
-	TIM_SelectOnePulseMode(TIM7, TIM_OPMode_Single);
-    TIM_ITConfig(TIM7, TIM_IT_Update, ENABLE);
 
 	NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
@@ -110,22 +95,31 @@ void TIM7_init (uint32_t delay){//ms
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-	NVIC_EnableIRQ(TIM7_IRQn);
+	RCC->APB1ENR |= RCC_APB1ENR_TIM7EN; // Enable TIM6 clock
+	TIM7->PSC = 41999; // Set prescaler to 41999
+	TIM7->CR1 |= TIM_CR1_OPM; // One pulse mode
+	TIM7->EGR |= TIM_EGR_UG; // Force update
+	TIM7->SR &= ~TIM_SR_UIF; // Clear the update flag
+	TIM7->DIER |= TIM_DIER_UIE; // Enable interrupt on update event
+	NVIC_EnableIRQ(TIM7_IRQn); // Enable TIM6 IRQ
 
 }
 
+static uint8_t TIM7_message;
 
 
-void TIM7start (void){//used for temp messages
-    TIM_Cmd(TIM7, ENABLE);
+void TIM7start (uint32_t delay, uint8_t mes){//ms ~30 seconds maximum
+	TIM7_message=mes;
+	TIM7->ARR = delay<<1; // Set auto-reload to 5999
+	TIM7->CR1 |= TIM_CR1_CEN; // Enable TIM6 counter
 }
 
 
 void TIM7_IRQHandler() {
-	if (TIM_GetITStatus(TIM7, TIM_IT_Update) != RESET) {
-		send_message(MES_MSCSTOP_TIMER_END);
-		TIM_ClearITPendingBit(TIM7, TIM_IT_Update); //clear interrupt bit
-	}
+    if((TIM7->SR & TIM_SR_UIF) != 0){                      // If update flag is set
+     send_message(TIM7_message);
+     TIM7->SR &= ~TIM_SR_UIF;                            // Interrupt has been handled
+    }
 }
 
 

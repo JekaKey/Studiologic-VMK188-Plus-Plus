@@ -29,8 +29,6 @@
 
 
 extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
-extern timer_counter_t temp_msg_timer_counter; //defined in menu.c
-extern timer_counter_t MSC_stop_timer_counter;
 
 void delay(volatile uint32_t c) {
 	while (--c) {
@@ -88,14 +86,10 @@ int main(void) {
 
 	//Main loop
 	while (1) {
-
 		//Check note array to calculate velocity
 		checkNoteArray(&Preset);
-
-		//TODO: why presets in arguments?
 		checkSliders_events(Preset.sliders, Preset.AnalogMidiEnable);
 		checkButtons_events(Preset.buttons, Preset.AnalogMidiEnable);
-		//Send/receive midi data
 		receiveMidiData();
 		sendMidiData();
 	}

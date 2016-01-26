@@ -12,5 +12,5 @@
 #define APP_NAME "VMK176++"
 #endif
 
-#define APP_VERSION "V. 0.8.8"
+#define APP_VERSION "V. 0.8.9"
 

@@ -30,7 +30,7 @@ static uint8_t USBD_MIDI_MSC_OUT_Incplt(void *pdev);
 static uint8_t *USBD_MIDI_MSC_GetCfgDesc(uint8_t speed, uint16_t *length);
 
 //FIFO32(128) midi_msc_usb_in; //FIFO buffer for 32-bit midi packets from a computer
-volatile uint32_t USB_Tx_State; //USB endpoint ready flag
+extern volatile uint32_t USB_Tx_State; //USB endpoint ready flag
 
 
 

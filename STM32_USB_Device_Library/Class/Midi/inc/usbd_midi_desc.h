@@ -14,8 +14,8 @@ extern USBD_DEVICE midi_Descriptor;
 #define USB_SIZ_STRING_LANGID                   4
 
 
-#define USBD_VID                     0x1209
-#define USBD_PID                     0x5000
+#define USBD_VID                     0x03E
+#define USBD_PID                     0x2304
 
 #define USBD_LANGID_STRING            0x409
 #define USBD_MANUFACTURER_STRING      "Studiologic"

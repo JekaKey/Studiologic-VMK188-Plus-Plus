@@ -892,6 +892,7 @@ void checkSliders_events(Slider_type* sliders, uint8_t analog) {
 
 void checkButtons_events(Button_type* buttons, uint8_t analog) {
 	uint8_t event;
+
 	if (FIFO_COUNT(control_events) == 0)
 		return; //No events
 

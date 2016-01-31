@@ -9,10 +9,14 @@ extern USB_OTG_CORE_HANDLE USB_OTG_dev;
 extern volatile uint32_t USB_Tx_State;
 
 void usb_midi_DataSend(uint8_t* Buf, uint32_t Len) {
-	volatile uint32_t timeout=10000;
-	while (USB_Tx_State && timeout){timeout--;}
-	USB_Tx_State=1;
-	DCD_EP_Tx(&USB_OTG_dev, MIDI_IN_EP, Buf, Len);
+	volatile uint32_t timeout = 1000;
+	while (USB_Tx_State && timeout) {
+		timeout--;
+	}
+	if (timeout) {
+		USB_Tx_State = 1;
+		DCD_EP_Tx(&USB_OTG_dev, MIDI_IN_EP, Buf, Len);
+	}
 }
 
 

@@ -252,7 +252,7 @@ static int note_name (uint8_t note_num, char *name) {
 }
 
 static void string_cut_spaces(char * st) {
-	size_t len;
+	int16_t len;
 	for (len = strlen(st) - 1; len >= 0; len--) {
 		if (st[len] != ' ')
 			break;

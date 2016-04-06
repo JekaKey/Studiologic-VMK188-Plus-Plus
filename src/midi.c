@@ -121,7 +121,6 @@ void sendMidiData(void) {
  //       PRINTF("FIFO %d\n", test);
 		if ((USART1->SR & 0x00000040)) {
 			USART_SendData(USART1, FIFO_FRONT(midiMessagesArray));
-            PRINTF("midi data %d\n", (midiMessagesArray.buf[(midiMessagesArray).tail & ((sizeof(midiMessagesArray.buf) / sizeof(midiMessagesArray.buf[0])) - 1)]));
 			FIFO_POP(midiMessagesArray);
  		}
 	}

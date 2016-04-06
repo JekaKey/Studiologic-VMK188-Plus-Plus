@@ -37,7 +37,6 @@ void delay(volatile uint32_t c) {
 }
 
 void delayms(volatile uint32_t c) {
-	c++;
 	while (--c) {
 		delay(23080);
 	}
@@ -58,23 +57,29 @@ static void firstInit(void) {
 	SD_DMA_activate();
 	//Display
 	delayms(400);
+#ifdef WS0010_GRAPHICS
+	hd44780_init();
+	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
+	ws0010_Graphics_mode();
+	ws0010_Draw_buffer(pictureVMK188);
+    delayms(20000);
+	ws0010_Character_mode();
+	hd44780_init();
+#else
 	hd44780_init();
 	hd44780_display( HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
 	hd44780_message_center(APP_NAME, 1);
 	hd44780_message_center(APP_VERSION, 2);
+    delayms(3000);
+#endif
 
 }
-
-
-
-
 
 
 int main(void) {
 	BootLoaderStart();
 	firstInit();
     set_defaults_all(&Preset, &Calibration);
-    delayms(3000);
     if (!start_load_all(&Preset, &Calibration))
 		   set_okIOzero();
 	interface_init(Current_state.preset_name);

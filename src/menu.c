@@ -323,7 +323,9 @@ MAKE_MENU(menu_pst_chan,	menu_pst_transp,NULL_ENTRY,		menu_pst_gen,	NULL_ENTRY,	
 MAKE_MENU(menu_pst_transp,	menu_pst_oct,	menu_pst_chan,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.Transpose,			t_int8, 	-11,	11,		NULL,					NULL,					"Transpose: "	);
 MAKE_MENU(menu_pst_oct,		menu_pst_hires,	menu_pst_transp,menu_pst_gen,	NULL_ENTRY,		0,		&Preset.OctaveShift,		t_int8,	    -3,		3,		NULL,					NULL,					"Oct Shift: "	);
 MAKE_MENU(menu_pst_hires,	menu_pst_midi,	menu_pst_oct,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.HighResEnable,		t_bool,		0,		1,		NULL,					NULL,					" High Res: "	);
-MAKE_MENU(menu_pst_midi,	NULL_ENTRY,		menu_pst_hires,	menu_pst_gen,	NULL_ENTRY,		1,		&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					NULL,					"Midi Port: "	);
+MAKE_MENU(menu_pst_midi,	menu_pst_slowk,	menu_pst_hires,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					NULL,					"Midi Port: "	);
+MAKE_MENU(menu_pst_slowk,	NULL_ENTRY,		menu_pst_midi,	menu_pst_gen,	NULL_ENTRY,		1,		&Preset.SlowKeySound,		t_bool,		0,		1,		NULL,					NULL,					" Slow Key: "	);
+
 
 MAKE_MENU(menu_split_on,	menu_split_key,	NULL_ENTRY,		menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitActive,		t_bool,		0,		1,		NULL,					NULL,					"    Split: "	);
 MAKE_MENU(menu_split_key,	menu_split_chan,menu_split_on,	menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitKey,			t_note,		22,		108,	NULL,					NULL,					"Split Key: "	);

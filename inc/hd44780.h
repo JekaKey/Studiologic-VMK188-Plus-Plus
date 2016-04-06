@@ -3,6 +3,9 @@
 #ifndef _HD44780_H_
 #define _HD44780_H_
 
+#define WS0010
+//#define WS0010_GRAPHICS
+
 // #include <stdint.h>
 #include "stm32f4xx.h"
 #include <stm32f4xx_gpio.h>
@@ -57,6 +60,18 @@
 #define HD44780_BUSY_FLAG               0x80      /*!< Busy flag */
 
 
+/*Font table for WS0010*/
+#ifdef WS0010
+#define WS0010_ENGLISH_JAPANESE			0x00
+#define WS0010_WESTERN_EUROPEAN1		0x01
+#define WS0010_ENGLISH_RUSSIAN			0x02
+#define WS0010_WESTERN_EUROPEAN2		0x03
+#define WS0010_INTERNAL_POWER_ON		0x17
+#define WS0010_INTERNAL_POWER_OFF		0x13
+#define WS0010_GRAPHICS_MODE_ON         0x1B
+#define WS0010_GHARACTER_MODE_ON        0x13
+#endif
+
 /***************************************************************
  *
  * CONFIGURATION
@@ -66,6 +81,12 @@
 #define HD44780_CONF_BUS            HD44780_FUNC_BUS_8BIT
 #define HD44780_CONF_LINES          HD44780_FUNC_LINES_2
 #define HD44780_CONF_FONT           HD44780_FUNC_FONT_5x8
+#ifdef WS0010
+#define HD44780_FONT_TABLE			WS0010_ENGLISH_RUSSIAN
+#else
+#define HD44780_FONT_TABLE			00
+#endif
+//#define
 
 #define HD44780_DISP_LENGTH         16
 #define HD44780_DISP_ROWS           2
@@ -109,19 +130,19 @@
 #define hd44780_init_delay()            delayms( 16 )
 #define hd44780_init_delay2()           delayms( 5 )
 #define hd44780_init_delay3()           delayms( 1 )
-#ifdef VMK176
-#define hd44780_init_end_delay()        delayms( 1 )
-#else
+#ifdef WS0010
 #define hd44780_init_end_delay()        delay( 6000 )
+#else
+#define hd44780_init_end_delay()        delayms( 1 )
 #endif
 
 
-#define hd44780_entry( inc_dec, shift )           hd44780_wr_cmd( ( HD44780_CMD_ENTRY_MODE | inc_dec | shift ) & 0x07 )
-#define hd44780_display( on_off, cursor, blink )  hd44780_wr_cmd( ( HD44780_CMD_DISPLAY | on_off | cursor | blink ) & 0x0F )
-#define hd44780_shift( inc_dec, shift )           hd44780_wr_cmd( ( HD44780_CMD_SHIFT | inc_dec | shift ) & 0x1F )
-#define hd44780_function( bus, lines, font )      hd44780_wr_cmd( ( HD44780_CMD_FUNCTION | bus | lines | font ) & 0x3F )
-#define hd44780_cgram_addr( addr )                hd44780_wr_cmd( HD44780_CMD_CGRAM_ADDR | ( addr & 0x3F ) )
-#define hd44780_ddram_addr( addr )                hd44780_wr_cmd( HD44780_CMD_DDRAM_ADDR | ( (addr) & 0x7F ) )
+#define hd44780_entry( inc_dec, shift )         	  	hd44780_wr_cmd( ( HD44780_CMD_ENTRY_MODE | inc_dec | shift ) & 0x07 )
+#define hd44780_display( on_off, cursor, blink )  		hd44780_wr_cmd( ( HD44780_CMD_DISPLAY | on_off | cursor | blink ) & 0x0F )
+#define hd44780_shift( inc_dec, shift )          	 	hd44780_wr_cmd( ( HD44780_CMD_SHIFT | inc_dec | shift ) & 0x1F )
+#define hd44780_function( bus, lines, font, table )     hd44780_wr_cmd( ( HD44780_CMD_FUNCTION | bus | lines | font | table) & 0x3F )
+#define hd44780_cgram_addr( addr )                		hd44780_wr_cmd( HD44780_CMD_CGRAM_ADDR | ( addr & 0x3F ) )
+#define hd44780_ddram_addr( addr )                		hd44780_wr_cmd( HD44780_CMD_DDRAM_ADDR | ( (addr) & 0x7F ) )
 
 void hd44780_home();
 void hd44780_clear();
@@ -141,4 +162,16 @@ void hd44780_load_symbol(uint8_t addr, const uint8_t * data);
 void hd44780_show_temp_msg(const char *line1, const char *line2);
 void hd44780_remove_temp_msg();
 
+#ifdef WS0010_GRAPHICS
+void ws0010_Graphics_mode(void);
+void ws0010_Character_mode(void);
+void ws0010_Draw(uint8_t x, uint8_t y, uint8_t data);
+void ws0010_Draw_buffer(const uint8_t * buffer );
+#endif
+
+
 #endif /* !_HD44780_H_ */
+
+#ifdef WS0010_GRAPHICS
+extern const uint8_t pictureVMK188 [];
+#endif

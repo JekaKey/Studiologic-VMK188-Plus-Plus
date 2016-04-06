@@ -20,6 +20,20 @@ const uint8_t symbol_check[]=       {0b00000111,
                                      0b00010101,
                                      0b00011100,
                                      0b00000000};
+#ifdef WS0010_GRAPHICS
+const uint8_t pictureVMK188 [] = {
+		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x78, 0x03, 0xF0, 0x1F, 0x80, 0x1C, 0x00,
+		0x1F, 0x80, 0x03, 0xF0, 0x00, 0x78, 0x00, 0x08, 0x00, 0x00, 0x1F, 0xF8, 0x1F, 0xF8, 0x00, 0x38,
+		0x01, 0xF0, 0x0F, 0x80, 0x1C, 0x00, 0x0F, 0x80, 0x01, 0xF0, 0x00, 0x38, 0x1F, 0xF8, 0x1F, 0xF8,
+		0x00, 0x00, 0x00, 0x00, 0x1F, 0xF8, 0x1F, 0xF8, 0x01, 0x80, 0x00, 0xC0, 0x01, 0xE0, 0x07, 0xB0,
+		0x1E, 0x18, 0x18, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x60, 0x00, 0x30, 0x1F, 0xF8,
+		0x1F, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x0E, 0x70, 0x1F, 0xF8, 0x19, 0x98, 0x19, 0x98, 0x19, 0x98,
+		0x1F, 0xF8, 0x0E, 0x70, 0x00, 0x00, 0x0E, 0x70, 0x1F, 0xF8, 0x19, 0x98, 0x19, 0x98, 0x19, 0x98,
+		0x1F, 0xF8, 0x0E, 0x70, 0x00, 0x00, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x0F, 0xF0, 0x0F, 0xF0,
+		0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x00, 0x00, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x0F, 0xF0,
+		0x0F, 0xF0, 0x01, 0x80, 0x01, 0x80, 0x01, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+#endif
 
 char buffer[HD44780_DISP_VOLUME] = {' '};
 uint8_t currentPos = 0;
@@ -60,54 +74,11 @@ void hd44780_wr_hi_nibble(uint8_t data) {
 	hd44780_EN_Off();
 }
 
-#if HD44780_CONF_BUS == HD44780_FUNC_BUS_4BIT
-
-void hd44780_wr_lo_nibble( uint8_t data ) {
-
-	if ( data & 0x01 ) {
-		GPIO_SetBits( HD44780_DATAPORT, HD44780_DATABIT4 );
-	} else {
-		GPIO_ResetBits( HD44780_DATAPORT, HD44780_DATABIT4 );
-	}
-	if ( data & 0x02 ) {
-		GPIO_SetBits( HD44780_DATAPORT, HD44780_DATABIT5 );
-	} else {
-		GPIO_ResetBits( HD44780_DATAPORT, HD44780_DATABIT5 );
-	}
-	if ( data & 0x04 ) {
-		GPIO_SetBits( HD44780_DATAPORT, HD44780_DATABIT6 );
-	} else {
-		GPIO_ResetBits( HD44780_DATAPORT, HD44780_DATABIT6 );
-	}
-	if ( data & 0x08 ) {
-		GPIO_SetBits( HD44780_DATAPORT, HD44780_DATABIT7 );
-	} else {
-		GPIO_ResetBits( HD44780_DATAPORT, HD44780_DATABIT7 );
-	}
-
-	/* set the EN signal */
-	hd44780_EN_On();
-
-	/* wait */
-	hd44780_EN_high_delay();
-
-	/* reset the EN signal */
-	hd44780_EN_Off();
-
-}
-
-/* 4bit bus version */
-void hd44780_write( uint8_t data ) {
-	/* send the data bits - high nibble first */
-	hd44780_wr_hi_nibble( data );
-	hd44780_wr_lo_nibble( data );
-
-}
-#endif /* HD44780_CONF_BUS == HD44780_FUNC_BUS_4BIT */
-
 #if HD44780_CONF_BUS == HD44780_FUNC_BUS_8BIT
 
 /* 8bit bus version */
+
+
 void hd44780_write(uint8_t data) {
 	while (buttons_active){
 	}
@@ -115,6 +86,10 @@ void hd44780_write(uint8_t data) {
 	controlLEDs_enable(0);
 
 	/* set the data bits */
+
+	HD44780_DATAPORT->ODR=data; //In the current project the display uses PE0-PE7 GPIO, so it is possible to switch them by one command
+
+	/*
 	if (data & 0x01) {
 		GPIO_SetBits(HD44780_DATAPORT, HD44780_DATABIT0);
 	} else {
@@ -155,7 +130,7 @@ void hd44780_write(uint8_t data) {
 	} else {
 		GPIO_ResetBits(HD44780_DATAPORT, HD44780_DATABIT7);
 	}
-
+    */
 	/* tell the lcd that we have a command to read in */hd44780_EN_On();
 
 	/* wait long enough so that the lcd can see the command */hd44780_EN_high_delay();
@@ -164,13 +139,15 @@ void hd44780_write(uint8_t data) {
 	hd44780_init_end_delay();
 	hd44780_active=0;
 	controlLEDs_enable(1);
-
 }
 #endif /* HD44780_CONF_BUS == HD44780_FUNC_BUS_8BIT */
 
+
 void hd44780_clear() {
-	for (int i = 0; i < HD44780_DISP_VOLUME; i++)
-		buffer[i] = ' ';
+//	for (int i = 0; i < HD44780_DISP_VOLUME; i++)
+//		buffer[i] = ' ';
+
+	memset(buffer, ' ', HD44780_DISP_VOLUME);
 
 	if (!showingTemp)
 		hd44780_wr_cmd(HD44780_CMD_CLEAR);
@@ -216,25 +193,12 @@ void hd44780_init(void) {
 	hd44780_RS_Off();
 //	hd44780_RW_Off();
 
-	/* wait initial delay for LCD to settle */
-	/* reset procedure - 3 function calls resets the device */hd44780_init_delay();
-	hd44780_wr_hi_nibble(HD44780_CMD_RESET);
-	hd44780_init_delay2();
-	hd44780_wr_hi_nibble(HD44780_CMD_RESET);
-	hd44780_init_delay3();
-	hd44780_wr_hi_nibble(HD44780_CMD_RESET);
-
-#if HD44780_CONF_BUS == HD44780_FUNC_BUS_4BIT
-	/* 4bit interface */
-	hd44780_wr_hi_nibble( HD44780_CMD_FUNCTION );
-#endif /* HD44780_CONF_BUS == HD44780_FUNC_BUS_4BIT */
 
 	/* sets the configured values - can be set again only after reset */
-	hd44780_function( HD44780_CONF_BUS, HD44780_CONF_LINES, HD44780_CONF_FONT);
+	hd44780_function( HD44780_CONF_BUS, HD44780_CONF_LINES, HD44780_CONF_FONT, HD44780_FONT_TABLE);
 
 	/* turn the display off with no cursor or blinking */
-	hd44780_display( HD44780_DISP_OFF, HD44780_DISP_CURS_OFF,
-			HD44780_DISP_BLINK_OFF);
+	hd44780_display( HD44780_DISP_OFF, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
 
 	/* clear the display */
 	hd44780_clear();
@@ -328,3 +292,37 @@ void hd44780_remove_temp_msg() {
 
 	showingTemp = 0;
 }
+#ifdef WS0010_GRAPHICS
+
+void ws0010_Graphics_mode(){
+	hd44780_wr_cmd(WS0010_GRAPHICS_MODE_ON | WS0010_INTERNAL_POWER_ON);
+}
+
+void ws0010_Character_mode(){
+	hd44780_wr_cmd (WS0010_GHARACTER_MODE_ON | WS0010_INTERNAL_POWER_ON);
+}
+
+void ws0010_Draw(uint8_t x, uint8_t y, uint8_t data){
+	hd44780_ddram_addr(x);
+	hd44780_cgram_addr(y);
+	hd44780_wr_data_noblock(data);
+}
+
+
+
+void ws0010_Draw_buffer(const uint8_t *buffer ){ //put buffer to display as quick is possible
+	uint8_t i;
+	hd44780_ddram_addr(0);
+	hd44780_cgram_addr(0);
+    for (i=0; i<80; i++){
+		hd44780_wr_data_noblock(buffer[(i<<1)+1]);
+    }
+	hd44780_ddram_addr(0);
+	hd44780_cgram_addr(1);
+    for (i=0; i<80; i++){
+		hd44780_wr_data_noblock(buffer[i<<1]);
+    }
+}
+
+#endif
+

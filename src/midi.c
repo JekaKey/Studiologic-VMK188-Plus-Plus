@@ -14,32 +14,32 @@ extern FIFO8(8) notes; //Array for current note
 extern FIFO16(8) durations; //Array for duration for current note
 extern FIFO32(128) midi_usb_in;
 
-void sendNoteOn(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t analog) {
+void sendNoteOn(uint8_t NoteNumber, uint8_t Velocity, uint8_t Channel, uint8_t analog) {
 	message_buff[0] = 0x09; //USB-MIDI NoteOn prefix
 	message_buff[1] = NoteOn ^ Channel;
 	message_buff[2] = NoteNumber;
-	message_buff[3] = (uint8_t)(Velocity >> 7);
+	message_buff[3] = Velocity;
 	usb_midi_DataSend(message_buff, 4);
 
 	if (analog) {
 		FIFO_PUSH(midiMessagesArray, NoteOn ^ Channel);
 		FIFO_PUSH(midiMessagesArray, NoteNumber);
-		FIFO_PUSH(midiMessagesArray, (uint8_t)(Velocity>>7));
+		FIFO_PUSH(midiMessagesArray, Velocity);
 	}
 
 }
 
-void sendNoteOff(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t analog) {
+void sendNoteOff(uint8_t NoteNumber, uint8_t Velocity, uint8_t Channel, uint8_t analog) {
 	message_buff[0] = 0x08; //USB-MIDI NoteOff prefix
 	message_buff[1] = NoteOff ^ Channel;
 	message_buff[2] = NoteNumber;
-	message_buff[3] = (uint8_t)(Velocity >> 7);
+	message_buff[3] = Velocity;
 	usb_midi_DataSend(message_buff, 4);
 
 	if (analog) {
 		FIFO_PUSH(midiMessagesArray, NoteOff ^ Channel);
 		FIFO_PUSH(midiMessagesArray, NoteNumber);
-		FIFO_PUSH(midiMessagesArray, (uint8_t)(Velocity>>7));
+		FIFO_PUSH(midiMessagesArray, Velocity);
 	}
 }
 

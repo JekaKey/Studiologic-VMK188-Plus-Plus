@@ -92,13 +92,13 @@ void checkNoteArray(presetType* preset) {
 				if (preset->HighResEnable){
 					sendControlChange(0x58, (uint8_t)(vel & 0x7F), channel, preset->AnalogMidiEnable);
 				}
-				sendNoteOn(curNote, vel, channel, preset->AnalogMidiEnable);
+				sendNoteOn(curNote, vel>>7, channel, preset->AnalogMidiEnable);
 			}else{
 				if (preset->SlowKeySound)
-					sendNoteOn(curNote, 0x80, channel, preset->AnalogMidiEnable);
+					sendNoteOn(curNote, 1, channel, preset->AnalogMidiEnable);
 			}
 		} else {
-			sendNoteOff(curNote, getVelocity_off(duration, note_color(curNote)),
+			sendNoteOff(curNote, getVelocity_off(duration, note_color(curNote)>>7),
 					channel, preset->AnalogMidiEnable);
 		}
 

@@ -46,8 +46,8 @@ enum kMIDIType {
 	InvalidType = 0x00 ///< For notifying errors
 };
 
-void sendNoteOn(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel, uint8_t analog);
-void sendNoteOff(uint8_t NoteNumber, uint16_t Velocity, uint8_t Channel,  uint8_t analog);
+void sendNoteOn(uint8_t NoteNumber, uint8_t Velocity, uint8_t Channel, uint8_t analog);
+void sendNoteOff(uint8_t NoteNumber, uint8_t Velocity, uint8_t Channel,  uint8_t analog);
 
 void sendProgramChange(uint8_t ProgramNumber, uint8_t Channel,  uint8_t analog);
 void sendControlChange(uint8_t ControlNumber, uint8_t ControlValue, uint8_t Channel,  uint8_t analog);

@@ -200,7 +200,7 @@ void readKeyChunk() {
 }
 
 */
-void readKeyState(void) {
+void inline readKeyState(void) {
 
 	uint8_t d1, d2, i, j, chunk, chunk8;
 	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
@@ -232,7 +232,7 @@ void readKeyState(void) {
 					if (d2 & k[i]) { // Key 0 in current chunk second sensor
 						if (lastState_key[j]) {
 						} else {
-							FIFO_PUSH(notes, j);
+							FIFO_PUSH(notes, j);//note on
 							FIFO_PUSH(durations, duration_note[j]);
 							lastState_key[j] = 0x1;
 							duration_note[j] = 0x0;
@@ -244,7 +244,7 @@ void readKeyState(void) {
 
 				} else {
 					if (lastState_key[j]) {
-						FIFO_PUSH(notes, j+0x80);
+						FIFO_PUSH(notes, j+0x80);//note off
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x0;
 						duration_note[j] = 0x0;

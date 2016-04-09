@@ -22,20 +22,21 @@
 /*The structure describes GPIO pins for one keyboard 8-keys block*/
 typedef struct {
 	GPIO_TypeDef * first;
-	uint16_t first_num;
 	GPIO_TypeDef * second;
+	uint16_t first_num;
 	uint16_t second_num;
-} gpio_pins_type;
+} __attribute__ ((aligned (32))) gpio_pins_type;
 
 typedef struct {
 	GPIO_TypeDef * gpio;
 	uint16_t num;
-} gpioPins_t;
+} __attribute__ ((aligned (32))) gpioPins_t;
 
-void readKeyChunk();
+//void readKeyChunk();
 void readKeyState(); //Read state of all 88 keys and send info to FIFO
 void checkNoteArray();
 void delay(volatile uint32_t c);
-void key_delay(void) __attribute__((optimize(0)));
+void key_delay1(void) __attribute__((optimize(0)));
+void key_delay2(void) __attribute__((optimize(0)));
 
 #endif //__KEYBOARDSCAN

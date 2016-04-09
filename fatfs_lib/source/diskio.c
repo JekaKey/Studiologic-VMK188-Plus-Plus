@@ -7,12 +7,12 @@ void SD_DMA_activate(void){
     /* Configure the NVIC Preemption Priority Bits */
     NVIC_PriorityGroupConfig (NVIC_PriorityGroup_1);
     NVIC_InitStructure.NVIC_IRQChannel = SDIO_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_Init (&NVIC_InitStructure);
     NVIC_InitStructure.NVIC_IRQChannel = SD_SDIO_DMA_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
     NVIC_Init (&NVIC_InitStructure);
 
 }

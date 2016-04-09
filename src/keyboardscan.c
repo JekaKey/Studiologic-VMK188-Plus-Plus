@@ -13,12 +13,13 @@ FIFO16(8) durations; //Array for duration for current note
 uint8_t keySeek = 0;
 uint8_t curNoteSeek=0;
 
-static uint8_t lastState[11] = { 0 };
+
+static uint8_t __attribute__ ((aligned (32))) lastState[16] = { 0 };
 
 
 
-static uint16_t duration_note[88] = { 0 };
-static uint16_t lastState_key[88] = { 0 };
+static uint16_t __attribute__ ((aligned (32))) duration_note[88] = { 0 };
+static uint16_t __attribute__ ((aligned (32))) lastState_key[88] = { 0 };
 
 
 static int16_t curNote;
@@ -109,36 +110,44 @@ void checkNoteArray(presetType* preset) {
 
 /*The array of structures for all 11 key blocks GPIO pins*/
 #ifdef VMK188
-static gpio_pins_type gpio_pins[11] = { { GPIOC, GPIO_Pin_5, GPIOC, GPIO_Pin_4 }, { GPIOB, GPIO_Pin_1, GPIOB, GPIO_Pin_0 }, { GPIOE, GPIO_Pin_8, GPIOB, GPIO_Pin_2 }, { GPIOE, GPIO_Pin_10, GPIOE, GPIO_Pin_9 }, { GPIOE, GPIO_Pin_12, GPIOE, GPIO_Pin_11 }, { GPIOE, GPIO_Pin_14, GPIOE, GPIO_Pin_13 }, { GPIOB, GPIO_Pin_10, GPIOE, GPIO_Pin_15 }, { GPIOB, GPIO_Pin_12, GPIOB, GPIO_Pin_11 }, { GPIOB, GPIO_Pin_14, GPIOB, GPIO_Pin_13 }, { GPIOD, GPIO_Pin_9, GPIOB, GPIO_Pin_15 }, { GPIOD, GPIO_Pin_8, GPIOD,
-		GPIO_Pin_10 } };
+static gpio_pins_type gpio_pins[11] = { { GPIOC, GPIOC, GPIO_Pin_5, GPIO_Pin_4 },
+										{ GPIOB, GPIOB, GPIO_Pin_1, GPIO_Pin_0 },
+										{ GPIOE, GPIOB, GPIO_Pin_8, GPIO_Pin_2 },
+										{ GPIOE, GPIOE, GPIO_Pin_10, GPIO_Pin_9 },
+										{ GPIOE, GPIOE, GPIO_Pin_12, GPIO_Pin_11 },
+										{ GPIOE, GPIOE, GPIO_Pin_14, GPIO_Pin_13 },
+										{ GPIOB, GPIOE, GPIO_Pin_10, GPIO_Pin_15 },
+										{ GPIOB, GPIOB, GPIO_Pin_12, GPIO_Pin_11 },
+										{ GPIOB, GPIOB, GPIO_Pin_14, GPIO_Pin_13 },
+										{ GPIOD, GPIOB, GPIO_Pin_9, GPIO_Pin_15 },
+										{ GPIOD, GPIOD, GPIO_Pin_8, GPIO_Pin_10 } };
 #endif
+
+
 
 #ifdef VMK176
-static gpio_pins_type gpio_pins[10] = { { GPIOC, GPIO_Pin_5, GPIOC, GPIO_Pin_4 }, { GPIOB, GPIO_Pin_1, GPIOB, GPIO_Pin_0 }, { GPIOE, GPIO_Pin_8, GPIOB, GPIO_Pin_2 }, { GPIOE, GPIO_Pin_10, GPIOE, GPIO_Pin_9 },/* { GPIOE, GPIO_Pin_12, GPIOE, GPIO_Pin_11 },*/ { GPIOE, GPIO_Pin_14, GPIOE, GPIO_Pin_13 }, { GPIOB, GPIO_Pin_10, GPIOE, GPIO_Pin_15 }, { GPIOB, GPIO_Pin_12, GPIOB, GPIO_Pin_11 }, { GPIOB, GPIO_Pin_14, GPIOB, GPIO_Pin_13 }, { GPIOD, GPIO_Pin_9, GPIOB, GPIO_Pin_15 }, { GPIOD, GPIO_Pin_8, GPIOD,
-		GPIO_Pin_10 } };
+
+static gpio_pins_type gpio_pins[11] = { { GPIOC, GPIOC, GPIO_Pin_5, GPIO_Pin_4 },
+										{ GPIOB, GPIOB, GPIO_Pin_1, GPIO_Pin_0 },
+										{ GPIOE, GPIOB, GPIO_Pin_8, GPIO_Pin_2 },
+										{ GPIOE, GPIOE, GPIO_Pin_10, GPIO_Pin_9 },
+										/*{ GPIOE, GPIOE, GPIO_Pin_12, GPIO_Pin_11 },*/
+										{ GPIOE, GPIOE, GPIO_Pin_14, GPIO_Pin_13 },
+										{ GPIOB, GPIOE, GPIO_Pin_10, GPIO_Pin_15 },
+										{ GPIOB, GPIOB, GPIO_Pin_12, GPIO_Pin_11 },
+										{ GPIOB, GPIOB, GPIO_Pin_14, GPIO_Pin_13 },
+										{ GPIOD, GPIOB, GPIO_Pin_9, GPIO_Pin_15 },
+										{ GPIOD, GPIOD, GPIO_Pin_8, GPIO_Pin_10 } };
+
 #endif
 
 
-/*Delay should be more long for full cycles code. The reason is unrecognized....*/
-void key_delay(void) {
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-	__NOP();
-}
+
 
 
 /*
 void readKeyChunk() {
 	uint8_t d,i,j, chunk8;
-	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
 	d = ~GPIOA->IDR; //Read port state first contact
 	gpioPins[Chunk].gpio->BSRRL = gpioPins[Chunk].num; //Pin to 1
 	GPIOA->MODER |= 0x00005555; //PA0-7 Switch to Output
@@ -147,27 +156,26 @@ void readKeyChunk() {
 
 	if (Chunk & 0x1) { //second sensor
 		chunk8 = (Chunk-1) << 2;
-		for (i = 0; i <= 7; i++) {
-			j = i + chunk8;
-			if (Sensors1 & k[i]) { // Key #i  in current chunk first sensor
-				if (d & k[i]) { // Key #i in current chunk second sensor
+		for (uint8_t i = 0, j=chunk8; i <= 7; i++, j++) {
+			if (Sensors1 & (1<<i)) { // Key #i  in current chunk first sensor
+				if (d & (1<<i)) { // Key #i in current chunk second sensor
 					if (!lastState_key[j]) { //second sensor was not pressed before
 						FIFO_PUSH(notes, j); //send noteon
-						FIFO_PUSH(durations, (uint16_t)(timer_counter-note_timer_start[j]));
+						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x1; //remember key is pressed
-						note_timer_start[j]=timer_counter;
+						duration_note[j]=0x0;
 					}
 				}
 			} else { //first sensor was not pressed
 				if (lastState_key[j]) { //key was pressed before
 					FIFO_PUSH(notes, j+0x80); //send note off
-					FIFO_PUSH(durations, (uint16_t)(timer_counter-note_timer_start[j]));
+					FIFO_PUSH(durations, duration_note[j]);
 					lastState_key[j] = 0x0;
 				}
-				note_timer_start[j] = timer_counter;
+				duration_note[j]=0x0;
 			}
 		}
-		if (Chunk >= 21)
+		if (Chunk >= (NUMBER_OF_CHUNKS+1)*2-1)
 			Chunk = 0;
 		else
 			Chunk++;
@@ -175,41 +183,58 @@ void readKeyChunk() {
 		Sensors1 = d; //remember first sensors state
 		if (d) { //one or more first sensors active
 			lastState[Chunk>>1]=d;
-			Chunk++; //need to look second sensors, in this case we don't need to check a maximum value
 		} else { //chunk is depressed
 			if (lastState[Chunk >> 1]) { //something was pressed before so it is just depressed
 				chunk8 = Chunk << 2;
-				for (i = 0; i <= 7; i++) {
-					j = i + chunk8;
+				for (uint8_t i = 0, j=chunk8; i <= 7; i++, j++) {
 					if (lastState_key[j]) { //this key was pressed before
 						FIFO_PUSH(notes, j+0x80); //send noteoff
-						FIFO_PUSH(durations, (uint16_t)(timer_counter-note_timer_start[j])); //send time
+						FIFO_PUSH(durations, duration_note[j]); //send time
 						lastState_key[j] = 0x0; //no this key is not pressed
 					}
 				}
 			}
 			lastState[Chunk>>1]=0; //all chunk was depressed
-			if (Chunk >= 20)//we don't need to check second sensor, because full chunk is depressed
-				Chunk = 0; //go to the first chunk
-			else
-				Chunk += 2; //go to the next chunk
 		}
+		Chunk++; //need to look second sensors, in this case we don't need to check a maximum value
 	}
 	gpioPins[Chunk].gpio->BSRRH = gpioPins[Chunk].num; //activate next chunk
-	timer_counter++;
 }
 
 */
-void inline readKeyState(void) {
 
-	uint8_t d1, d2, i, j, chunk, chunk8;
-	uint8_t k[8] = { 1, 2, 4, 8, 16, 32, 64, 128 }; //array with values for key select
 
-	for (chunk = 0; chunk <= NUMBER_OF_CHUNKS; chunk++) {
+void  key_delay1(void) {
+	__NOP();
+	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+}
+
+
+void  key_delay2(void) {
+//	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+//	__NOP();
+}
+
+
+void readKeyState(void)  {
+	for (uint8_t chunk = 0; chunk <= NUMBER_OF_CHUNKS; chunk++) {
 		gpio_pins[chunk].first->BSRRH = gpio_pins[chunk].first_num; //Pin to zero
-		chunk8 = chunk << 3;
-		key_delay();
-		d1 = ~GPIOA->IDR; //Read port state first contact
+		uint8_t chunk8 = chunk << 3;
+		key_delay1();
+		uint8_t d1 = ~GPIOA->IDR; //Read port state first contact
 		gpio_pins[chunk].first->BSRRL = gpio_pins[chunk].first_num; //Pin to 1
 
 		GPIOA->MODER |= 0x00005555; //PA0-7 Switch to Output
@@ -218,49 +243,44 @@ void inline readKeyState(void) {
 
 		if (d1) {//One or more keys in the chunk is pressed
 			gpio_pins[chunk].second->BSRRH = gpio_pins[chunk].second_num;
-			key_delay();
-			d2 = ~GPIOA->IDR; //Read port state second contact
+			for (uint8_t i = 0, j = chunk8; i < 8; i++, j++) { //useful calculation instead of long delay
+				if (lastState_key[j]) {
+					if (!(d1 & (0x01 << i))) {
+						FIFO_PUSH(notes, j|0x80);//note off
+						FIFO_PUSH(durations, duration_note[j]);
+						lastState_key[j] = 0x0;
+						duration_note[j] = 0x0;
+					}
+				}
+			}
+			//key_delay2(); //Probably it is not necessary
+			uint8_t d2 = ~GPIOA->IDR; //Read port state second contact
 			gpio_pins[chunk].second->BSRRL = gpio_pins[chunk].second_num;
 
 			GPIOA->MODER |= 0x00005555; //PA0-7 Switch to Output
 			GPIOA->ODR = 0x00FF; //High level on PA0-7;
 			GPIOA->MODER &= 0xFFFF0000; //PA0-7 Switch to Input
 
-			for (i = 0; i <= 7; i++) {
-				j = i + chunk8;
-				if (d1 & k[i]) { // Key 0 in current chunk first sensor
-					if (d2 & k[i]) { // Key 0 in current chunk second sensor
-						if (lastState_key[j]) {
-						} else {
+			for (uint8_t i = 0, j=chunk8; i < 8; i++, j++) {
+				if (d1 & (0x01<<i)) { // Key 0 in current chunk first sensor
+					if (d2 & (0x01<<i)) { // Key 0 in current chunk second sensor
+						if (!lastState_key[j]) {
 							FIFO_PUSH(notes, j);//note on
 							FIFO_PUSH(durations, duration_note[j]);
 							lastState_key[j] = 0x1;
 							duration_note[j] = 0x0;
 						}
 					} else {
-						if (duration_note[j] < 0xFFFF)
+						if (~(duration_note[j]))
 							duration_note[j]++;
-					}
-
-				} else {
-					if (lastState_key[j]) {
-						FIFO_PUSH(notes, j+0x80);//note off
-						FIFO_PUSH(durations, duration_note[j]);
-						lastState_key[j] = 0x0;
-						duration_note[j] = 0x0;
-					} else {
-						duration_note[j] = 0x0;
 					}
 				}
 			}
 		} else {
-			d2 = 0x0;
 			if (lastState[chunk]) {
-				chunk8 = chunk <<3;
-				for (i = 0; i <= 7; i++) {
-					j = i + chunk8;
+				for (uint8_t j=chunk8; j <= chunk8+7; j++) {
 					if (lastState_key[j]) {
-						FIFO_PUSH(notes, j+0x80);
+						FIFO_PUSH(notes, j|0x80);
 						FIFO_PUSH(durations, duration_note[j]);
 						lastState_key[j] = 0x0;
 					}
@@ -272,4 +292,3 @@ void inline readKeyState(void) {
 	}
 
 }
-

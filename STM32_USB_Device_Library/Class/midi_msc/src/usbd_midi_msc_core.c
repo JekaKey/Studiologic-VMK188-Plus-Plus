@@ -109,7 +109,7 @@ static uint8_t USBD_MIDI_MSC_CfgDesc[MIDI_MSC_CONFIG_DESC_SIZE] = {
 		0x24, /* descriptor type: CS_INTERFACE descriptor. */
 		0x01, /* header functional descriptor */
 		0x0, 0x01, /* bcdADC: Revision of this class specification. */
-		/*CLASS_SPECIFIC_DESC_SIZE*/0x32, 0, /* wTotalLength : 7+6+9+6+9+9+5+9+5*/
+		/*CLASS_SPECIFIC_DESC_SIZE*/MIDI_CLASS_SPECIFIC_DESC_SIZE, 0, /* wTotalLength : 7+6+9+6+9+9+5+9+5*/
 
 		// B.4.3 MIDI IN Jack Descriptor
 
@@ -118,8 +118,18 @@ static uint8_t USBD_MIDI_MSC_CfgDesc[MIDI_MSC_CONFIG_DESC_SIZE] = {
 		0x24, /* descriptor type */
 		0x02, /* MIDI_IN_JACK desc subtype */
 		0x01, /* EMBEDDED bJackType */
-		0x01, /* bJackID: ID of this Jack*/
+		JACK_IN_EMBEDDED, /* bJackID: ID of this Jack*/
 		0x00, /* UNUSED */
+
+#ifdef EXTERNAL_JACKS
+		// Midi in Jack Descriptor (External)
+		0x06, /* bLength */
+		0x24, /* descriptor type */
+		0x02, /* MIDI_IN_JACK desc subtype */
+		0x02, /* External bJackType */
+		JACK_IN_EXTERNAL, /* bJackID: ID of this Jack*/
+		0x00, /* UNUSED */
+#endif
 
 		// Table B4.4
 		// Midi Out Jack Descriptor (Embedded)
@@ -127,11 +137,24 @@ static uint8_t USBD_MIDI_MSC_CfgDesc[MIDI_MSC_CONFIG_DESC_SIZE] = {
 		0x24, /* descriptor type: CS_INTERFACE descriptor. */
 		0x03, /* MIDI_OUT_JACK descriptor */
 		0x01, /* EMBEDDED bJackType */
-		0x02, /* bJackID ID of this Jack*/
+		JACK_OUT_EMBEDDED, /* bJackID ID of this Jack*/
 		0x01, /* No of input pins */
 		0x02, /* ID of the Entity to which this Pin is connected. */
 		0x01, /* Output Pin number of the Entity to which this Input Pin is connected. */
 		0X00, /* iJack : UNUSED */
+
+#ifdef EXTERNAL_JACKS
+		// Midi Out Jack Descriptor (External)
+		0x09, /* length of descriptor in bytes */
+		0x24, /* descriptor type: CS_INTERFACE descriptor. */
+		0x03, /* MIDI_OUT_JACK descriptor */
+		0x02, /* External bJackType */
+		JACK_OUT_EXTERNAL, /* bJackID ID of this Jack*/
+		0x01, /* No of input pins */
+		0x01, /* ID of the Entity to which this Pin is connected. */
+		0x01, /* Output Pin number of the Entity to which this Input Pin is connected. */
+		0X00, /* iJack : UNUSED */
+#endif
 
 		// ===== B.5 Bulk OUT Endpoint Descriptors
 		//B.5.1 Standard Bulk OUT Endpoint Descriptor
@@ -149,7 +172,7 @@ static uint8_t USBD_MIDI_MSC_CfgDesc[MIDI_MSC_CONFIG_DESC_SIZE] = {
 		0x25, /* bDescriptorType */
 		0x01, /* bDescriptorSubtype : GENERAL */
 		0x01, /* bNumEmbMIDIJack  */
-		0x01, /* baAssocJackID (0) ID of the Embedded MIDI IN Jack. */
+		JACK_IN_EMBEDDED, /* baAssocJackID (0) ID of the Embedded MIDI IN Jack. */
 
 		//B.6 Bulk IN Endpoint Descriptors
 		//B.6.1 Standard Bulk IN Endpoint Descriptor
@@ -167,7 +190,7 @@ static uint8_t USBD_MIDI_MSC_CfgDesc[MIDI_MSC_CONFIG_DESC_SIZE] = {
 		0X25, /* bDescriptorType */
 		0x01, /* bDescriptorSubtype */
 		0X01, /* bNumEmbMIDIJack (0) */
-		0X02, /* baAssocJackID (0) ID of the Embedded MIDI OUT Jack	*/
+		JACK_OUT_EMBEDDED, /* baAssocJackID (0) ID of the Embedded MIDI OUT Jack	*/
 
    	    /********************  Mass Storage interface ********************/
 	    0x09,   /* bLength: Interface Descriptor size */

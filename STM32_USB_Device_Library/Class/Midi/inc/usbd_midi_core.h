@@ -26,12 +26,29 @@
 /*Descriptors defines*/
 
 
+#define EXTERNAL_JACKS //External jacks in midi_usb descriptors, implemented specially for Windows XP
+
+#ifdef EXTERNAL_JACKS
+#define MIDI_CLASS_SPECIFIC_DESC_SIZE   7+6+9+9+5+9+5+6+9 //descriptor contains two external jacks
+#else
 #define MIDI_CLASS_SPECIFIC_DESC_SIZE   7+6+9+9+5+9+5
+#endif//EXTERNAL_JACKS
+
 #define MIDI_CONFIG_DESC_SIZE 			9+9+9+9 + MIDI_CLASS_SPECIFIC_DESC_SIZE //Full size of interface descriptors
 #define USB_CONFIGURATION_DESCRIPTOR_TYPE       0x02
 #define USB_INTERFACE_DESCRIPTOR_TYPE           0x04
 #define USB_DEVICE_CLASS_AUDIO                  0x01
 #define USB_DEVICE_SUBCLASS_MIDISTREAMING       0x03
+
+#ifdef EXTERNAL_JACKS
+#define JACK_IN_EMBEDDED 0x01
+#define JACK_IN_EXTERNAL 0x02
+#define JACK_OUT_EMBEDDED 0x03
+#define JACK_OUT_EXTERNAL 0x04
+#else
+#define JACK_IN_EMBEDDED 0x01
+#define JACK_OUT_EMBEDDED 0x02
+#endif
 
 
 #define midi_data_in_pack_size 128

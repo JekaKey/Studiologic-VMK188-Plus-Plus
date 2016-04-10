@@ -26,7 +26,7 @@
 /*Descriptors defines*/
 
 
-#define EXTERNAL_JACKS //External jacks in midi_usb descriptors, implemented specially for Windows XP
+//#define EXTERNAL_JACKS //External jacks in midi_usb descriptors, implemented specially for Windows XP
 
 #ifdef EXTERNAL_JACKS
 #define MIDI_CLASS_SPECIFIC_DESC_SIZE   7+6+9+9+5+9+5+6+9 //descriptor contains two external jacks

@@ -84,7 +84,7 @@ int main(void) {
 		   set_okIOzero();
 	interface_init(Current_state.preset_name);
 	calibration_init(Current_state.calibration_name);
-
+	noteOffStoreInit();
     TIM4_init();//keyboard timer
     TIM6_init();//delay for temp messages
     TIM7_init(); //delay for MSC

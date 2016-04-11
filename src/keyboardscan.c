@@ -13,6 +13,7 @@ FIFO16(8) durations; //Array for duration for current note
 uint8_t keySeek = 0;
 uint8_t curNoteSeek=0;
 
+static volatile uint32_t timerCounter = 0;
 
 static uint8_t __attribute__ ((aligned (32))) lastState[16] = { 0 };
 
@@ -22,8 +23,8 @@ static uint16_t __attribute__ ((aligned (32))) duration_note[88] = { 0 };
 static uint16_t __attribute__ ((aligned (32))) lastState_key[88] = { 0 };
 
 
-static int16_t curNote;
-static uint16_t duration;
+//static int16_t curNote;
+//static uint16_t duration;
 
 
 /*new global block*
@@ -46,10 +47,88 @@ static gpioPins_t gpioPins[22] =  {{ GPIOC, GPIO_Pin_5 },  { GPIOC, GPIO_Pin_4 }
 
 *****************************************************/
 
+static noteOffStore_t noteOffStore[88];
+static uint8_t noteOffIndex = 0;
+
+void noteOffStoreInit(void) {
+	for (uint8_t i = 0; i < NUMBER_OF_KEYS; i++)
+		noteOffStore[i].delay = 0xFFFFFFFF;
+}
+
+void checkNoteArray(presetType* preset) {
+	uint8_t channel;
+	int16_t curNote;
+	uint16_t duration;
+
+	/*Check noteoff delay time*/
+	noteOffStore_t* noteOff = &noteOffStore[noteOffIndex]; //save base address
+	if ((noteOff->delay ^ 0xFFFFFFFF) && (timerCounter - (noteOff->delay) > preset->NoteOffDelay * (1000 / TIMER_TIMPERIOD))) {
+		sendNoteOff(noteOffIndex, getVelocity_off(noteOff->duration, note_color(noteOffIndex) >> 7), noteOff->channel, preset->AnalogMidiEnable);
+		noteOff->delay = 0xFFFFFFFF;
+	}
+	if (++noteOffIndex > NUMBER_OF_KEYS - 1) // cycled step to next note
+		noteOffIndex = 0;
+
+	if (FIFO_COUNT(notes)) {
+		curNote = FIFO_FRONT(notes);
+		duration = FIFO_FRONT(durations);
+
+		FIFO_POP(durations);
+		FIFO_POP(notes);
+
+		uint8_t noteOn = !(curNote & 0x80);
+		curNote = (curNote & 0x7F) + NOTE_SHIFT;
+
+		if (keySeek) {
+			send_message(MES_KEY_SEEK);
+			curNoteSeek = curNote;
+			return;
+		}
+
+		if (preset->SplitActive && curNote < preset->SplitKey) {
+			channel = preset->SplitChannel - 1;
+			curNote += preset->SplitOctShift * 12;
+		} else {
+			channel = preset->MidiChannel - 1;
+			curNote += preset->OctaveShift * 12;
+		}
+
+		if (channel > 15)
+			channel = 0;
+
+		curNote += preset->Transpose;
+		if (curNote < 0 || curNote > 127) //what is it?
+			return;
+
+		if (noteOn) {
+			uint16_t vel = getVelocity_on(duration, note_color(curNote));
+			//Send High Res Preffix
+			if (vel & 0xFF80) {
+				if (preset->HighResEnable) {
+					sendControlChange(0x58, (uint8_t)(vel & 0x7F), channel,
+							preset->AnalogMidiEnable);
+				}
+				sendNoteOn(curNote, vel >> 7, channel,
+						preset->AnalogMidiEnable);
+				noteOffStore[curNote].delay = 0xFFFFFFFF;
+			} else {
+				if (preset->SlowKeySound) {
+					sendNoteOn(curNote, 1, channel, preset->AnalogMidiEnable);
+					noteOffStore[curNote].delay = 0xFFFFFFFF;
+				}
+			}
+		} else {
+			noteOffStore[curNote].delay = timerCounter;
+			noteOffStore[curNote].duration = duration;
+			noteOffStore[curNote].channel = channel;
+		}
+
+	}
+}
 
 
 
-
+/*
 void checkNoteArray(presetType* preset) {
 	uint16_t vel;
 	uint8_t channel;
@@ -106,7 +185,7 @@ void checkNoteArray(presetType* preset) {
 	}
 }
 
-
+*/
 
 /*The array of structures for all 11 key blocks GPIO pins*/
 #ifdef VMK188
@@ -230,6 +309,7 @@ void  key_delay2(void) {
 
 
 void readKeyState(void)  {
+	timerCounter++;
 	for (uint8_t chunk = 0; chunk <= NUMBER_OF_CHUNKS; chunk++) {
 		gpio_pins[chunk].first->BSRRH = gpio_pins[chunk].first_num; //Pin to zero
 		uint8_t chunk8 = chunk << 3;

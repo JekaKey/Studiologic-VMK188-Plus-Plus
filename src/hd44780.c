@@ -86,10 +86,10 @@ void hd44780_write(uint8_t data) {
 	controlLEDs_enable(0);
 
 	/* set the data bits */
+	uint16_t dataportValue = HD44780_DATAPORT->IDR;
+	HD44780_DATAPORT->ODR = (dataportValue & 0xFF00) + data; //In the current project the display uses PE0-PE7 GPIO, so it is possible to switch them by one command
 
-	HD44780_DATAPORT->ODR=data; //In the current project the display uses PE0-PE7 GPIO, so it is possible to switch them by one command
-
-	/*
+/*
 	if (data & 0x01) {
 		GPIO_SetBits(HD44780_DATAPORT, HD44780_DATABIT0);
 	} else {
@@ -130,7 +130,7 @@ void hd44780_write(uint8_t data) {
 	} else {
 		GPIO_ResetBits(HD44780_DATAPORT, HD44780_DATABIT7);
 	}
-    */
+*/
 	/* tell the lcd that we have a command to read in */hd44780_EN_On();
 
 	/* wait long enough so that the lcd can see the command */hd44780_EN_high_delay();

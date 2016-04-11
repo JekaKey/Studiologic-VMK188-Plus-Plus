@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="1">
+    <includedir>
+        <dir name="usb/inc/"/>
+        <dir name="STM32F4xx_SPL/inc/"/>
+        <dir name="STM32_USB_OTG_Driver/inc/"/>
+        <dir name="STM32_USB_Device_Library/Core/inc/"/>
+        <dir name="STM32_USB_Device_Library/Class/msc/inc/"/>
+        <dir name="inc/"/>
+        <dir name="STM32_USB_Device_Library/Class/midi_msc/inc/"/>
+        <dir name="STM32_USB_Device_Library/Class/msc/inc/"/>
+        <dir name="json/"/>
+        <dir name="fatfs_lib/include/"/>
+        <dir name="CMSIS/Include/"/>
+    </includedir>
+</project>

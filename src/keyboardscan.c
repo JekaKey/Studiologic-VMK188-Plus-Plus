@@ -4,7 +4,7 @@
 #include "usb_midi_io.h"
 #include "fifo.h"
 #include "controls.h"
-
+#include "log.h"
 
 FIFO8(128) midiMessagesArray; //Array for midi messages buffer
 FIFO8(8) notes; //Array for current note
@@ -47,11 +47,11 @@ static gpioPins_t gpioPins[22] =  {{ GPIOC, GPIO_Pin_5 },  { GPIOC, GPIO_Pin_4 }
 
 *****************************************************/
 
-static noteOffStore_t noteOffStore[88];
+static noteOffStore_t noteOffStore[128];
 static uint8_t noteOffIndex = 0;
 
 void noteOffStoreInit(void) {
-	for (uint8_t i = 0; i < NUMBER_OF_KEYS; i++)
+	for (uint8_t i = 0; i < 128; i++)
 		noteOffStore[i].delay = 0xFFFFFFFF;
 }
 
@@ -60,13 +60,14 @@ void checkNoteArray(presetType* preset) {
 	int16_t curNote;
 	uint16_t duration;
 
-	/*Check noteoff delay time*/
 	noteOffStore_t* noteOff = &noteOffStore[noteOffIndex]; //save base address
-	if ((noteOff->delay ^ 0xFFFFFFFF) && (timerCounter - (noteOff->delay) > preset->NoteOffDelay * (1000 / TIMER_TIMPERIOD))) {
-		sendNoteOff(noteOffIndex, (getVelocity_off(noteOff->duration, note_color(noteOffIndex))) >> 7, noteOff->channel, preset->AnalogMidiEnable);
+	if ((noteOff->delay < 0xFFFFFFFF) && (timerCounter - (noteOff->delay) > preset->NoteOffDelay * (1000 / TIMER_TIMPERIOD))) {
+		uint8_t vel = (uint8_t)((getVelocity_off(noteOff->duration, note_color(noteOffIndex))) >> 7);
+		sendNoteOff(noteOffIndex, vel, noteOff->channel, preset->AnalogMidiEnable);
+
 		noteOff->delay = 0xFFFFFFFF;
 	}
-	if (++noteOffIndex > NUMBER_OF_KEYS - 1) // cycled step to next note
+	if (++noteOffIndex > 127) // cycled step to next note
 		noteOffIndex = 0;
 
 	if (FIFO_COUNT(notes)) {
@@ -103,12 +104,12 @@ void checkNoteArray(presetType* preset) {
 		if (noteOn) {
 			uint16_t vel = getVelocity_on(duration, note_color(curNote));
 			//Send High Res Preffix
-			if (vel & 0xFF80) {
+			if (vel & 0x3F80) {
 				if (preset->HighResEnable) {
 					sendControlChange(0x58, (uint8_t)(vel & 0x7F), channel,
 							preset->AnalogMidiEnable);
 				}
-				sendNoteOn(curNote, vel >> 7, channel,
+				sendNoteOn(curNote, (uint8_t)(vel >> 7), channel,
 						preset->AnalogMidiEnable);
 				noteOffStore[curNote].delay = 0xFFFFFFFF;
 			} else {
@@ -132,6 +133,8 @@ void checkNoteArray(presetType* preset) {
 void checkNoteArray(presetType* preset) {
 	uint16_t vel;
 	uint8_t channel;
+	int16_t curNote;
+	uint16_t duration;
 
 	if (FIFO_COUNT(notes) != 0) {
 		curNote = FIFO_FRONT(notes);
@@ -178,7 +181,8 @@ void checkNoteArray(presetType* preset) {
 					sendNoteOn(curNote, 1, channel, preset->AnalogMidiEnable);
 			}
 		} else {
-			sendNoteOff(curNote, getVelocity_off(duration, note_color(curNote)>>7),
+			vel=getVelocity_off(duration, note_color(curNote));
+			sendNoteOff(curNote, vel>>7,
 					channel, preset->AnalogMidiEnable);
 		}
 
@@ -286,8 +290,8 @@ void readKeyChunk() {
 void  key_delay1(void) {
 	__NOP();
 	__NOP();
-//	__NOP();
-//	__NOP();
+	__NOP();
+	__NOP();
 //	__NOP();
 //	__NOP();
 //	__NOP();
@@ -299,9 +303,9 @@ void  key_delay1(void) {
 
 
 void  key_delay2(void) {
-//	__NOP();
-//	__NOP();
-//	__NOP();
+	__NOP();
+	__NOP();
+	__NOP();
 //	__NOP();
 //	__NOP();
 //	__NOP();
@@ -333,7 +337,7 @@ void readKeyState(void)  {
 					}
 				}
 			}
-			//key_delay2(); //Probably it is not necessary
+			key_delay2(); //Probably it is not necessary
 			uint8_t d2 = ~GPIOA->IDR; //Read port state second contact
 			gpio_pins[chunk].second->BSRRL = gpio_pins[chunk].second_num;
 

@@ -147,7 +147,6 @@ void btoa_mem(const uint8_t value, char* buffer) {
 }
 
 void uint16toa(uint16_t n, char *s) {
-	char c;
 	uint16_t i = 0;
 	uint16_t j;
 	do {
@@ -155,7 +154,7 @@ void uint16toa(uint16_t n, char *s) {
 	} while ((n /= 10) > 0);
 	s[i] = '\0';
 	for (i = 0, j = strlen(s) - 1; i < j; i++, j--) {
-		c = s[i];
+		char c = s[i];
 		s[i] = s[j];
 		s[j] = c;
 	}
@@ -173,7 +172,6 @@ void string_number_format(char * s, uint8_t n){
 }
 
 void uint8toa(uint8_t n, char *s) {
-	char c;
 	uint16_t i = 0;
 	uint16_t j;
 	do {
@@ -181,7 +179,7 @@ void uint8toa(uint8_t n, char *s) {
 	} while ((n /= 10) > 0);
 	s[i] = '\0';
 	for (i = 0, j = strlen(s) - 1; i < j; i++, j--) {
-		c = s[i];
+		char c = s[i];
 		s[i] = s[j];
 		s[j] = c;
 	}

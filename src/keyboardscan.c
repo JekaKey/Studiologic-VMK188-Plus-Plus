@@ -51,8 +51,10 @@ static noteOffStore_t noteOffStore[128];
 static uint8_t noteOffIndex = 0;
 
 void noteOffStoreInit(void) {
-	for (uint8_t i = 0; i < 128; i++)
+	for (uint8_t i = 0; i < 128; i++){
 		noteOffStore[i].delay = 0xFFFFFFFF;
+		noteOffStore[i].count = 0x0;
+	}
 }
 
 void checkNoteArray(presetType* preset) {
@@ -63,8 +65,9 @@ void checkNoteArray(presetType* preset) {
 	noteOffStore_t* noteOff = &noteOffStore[noteOffIndex]; //save base address
 	if ((noteOff->delay < 0xFFFFFFFF) && (timerCounter - (noteOff->delay) > preset->NoteOffDelay * (1000 / TIMER_TIMPERIOD))) {
 		uint8_t vel = (uint8_t)((getVelocity_off(noteOff->duration, note_color(noteOffIndex))) >> 7);
-		sendNoteOff(noteOffIndex, vel, noteOff->channel, preset->AnalogMidiEnable);
-
+		for (uint8_t n=0; n<noteOff->count; n++)
+		    sendNoteOff(noteOffIndex, vel, noteOff->channel, preset->AnalogMidiEnable);
+		noteOff->count=0;
 		noteOff->delay = 0xFFFFFFFF;
 	}
 	if (++noteOffIndex > 127) // cycled step to next note
@@ -109,13 +112,14 @@ void checkNoteArray(presetType* preset) {
 					sendControlChange(0x58, (uint8_t)(vel & 0x7F), channel,
 							preset->AnalogMidiEnable);
 				}
-				sendNoteOn(curNote, (uint8_t)(vel >> 7), channel,
-						preset->AnalogMidiEnable);
+				sendNoteOn(curNote, (uint8_t)(vel >> 7), channel, preset->AnalogMidiEnable);
 				noteOffStore[curNote].delay = 0xFFFFFFFF;
+				noteOffStore[curNote].count++;
 			} else {
 				if (preset->SlowKeySound) {
 					sendNoteOn(curNote, 1, channel, preset->AnalogMidiEnable);
 					noteOffStore[curNote].delay = 0xFFFFFFFF;
+					noteOffStore[curNote].count++;
 				}
 			}
 		} else {
@@ -291,7 +295,7 @@ void  key_delay1(void) {
 	__NOP();
 	__NOP();
 	__NOP();
-	__NOP();
+//	__NOP();
 //	__NOP();
 //	__NOP();
 //	__NOP();
@@ -337,7 +341,7 @@ void readKeyState(void)  {
 					}
 				}
 			}
-			key_delay2(); //Probably it is not necessary
+			//key_delay2(); //Probably it is not necessary
 			uint8_t d2 = ~GPIOA->IDR; //Read port state second contact
 			gpio_pins[chunk].second->BSRRL = gpio_pins[chunk].second_num;
 

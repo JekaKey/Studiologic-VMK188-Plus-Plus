@@ -65,7 +65,7 @@ void checkNoteArray(presetType* preset) {
 	noteOffStore_t* noteOff = &noteOffStore[noteOffIndex]; //save base address
 	if ((noteOff->delay < 0xFFFFFFFF) && (timerCounter - (noteOff->delay) > preset->NoteOffDelay * (1000 / TIMER_TIMPERIOD))) {
 		uint8_t vel = (uint8_t)((getVelocity_off(noteOff->duration, note_color(noteOffIndex))) >> 7);
-		for (uint8_t n=0; n<noteOff->count; n++)
+		for (uint8_t n=noteOff->count; n; n--)
 		    sendNoteOff(noteOffIndex, vel, noteOff->channel, preset->AnalogMidiEnable);
 		noteOff->count=0;
 		noteOff->delay = 0xFFFFFFFF;

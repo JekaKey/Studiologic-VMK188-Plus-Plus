@@ -295,8 +295,8 @@ void  key_delay1(void) {
 	__NOP();
 	__NOP();
 	__NOP();
-//	__NOP();
-//	__NOP();
+	__NOP();
+	__NOP();
 //	__NOP();
 //	__NOP();
 //	__NOP();

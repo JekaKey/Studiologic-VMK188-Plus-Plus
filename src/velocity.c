@@ -32,6 +32,7 @@ void calculate_velocity_formula(curve_points_type *cp) {
 	Bb = (x3 - z * x2) / (z - 1);
 	Ab = (y2 - y1) * (x1 + Bb) * (x2 + Bb) / (x1 - x2);
 	Cb = y2 - Ab / (x2 + Bb);
+
 }
 
 
@@ -61,11 +62,11 @@ uint16_t getVelocity_off(uint16_t tickNum, uint16_t black) {
 
 	if (black) {
 
-		vel = (uint16_t)(Ab * 2 / (tickNum));
+		vel = (uint16_t)(Ab * 1.5 / (tickNum));
 
 	} else {
 
-		vel = (uint16_t)(Aw * 2 / (tickNum));
+		vel = (uint16_t)(Aw * 1.5 / (tickNum));
 	}
 	if (vel > MAXVELOCITY)
 		return MAXVELOCITY;

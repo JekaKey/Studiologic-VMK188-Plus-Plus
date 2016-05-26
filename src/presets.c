@@ -753,10 +753,8 @@ static void init_json_curve_attr(curve_points_type * curve) {
 
 /*******************************************************/
 
-/*Load setting file start.cfg with current calibration file name and preset file name*/
 
-
-
+/*Load any json file*/
 
 FIO_status load_JSON(char* path, char *js_buff,  jsmntok_t *tokens, json_attr_t *json_attr){
 	FIL fff; // File handler
@@ -789,6 +787,8 @@ FIO_status load_JSON(char* path, char *js_buff,  jsmntok_t *tokens, json_attr_t 
 		return FIO_FILE_CLOSE_ERROR;
     return FIO_OK;
 }
+
+/*Load setting file start.cfg with current calibration file name and preset file name*/
 
 FIO_status currentState_load(void) {
      	FIO_status status=load_JSON("0:/" SETTING_NAME, js_buff, tokens, setting_attr );

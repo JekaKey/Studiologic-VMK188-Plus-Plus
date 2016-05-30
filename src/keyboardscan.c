@@ -61,12 +61,12 @@ void checkNoteArray(presetType* preset) {
 	uint8_t channel;
 	int16_t curNote;
 	uint16_t duration;
-
+    uint16_t delay1=preset->NoteOffDelay1;
+    uint16_t delay127=preset->NoteOffDelay127;
 	noteOffStore_t* noteOff = &noteOffStore[noteOffIndex]; //save base address
-	if ((~(noteOff->delay)) && (timerCounter - (noteOff->delay) > preset->NoteOffDelay * (1000 / TIMER_TIMPERIOD))) {
-		uint8_t vel = (uint8_t)((getVelocity_off(noteOff->duration, note_color(noteOffIndex))) >> 7);
+	if ((~(noteOff->delay)) && (timerCounter - (noteOff->delay) > ((delay1-delay127)/(noteOff->vel)+delay127) * (1000 / TIMER_TIMPERIOD))) {
 		for (uint8_t n=noteOff->count; n; n--)
-		    sendNoteOff(noteOffIndex, vel, noteOff->channel, preset->AnalogMidiEnable);
+		    sendNoteOff(noteOffIndex, noteOff->vel, noteOff->channel, preset->AnalogMidiEnable);
 		noteOff->count=0;
 		noteOff->delay = 0xFFFFFFFF;
 	}
@@ -124,7 +124,7 @@ void checkNoteArray(presetType* preset) {
 			}
 		} else {
 			noteOffStore[curNote].delay = timerCounter;
-			noteOffStore[curNote].duration = duration;
+			noteOffStore[curNote].vel = (uint8_t)(getVelocity_off(duration, note_color(noteOffIndex)) >> 7);
 			noteOffStore[curNote].channel = channel;
 		}
 

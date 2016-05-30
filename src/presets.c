@@ -251,7 +251,8 @@ FIO_status preset_save(const char* path, presetType* pr){
 	json_write_number(1, ATTR_HIRES, pr->HighResEnable, 1, &fff);
 	json_write_number(1, ATTR_ANALOGMIDI, pr->AnalogMidiEnable, 1, &fff);
 	json_write_number(1, ATTR_SLOWKEYSOUND, pr->SlowKeySound, 1, &fff);
-	json_write_number(1, ATTR_NOTEOFFDELAY, pr->NoteOffDelay, 1, &fff);
+	json_write_number(1, ATTR_NOTEOFFDELAY1, pr->NoteOffDelay1, 1, &fff);
+	json_write_number(1, ATTR_NOTEOFFDELAY127, pr->NoteOffDelay127, 1, &fff);
 	json_write_number(1, ATTR_TRANSPOSE, pr->Transpose, 1, &fff);
 	json_write_number(1, ATTR_OCTAVE, pr->OctaveShift, 1, &fff);
 	json_write_string(1, "\"" ATTR_CURVE "\":{", &fff);
@@ -479,13 +480,14 @@ static json_attr_t preset_curve_attr[] ={
 };
 
 
-static json_attr_t preset_attr[20] = {
+static json_attr_t preset_attr[21] = {
 		{ATTR_CHANNEL, t_uint8,},
 		{ATTR_SPLIT,t_object, .addr.object = split_attr},
 		{ATTR_HIRES, t_uint8,},
 		{ATTR_ANALOGMIDI, t_uint8,},
 		{ATTR_SLOWKEYSOUND, t_uint8,},
-		{ATTR_NOTEOFFDELAY, t_uint16,},
+		{ATTR_NOTEOFFDELAY1, t_uint16,},
+		{ATTR_NOTEOFFDELAY127, t_uint16,},
 		{ATTR_TRANSPOSE, t_int8,},
 		{ATTR_OCTAVE, t_int8,},
 		{ATTR_CURVE, t_object, .addr.object = preset_curve_attr},
@@ -532,9 +534,10 @@ static void init_json_preset_attr(presetType *preset) {
 	preset_attr[2].addr.uint8 = &(preset->HighResEnable);
 	preset_attr[3].addr.uint8 = &(preset->AnalogMidiEnable);
 	preset_attr[4].addr.uint8 = &(preset->SlowKeySound);
-	preset_attr[5].addr.uint16 = &(preset->NoteOffDelay);
-	preset_attr[6].addr.int8 = &(preset->Transpose);
-	preset_attr[7].addr.int8 = &(preset->OctaveShift);
+	preset_attr[5].addr.uint16 = &(preset->NoteOffDelay1);
+	preset_attr[6].addr.uint16 = &(preset->NoteOffDelay127);
+	preset_attr[7].addr.int8 = &(preset->Transpose);
+	preset_attr[8].addr.int8 = &(preset->OctaveShift);
 
 	split_attr[0].addr.uint8 = &(preset->SplitActive);
 	split_attr[1].addr.uint8 = &(preset->SplitKey);
@@ -849,7 +852,8 @@ static void preset_set_defaults(presetType* pr){
 	pr->Transpose=0;
 	pr->OctaveShift=0;
 	pr->SlowKeySound=0;
-	pr->NoteOffDelay=0;
+	pr->NoteOffDelay1=0;
+	pr->NoteOffDelay127=0;
 }
 
 static void curve_set_defaults(presetType* pr){

@@ -64,7 +64,8 @@
 #define ATTR_TRANSPOSE "transpose"
 #define ATTR_OCTAVE "octave"
 #define ATTR_SLOWKEYSOUND "slowkeysound"
-#define ATTR_NOTEOFFDELAY "noteoffdelay"
+#define ATTR_NOTEOFFDELAY1 "noteoffdelay1"
+#define ATTR_NOTEOFFDELAY127 "noteoffdelay127"
 
 #define ATTR_SLIDERS "sliders"
 #define ATTR_PEDALS "pedals"
@@ -157,7 +158,8 @@ typedef struct {
 	uint8_t HighResEnable; //bool
 	uint8_t AnalogMidiEnable; //bool
 	uint8_t SlowKeySound;//bool
-	uint16_t NoteOffDelay;//0..20000
+	uint16_t NoteOffDelay1;//0..20000
+	uint16_t NoteOffDelay127;//0..20000
 	curve_points_type Curve;//curve nodes for B&W keys
 	Slider_type sliders[SLIDERS_AMOUNT];
 	Button_type buttons[BUTTONS_AMOUNT];

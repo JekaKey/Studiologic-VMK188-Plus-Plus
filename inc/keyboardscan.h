@@ -36,7 +36,7 @@ typedef struct {
 
 typedef struct {
 	uint32_t delay;
-	uint16_t duration;
+	uint8_t vel;
 	uint8_t channel;
 	uint8_t count;
 } __attribute__ ((aligned (32))) noteOffStore_t;

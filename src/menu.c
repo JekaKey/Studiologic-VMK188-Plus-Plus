@@ -1767,40 +1767,48 @@ static void preset_curves_button_handler(uint8_t button) {
 static void curves_button_handler(uint8_t button) {
 	switch (button) {
 	case MES_REDRAW:
-		if (curve_load(curves_list.names[curves_list.pos], &Curve) != FIO_OK)
-			set_okIOzero();
+		if (curves_list.num > 0)
+			if (curve_load(curves_list.names[curves_list.pos], &Curve)
+					!= FIO_OK)
+				set_okIOzero();
 		show_curve(&curves_list);
 		break;
 	case ENCODER_LEFT1:
 	case ENCODER_LEFT2:
 	case ENCODER_LEFT3:
 	case BUTTON_PAGEUP:
-		curves_list.pos--;
-		if (curves_list.pos == 0xFFFF)
-			curves_list.pos = curves_list.num - 1;
-		if (curve_load(curves_list.names[curves_list.pos], &Curve) != FIO_OK)
-			set_okIOzero();
-		show_curve(&curves_list);
+		if (curves_list.num > 0) {
+			curves_list.pos--;
+			if (curves_list.pos == 0xFFFF)
+				curves_list.pos = curves_list.num - 1;
+			if (curve_load(curves_list.names[curves_list.pos], &Curve)
+					!= FIO_OK)
+				set_okIOzero();
+			show_curve(&curves_list);
+		}
 		break;
 	case ENCODER_RIGHT1:
 	case ENCODER_RIGHT2:
 	case ENCODER_RIGHT3:
 	case BUTTON_PAGEDOWN:
-		curves_list.pos++;
-		if (curves_list.pos >= curves_list.num)
-			curves_list.pos = 0;
-		if (curve_load(curves_list.names[curves_list.pos], &Curve) != FIO_OK)
-			set_okIOzero();
-		show_curve(&curves_list);
+		if (curves_list.num > 0) {
+			curves_list.pos++;
+			if (curves_list.pos >= curves_list.num)
+				curves_list.pos = 0;
+			if (curve_load(curves_list.names[curves_list.pos], &Curve)
+					!= FIO_OK)
+				set_okIOzero();
+			show_curve(&curves_list);
+		}
 		break;
 	case BUTTON_STORAGE:
 		break;
 	case BUTTON_ENTER:
-	//	if ((curves_list.pos) == (curves_list.active)) {
-	//		menu3_item3.Next=&NULL_ENTRY;
-	//	} else {
-	//		menu3_item3.Next=&menu3_item4;
-	//	}
+		//	if ((curves_list.pos) == (curves_list.active)) {
+		//		menu3_item3.Next=&NULL_ENTRY;
+		//	} else {
+		//		menu3_item3.Next=&menu3_item4;
+		//	}
 		selectedMenuItem = (menuItem_type*) &menu3_item1;
 		showMenu();
 		I_state = STATE_menu;

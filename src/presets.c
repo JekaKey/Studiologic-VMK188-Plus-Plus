@@ -930,7 +930,7 @@ FIO_status start_load_calibration(calibrationType* cal){
 FIO_status start_load_curve_list(void) {
 	SDFS_status_type res;
 	res = SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list);
-	if (res != SDFS_OK) { //Preset directory is  not found
+	if (res != SDFS_OK) { //Curve directory is  not found
 		f_mkdir("0:/" CURVE_DIR_NAME);
 		curves_list.num = 0;
 	}

@@ -13,6 +13,7 @@
 #include "bootloader.h"
 #include "usb_init.h"
 #include "timer.h"
+#include "presets.h"
 
 const xy_t curve_xy[6] = {{3, 1, 2}, {7, 1, 3}, {12, 1, 4}, {3, 2, 2}, {7, 2, 3}, {12, 2, 4}};
 
@@ -521,7 +522,7 @@ static void toYNMenu() {
 	//strcpy(temp_msg_1, "why it works?");
 	//send_message(MES_SHOW_TEMP_MSG);
 
-	if (!okIO) {
+	if (okIO) {
 		if (menuChange(selectedMenuYNItem->Previous))
 			send_message(MES_REDRAW);
 		else
@@ -594,7 +595,7 @@ static void menu_show_param(menuItem_type * menu) {
 }
 
 static void startMenu_preset(void) {
-	if (!okIO)
+	if (okIO)
 		return;
 
 	if (presets_list.pos == presets_list.active)
@@ -644,9 +645,9 @@ static void startMenuYN_preset_copy(void) {
 	strcat(file_name, PRESET_EXT);
 	strcat(path, file_name);
 	if (preset_save(path, &Preset) != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_PRESETSAVE);
 	if (SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list) != SDFS_OK)
-		set_okIOzero(); //update Presets list
+		set_okIO(OKIO_SCANDIR); //update Presets list
 	file_list_find(&presets_list, old_active_preset_name);
 	presets_list.active = presets_list.pos;
 	file_list_find(&presets_list, file_name);
@@ -690,9 +691,9 @@ static void startMenuYN_calibration_copy(void) {
 	strcat(file_name, CALIBR_EXT);
 	strcat(path, file_name);
 	if (calibration_save(path, &Calibration) != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_CALIBRATIONSAVE);
 	if (SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list) != SDFS_OK)
-		set_okIOzero();
+		set_okIO(OKIO_SCANDIR);
 	file_list_find(&calibrations_list, old_active_calibration_name);
 	calibrations_list.active = calibrations_list.pos;
 	file_list_find(&calibrations_list, file_name);
@@ -734,9 +735,9 @@ static void startMenuYN_curve_copy(void) {
 	strcat(file_name, CURVE_EXT);
 	strcat(path, file_name);
 	if (curve_save(path, (curve_points_type*)(&Curve)) != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_CURVESAVE);
 	if (SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list) != SDFS_OK)
-		set_okIOzero();
+		set_okIO(OKIO_SCANDIR);
 	file_list_find(&curves_list, file_name);
 
 	showTempMessage("Curve", "was copied!");
@@ -750,9 +751,9 @@ static void startMenuYN_curve_export(void) {
 	strcat(file_name, CURVE_EXT);
 	strcat(path, file_name);
 	if (curve_save(path, &Preset.Curve) != FIO_OK)//Save (export) from selected preset
-		set_okIOzero();
+		set_okIO(OKIO_CURVESAVE);
 	if (SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list) != SDFS_OK)
-		set_okIOzero();
+		set_okIO(OKIO_SCANDIR);
 	file_list_find(&curves_list, file_name);
 
 	showTempMessage("Curve", "was exported!");
@@ -785,7 +786,7 @@ static void menu_preset_as_default(void) {
 
 
 static void menu_preset_rename(void) {
-	if (!okIO)
+	if (okIO)
 		return;
 
 	char name[MAX_FNAME - FEXT_SIZE];
@@ -798,7 +799,7 @@ static void menu_preset_rename(void) {
 
 
 static void menu_preset_copy(void) {
-	if (!okIO)
+	if (okIO)
 		return;
 
 	char name[MAX_FNAME - FEXT_SIZE];
@@ -814,7 +815,7 @@ static void menu_preset_save_yes(void) {
 	char path[MAX_PATH] = "0:/" PRESET_DIR_NAME "/";
     strcat(path, presets_list.names[presets_list.pos]);
 	if (preset_save(path, &Preset) != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_PRESETSAVE);
 	Preset.Crc = getCRC(&Preset, sizeof(presetType));
 }
 
@@ -822,9 +823,9 @@ static void menu_preset_delete_yes(void) {
 	char old_active_preset_name[MAX_FNAME];
 	strcpy(old_active_preset_name, presets_list.names[presets_list.active]);
 	if (preset_delete(&presets_list) != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_PRESETDELETE);
 	if (SDFS_scandir("0:/" PRESET_DIR_NAME, &presets_list) != SDFS_OK)
-		set_okIOzero();//update Presets list
+		set_okIO(OKIO_SCANDIR);//update Presets list
 	file_list_find(&presets_list, old_active_preset_name);
 	presets_list.active = presets_list.pos;
 }
@@ -842,7 +843,7 @@ static void menu_edit_calibration(void) {
 }
 
 static void startMenu_calibration(void) {
-	if (!okIO)
+	if (okIO)
 		return;
 
 	if (calibrations_list.pos == calibrations_list.active)
@@ -856,7 +857,7 @@ static void startMenu_calibration(void) {
 
 
 static void menu_calibration_rename(void) {
-	if (!okIO)
+	if (okIO)
 		return;
 
 	char name[MAX_FNAME - FEXT_SIZE];
@@ -871,12 +872,12 @@ static void menu_calibration_save_yes(void) {
 	char path[MAX_PATH] = "0:/" CALIBR_DIR_NAME "/";
 	strcat(path, calibrations_list.names[calibrations_list.pos]);
 	if (calibration_save(path, &Calibration) != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_CALIBRATIONSAVE);
 	Calibration.Crc = getCRC(&Calibration, sizeof(calibrationType));
 }
 
 static void menu_calibration_copy(void) {
-	if (!okIO)
+	if (okIO)
 		return;
 
 	char name[MAX_FNAME - FEXT_SIZE];
@@ -892,9 +893,9 @@ static void menu_calibration_delete_yes(void){
 	char old_active_calibration_name[MAX_FNAME];
 	strcpy(old_active_calibration_name, calibrations_list.names[calibrations_list.active]);
 	if (calibration_delete(&calibrations_list) != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_CALIBRATIONDELETE);
 	if (SDFS_scandir("0:/" CALIBR_DIR_NAME, &calibrations_list) != SDFS_OK)
-		set_okIOzero();
+		set_okIO(OKIO_SCANDIR);
 	file_list_find(&calibrations_list, old_active_calibration_name);
 	calibrations_list.active = calibrations_list.pos;
 }
@@ -950,13 +951,13 @@ static void menu_curve_save_yes(void) {
 	char path[MAX_PATH] = "0:/" CURVE_DIR_NAME "/";
 	strcat(path, curves_list.names[curves_list.pos]);
 	if (curve_save(path, &Curve) != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_CURVESAVE);
 	Curve.Crc = getCRC(&Curve, sizeof(curve_points_type));
 }
 
 
 static void menu_curve_copy(void) {
-	if (!okIO)
+	if (okIO)
 		return;
 
 	char name[MAX_FNAME - FEXT_SIZE];
@@ -974,16 +975,16 @@ static void menu_curve_load_yes(void) {
     strcat(file_name, CURVE_EXT);
     strcat(path, file_name);
     if (curve_load(file_name, &Preset.Curve) != FIO_OK)
-    	set_okIOzero();
+    	set_okIO(OKIO_CURVELOAD);
 }
 
 static void menu_curve_delete_yes(void) {
 	char old_active_curve_name[MAX_FNAME];
 	strcpy(old_active_curve_name, curves_list.names[curves_list.active]);
 	if (curve_delete(&curves_list) != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_CURVEDELETE);
 	if (SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list) != SDFS_OK)
-		set_okIOzero();
+		set_okIO(OKIO_SCANDIR);
 	file_list_find(&curves_list, old_active_curve_name);
 	curves_list.active = curves_list.pos;
 }
@@ -995,7 +996,7 @@ static void menu_bootloader_yes(void){
 }
 
 static void menu_USBdisk_on_yes(void){
-	set_okIOzero();
+	set_okIO(OKIO_USBDISK);
 	USBdisk_active=1;
 	usb_midi_MSC_cb();
 }
@@ -1003,7 +1004,7 @@ static void menu_USBdisk_on_yes(void){
 static void menu_USBdisk_off_yes(void){
 	USBdisk_active=0;
 	usb_midi_cb();
-	reset_okIOzero();
+	reset_okIO();
 }
 
 
@@ -1420,18 +1421,21 @@ static void preset_show (const presetType *pr, file_list_type *pr_list) {
 	hd44780_display(HD44780_DISP_ON, HD44780_DISP_CURS_OFF, HD44780_DISP_BLINK_OFF);
 
 	char line[MAX_FNAME];
+	char errcode[3];
 	memset(line, ' ', HD44780_DISP_LENGTH);
 	line[HD44780_DISP_LENGTH] = 0;
 
 	int len = 0;
 
-	if (okIO) {
+	if (!okIO) {
 		len = strlen(pr_list->names[pr_list->pos]);
 		memcpy(line, pr_list->names[pr_list->pos], len - FEXT_SIZE);
 	} else if (USBdisk_active) {
 		strcpy(line, "USB DISK ACTIVE");
 	} else {
-		strcpy(line, " SD CARD ERROR!");
+		btoa(okIO,errcode);
+		strcpy(line, " SDIO ERROR:");
+		strcat(line, errcode);
 	}
 
 	hd44780_goto(1, 1);
@@ -1467,7 +1471,7 @@ static void preset_name_current_state(void) {
 	strcpy(Current_state.preset_name, presets_list.names[presets_list.pos]);
 	presets_list.active = presets_list.pos;
 	if (currentState_save() != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_CURRENTSTATESAVE);
 }
 
 
@@ -1482,14 +1486,14 @@ static void presets_button_handler(uint8_t button){
 	case ENCODER_LEFT2:
 	case ENCODER_LEFT3:
 	case BUTTON_PAGEUP:
-		if (!okIO)
+		if (okIO)
 			break;
 
 		presets_list.pos--;
 		if (presets_list.pos == 0xFFFF)
 			presets_list.pos = presets_list.num - 1;
 		if (preset_load(presets_list.names[presets_list.pos], &Preset)!=FIO_OK)
-			set_okIOzero();
+			set_okIO(OKIO_PRESETLOAD);
 		preset_show(&Preset, &presets_list);
 		break;
 
@@ -1497,14 +1501,14 @@ static void presets_button_handler(uint8_t button){
 	case ENCODER_RIGHT2:
 	case ENCODER_RIGHT1:
 	case BUTTON_PAGEDOWN:
-		if (!okIO)
+		if (okIO)
 			break;
 
 		presets_list.pos++;
 		if (presets_list.pos >= presets_list.num)
 			presets_list.pos = 0;
 		if (preset_load(presets_list.names[presets_list.pos], &Preset)!=FIO_OK)
-			set_okIOzero();
+			set_okIO(OKIO_PRESETLOAD);
 		preset_show(&Preset, &presets_list);
 		break;
 
@@ -1563,7 +1567,7 @@ static void calibration_name_current_state(void) {
 	strcpy(Current_state.calibration_name, calibrations_list.names[calibrations_list.pos]);
 	calibrations_list.active = calibrations_list.pos;
 	if (currentState_save() != FIO_OK)
-		set_okIOzero();
+		set_okIO(OKIO_CURRENTSTATESAVE);
 }
 
 
@@ -1664,7 +1668,7 @@ static void calibrations_button_handler(uint8_t button){
 			calibrations_list.pos = calibrations_list.num - 1;
 		Calibration.calibr[0].min_in_value=99;
 		if(calibration_load(calibrations_list.names[calibrations_list.pos], &Calibration)!=FIO_OK)
-			set_okIOzero();
+			set_okIO(OKIO_CALIBRATIONLOAD);
 		show_calibration(&Calibration, &calibrations_list);
 		break;
 	case ENCODER_RIGHT1:
@@ -1675,7 +1679,7 @@ static void calibrations_button_handler(uint8_t button){
 		if (calibrations_list.pos >= calibrations_list.num)
 			calibrations_list.pos = 0;
 		if(calibration_load(calibrations_list.names[calibrations_list.pos], &Calibration)!=FIO_OK)
-			set_okIOzero();
+			set_okIO(OKIO_CALIBRATIONLOAD);
 		show_calibration(&Calibration, &calibrations_list);
 		break;
 	case BUTTON_STORAGE:
@@ -1733,7 +1737,7 @@ static void preset_curves_button_handler(uint8_t button) {
 		if (curves_list.pos == 0xFFFF)
 			curves_list.pos = curves_list.num - 1;
 		if (curve_load(curves_list.names[curves_list.pos], &(Preset.Curve)) != FIO_OK)
-			set_okIOzero();
+			set_okIO(OKIO_CURVELOAD);
 		show_curve(&curves_list);
 		break;
 	case ENCODER_RIGHT1:
@@ -1744,7 +1748,7 @@ static void preset_curves_button_handler(uint8_t button) {
 		if (curves_list.pos >= curves_list.num)
 			curves_list.pos = 0;
 		if (curve_load(curves_list.names[curves_list.pos], &(Preset.Curve)) != FIO_OK)
-			set_okIOzero();
+			set_okIO(OKIO_CURVELOAD);
 		show_curve(&curves_list);
 		break;
 	case BUTTON_STORAGE:
@@ -1770,7 +1774,7 @@ static void curves_button_handler(uint8_t button) {
 		if (curves_list.num > 0)
 			if (curve_load(curves_list.names[curves_list.pos], &Curve)
 					!= FIO_OK)
-				set_okIOzero();
+				set_okIO(OKIO_CURVELOAD);
 		show_curve(&curves_list);
 		break;
 	case ENCODER_LEFT1:
@@ -1783,7 +1787,7 @@ static void curves_button_handler(uint8_t button) {
 				curves_list.pos = curves_list.num - 1;
 			if (curve_load(curves_list.names[curves_list.pos], &Curve)
 					!= FIO_OK)
-				set_okIOzero();
+				set_okIO(OKIO_CURVELOAD);
 			show_curve(&curves_list);
 		}
 		break;
@@ -1797,7 +1801,7 @@ static void curves_button_handler(uint8_t button) {
 				curves_list.pos = 0;
 			if (curve_load(curves_list.names[curves_list.pos], &Curve)
 					!= FIO_OK)
-				set_okIOzero();
+				set_okIO(OKIO_CURVELOAD);
 			show_curve(&curves_list);
 		}
 		break;
@@ -2036,7 +2040,7 @@ static void menu_back_to_preset(void) {
 }
 
 static void curvelist_start(void) {
-	if (!okIO)
+	if (okIO)
 		return;
 
     I_state = STATE_curve_list;
@@ -2044,7 +2048,7 @@ static void curvelist_start(void) {
 }
 
 static void preset_curvelist_start(void) {
-	if (!okIO)
+	if (okIO)
 		return;
 
     I_state = STATE_preset_curve_list;

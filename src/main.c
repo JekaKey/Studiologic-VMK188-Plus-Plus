@@ -81,7 +81,7 @@ int main(void) {
 	firstInit();
     set_defaults_all(&Preset, &Calibration);
     if (!start_load_all(&Preset, &Calibration))
-		   set_okIOzero();
+		   set_okIO(OKIO_LOADALL);
 	interface_init(Current_state.preset_name);
 	calibration_init(Current_state.calibration_name);
 	noteOffStoreInit();

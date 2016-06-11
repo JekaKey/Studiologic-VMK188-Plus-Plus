@@ -128,6 +128,21 @@
 
 #define OCTAVE_SHIFT_MAX 3
 
+#define OKIO_USBDISK 			1
+#define OKIO_SCANDIR 			2
+#define OKIO_PRESETSAVE 		3
+#define OKIO_PRESETDELETE		4
+#define OKIO_PRESETLOAD			5
+#define OKIO_CALIBRATIONSAVE	6
+#define OKIO_CALIBRATIONDELETE	7
+#define OKIO_CALIBRATIONLOAD	8
+#define OKIO_CURVESAVE 			9
+#define OKIO_CURVEDELETE		10
+#define OKIO_CURVELOAD			11
+#define OKIO_CURRENTSTATESAVE	12
+#define OKIO_LOADALL			13
+
+
 /********************************/
 
 typedef enum  {FIO_OK=0, FIO_SD_ERROR, FIO_FILE_NOT_FOUND,FIO_FILE_CREATE_ERROR,FIO_GETFREE_ERR,FIO_MOUNT_ERR,FIO_WRITE_ERROR,FIO_READ_ERROR,
@@ -195,8 +210,8 @@ FIO_status curve_load(char* name, curve_points_type  *curve);
 FIO_status curve_delete(file_list_type *cur_list);
 FIO_status curve_rename(file_list_type *cur_list, char *new_name);
 FIO_status curve_save(const char* path, curve_points_type* curve);
-void set_okIOzero(void);
-void reset_okIOzero(void);
+void set_okIO(uint8_t error);
+void reset_okIO(void);
 uint16_t getCRC(void *obj, uint16_t size);
 
 #endif //PRESETS__H

@@ -10,7 +10,7 @@
 #include "log.h"
 /************/
 
-uint8_t okIO=1;//if this flag is zero all I/O operations will be canceled.
+uint8_t okIO=0;//if this flag is not zero all I/O operations will be canceled.
 
 
 presetType Preset;  //Current preset global structure
@@ -29,12 +29,12 @@ extern const uint8_t pedalsN[PEDALS_N];
 extern const uint8_t slidersN[SLIDERS_N];
 extern const uint8_t knobsN[KNOBS_N];
 
-void set_okIOzero(void){
-	okIO=0;
+void set_okIO(uint8_t error){
+	okIO=error;
 }
 
-void reset_okIOzero(void){
-	okIO=1;
+void reset_okIO(void){
+	okIO=0;
 }
 
 

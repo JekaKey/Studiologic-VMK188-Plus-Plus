@@ -28,7 +28,7 @@
 #include "bootloader.h"
 
 
-extern uint8_t okIO;//if this flag is zero all I/O operations will be canceled.
+extern uint8_t errIO;//if this flag is zero all I/O operations will be canceled.
 
 void delay(volatile uint32_t c) {
 	while (--c) {
@@ -81,7 +81,7 @@ int main(void) {
 	firstInit();
     set_defaults_all(&Preset, &Calibration);
     if (!start_load_all(&Preset, &Calibration))
-		   set_okIO(OKIO_LOADALL);
+		   set_errIO(ERRIO_LOADALL);
 	interface_init(Current_state.preset_name);
 	calibration_init(Current_state.calibration_name);
 	noteOffStoreInit();

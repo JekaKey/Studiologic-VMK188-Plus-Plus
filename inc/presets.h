@@ -128,19 +128,20 @@
 
 #define OCTAVE_SHIFT_MAX 3
 
-#define OKIO_USBDISK 			1
-#define OKIO_SCANDIR 			2
-#define OKIO_PRESETSAVE 		3
-#define OKIO_PRESETDELETE		4
-#define OKIO_PRESETLOAD			5
-#define OKIO_CALIBRATIONSAVE	6
-#define OKIO_CALIBRATIONDELETE	7
-#define OKIO_CALIBRATIONLOAD	8
-#define OKIO_CURVESAVE 			9
-#define OKIO_CURVEDELETE		10
-#define OKIO_CURVELOAD			11
-#define OKIO_CURRENTSTATESAVE	12
-#define OKIO_LOADALL			13
+/*Block of definitions of SD card Error codes*/
+#define ERRIO_USBDISK 			1
+#define ERRIO_SCANDIR 			2
+#define ERRIO_PRESETSAVE 		3
+#define ERRIO_PRESETDELETE		4
+#define ERRIO_PRESETLOAD		5
+#define ERRIO_CALIBRATIONSAVE	6
+#define ERRIO_CALIBRATIONDELETE	7
+#define ERRIO_CALIBRATIONLOAD	8
+#define ERRIO_CURVESAVE 		9
+#define ERRIO_CURVEDELETE		10
+#define ERRIO_CURVELOAD			11
+#define ERRIO_CURRENTSTATESAVE	12
+#define ERRIO_LOADALL			13
 
 
 /********************************/
@@ -210,8 +211,8 @@ FIO_status curve_load(char* name, curve_points_type  *curve);
 FIO_status curve_delete(file_list_type *cur_list);
 FIO_status curve_rename(file_list_type *cur_list, char *new_name);
 FIO_status curve_save(const char* path, curve_points_type* curve);
-void set_okIO(uint8_t error);
-void reset_okIO(void);
+void set_errIO(uint8_t error);
+void reset_errIO(void);
 uint16_t getCRC(void *obj, uint16_t size);
 
 #endif //PRESETS__H

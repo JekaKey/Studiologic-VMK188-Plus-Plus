@@ -31,7 +31,7 @@
 #include "usbd_ioreq.h"
 #include "usb_dcd_int.h"
 #include "usb_bsp.h"
-#include "log.h"
+#define __IO volatile
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
 * @{
@@ -180,14 +180,32 @@ USBD_Status USBD_DeInit(USB_OTG_CORE_HANDLE *pdev)
   return USBD_OK;
 }
 
+static void delay(volatile uint32_t c) __attribute__((optimize(0)));
+static void delayms(volatile uint32_t c) __attribute__((optimize(0)));
+
+static void delay(volatile uint32_t c) {
+	while (--c) {
+		__NOP();
+	}
+}
+
+static void delayms(volatile uint32_t c)  {
+	while (--c) {
+		delay(23080);
+	}
+}
+
 
 /*Change block of callbacks. This function is not from native library */
+
+
 
 void USBD_change_cb(USB_OTG_CORE_HANDLE *pdev,  USBD_Class_cb_TypeDef *class_cb){
 	  USB_OTG_BSP_DisableInterrupt(pdev);
 	  USB_OTG_DisableGlobalInt(pdev);
 	  pdev->dev.class_cb = class_cb;
 	  DCD_DevDisconnect(pdev);
+	  delayms(200);
 	  USB_OTG_EnableGlobalInt(pdev);
 	  USB_OTG_BSP_EnableInterrupt(pdev);
 	  DCD_DevConnect(pdev);

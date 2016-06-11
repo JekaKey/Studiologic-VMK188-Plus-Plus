@@ -11,7 +11,7 @@ const uint8_t symbol_menu_pointer[]={0b00001000,
                                      0b00000100,
                                      0b00001000,
                                      0b00000000};
-
+/*
 const uint8_t symbol_check[]=       {0b00000111,
                                      0b00010101,
                                      0b00010111,
@@ -20,6 +20,16 @@ const uint8_t symbol_check[]=       {0b00000111,
                                      0b00010101,
                                      0b00011100,
                                      0b00000000};
+*/
+const uint8_t symbol_check[]=       {0b00000000,
+                                     0b00001110,
+                                     0b00011111,
+                                     0b00011111,
+                                     0b00011111,
+                                     0b00001110,
+                                     0b00000000,
+                                     0b00000000};
+
 #ifdef WS0010_GRAPHICS
 const uint8_t pictureVMK188 [] = {
 		0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x78, 0x03, 0xF0, 0x1F, 0x80, 0x1C, 0x00,

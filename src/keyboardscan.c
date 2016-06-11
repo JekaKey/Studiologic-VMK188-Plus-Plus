@@ -59,7 +59,7 @@ void noteOffStoreInit(void) {
 
 void checkNoteArray(presetType* preset) {
 	uint8_t channel;
-	int16_t curNote;
+	int16_t curKey, curNote;
 	uint16_t duration;
     uint16_t delay1=preset->NoteOffDelay1;
     uint16_t delay127=preset->NoteOffDelay127;
@@ -74,18 +74,20 @@ void checkNoteArray(presetType* preset) {
 		noteOffIndex = 0;
 
 	if (FIFO_COUNT(notes)) {
-		curNote = FIFO_FRONT(notes);
+		curKey = FIFO_FRONT(notes);
 		duration = FIFO_FRONT(durations);
 
 		FIFO_POP(durations);
 		FIFO_POP(notes);
 
-		uint8_t noteOn = !(curNote & 0x80);
-		curNote = (curNote & 0x7F) + NOTE_SHIFT;
+		uint8_t noteOn = !(curKey & 0x80);
+		curKey &= 0x7F;
+		curKey +=NOTE_SHIFT;
+		curNote = curKey;
 
 		if (keySeek) {
 			send_message(MES_KEY_SEEK);
-			curNoteSeek = curNote;
+			curNoteSeek = curKey;
 			return;
 		}
 
@@ -101,11 +103,11 @@ void checkNoteArray(presetType* preset) {
 			channel = 0;
 
 		curNote += preset->Transpose;
-		if (curNote < 0 || curNote > 127) //what is it?
+		if (curNote < 0 || curNote > 127)
 			return;
 
 		if (noteOn) {
-			uint16_t vel = getVelocity_on(duration, note_color(curNote));
+			uint16_t vel = getVelocity_on(duration, note_color(curKey));
 			//Send High Res Preffix
 			if (vel & 0x3F80) {
 				if (preset->HighResEnable) {

@@ -1443,20 +1443,20 @@ static void preset_show (const presetType *pr, file_list_type *pr_list) {
 
 	memset(line, ' ', HD44780_DISP_LENGTH);
 	memcpy(line, "Ch:", 3);
+	if (!USBdisk_active) {
+		if (pr->SplitActive) {
+			btoa_mem(pr->SplitChannel, line + 3);
 
-    if (pr->SplitActive) {
-    	btoa_mem(pr->SplitChannel, line + 3);
-
-    	memcpy(line + 5, "-", 1);
-	    len = note_name(pr->SplitKey, line + 6) + 6;
-	    memcpy(line + len, "-", 1);
-	    btoa_mem(pr->MidiChannel, line + len + 1);
-    } else {
-    	btoa_mem(pr->MidiChannel, line + 3);
-    }
-
-    hd44780_goto(2, 1);
-	hd44780_write_string(line);
+			memcpy(line + 5, "-", 1);
+			len = note_name(pr->SplitKey, line + 6) + 6;
+			memcpy(line + len, "-", 1);
+			btoa_mem(pr->MidiChannel, line + len + 1);
+		} else {
+			btoa_mem(pr->MidiChannel, line + 3);
+		}
+		hd44780_goto(2, 1);
+		hd44780_write_string(line);
+	}
 	if (!errIO)
 		if (pr_list->pos == pr_list->active) {
 			hd44780_goto(1, HD44780_DISP_LENGTH);

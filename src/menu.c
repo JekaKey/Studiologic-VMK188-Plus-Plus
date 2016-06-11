@@ -1442,8 +1442,8 @@ static void preset_show (const presetType *pr, file_list_type *pr_list) {
 	hd44780_write_string(line);
 
 	memset(line, ' ', HD44780_DISP_LENGTH);
-	memcpy(line, "Ch:", 3);
 	if (!USBdisk_active) {
+		memcpy(line, "Ch:", 3);
 		if (pr->SplitActive) {
 			btoa_mem(pr->SplitChannel, line + 3);
 
@@ -1454,9 +1454,9 @@ static void preset_show (const presetType *pr, file_list_type *pr_list) {
 		} else {
 			btoa_mem(pr->MidiChannel, line + 3);
 		}
-		hd44780_goto(2, 1);
-		hd44780_write_string(line);
 	}
+	hd44780_goto(2, 1);
+	hd44780_write_string(line);
 	if (!errIO)
 		if (pr_list->pos == pr_list->active) {
 			hd44780_goto(1, HD44780_DISP_LENGTH);

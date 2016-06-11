@@ -1457,11 +1457,11 @@ static void preset_show (const presetType *pr, file_list_type *pr_list) {
 
     hd44780_goto(2, 1);
 	hd44780_write_string(line);
-
-	if (pr_list->pos == pr_list->active) {
-		hd44780_goto(1, HD44780_DISP_LENGTH);
-		hd44780_write_char(MENU_CHECK_CHAR);
-	}
+	if (!errIO)
+		if (pr_list->pos == pr_list->active) {
+			hd44780_goto(1, HD44780_DISP_LENGTH);
+			hd44780_write_char(MENU_CHECK_CHAR);
+		}
 
 	octave_shift_show();
 }

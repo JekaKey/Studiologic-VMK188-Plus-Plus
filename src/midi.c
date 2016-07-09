@@ -118,7 +118,6 @@ void sendMidiData(void) {
 
 	test = FIFO_COUNT(midiMessagesArray);
 	if (test) {
- //       PRINTF("FIFO %d\n", test);
 		if ((USART1->SR & 0x00000040)) {
 			USART_SendData(USART1, FIFO_FRONT(midiMessagesArray));
 			FIFO_POP(midiMessagesArray);

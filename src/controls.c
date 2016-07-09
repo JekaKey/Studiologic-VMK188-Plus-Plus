@@ -649,7 +649,6 @@ void read_controls(Slider_type* sliders, Calibration_slider_type* cal) {
 		slider_number = mux3 + ADC_channel;
 		adc_res = median(&ADC_sourse[slider_number][0]);
 		ADC_value = median_filter(adc_res, &filter_storage[slider_number]); //big window median filter
-//		if (slider_number==SLIDER_R8) PRINTF("$%d %d;",adc_res, ADC_value);
 		switch (sliders_state) { // SLIDERS_WORK is for ordinary work, other values are for calibration only
 		case SLIDERS_WORK:
 			//Calculate change comparing with old value.

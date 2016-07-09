@@ -415,6 +415,7 @@ MAKE_MENU_YN(menuYN_preset_default, "Set as default?", 	preset_name_current_stat
 MAKE_MENU_YN(menuYN_preset_save, 	"Save preset?", 	menu_preset_save_yes, 			0,	menu_stor_save,	menu_back_to_preset);
 MAKE_MENU_YN(menuYN_preset_delete, 	"Delete preset?", 	menu_preset_delete_yes, 		0,	menu_stor_del,	menu_back_to_preset);
 
+
 MAKE_MENU_YN(menuYN_calibr_changes, "Save changes?", 	menu_calibration_save_yes, 		0,	NULL_ENTRY,		calibrationlist_start);
 MAKE_MENU_YN(menuYN_calibr_active, 	"Set active?", 		calibration_name_current_state,	0,	NULL_ENTRY,		calibrationlist_start);
 MAKE_MENU_YN(menuYN_calibr_save, 	"Save calibr.?", 	menu_calibration_save_yes, 		0,	menu_clb_save,	calibrationlist_start);
@@ -423,7 +424,7 @@ MAKE_MENU_YN(menuYN_calibr_delete, 	"Delete calibr.?", 	menu_calibration_delete_
 MAKE_MENU_YN(menuYN_curve_changes, 	"Save changes?", 	menu_curve_save_yes, 			0,	NULL_ENTRY,		curvelist_start);
 MAKE_MENU_YN(menuYN_curve_save, 	"Save curve?", 		menu_curve_save_yes, 			0,	menu3_item2,	curvelist_start);
 MAKE_MENU_YN(menuYN_curve_delete, 	"Delete curve?", 	menu_curve_delete_yes, 			0,	menu3_item5,	curvelist_start);
-MAKE_MENU_YN(menuYN_curve_load, 	"Load curve?", 		menu_curve_load_yes, 			0,	menu4_item1,	curvelist_start);
+MAKE_MENU_YN(menuYN_curve_load, 	"Load curve?", 		menu_curve_load_yes, 			0,	menu4_item1,	preset_curvelist_start);
 
 MAKE_MENU_YN(menuYN_USBdisk_on,    	"USB disk On?",		menu_USBdisk_on_yes,   			1,	menu1_item3,	menu_back_to_preset);
 MAKE_MENU_YN(menuYN_USBdisk_off,    "USB disk Off?",	menu_USBdisk_off_yes,  			1,	menu1_item3,	menu_back_to_preset);
@@ -529,7 +530,6 @@ static void toYNMenu() {
 			menu_back_to_preset();
 		return;
 	}
-
 	prev_state = I_state;
 	I_state = STATE_yn_menu;
 
@@ -537,12 +537,8 @@ static void toYNMenu() {
 }
 
 static void toYNMenu_noIO() {
-	//Example of using temp message.
-	//strcpy(temp_msg_1, "why it works?");
-	//send_message(MES_SHOW_TEMP_MSG);
 	prev_state = I_state;
 	I_state = STATE_yn_menu;
-
 	showYNMenu();
 }
 
@@ -927,7 +923,7 @@ static void menu_preset_edit_curve(void) {
 }
 
 static void menu_curve_export(void) {
-	if (!errIO)
+	if (errIO)
 		return;
 
 	text_object_init(&Text_Edit_object, "Curve name:", "", startMenuYN_curve_export);
@@ -935,7 +931,7 @@ static void menu_curve_export(void) {
 
 
 static void menu_curve_rename(void) {
-	if (!errIO)
+	if (errIO)
 		return;
 
 	char name[MAX_FNAME - FEXT_SIZE];
@@ -972,10 +968,12 @@ static void menu_curve_load_yes(void) {
 	char path[MAX_PATH] = "0:/" CURVE_DIR_NAME "/";
 	char file_name[MAX_FNAME];
 	strcpy(file_name, curves_list.names[curves_list.pos]);
-    strcat(file_name, CURVE_EXT);
     strcat(path, file_name);
     if (curve_load(file_name, &Preset.Curve) != FIO_OK)
     	set_errIO(ERRIO_CURVELOAD);
+    else
+       showTempMessage("Curve was loaded", "successfully");
+    PRINTF("menu_curve_load_yes, path=%s, errIO=%d\n",file_name, errIO);
 }
 
 static void menu_curve_delete_yes(void) {
@@ -1736,8 +1734,8 @@ static void preset_curves_button_handler(uint8_t button) {
 		curves_list.pos--;
 		if (curves_list.pos == 0xFFFF)
 			curves_list.pos = curves_list.num - 1;
-		if (curve_load(curves_list.names[curves_list.pos], &(Preset.Curve)) != FIO_OK)
-			set_errIO(ERRIO_CURVELOAD);
+//		if ((curves_list.names[curves_list.pos], &(Preset.Curve)) != FIO_OK)
+//			set_errIO(ERRIO_CURVELOAD);
 		show_curve(&curves_list);
 		break;
 	case ENCODER_RIGHT1:
@@ -1747,8 +1745,8 @@ static void preset_curves_button_handler(uint8_t button) {
 		curves_list.pos++;
 		if (curves_list.pos >= curves_list.num)
 			curves_list.pos = 0;
-		if (curve_load(curves_list.names[curves_list.pos], &(Preset.Curve)) != FIO_OK)
-			set_errIO(ERRIO_CURVELOAD);
+//		if (curve_load(curves_list.names[curves_list.pos], &(Preset.Curve)) != FIO_OK)
+//			set_errIO(ERRIO_CURVELOAD);
 		show_curve(&curves_list);
 		break;
 	case BUTTON_STORAGE:

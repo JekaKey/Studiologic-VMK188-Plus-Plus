@@ -26,18 +26,18 @@ difference in their mechanical behaviour.
 
 /*Definitions of the  values bounding the range where X-values can be changed*/
 #define CURVE_X_FACTOR 100
-#define MIN_XW1 10 * CURVE_X_FACTOR
-#define MAX_XW1 60 * CURVE_X_FACTOR
-#define MIN_XW2 90 * CURVE_X_FACTOR
-#define MAX_XW2 200 * CURVE_X_FACTOR
-#define MIN_XW3 700 * CURVE_X_FACTOR
-#define MAX_XW3 1400 * CURVE_X_FACTOR
-#define MIN_XB1 10 * CURVE_X_FACTOR
-#define MAX_XB1 60 * CURVE_X_FACTOR
-#define MIN_XB2 90 * CURVE_X_FACTOR
-#define MAX_XB2 200 * CURVE_X_FACTOR
-#define MIN_XB3 700 * CURVE_X_FACTOR
-#define MAX_XB3 1400 * CURVE_X_FACTOR
+#define MIN_XW1 8 * CURVE_X_FACTOR
+//#define MAX_XW1 60 * CURVE_X_FACTOR
+//#define MIN_XW2 90 * CURVE_X_FACTOR
+//#define MAX_XW2 200 * CURVE_X_FACTOR
+//#define MIN_XW3 700 * CURVE_X_FACTOR
+#define MAX_XW3 2500 * CURVE_X_FACTOR
+#define MIN_XB1 8 * CURVE_X_FACTOR
+//#define MAX_XB1 60 * CURVE_X_FACTOR
+//#define MIN_XB2 90 * CURVE_X_FACTOR
+//#define MAX_XB2 200 * CURVE_X_FACTOR
+//#define MIN_XB3 700 * CURVE_X_FACTOR
+#define MAX_XB3 2500 * CURVE_X_FACTOR
 
 /**********************************************/
 typedef struct {

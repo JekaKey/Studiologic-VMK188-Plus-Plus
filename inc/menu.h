@@ -73,6 +73,7 @@ typedef struct {
 #define MENU_MIN        (selectedMenuItem->Min)
 #define MENU_MAX        (selectedMenuItem->Max)
 
+#define EDIT_CURVE_GAP 2000
 
 
 
@@ -110,16 +111,15 @@ typedef struct {
 	void (*onComplete)(void);
 } text_edit_object_t;
 
-typedef struct {
-	uint32_t * value;
-    uint32_t min;
-    uint32_t max;
-} curve_edit_item_t;
 
 typedef struct {
 	int8_t pos;
+    int32_t minw;
+    int32_t maxw;
+    int32_t minb;
+    int32_t maxb;
 	curve_points_type * Curve;
-	curve_edit_item_t item[6];
+	uint32_t *value[6];
 } curve_edit_object_t;
 
 typedef struct {

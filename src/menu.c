@@ -58,13 +58,8 @@ extern sliders_state_t sliders_state;
 extern calibrationType Calibration;
 extern curve_points_type Curve;
 
-static curve_edit_object_t Curve_Edit_object[6]={{0, &Curve, //Initialization of bounds for white and black curves points
-		{{NULL, MIN_XW1, MAX_XW1},
-		{NULL, MIN_XW2, MAX_XW2},
-		{NULL, MIN_XW3, MAX_XW3},
-		{NULL, MIN_XB1, MAX_XB1},
-		{NULL, MIN_XB2, MAX_XB2},
-		{NULL, MIN_XB3, MAX_XB3}}}};
+
+static curve_edit_object_t Curve_Edit_object={0, MIN_XW1, MAX_XW3, MIN_XB1, MAX_XB3, &Curve, {NULL,NULL,NULL,NULL,NULL,NULL}}; //Initialization of bounds for white and black curves points
 
 
 uint8_t menuChange(menuItem_type* NewMenu) {
@@ -901,23 +896,24 @@ static void menu_calibration_delete_yes(void){
 static void curve_editor_init(curve_edit_object_t  * C_object, curve_points_type * curve){ //Initialize pointers to Curve_points structure elements
 	C_object->pos = 0;
 	C_object->Curve = curve;
-	C_object->item[0].value = &(curve->xw1);
-	C_object->item[1].value = &(curve->xw2);
-	C_object->item[2].value = &(curve->xw3);
-	C_object->item[3].value = &(curve->xb1);
-	C_object->item[4].value = &(curve->xb2);
-	C_object->item[5].value = &(curve->xb3);
+	C_object->value[0] = &(curve->xw1);
+	C_object->value[1] = &(curve->xw2);
+	C_object->value[2] = &(curve->xw3);
+	C_object->value[3] = &(curve->xb1);
+	C_object->value[4] = &(curve->xb2);
+	C_object->value[5] = &(curve->xb3);
 }
 
 
 static void menu_edit_curve(void) {
-    curve_editor_init(Curve_Edit_object, &Curve);
+    curve_editor_init(&Curve_Edit_object, &Curve);
+	calculate_velocity_formula(&Curve);
 	I_state = STATE_curve_edit;
 	send_message(MES_REDRAW);
 }
 
 static void menu_preset_edit_curve(void) {
-    curve_editor_init(Curve_Edit_object, &(Preset.Curve));
+    curve_editor_init(&Curve_Edit_object, &(Preset.Curve));
 	I_state = STATE_preset_curve_edit;
 	send_message(MES_REDRAW);
 }
@@ -1829,8 +1825,10 @@ static void curves_button_handler(uint8_t button) {
 
 static void curve_editor_value_draw(curve_edit_object_t* C_object, uint8_t i) {
 	uint16_t n;
-	char s[10];
-	n = (uint16_t)((*(C_object->item[i].value))/CURVE_X_FACTOR);
+	char s[10]="    ";
+	hd44780_goto(curve_xy[i].y, curve_xy[i].x);
+	hd44780_write_string(s);
+	n = (uint16_t)(*(C_object->value[i])/CURVE_X_FACTOR);
 	uint16toa(n, s);
 	string_number_format(s,curve_xy[i].n);
 	hd44780_goto(curve_xy[i].y, curve_xy[i].x);
@@ -1863,14 +1861,44 @@ static void curve_editor_change_pos(curve_edit_object_t* C_object, int8_t n) {
 
 static void curves_editor_change_value(curve_edit_object_t* C_object, int32_t change) {
 	uint8_t pos = C_object->pos;
-	uint32_t value = *(C_object->item[pos].value) + change;
-	uint32_t max = C_object->item[pos].max;
-	uint32_t min = C_object->item[pos].min;
+	int32_t value = *(C_object->value[pos]) + change;
+	int32_t max=0;
+	int32_t min=0;
+	switch (pos){
+	case 0:
+		min = C_object->minw;
+		max = *(C_object->value[1])-EDIT_CURVE_GAP;
+		if (max>99900)
+			max=99900;
+		break;
+	case 1:
+		min = *(C_object->value[0])+EDIT_CURVE_GAP;
+		max = *(C_object->value[2])-EDIT_CURVE_GAP;
+		break;
+	case 2:
+		min = *(C_object->value[1])+EDIT_CURVE_GAP;;
+		max = C_object->maxw;
+		break;
+	case 3:
+		min = C_object->minb;
+		max = *(C_object->value[4])-EDIT_CURVE_GAP;
+		if (max>99900)
+			max=99900;
+		break;
+	case 4:
+		min = *(C_object->value[3])+EDIT_CURVE_GAP;;
+		max = *(C_object->value[5])-EDIT_CURVE_GAP;
+		break;
+	case 5:
+		min = *(C_object->value[4])+EDIT_CURVE_GAP;;
+		max = C_object->maxb;
+		break;
+	}
 	if (value > max)
 		value = max;
 	else if (value < min)
 		value = min;
-	*(C_object->item[pos].value) = value;
+	*(C_object->value[pos]) = value;
 	curve_editor_value_draw(C_object, pos);
 	hd44780_goto(curve_xy[pos].y, curve_xy[pos].x);
 	calculate_velocity_formula(C_object->Curve);
@@ -1879,31 +1907,31 @@ static void curves_editor_change_value(curve_edit_object_t* C_object, int32_t ch
 static void curves_editor_button_handler(uint8_t button) {
 	switch (button) {
 	case MES_REDRAW:
-		curve_editor_draw(Curve_Edit_object);
+		curve_editor_draw(&Curve_Edit_object);
 		break;
 	case ENCODER_LEFT1:
-		curves_editor_change_value(Curve_Edit_object, -1 * CURVE_X_FACTOR);
+		curves_editor_change_value(&Curve_Edit_object, -1 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_LEFT2:
-		curves_editor_change_value(Curve_Edit_object, -10 * CURVE_X_FACTOR);
+		curves_editor_change_value(&Curve_Edit_object, -10 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_LEFT3:
-		curves_editor_change_value(Curve_Edit_object, -50 * CURVE_X_FACTOR);
+		curves_editor_change_value(&Curve_Edit_object, -50 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_RIGHT1:
-		curves_editor_change_value(Curve_Edit_object, 1 * CURVE_X_FACTOR);
+		curves_editor_change_value(&Curve_Edit_object, 1 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_RIGHT2:
-		curves_editor_change_value(Curve_Edit_object, 10 * CURVE_X_FACTOR);
+		curves_editor_change_value(&Curve_Edit_object, 10 * CURVE_X_FACTOR);
 		break;
 	case ENCODER_RIGHT3:
-		curves_editor_change_value(Curve_Edit_object, 50 * CURVE_X_FACTOR);
+		curves_editor_change_value(&Curve_Edit_object, 50 * CURVE_X_FACTOR);
 		break;
 	case BUTTON_PAGEDOWN:
-		curve_editor_change_pos(Curve_Edit_object, 1);
+		curve_editor_change_pos(&Curve_Edit_object, 1);
 		break;
 	case BUTTON_PAGEUP:
-		curve_editor_change_pos(Curve_Edit_object, -1);
+		curve_editor_change_pos(&Curve_Edit_object, -1);
 		break;
 	case BUTTON_STORAGE:
 		break;

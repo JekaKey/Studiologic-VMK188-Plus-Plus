@@ -207,6 +207,7 @@ FIO_status preset_delete(file_list_type *pr_list);
 FIO_status preset_save(const char* name, presetType* preset );
 FIO_status preset_save_current(void);
 
+FIO_status reload_curve_list(void);
 FIO_status curve_load(char* name, curve_points_type  *curve);
 FIO_status curve_delete(file_list_type *cur_list);
 FIO_status curve_rename(file_list_type *cur_list, char *new_name);

@@ -937,6 +937,12 @@ FIO_status start_load_curve_list(void) {
     return FIO_OK;
 }
 
+FIO_status reload_curve_list(void) {
+	SDFS_status_type res = SDFS_scandir("0:/" CURVE_DIR_NAME, &curves_list);
+    return FIO_OK;
+}
+
+
 static void init_preset_list(void){
 	presets_list.active=0; //Position of an active item
 	presets_list.num = 1; //Number of items in a file list

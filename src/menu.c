@@ -2040,7 +2040,7 @@ static void menu_back_to_preset(void) {
 static void curvelist_start(void) {
 	if (errIO)
 		return;
-
+	reload_curve_list();
     I_state = STATE_curve_list;
     send_message(MES_REDRAW);
 }
@@ -2048,7 +2048,7 @@ static void curvelist_start(void) {
 static void preset_curvelist_start(void) {
 	if (errIO)
 		return;
-
+	reload_curve_list();
     I_state = STATE_preset_curve_list;
     send_message(MES_REDRAW);
 }

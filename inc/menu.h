@@ -114,10 +114,8 @@ typedef struct {
 
 typedef struct {
 	int8_t pos;
-    int32_t minw;
-    int32_t maxw;
-    int32_t minb;
-    int32_t maxb;
+    int32_t min;
+    int32_t max;
 	curve_points_type * Curve;
 	uint32_t *value[6];
 } curve_edit_object_t;

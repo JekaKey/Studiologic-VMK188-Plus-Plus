@@ -59,7 +59,7 @@ extern calibrationType Calibration;
 extern curve_points_type Curve;
 
 
-static curve_edit_object_t Curve_Edit_object={0, MIN_XW1, MAX_XW3, MIN_XB1, MAX_XB3, &Curve, {NULL,NULL,NULL,NULL,NULL,NULL}}; //Initialization of bounds for white and black curves points
+static curve_edit_object_t Curve_Edit_object={0, MIN_XW1, MAX_XW3, NULL, {NULL,NULL,NULL,NULL,NULL,NULL}}; //Initialization of bounds for white and black curves points
 
 
 uint8_t menuChange(menuItem_type* NewMenu) {
@@ -892,6 +892,71 @@ static void menu_calibration_delete_yes(void){
 }
 
 
+
+/*calculate x of point on a strate line from point (x1,y1) to point (x2,y2) for certain y*/
+static int32_t point_x_on_line(int32_t y, int32_t x1, int32_t y1, int32_t x2, int32_t y2){
+//	return (y*(x2-x1)-y1*x2+y2*x1)/(y2-y1);
+	int32_t ret = (y-y1)*(x2-x1)/(y2-y1)+x1;
+	return ret;
+}
+
+/*Calculate range for curve editor*/
+static void calculate_min_max(curve_edit_object_t* C_object, int8_t pos){
+	int32_t tmp;
+	curve_points_type* curve = C_object->Curve;
+	switch (pos){
+	case 0:
+		C_object->min=MIN_XW1;
+		C_object->max = curve->xw2 -EDIT_CURVE_GAP;
+		if (C_object->max>99900)
+			C_object->max=99900;
+		break;
+	case 1:
+		C_object->min = curve->xw1+EDIT_CURVE_GAP;
+		tmp=point_x_on_line(curve->yw2, curve->xw1, curve->yw1, curve->xw3, curve->yw3);
+		if (tmp>=curve->xw3)
+		    C_object->max = tmp-EDIT_CURVE_GAP;
+		else {
+		    C_object->max = curve->xw3-EDIT_CURVE_GAP;
+		}
+		break;
+	case 2:
+		tmp = point_x_on_line(curve->yw3, curve->xw1, curve->yw1, curve->xw2, curve->yw2);
+		if (tmp<=curve->xw2)
+		    C_object->min = tmp+EDIT_CURVE_GAP;
+		else {
+		    C_object->min = curve->xw2+EDIT_CURVE_GAP;
+		}
+		C_object->max = MAX_XW3;
+		break;
+	case 3:
+		C_object->min=MIN_XB1;
+		C_object->max = curve->xb2 -EDIT_CURVE_GAP;
+		if (C_object->max>99900)
+			C_object->max=99900;
+		break;
+	case 4:
+		C_object->min = curve->xb1+EDIT_CURVE_GAP;
+		tmp=point_x_on_line(curve->yb2, curve->xb1, curve->yb1, curve->xb3, curve->yb3);
+		if (tmp>=curve->xb3)
+		    C_object->max = tmp-EDIT_CURVE_GAP;
+		else {
+		    C_object->max = curve->xb3-EDIT_CURVE_GAP;
+		}
+		break;
+	case 5:
+		tmp = point_x_on_line(curve->yb3, curve->xb1, curve->yb1, curve->xb2, curve->yb2);
+		if (tmp<=curve->xb2)
+		    C_object->min = tmp+EDIT_CURVE_GAP;
+		else {
+		    C_object->min = curve->xb2+EDIT_CURVE_GAP;
+		}
+		C_object->max = MAX_XB3;
+		break;
+	}
+}
+
+
 /*Initialize pointers to Curve_points structure elements*/
 static void curve_editor_init(curve_edit_object_t  * C_object, curve_points_type * curve){ //Initialize pointers to Curve_points structure elements
 	C_object->pos = 0;
@@ -902,6 +967,7 @@ static void curve_editor_init(curve_edit_object_t  * C_object, curve_points_type
 	C_object->value[3] = &(curve->xb1);
 	C_object->value[4] = &(curve->xb2);
 	C_object->value[5] = &(curve->xb3);
+	calculate_min_max(C_object, 0);
 }
 
 
@@ -1849,6 +1915,8 @@ static void curve_editor_draw(curve_edit_object_t* C_object) {
 	menu_cursor_draw(&Menu_Cursor, curve_xy[C_object->pos].y, curve_xy[C_object->pos].x - 1);
 }
 
+
+
 static void curve_editor_change_pos(curve_edit_object_t* C_object, int8_t n) {
 	int8_t pos = C_object->pos + n;
 	if (pos > 5)
@@ -1857,43 +1925,16 @@ static void curve_editor_change_pos(curve_edit_object_t* C_object, int8_t n) {
 		pos = pos + 6;
 	menu_cursor_draw(&Menu_Cursor, curve_xy[pos].y, curve_xy[pos].x - 1);
 	C_object->pos = pos;
+	calculate_min_max(C_object, pos);
 }
+
+
 
 static void curves_editor_change_value(curve_edit_object_t* C_object, int32_t change) {
 	uint8_t pos = C_object->pos;
 	int32_t value = *(C_object->value[pos]) + change;
-	int32_t max=0;
-	int32_t min=0;
-	switch (pos){
-	case 0:
-		min = C_object->minw;
-		max = *(C_object->value[1])-EDIT_CURVE_GAP;
-		if (max>99900)
-			max=99900;
-		break;
-	case 1:
-		min = *(C_object->value[0])+EDIT_CURVE_GAP;
-		max = *(C_object->value[2])-EDIT_CURVE_GAP;
-		break;
-	case 2:
-		min = *(C_object->value[1])+EDIT_CURVE_GAP;;
-		max = C_object->maxw;
-		break;
-	case 3:
-		min = C_object->minb;
-		max = *(C_object->value[4])-EDIT_CURVE_GAP;
-		if (max>99900)
-			max=99900;
-		break;
-	case 4:
-		min = *(C_object->value[3])+EDIT_CURVE_GAP;;
-		max = *(C_object->value[5])-EDIT_CURVE_GAP;
-		break;
-	case 5:
-		min = *(C_object->value[4])+EDIT_CURVE_GAP;;
-		max = C_object->maxb;
-		break;
-	}
+	int32_t max=C_object->max;
+	int32_t min=C_object->min;
 	if (value > max)
 		value = max;
 	else if (value < min)

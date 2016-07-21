@@ -1033,9 +1033,10 @@ static void menu_curve_load_yes(void) {
     strcat(path, file_name);
     if (curve_load(file_name, &Preset.Curve) != FIO_OK)
     	set_errIO(ERRIO_CURVELOAD);
-    else
+    else{
+       calculate_velocity_formula(&Preset.Curve);
        showTempMessage("Curve was loaded", "successfully");
-    PRINTF("menu_curve_load_yes, path=%s, errIO=%d\n",file_name, errIO);
+    }
 }
 
 static void menu_curve_delete_yes(void) {

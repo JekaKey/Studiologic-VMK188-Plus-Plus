@@ -131,7 +131,7 @@
 #define hd44780_init_delay2()           delayms( 5 )
 #define hd44780_init_delay3()           delayms( 1 )
 #ifdef WS0010
-#define hd44780_init_end_delay()        delay( 6000 )
+#define hd44780_init_end_delay()        delay( 9000 )
 #else
 #define hd44780_init_end_delay()        delayms( 1 )
 #endif

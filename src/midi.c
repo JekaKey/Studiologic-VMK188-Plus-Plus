@@ -131,6 +131,7 @@ void receiveMidiData(void) {
 
 		uint32_t midipacket;
 		uint32_t midiMessage = FIFO_FRONT(midi_usb_in);
+		PRINTF("MIDI: %lu\n", midiMessage);
 
 		//add only sysex messages into sysexArray
 		if ((midiMessage & 0xF) == 0x4) {

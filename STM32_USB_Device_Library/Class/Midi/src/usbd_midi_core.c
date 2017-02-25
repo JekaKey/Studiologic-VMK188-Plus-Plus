@@ -204,7 +204,6 @@ uint8_t USBD_MIDI_EP0_RxReady(void *pdev) {
 
 uint8_t USBD_MIDI_DataIn(void *pdev, uint8_t epnum) {
 	DCD_EP_Flush((USB_OTG_CORE_HANDLE *) pdev, MIDI_IN_EP);
-	USB_Tx_State = 0;
 	return USBD_OK;
 }
 

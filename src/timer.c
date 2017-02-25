@@ -9,6 +9,7 @@
 #include "midi.h"
 #include "presets.h"
 #include "keyboardscan.h"
+#include "usb_midi_io.h"
 
 
 void TIM4_init(void){
@@ -36,10 +37,17 @@ void TIM4_init(void){
 }
 
 
+static uint32_t USB_counter=0;
+
 void TIM4_IRQHandler() {
 
 	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET) {
 		readKeyState();
+		USB_counter++;
+		if (USB_counter>1000/TIMER_TIMPERIOD){
+			   usb_midi_refresh();
+			   USB_counter=0;
+		}
 		read_controls(Preset.sliders, Calibration.calibr);
 		read_buttons_state();
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);

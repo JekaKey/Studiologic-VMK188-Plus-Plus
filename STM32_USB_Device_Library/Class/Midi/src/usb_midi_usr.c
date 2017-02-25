@@ -1,6 +1,7 @@
 #include "usbd_usr.h"
 #include "usbd_ioreq.h"
 #include "usb_midi_usr.h"
+#include "usb_midi_io.h"
 
 
 USBD_Usr_cb_TypeDef MS_Usr_cb =
@@ -45,6 +46,7 @@ void USBD_USR_DeviceReset(uint8_t speed )
 */
 void USBD_USR_DeviceConfigured (void)
 {
+	USB_MIDI_ChangeConnectionState(1);
 }
 
 
@@ -67,6 +69,7 @@ void USBD_USR_DeviceConnected (void)
 */
 void USBD_USR_DeviceDisconnected (void)
 {
+	USB_MIDI_ChangeConnectionState(0);
 }
 
 /**

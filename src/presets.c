@@ -481,15 +481,15 @@ static json_attr_t preset_curve_attr[] ={
 
 
 static json_attr_t preset_attr[21] = {
-		{ATTR_CHANNEL, t_uint8,},
-		{ATTR_SPLIT,t_object, .addr.object = split_attr},
-		{ATTR_HIRES, t_uint8,},
-		{ATTR_ANALOGMIDI, t_uint8,},
-		{ATTR_SLOWKEYSOUND, t_uint8,},
-		{ATTR_NOTEOFFDELAY1, t_uint16,},
-		{ATTR_NOTEOFFDELAY127, t_uint16,},
-		{ATTR_TRANSPOSE, t_int8,},
-		{ATTR_OCTAVE, t_int8,},
+		{ATTR_CHANNEL, t_uint8,},							//0
+		{ATTR_SPLIT,t_object, .addr.object = split_attr},	//1
+		{ATTR_HIRES, t_uint8,},								//2
+		{ATTR_ANALOGMIDI, t_uint8,},						//3
+		{ATTR_SLOWKEYSOUND, t_uint8,},						//4
+		{ATTR_NOTEOFFDELAY1, t_uint16,},					//5
+		{ATTR_NOTEOFFDELAY127, t_uint16,},					//6
+		{ATTR_TRANSPOSE, t_int8,},							//7
+		{ATTR_OCTAVE, t_int8,},								//8
 		{ATTR_CURVE, t_object, .addr.object = preset_curve_attr},
 		{ATTR_PI, t_object, .addr.object = &pitch_attr},
 		{ATTR_AT, t_object, .addr.object = &at_attr},

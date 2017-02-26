@@ -1099,7 +1099,7 @@ static void menu_slider_edit(void){
 static void menu_slider_enter(void) {
 	sliders_state = SLIDERS_WORK;
 	controlLED1on(0);
-
+	/*For sliders menu items "Min" parameter is used for slider number keeping*/
 	uint8_t num = selectedMenuItem->Min;
 	slider_calibrate_number = num;
 

@@ -454,13 +454,10 @@ static json_attr_t buttons_param_attr[BUTTONS_AMOUNT+1][7];
 static json_attr_t buttons_attr[BUTTONS_AMOUNT+1];
 
 static json_attr_t pitch_param_attr[3];
-static json_attr_t pitch_attr;
 
 static json_attr_t mod_param_attr[7];
-static json_attr_t mod_attr;
 
 static json_attr_t at_param_attr[5];
-static json_attr_t at_attr;
 
 
 static json_attr_t preset_curve_attr[] ={
@@ -491,9 +488,9 @@ static json_attr_t preset_attr[21] = {
 		{ATTR_TRANSPOSE, t_int8,},							//7
 		{ATTR_OCTAVE, t_int8,},								//8
 		{ATTR_CURVE, t_object, .addr.object = preset_curve_attr},
-		{ATTR_PI, t_object, .addr.object = &pitch_attr},
-		{ATTR_AT, t_object, .addr.object = &at_attr},
-		{ATTR_MO, t_object, .addr.object = &mod_attr},
+		{ATTR_PI, t_object, .addr.object = pitch_param_attr},
+		{ATTR_AT, t_object, .addr.object = at_param_attr},
+		{ATTR_MO, t_object, .addr.object = mod_param_attr},
 		{ATTR_PEDALS, t_object, .addr.object = pedals_attr},
 		{ATTR_SLIDERS, t_object, .addr.object = sliders_attr},
 		{ATTR_KNOBS, t_object, .addr.object = knobs_attr},
@@ -545,14 +542,11 @@ static void init_json_preset_attr(presetType *preset) {
 	split_attr[3].addr.int8 = &(preset->SplitOctShift);
 
 	/* Assign pitch attribite*/
-	strcpy(pitch_attr.attribute, slider_names[SLIDER_PITCH]);
-	pitch_attr.type = t_object;
-	pitch_attr.addr.object = pitch_param_attr;
 	strcpy(pitch_param_attr[0].attribute, ATTR_S_ACTIVE);
 	pitch_param_attr[0].addr.uint8 = &(preset->sliders[SLIDER_PITCH].active);
 	strcpy(pitch_param_attr[1].attribute, ATTR_S_CHANNEL);
 	pitch_param_attr[1].addr.uint8 = &(preset->sliders[SLIDER_PITCH].channel);
-	for (int j = 0; j < 2; j++) {
+	for (uint8_t j = 0; j < 2; j++) {
 		pitch_param_attr[j].type = t_uint8;
 	}
 	pitch_param_attr[2].attribute[0] = 0;
@@ -561,9 +555,6 @@ static void init_json_preset_attr(presetType *preset) {
 
 
     /* Assign mod attribite*/
-	strcpy(mod_attr.attribute, slider_names[SLIDER_MOD]);
-	mod_attr.type = t_object;
-	mod_attr.addr.object = mod_param_attr;
 	strcpy(mod_param_attr[0].attribute, ATTR_S_ACTIVE);
 	mod_param_attr[0].addr.uint8 = &(preset->sliders[SLIDER_MOD].active);
 	strcpy(mod_param_attr[1].attribute, ATTR_S_REVERSE);
@@ -576,16 +567,13 @@ static void init_json_preset_attr(presetType *preset) {
 	mod_param_attr[4].addr.uint16 = &(preset->sliders[SLIDER_MOD].min_out_value);
 	strcpy(mod_param_attr[5].attribute, ATTR_S_MAX);
 	mod_param_attr[5].addr.uint16 = &(preset->sliders[SLIDER_MOD].max_out_value);
-	for (int j = 0; j < 6; j++) {
+	for (uint8_t j = 0; j < 6; j++) {
 		mod_param_attr[j].type = t_uint8;
 	}
 	mod_param_attr[6].attribute[0]=0;
     /*****/
 
 	/* Assign at attribite*/
-	strcpy(at_attr.attribute, slider_names[SLIDER_AT]);
-	at_attr.type = t_object;
-	at_attr.addr.object = at_param_attr;
 	strcpy(at_param_attr[0].attribute, ATTR_S_ACTIVE);
 	at_param_attr[0].addr.uint8 = &(preset->sliders[SLIDER_AT].active);
 	strcpy(at_param_attr[1].attribute, ATTR_S_CHANNEL);
@@ -594,7 +582,7 @@ static void init_json_preset_attr(presetType *preset) {
 	at_param_attr[2].addr.uint16 = &(preset->sliders[SLIDER_AT].min_out_value);
 	strcpy(at_param_attr[3].attribute, ATTR_S_MAX);
 	at_param_attr[3].addr.uint16 = &(preset->sliders[SLIDER_AT].max_out_value);
-	for (int j = 0; j < 4; j++) {
+	for (uint8_t j = 0; j < 4; j++) {
 		at_param_attr[j].type = t_uint8;
 	}
 	at_param_attr[4].attribute[0] = 0;
@@ -602,7 +590,7 @@ static void init_json_preset_attr(presetType *preset) {
 
 
 	/*Assign pedals addresses and attributes*/
-	for (int i = 0; i < PEDALS_N; i++) {
+	for (uint8_t i = 0; i < PEDALS_N; i++) {
 		strcpy(pedals_attr[i].attribute, slider_names[pedalsN[i]]);
 		pedals_attr[i].type = t_object;
 		pedals_attr[i].addr.object = pedals_param_attr[i];
@@ -620,7 +608,7 @@ static void init_json_preset_attr(presetType *preset) {
 		pedals_param_attr[i][5].addr.uint16 = &(preset->sliders[pedalsN[i]].min_out_value);
 		strcpy(pedals_param_attr[i][6].attribute, ATTR_S_MAX);
 		pedals_param_attr[i][6].addr.uint16 = &(preset->sliders[pedalsN[i]].max_out_value);
-		for (int j = 0; j < 7; j++) {
+		for (uint8_t j = 0; j < 7; j++) {
 			pedals_param_attr[i][j].type = t_uint8;
 		}
 		pedals_param_attr[i][7].attribute[0]=0;
@@ -628,7 +616,7 @@ static void init_json_preset_attr(presetType *preset) {
 	pedals_attr[PEDALS_N].attribute[0]=0;
 
 	/*Assign sliders addresses and attributes*/
-	for (int i = 0; i < SLIDERS_N; i++) {
+	for (uint8_t i = 0; i < SLIDERS_N; i++) {
 		strcpy(sliders_attr[i].attribute, slider_names[slidersN[i]]);
 		sliders_attr[i].type = t_object;
 		sliders_attr[i].addr.object = sliders_param_attr[i];
@@ -644,7 +632,7 @@ static void init_json_preset_attr(presetType *preset) {
 		sliders_param_attr[i][4].addr.uint16 = &(preset->sliders[slidersN[i]].min_out_value);
 		strcpy(sliders_param_attr[i][5].attribute, ATTR_S_MAX);
 		sliders_param_attr[i][5].addr.uint16 = &(preset->sliders[slidersN[i]].max_out_value);
-		for (int j = 0; j < 6; j++) {
+		for (uint8_t j = 0; j < 6; j++) {
 			sliders_param_attr[i][j].type = t_uint8;
 		}
 		sliders_param_attr[i][6].attribute[0]=0;
@@ -652,7 +640,7 @@ static void init_json_preset_attr(presetType *preset) {
 	sliders_attr[SLIDERS_N].attribute[0]=0;
 
 	/*Assign knobs addresses and attributes*/
-	for (int i = 0; i < KNOBS_N; i++) {
+	for (uint8_t i = 0; i < KNOBS_N; i++) {
 		strcpy(knobs_attr[i].attribute, slider_names[knobsN[i]]);
 		knobs_attr[i].type = t_object;
 		knobs_attr[i].addr.object = knobs_param_attr[i];
@@ -668,7 +656,7 @@ static void init_json_preset_attr(presetType *preset) {
 		knobs_param_attr[i][4].addr.uint16 = &(preset->sliders[knobsN[i]].min_out_value);
 		strcpy(knobs_param_attr[i][5].attribute, ATTR_S_MAX);
 		knobs_param_attr[i][5].addr.uint16 = &(preset->sliders[knobsN[i]].max_out_value);
-		for (int j = 0; j < 6; j++) {
+		for (uint8_t j = 0; j < 6; j++) {
 			knobs_param_attr[i][j].type = t_uint8;
 		}
 		knobs_param_attr[i][6].attribute[0]=0;
@@ -677,7 +665,7 @@ static void init_json_preset_attr(presetType *preset) {
 
 
 	/*Assign buttons addresses and attributes*/
-	for (int i = 0; i < BUTTONS_AMOUNT; i++) {
+	for (uint8_t i = 0; i < BUTTONS_AMOUNT; i++) {
 		strcpy(buttons_attr[i].attribute, button_names[i]);
 		buttons_attr[i].type = t_object;
 		buttons_attr[i].addr.object = buttons_param_attr[i];
@@ -693,7 +681,7 @@ static void init_json_preset_attr(presetType *preset) {
 		buttons_param_attr[i][4].addr.uint8 = &(preset->buttons[i].on);
 		strcpy(buttons_param_attr[i][5].attribute, ATTR_B_OFF);
 		buttons_param_attr[i][5].addr.uint8 = &(preset->buttons[i].off);
-		for (int j = 0; j < 6; j++) {
+		for (uint8_t j = 0; j < 6; j++) {
 			buttons_param_attr[i][j].type = t_uint8;
 		}
 		buttons_param_attr[i][6].attribute[0]=0;
@@ -715,7 +703,7 @@ static void init_json_preset_attr(presetType *preset) {
 }
 	/*Assign calibration addresses and attributes*/
 static void init_json_calibr_attr(calibrationType *cal) {
-	for (int i = 0; i < SLIDERS_AMOUNT; i++){
+	for (uint8_t i = 0; i < SLIDERS_AMOUNT; i++){
 		strcpy(calibr_sliders_attr[i].attribute, slider_names[i]);
 		calibr_sliders_attr[i].type = t_object;
 		calibr_sliders_attr[i].addr.object = calibr_sliders_param_attr[i];
@@ -729,7 +717,7 @@ static void init_json_calibr_attr(calibrationType *cal) {
 		calibr_sliders_param_attr[i][3].addr.uint8 = &(cal->calibr[i].dead);
 		strcpy(calibr_sliders_param_attr[i][4].attribute, ATTR_CAL_S_GAP);
 		calibr_sliders_param_attr[i][4].addr.uint8 = &(cal->calibr[i].gap);
-		for (int j = 0; j < 3; j++) {
+		for (uint8_t j = 0; j < 3; j++) {
 			calibr_sliders_param_attr[i][j].type = t_uint16;
 		}
 		calibr_sliders_param_attr[i][3].type = t_uint8;
@@ -827,6 +815,7 @@ FIO_status curve_load(char* name, curve_points_type  *curve) {
 	curve->Crc = getCRC(curve, sizeof(curve_points_type));
     return status;
 }
+
 
 
 FIO_status preset_load(char* name, presetType* pr) {

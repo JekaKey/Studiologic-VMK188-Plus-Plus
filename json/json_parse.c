@@ -9,11 +9,10 @@
 static int token_number=0;
 
 
-
 parse_result_t tokens_parse(const char * buff, const jsmntok_t* tok,
 		const json_attr_t* json_attr, const uint8_t level) {
 
-	int j;
+	uint8_t j;
 	uint8_t found;
 	json_type j_type;
 	static char st[32];
@@ -27,7 +26,6 @@ parse_result_t tokens_parse(const char * buff, const jsmntok_t* tok,
 		return parse_not_object_err; //Start token must be object
 	}
 	uint16_t size = tok[token_number].size/2;
-
 	token_number++;
 	for (int i = 0; i < size; i ++) {
 		found = 0;
@@ -51,8 +49,7 @@ parse_result_t tokens_parse(const char * buff, const jsmntok_t* tok,
             if(tok[token_number].type!=JSMN_OBJECT){
             	return parse_wrong_type;
             }
-			parse_result_t par_result = tokens_parse(buff, tok,
-					json_attr[j].addr.object, level + 1);
+			parse_result_t par_result = tokens_parse(buff, tok, json_attr[j].addr.object, level + 1);
 			if (par_result != parse_ok)
 				return par_result;
 		} else {
@@ -70,17 +67,17 @@ parse_result_t tokens_parse(const char * buff, const jsmntok_t* tok,
 	            }
 				unsigned long l = strtoul(st, NULL, 10);
 				switch (j_type) {
+				case t_int8:
+					*(json_attr[j].addr.int8) = (int8_t) l;
+					break;
 				case t_uint8:
-					*(json_attr[j].addr.uint8) = (uint8_t)l;
+					*(json_attr[j].addr.uint8) = (uint8_t) l;
 					break;
 				case t_uint16:
-					*(json_attr[j].addr.uint16) = (uint16_t)l;
+					*(json_attr[j].addr.uint16) = (uint16_t) l;
 					break;
 				case t_uint32:
-					*(json_attr[j].addr.uint32) = (uint32_t)l;
-					break;
-				case t_int8:
-					*(json_attr[j].addr.int8) = (int8_t)l;
+					*(json_attr[j].addr.uint32) = (uint32_t) l;
 					break;
 				default:
 					break;

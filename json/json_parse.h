@@ -3,7 +3,7 @@
 /** some types for work with json using jsmn lib **/
 
 typedef enum {
-	t_int8, t_uint8, t_uint16, t_uint32, t_string, t_object
+	t_uint8, t_int8, t_uint16, t_uint32, t_string, t_object
 } json_type;
 
 typedef enum {parse_ok, parse_recursion_err, parse_not_object_err, parse_wrong_attr_err, parse_wrong_number_err, parse_wrong_type}

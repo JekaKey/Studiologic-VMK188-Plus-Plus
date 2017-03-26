@@ -33,8 +33,8 @@ FIFO16(128) sliders_events;
 FIFO16(128) pitch_events;
 
 sliders_state_t sliders_state = SLIDERS_WORK;
-uint8_t buttonsToMenu = 0;
-uint8_t buttons_control_state = 0;
+uint8_t buttonsToMenu;
+uint8_t buttons_control_state;
 
 
 extern presetType Preset;

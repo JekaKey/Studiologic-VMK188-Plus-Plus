@@ -10,17 +10,17 @@ FIFO8(128) midiMessagesArray; //Array for midi messages buffer
 FIFO8(8) notes; //Array for current note
 FIFO16(8) durations; //Array for duration for current note
 
-uint8_t keySeek = 0;
-uint8_t curNoteSeek=0;
+uint8_t keySeek;
+uint8_t curNoteSeek;
 
-static volatile uint32_t timerCounter = 0;
+static volatile uint32_t timerCounter;
 
-static uint8_t __attribute__ ((aligned (32))) lastState[16] = { 0 };
+static uint8_t __attribute__ ((aligned (32))) lastState[16];// = { 0 };
 
 
 
-static uint16_t __attribute__ ((aligned (32))) duration_note[88] = { 0 };
-static uint16_t __attribute__ ((aligned (32))) lastState_key[88] = { 0 };
+static uint16_t __attribute__ ((aligned (32))) duration_note[88];// = { 0 };
+static uint16_t __attribute__ ((aligned (32))) lastState_key[88];// = { 0 };
 
 
 //static int16_t curNote;
@@ -48,7 +48,7 @@ static gpioPins_t gpioPins[22] =  {{ GPIOC, GPIO_Pin_5 },  { GPIOC, GPIO_Pin_4 }
 *****************************************************/
 
 static noteOffStore_t noteOffStore[128];
-static uint8_t noteOffIndex = 0;
+static uint8_t noteOffIndex;
 
 void noteOffStoreInit(void) {
 	for (uint8_t i = 0; i < 128; i++){

@@ -38,15 +38,15 @@ menuYNItem_type* selectedMenuYNItem;
 char temp_msg_1[HD44780_DISP_LENGTH + 1] = {' '};
 char temp_msg_2[HD44780_DISP_LENGTH + 1] = {' '};
 uint16_t temp_msg_time = TEMP_MSG_INTERVAL;
-uint8_t showing_temp_msg = 0;
+uint8_t showing_temp_msg;
 
-timer_counter_t temp_msg_timer_counter={0,0};
-timer_counter_t MSC_stop_timer_counter={0,0};
+timer_counter_t temp_msg_timer_counter;//={0,0};
+timer_counter_t MSC_stop_timer_counter;//={0,0};
 
 static i_state_t I_state;
 static i_state_t prev_state;
 
-static uint8_t calibrationActive = 0;
+static uint8_t calibrationActive;
 
 static text_edit_object_t Text_Edit_object;
 static menu_cursor_object_t Menu_Cursor;

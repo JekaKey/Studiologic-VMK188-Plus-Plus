@@ -37,7 +37,7 @@ void TIM4_init(void){
 }
 
 
-static uint32_t USB_counter=0;
+static uint32_t USB_counter;
 
 void TIM4_IRQHandler() {
 

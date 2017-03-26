@@ -8,7 +8,7 @@
 extern USB_OTG_CORE_HANDLE USB_OTG_dev;
 //static uint8_t USB_TxBufferBusy;
 //static uint8_t USB_RxBufferBusy;
-static uint8_t USB_transferPossible=0;
+static uint8_t USB_transferPossible;
 
 
 FIFO32(128) USB_midi_packets_in;

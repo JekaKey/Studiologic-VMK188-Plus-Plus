@@ -46,12 +46,12 @@ const uint8_t pictureVMK188 [] = {
 #endif
 
 char buffer[HD44780_DISP_VOLUME] = {' '};
-uint8_t currentPos = 0;
+uint8_t currentPos;
 
-uint8_t showingTemp = 0;
+uint8_t showingTemp;
 
 
-volatile uint8_t hd44780_active=0;
+volatile uint8_t hd44780_active;
 extern uint8_t buttons_active;
 
 void hd44780_wr_hi_nibble(uint8_t data) {

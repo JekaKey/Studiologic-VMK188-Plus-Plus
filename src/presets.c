@@ -10,7 +10,7 @@
 #include "log.h"
 /************/
 
-uint8_t errIO=0;//if this flag is not zero all I/O operations will be canceled.
+uint8_t errIO;//if this flag is not zero all I/O operations will be canceled.
 
 
 presetType Preset;  //Current preset global structure

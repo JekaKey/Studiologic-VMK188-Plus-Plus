@@ -428,7 +428,25 @@ static void slider_FIFO_send(uint8_t num, uint16_t value, Slider_type* sliders, 
 		} else {
 			midi_value = (int)(a * value - (alpha + dead) * a + middle_out);
 		}
-	} else {
+	} else if (num==SLIDER_MOD) {
+			double dead = (double)sliders_calibr->dead / 100 * length;
+			a = (double) (sliders->max_out_value - sliders->min_out_value)*2.0/ (double) (length - dead);
+
+			double middle_in = (double)(max_in + min_in) / 2;
+
+			//alpha is the point when the dead zone begins
+			double alpha = middle_in - dead/2;
+			value = max_in - value + min_in;
+
+
+			if (value < alpha) {
+				midi_value = (int)(a * (min_in-value) + sliders->max_out_value);
+			} else if (value < alpha + dead) {
+				midi_value = sliders->min_out_value;
+			} else {
+				midi_value = (int)(a * (value-max_in) + sliders->max_out_value);
+			}
+	}else{
 		a = (double) (sliders->max_out_value - sliders->min_out_value) / length;
 		if (sliders->reverse) {
 			a = -a;

@@ -1104,7 +1104,7 @@ static void menu_slider_enter(void) {
 	slider_calibrate_number = num;
 
 	if (calibrationActive) {
-		if (num == SLIDER_PITCH) {
+		if ((num == SLIDER_PITCH)||(num == SLIDER_MOD)) {
 			menu_clb_e_dead.Parent = selectedMenuItem;
 			menu_clb_e_dead.Value = (uint8_t*)(&Calibration.calibr[num].dead);
 			menu_clb_e_gaps.Next = &menu_clb_e_dead;
@@ -1126,7 +1126,7 @@ static void menu_slider_enter(void) {
 		menu_sl_channel.Parent = selectedMenuItem;
 		menu_sl_channel.Value = (uint8_t*)(&Preset.sliders[num].channel);
 
-		if (num == SLIDER_PITCH) {
+		if ((num == SLIDER_PITCH)||(num == SLIDER_MOD)) {
 			menu_sl_channel.Next = &NULL_ENTRY;
 
 		} else if (num == SLIDER_AT) {

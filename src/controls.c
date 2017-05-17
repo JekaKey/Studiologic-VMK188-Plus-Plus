@@ -537,6 +537,12 @@ void button_midi_send(uint16_t value, Button_type* buttons, uint8_t analog) {
 		case BUTTON_RECORD:
 			sendMMC(MMC_REC, analog);
 			break;
+		case BUTTON_LEFT:
+			if (Preset.TransportBtnFunc==0)
+				sendMMC(MMC_RW, analog);
+		case BUTTON_RIGHT:
+			if (Preset.TransportBtnFunc==0)
+				sendMMC(MMC_FF, analog);
 		}
 		return;
 	}

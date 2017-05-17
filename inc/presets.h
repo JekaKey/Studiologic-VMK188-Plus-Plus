@@ -118,6 +118,7 @@
 #define ATTR_BRC "buttonrecord"
 #define ATTR_BST "buttonstop"
 #define ATTR_BPL "buttonplay"
+#define ATTR_TRBUTTONS "trbuttons"
 
 #define ATTR_B_ACTIVE "active"
 #define ATTR_B_TYPE "type"
@@ -127,6 +128,7 @@
 #define ATTR_B_OFF "off"
 
 #define OCTAVE_SHIFT_MAX 3
+#define TRANSPOSE_MAX 11
 
 /*Block of definitions of SD card Error codes*/
 #define ERRIO_USBDISK 			1
@@ -176,6 +178,7 @@ typedef struct {
 	uint8_t SlowKeySound;//bool
 	uint16_t NoteOffDelay1;//0..20000
 	uint16_t NoteOffDelay127;//0..20000
+	uint8_t TransportBtnFunc; //0..2
 	curve_points_type Curve;//curve nodes for B&W keys
 	Slider_type sliders[SLIDERS_AMOUNT];
 	Button_type buttons[BUTTONS_AMOUNT];

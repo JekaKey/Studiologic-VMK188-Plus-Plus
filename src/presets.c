@@ -255,6 +255,7 @@ FIO_status preset_save(const char* path, presetType* pr){
 	json_write_number(1, ATTR_NOTEOFFDELAY127, pr->NoteOffDelay127, 1, &fff);
 	json_write_number(1, ATTR_TRANSPOSE, pr->Transpose, 1, &fff);
 	json_write_number(1, ATTR_OCTAVE, pr->OctaveShift, 1, &fff);
+	json_write_number(1, ATTR_TRBUTTONS, pr->TransportBtnFunc, 1, &fff);
 	json_write_string(1, "\"" ATTR_CURVE "\":{", &fff);
 	json_write_number(2, ATTR_CURVE_XW1, pr->Curve.xw1, 1, &fff);
 	json_write_number(2, ATTR_CURVE_YW1, pr->Curve.yw1, 1, &fff);
@@ -477,7 +478,7 @@ static json_attr_t preset_curve_attr[] ={
 };
 
 
-static json_attr_t preset_attr[21] = {
+static json_attr_t preset_attr[22] = {
 		{ATTR_CHANNEL, t_uint8,},							//0
 		{ATTR_SPLIT,t_object, .addr.object = split_attr},	//1
 		{ATTR_HIRES, t_uint8,},								//2
@@ -487,6 +488,7 @@ static json_attr_t preset_attr[21] = {
 		{ATTR_NOTEOFFDELAY127, t_uint16,},					//6
 		{ATTR_TRANSPOSE, t_int8,},							//7
 		{ATTR_OCTAVE, t_int8,},								//8
+		{ATTR_TRBUTTONS, t_uint8},							//9
 		{ATTR_CURVE, t_object, .addr.object = preset_curve_attr},
 		{ATTR_PI, t_object, .addr.object = pitch_param_attr},
 		{ATTR_AT, t_object, .addr.object = at_param_attr},
@@ -535,6 +537,8 @@ static void init_json_preset_attr(presetType *preset) {
 	preset_attr[6].addr.uint16 = &(preset->NoteOffDelay127);
 	preset_attr[7].addr.int8 = &(preset->Transpose);
 	preset_attr[8].addr.int8 = &(preset->OctaveShift);
+	preset_attr[9].addr.uint8 = &(preset->TransportBtnFunc);
+
 
 	split_attr[0].addr.uint8 = &(preset->SplitActive);
 	split_attr[1].addr.uint8 = &(preset->SplitKey);
@@ -843,6 +847,7 @@ static void preset_set_defaults(presetType* pr){
 	pr->SlowKeySound=0;
 	pr->NoteOffDelay1=0;
 	pr->NoteOffDelay127=0;
+	pr->TransportBtnFunc=0;
 }
 
 static void curve_set_defaults(presetType* pr){

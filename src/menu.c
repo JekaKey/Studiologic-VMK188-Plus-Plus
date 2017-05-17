@@ -311,7 +311,7 @@ MAKE_MENU(menu_pst_gen,		menu_pst_split,	NULL_ENTRY,		NULL_ENTRY,		menu_pst_chan
 MAKE_MENU(menu_pst_split,	menu_pst_curve,	menu_pst_gen,	NULL_ENTRY,		menu_split_on,	0,		NULL,						t_none,		0,		0,		NULL,					check_saving_preset,	"  Split   "	);
 MAKE_MENU(menu_pst_curve,	menu_pst_slid,	menu_pst_split,	NULL_ENTRY,		menu4_item1, 	0,		NULL,						t_none,		0,		0,		NULL,					check_saving_preset,	"  Curve   "	);
 MAKE_MENU(menu_pst_slid,	menu_pst_btns,	menu_pst_curve,	NULL_ENTRY,		menu_slider1,	0,		NULL,						t_none,		0,		0,		menu_preset_sl_enter,	check_saving_preset,	"  Sliders "	);
-MAKE_MENU(menu_pst_btns,	NULL_ENTRY,		menu_pst_slid,	NULL_ENTRY,		menu_button1,	1,		NULL,						t_none,		0,		0,		menu_preset_bt_enter,	check_saving_preset,	"  Buttons "	);
+MAKE_MENU(menu_pst_btns,	NULL_ENTRY,		menu_pst_slid,	NULL_ENTRY,		menu_button1,	0,		NULL,						t_none,		0,		0,		menu_preset_bt_enter,	check_saving_preset,	"  Buttons "	);
 
 MAKE_MENU(menu_pst_chan,	menu_pst_transp,NULL_ENTRY,		menu_pst_gen,	NULL_ENTRY,		0,		&Preset.MidiChannel,		t_uint8,	1,		16,		NULL,					NULL,					"  Channel: "	);
 MAKE_MENU(menu_pst_transp,	menu_pst_oct,	menu_pst_chan,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.Transpose,			t_int8, 	-11,	11,		NULL,					NULL,					"Transpose: "	);
@@ -320,7 +320,8 @@ MAKE_MENU(menu_pst_hires,	menu_pst_midi,	menu_pst_oct,	menu_pst_gen,	NULL_ENTRY,
 MAKE_MENU(menu_pst_midi,	menu_pst_slowk,	menu_pst_hires,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.AnalogMidiEnable,	t_bool,		0,		1,		NULL,					NULL,					"Midi Port: "	);
 MAKE_MENU(menu_pst_slowk,	menu_pst_noff1,	menu_pst_midi,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.SlowKeySound,		t_bool,		0,		1,		NULL,					NULL,					" Slow Key: "	);
 MAKE_MENU(menu_pst_noff1,	menu_pst_noff7,	menu_pst_slowk,	menu_pst_gen,	NULL_ENTRY,		0,		&Preset.NoteOffDelay1,		t_uint16,	0,		999,	NULL,					NULL,					"OffDelayP: "	);
-MAKE_MENU(menu_pst_noff7,	NULL_ENTRY,		menu_pst_noff1,	menu_pst_gen,	NULL_ENTRY,		1,		&Preset.NoteOffDelay127,	t_uint16,	0,		999,	NULL,					NULL,					"OffDelayF: "	);
+MAKE_MENU(menu_pst_noff7,	menu_pst_trbtns,menu_pst_noff1,	menu_pst_gen,	NULL_ENTRY,		1,		&Preset.NoteOffDelay127,	t_uint16,	0,		999,	NULL,					NULL,					"OffDelayF: "	);
+MAKE_MENU(menu_pst_trbtns,	NULL_ENTRY,		menu_pst_noff7,	menu_pst_gen,	NULL_ENTRY,		1,		&Preset.TransportBtnFunc,	t_transport,0,		2,		NULL,					NULL,					"<>Buttons"	);
 
 
 MAKE_MENU(menu_split_on,	menu_split_key,	NULL_ENTRY,		menu_pst_split,	NULL_ENTRY,		0,		&Preset.SplitActive,		t_bool,		0,		1,		NULL,					NULL,					"    Split: "	);
@@ -565,6 +566,15 @@ static void menu_show_param(menuItem_type * menu) {
 			hd44780_write_string("On");
 		else
 			hd44780_write_string("Off");
+		break;
+	case t_transport:
+		b = (uint8_t*) (menu->Value);
+		if (*b==0)
+			hd44780_write_string("Trs");
+		else if (*b==1)
+			hd44780_write_string("Not");
+		else
+			hd44780_write_string("Oct");
 		break;
 
 	case t_perc:
@@ -1590,15 +1600,27 @@ static void presets_button_handler(uint8_t button){
 		break;
 
 	case BUTTON_LEFT:
-		if (Preset.OctaveShift > -OCTAVE_SHIFT_MAX)
-			Preset.OctaveShift--;
-		octave_shift_show();
+		if (Preset.TransportBtnFunc==2){
+			if (Preset.OctaveShift > -OCTAVE_SHIFT_MAX)
+				Preset.OctaveShift--;
+			octave_shift_show();
+		}else if (Preset.TransportBtnFunc==1){
+			if (Preset.Transpose > -TRANSPOSE_MAX)
+				Preset.Transpose--;
+			octave_shift_show();
+		}
 		break;
 
 	case BUTTON_RIGHT:
-		if (Preset.OctaveShift < OCTAVE_SHIFT_MAX)
-			Preset.OctaveShift++;
-		octave_shift_show();
+		if (Preset.TransportBtnFunc==2){
+			if (Preset.OctaveShift < OCTAVE_SHIFT_MAX)
+				Preset.OctaveShift++;
+			octave_shift_show();
+		}else if (Preset.TransportBtnFunc==1){
+			if (Preset.Transpose <TRANSPOSE_MAX)
+				Preset.Transpose++;
+			octave_shift_show();
+		}
 		break;
 
 	default:

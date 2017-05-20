@@ -128,7 +128,7 @@
 #define ATTR_B_OFF "off"
 
 #define OCTAVE_SHIFT_MAX 3
-#define TRANSPOSE_MAX 11
+#define TRANSPOSE_MAX 24
 
 /*Block of definitions of SD card Error codes*/
 #define ERRIO_USBDISK 			1

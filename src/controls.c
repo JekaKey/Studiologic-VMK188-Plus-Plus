@@ -928,9 +928,8 @@ void checkButtons_events(Button_type* buttons, uint8_t analog) {
 	//so messages sends to menu_btns_n_msg_handler
 	if (btn_num == BUTTON_PANIC) {
 		if (!(event & 0x80))
-			sendPanic(analog);
+			sendPanicAll(Preset.AnalogMidiEnable);
 	} else if (btn_num <= BUTTON_RIGHT || btn_num >= ENCODER_LEFT1 || buttonsToMenu) {
-		if (!(event & 0x80))
 		   menu_btns_n_msg_handler(event);
 	} else {
 		button_midi_send(event, buttons, analog);

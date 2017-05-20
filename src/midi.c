@@ -86,8 +86,14 @@ void sendAfterTouch(uint8_t Preasure, uint8_t Channel, uint8_t analog) {
 	}
 }
 
-void sendPanic(uint8_t analog) {
-	for (int i = 0; i < 16; i++)
+void sendPanic(presetType *pr){
+	sendControlChange(120, 0, pr->MidiChannel-1, pr->AnalogMidiEnable);
+	if (pr->SplitActive)
+	    sendControlChange(120, 0, pr->SplitChannel-1, pr->AnalogMidiEnable);
+}
+
+void sendPanicAll(uint8_t analog) {
+	for (uint8_t i = 0; i < 16; i++)
 		sendControlChange(120, 0, i, analog);
 }
 
